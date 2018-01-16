@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_routine_list_item"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    tools:context="com.longlife.workoutlogger.view.RoutineListItemActivity">
+
+    <TextView
+        android:id="@+id/text_routine_list_item_description"
+        android:layout_width="179dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="4dp"
+        android:ellipsize="end"
+        android:text="This routine includes a bench press, squats, pull up, push up, and a warmup and cooldown. And more text to fill 3 rows"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_performRoutine"
+        app:layout_constraintStart_toEndOf="@+id/imv_icon"
+        app:layout_constraintTop_toBottomOf="@+id/text_routine_list_item_name"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/text_routine_list_item_name"
+        android:layout_width="0dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="4dp"
+        android:text="Last Performed on 10/10/2010"
+        android:textColor="@color/subheaderText"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imv_icon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imv_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/exercise_48dp_xhdpi" />
+
+    <Button
+        android:id="@+id/button_performRoutine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="@string/EditRoutine"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteY="12dp" />
+
+</android.support.constraint.ConstraintLayout>

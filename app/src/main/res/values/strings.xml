@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Workout Logger</string>
+    <!-- strings on MainActivity -->
+    <string name="Routines_button">Routines</string>
+    <string name="History_Button">History</string>
+    <string name="Goals_Button">Goals</string>
+
+    <!-- strings on RoutinesActivity -->
+    <string name="Header_MyRoutines">My Routines</string>
+    <string name="Header_PremadeRoutines">Pre-made Routines</string>
+
+    <!-- strings on HistoryActivity -->
+    <string name="Header_MyHistory">My History</string>
+
+    <!-- strings on GoalsActivity -->
+    <string name="Header_MyGoals">My Goals</string>
+    <string name="EditRoutine">Edit Routine</string>
+    <string name="text_save">Save</string>
+    <string name="text_cancel">Cancel</string>
+</resources>

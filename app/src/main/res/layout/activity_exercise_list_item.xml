@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    tools:context="com.longlife.workoutlogger.view.ExerciseListItemActivity"
+    android:id="@+id/root_exerciseListItem">
+
+    <TextView
+        android:id="@+id/text_exerciseListItem_description"
+        android:layout_width="179dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:ellipsize="end"
+        android:text="An exercise"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_editExercise"
+        app:layout_constraintStart_toEndOf="@+id/imv_icon"
+        app:layout_constraintTop_toBottomOf="@+id/text_exerciseListItem_name"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/text_exerciseListItem_name"
+        android:layout_width="0dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:text="Last Performed on 10/10/2010"
+        android:textColor="@color/subheaderText"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imv_icon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imv_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/exercise_48dp_xhdpi" />
+
+    <Button
+        android:id="@+id/button_editExercise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/EditRoutine"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteY="12dp" />
+</android.support.constraint.ConstraintLayout>
