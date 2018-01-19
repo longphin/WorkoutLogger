@@ -20,6 +20,12 @@ public class RoutineSession {
 
         this.sessionDate = (new GregorianCalendar()).getTime();
     }
+    // makes a blank RoutineSession, to be filled later
+    public RoutineSession()
+    {
+        this.idRoutineSession = -1;
+        this.idRoutine = -1;
+    }
 
     public int getIdRoutineSession() {
         return idRoutineSession;

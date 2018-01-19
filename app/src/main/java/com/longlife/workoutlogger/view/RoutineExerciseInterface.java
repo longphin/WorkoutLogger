@@ -1,7 +1,7 @@
 package com.longlife.workoutlogger.view;
 
 import com.longlife.workoutlogger.model.Exercise;
-import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 
 import java.util.List;
@@ -14,4 +14,6 @@ public interface RoutineExerciseInterface {
     void startExerciseActivity(Exercise exercise);
 
     void setUpAdapterAndView(List<SessionExercise> sessionExercises);
+
+    void addNewSessionExercise(RoutineSession routineSession);
 }

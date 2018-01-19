@@ -67,8 +67,9 @@ public class DataAccessor implements DataAccessorInterface {
         return(routines);
     }
 
+    /*
     @Override
-    public int getLatestRoutineSession(int idRoutine) {
+    public int getLatestIdRoutineSession(int idRoutine) {
         Date latestRoutineDate = new Date();
         int latestIdRoutineSession = -1;
 
@@ -86,14 +87,37 @@ public class DataAccessor implements DataAccessorInterface {
 
         return(latestIdRoutineSession);
     }
+    */
 
     @Override
-    public List<SessionExercise> getSessionExercises(int idRoutineSession) {
+    public RoutineSession getLatestRoutineSession(Routine routine) {
+        Date latestRoutineDate = new Date();
+        int latestIdRoutineSession = -1;
+        RoutineSession latestRoutineSession = new RoutineSession();
+
+        for(RoutineSession rs : routineSessions)
+        {
+            if(rs.getIdRoutine() == routine.getIdRoutine())
+            {
+                if(latestIdRoutineSession == -1 || rs.getSessionDate().after(latestRoutineDate))
+                {
+                    latestRoutineDate = rs.getSessionDate();
+                    latestIdRoutineSession = rs.getIdRoutineSession();
+                    latestRoutineSession = rs;
+                }
+            }
+        }
+
+        return(latestRoutineSession);
+    }
+
+    @Override
+    public List<SessionExercise> getSessionExercises(RoutineSession routineSession) {
         List<SessionExercise> exercisesInThisRoutineSession = new ArrayList<SessionExercise>();
 
         for(SessionExercise se : sessionExercises)
         {
-            if(se.getIdRoutineSession() == idRoutineSession)
+            if(se.getIdRoutineSession() == routineSession.getIdRoutineSession())
             {
                 exercisesInThisRoutineSession.add(se);
             }
@@ -102,10 +126,10 @@ public class DataAccessor implements DataAccessorInterface {
     }
 
     @Override
-    public Exercise getExerciseFromSession(int idSessionExercise) {
+    public Exercise getExerciseFromSession(SessionExercise sessionExercise) {
         for(SessionExercise se : sessionExercises)
         {
-            if(se.getIdSessionExercise() == idSessionExercise)
+            if(se.getIdSessionExercise() == sessionExercise.getIdSessionExercise())
             {
                 // now that we found the idSessionExercise, find the exercise
                 for(Exercise exercise : exercises)
@@ -132,6 +156,14 @@ public class DataAccessor implements DataAccessorInterface {
                 exercise.setDescription(exerciseToSave.getDescription());
             }
         }
+    }
+
+    @Override
+    public SessionExercise createBlankSessionExercise(RoutineSession sessionToAddTo) {
+        Exercise newExercise = new Exercise("unnamed", "");
+        SessionExercise newSessionExercise = new SessionExercise(sessionToAddTo, newExercise); // [TODO] create a new instance of SessionExercise. Needs Routine and Exercise.
+
+        return(newSessionExercise);
     }
 
 

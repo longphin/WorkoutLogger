@@ -2,6 +2,7 @@ package com.longlife.workoutlogger.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,11 +18,12 @@ import com.longlife.workoutlogger.enums.ExerciseRequestCode;
 import com.longlife.workoutlogger.model.DataAccessor;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 
 import java.util.List;
 
-public class RoutineActivity extends AppCompatActivity implements RoutineExerciseInterface{
+public class RoutineActivity extends AppCompatActivity implements RoutineExerciseInterface, View.OnClickListener{
     private LayoutInflater layoutInflater;
     private RecyclerView recyclerView;
     private CustomAdapter adapter;
@@ -29,6 +31,8 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
 
     private List<SessionExercise> sessionExercises;
     private int selectedItemPosition;
+    private Routine thisRoutine;
+    private RoutineSession thisRoutineSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +41,23 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
 
         // get data from Parcelable
         Intent intent = getIntent();
-        Routine routine = intent.getParcelableExtra("Routine");
+        thisRoutine = intent.getParcelableExtra("Routine");
 
         TextView nameTxt = (TextView) findViewById(R.id.text_routine_name);
         TextView descripTxt = (TextView) findViewById(R.id.text_routine_description);
 
-        nameTxt.setText(routine.getName());
-        descripTxt.setText(routine.getDescription());
+        nameTxt.setText(thisRoutine.getName());
+        descripTxt.setText(thisRoutine.getDescription());
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_exercises);
         layoutInflater = getLayoutInflater();
 
-        controller = new RoutineExerciseController(this, new DataAccessor(), routine.getIdRoutine());
+        controller = new RoutineExerciseController(this, new DataAccessor(), thisRoutine);
+        // by default, select the latest session
+        thisRoutineSession = controller.getLatestRoutineSession(thisRoutine);
+
+        FloatingActionButton addExerciseButton = (FloatingActionButton) findViewById(R.id.floatingButton_add_exercise);
+        addExerciseButton.setOnClickListener(this);
     }
 
     // When SessionExercise is selected, go to the exercise definition.
@@ -101,6 +110,27 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
+    public void addNewSessionExercise(RoutineSession routineSession) {
+        sessionExercises.add(controller.createBlankSessionExercise(routineSession));
+
+        // notify adapter
+        int endPosition = sessionExercises.size()-1;
+        adapter.notifyItemInserted(endPosition);
+
+        recyclerView.smoothScrollToPosition(endPosition);
+    }
+
+    // On click, create a new exercise
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+        if(viewId == R.id.floatingButton_add_exercise)
+        {
+            controller.createBlankSessionExercise(thisRoutineSession);
+        }
+    }
+
     /**
      * 4.
      * (Opinion)
@@ -148,7 +178,7 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
             SessionExercise currentItem = sessionExercises.get(position);
             currentItem.setDisplayOrder(position);
 
-            Exercise currentExercise = controller.getExerciseFromSession(currentItem.getIdSessionExercise());
+            Exercise currentExercise = controller.getExerciseFromSession(currentItem);
             holder.name.setText(currentExercise.getName());
             holder.description.setText(currentExercise.getDescription());
         }
@@ -216,7 +246,7 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
 
                     SessionExercise sessionExercise = sessionExercises.get(selectedItemPosition);
 
-                    Exercise selectedExercise = controller.getExerciseFromSession(sessionExercise.getIdSessionExercise());
+                    Exercise selectedExercise = controller.getExerciseFromSession(sessionExercise);
 
                     controller.onExerciseClick(
                             selectedExercise

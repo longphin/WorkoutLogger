@@ -18,9 +18,15 @@ public class SessionExercise {
         idSessionExercise = IDENTITY += 1;
         this.idRoutineSession = routineSession.getIdRoutineSession();
         this.idExercise = exercise.getIdExercise();
-
-        this.displayOrder = 1; // [TODO] need to get display order
     }
+    /*
+    public SessionExercise(int idRoutineSession, int idExercise)
+    {
+        idSessionExercise = IDENTITY += 1;
+        this.idRoutineSession = idRoutineSession;
+        this.idExercise = idExercise;
+    }
+    */
 
     public int getDisplayOrder() {
         return displayOrder;

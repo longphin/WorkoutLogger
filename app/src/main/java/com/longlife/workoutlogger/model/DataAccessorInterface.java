@@ -9,8 +9,13 @@ import java.util.List;
 public interface DataAccessorInterface {
     List<Exercise> getExercises();
     List<Routine> getRoutines();
-    int getLatestRoutineSession(int idRoutine);
-    List<SessionExercise> getSessionExercises(int idRoutineSession);
-    Exercise getExerciseFromSession(int idSessionExercise);
+    //int getLatestIdRoutineSession(int idRoutine);
+    //RoutineSession getLatestRoutineSession(int idRoutine);
+    RoutineSession getLatestRoutineSession(Routine routine);
+    //List<SessionExercise> getSessionExercises(int idRoutineSession);
+    List<SessionExercise> getSessionExercises(RoutineSession routineSession);
+    //Exercise getExerciseFromSession(int idSessionExercise);
+    Exercise getExerciseFromSession(SessionExercise sessionExercise);
     void saveExercise(Exercise exercise);
+    SessionExercise createBlankSessionExercise(RoutineSession sessionToAddTo);
 }
