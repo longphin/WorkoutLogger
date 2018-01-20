@@ -16,6 +16,7 @@ import com.longlife.workoutlogger.enums.RoutineRequestCode;
 import com.longlife.workoutlogger.model.DataAccessor;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.controller.RoutineController;
+import com.longlife.workoutlogger.model.RoutineSession;
 
 import java.util.List;
 
@@ -77,6 +78,9 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
             }
             if(resultCode == RESULT_CANCELED)
             {
+                // [TODO] need to debug why deleting the routine session causes an error.
+                RoutineSession routineSession = data.getParcelableExtra(RoutineRequestCode.getRequestRoutine_Cancel_Parcel());
+                controller.deleteRoutineSession(routineSession);
                 // do stuff
             }
         }

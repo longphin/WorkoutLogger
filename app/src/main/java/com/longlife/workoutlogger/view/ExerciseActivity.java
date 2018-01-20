@@ -13,7 +13,8 @@ import com.longlife.workoutlogger.enums.ExerciseRequestCode;
 import com.longlife.workoutlogger.model.Exercise;
 
 public class ExerciseActivity extends AppCompatActivity {
-    private int idExercise;
+    //private int idExercise;
+    private Exercise exercise;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +22,12 @@ public class ExerciseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exercise);
 
         Intent intent = getIntent();
-        Exercise exercise = intent.getParcelableExtra("Exercise");
+        this.exercise = intent.getParcelableExtra("Exercise");
 
         EditText nameTxt = (EditText) findViewById(R.id.edittext_exercise_name);
         EditText descripTxt = (EditText) findViewById(R.id.edittext_exercise_description);
 
-        idExercise = exercise.getIdExercise();
+        //idExercise = exercise.getIdExercise();
         nameTxt.setText(exercise.getName());
         descripTxt.setText(exercise.getDescription());
     }
@@ -36,11 +37,17 @@ public class ExerciseActivity extends AppCompatActivity {
         EditText nameTxt = (EditText) findViewById(R.id.edittext_exercise_name);
         EditText descripTxt = (EditText) findViewById(R.id.edittext_exercise_description);
 
+        exercise.setName(nameTxt.getText().toString());
+        exercise.setDescription(descripTxt.getText().toString());
+
         Intent i = getIntent();
         //i.putExtra("Routine", routine);
+        /*
         i.putExtra("ExerciseId", idExercise);
         i.putExtra("ExerciseName", nameTxt.getText().toString());
         i.putExtra("ExerciseDescription", descripTxt.getText().toString());
+        */
+        i.putExtra(ExerciseRequestCode.getRequestExercise_OK_Parcel(), exercise);
         setResult(Activity.RESULT_OK, i);
         finish();
     }

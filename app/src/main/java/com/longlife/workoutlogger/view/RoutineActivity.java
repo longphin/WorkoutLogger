@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.controller.RoutineExerciseController;
 import com.longlife.workoutlogger.enums.ExerciseRequestCode;
+import com.longlife.workoutlogger.enums.RoutineRequestCode;
 import com.longlife.workoutlogger.model.DataAccessor;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
@@ -80,18 +81,22 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
                 TextView nameTxt = (TextView) findViewById(R.id.edittext_routine_name);
                 TextView descripTxt = (TextView) findViewById(R.id.edittext_routine_description);
 
+                Exercise exerciseToSave = data.getParcelableExtra(ExerciseRequestCode.getRequestExercise_OK_Parcel());
+
+                /*
                 int idExerciseToSave = data.getIntExtra("ExerciseId", -1);
                 String nameToSave = data.getStringExtra("ExerciseName");
                 String descripToSave = data.getStringExtra("ExerciseDescription");
 
                 Exercise exerciseToSave = new Exercise(idExerciseToSave, nameToSave, descripToSave);
+                */
 
                 controller.saveExercise(exerciseToSave);
 
                 //adapter.notifyDataSetChanged();
                 for(SessionExercise se : sessionExercises)
                 {
-                    if(se.getIdExercise() == idExerciseToSave) {
+                    if(se.getIdExercise() == exerciseToSave.getIdExercise()) {
                         adapter.notifyItemChanged(se.getDisplayOrder());
                     }
                 }
@@ -112,8 +117,13 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         /*
         i.putExtra("ExerciseId", idRoutineSession);
         */
+        /*
         i.putExtra("RoutineName", nameTxt.getText().toString());
         i.putExtra("RoutineDescription", descripTxt.getText().toString());
+        */
+        thisRoutine.setName(nameTxt.getText().toString());
+        thisRoutine.setDescription(descripTxt.getText().toString());
+        i.putExtra(RoutineRequestCode.getRequestRoutine_OK_Parcel(), thisRoutine);
 
         setResult(Activity.RESULT_OK, i);
         finish();
@@ -121,9 +131,11 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
 
     public void cancelChanges(View v)
     {
-        controller.deleteRoutineSession(thisRoutineSession);
+        //controller.deleteRoutineSession(thisRoutineSession);
+        Intent i = getIntent();
+        i.putExtra(RoutineRequestCode.getRequestRoutine_Cancel_Parcel(), thisRoutineSession);
 
-        setResult(Activity.RESULT_CANCELED);
+        setResult(Activity.RESULT_CANCELED, i);
         finish();
     }
 

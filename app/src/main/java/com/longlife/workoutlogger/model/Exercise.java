@@ -37,6 +37,7 @@ public class Exercise extends ExerciseAbstract implements Parcelable {
         setName(name);
         setDescription(description);
     }
+
     // definitions for Parcelable
     public Exercise(Parcel parcel)
     {
