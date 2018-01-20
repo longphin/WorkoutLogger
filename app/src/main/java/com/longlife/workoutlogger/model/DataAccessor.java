@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -164,6 +165,74 @@ public class DataAccessor implements DataAccessorInterface {
         SessionExercise newSessionExercise = new SessionExercise(sessionToAddTo, newExercise); // [TODO] create a new instance of SessionExercise. Needs Routine and Exercise.
 
         return(newSessionExercise);
+    }
+
+    // create a new RoutineSession that will create copies of SessionExercises and Exercise sets as well.
+    @Override
+    public RoutineSession createRoutineSessionCopy(RoutineSession routineSessionToCopy) {
+        // create a copy of the RoutineSession, but with give it a unique ID
+        RoutineSession newRoutineSession = new RoutineSession(routineSessionToCopy);
+
+        // add the new RoutineSession to the database
+        routineSessions.add(newRoutineSession);
+
+        // find SessionExercises that need to be copied.
+        List<Integer> indexesOfSessionExercisesToCopy = new ArrayList<Integer>();
+        for(int i = 0; i<sessionExercises.size(); i++)
+        {
+            if(sessionExercises.get(i).getIdRoutineSession() == routineSessionToCopy.getIdRoutineSession())
+            {
+                indexesOfSessionExercisesToCopy.add(i);
+            }
+        }
+        // add copies of the SessionExercises to the database
+        for(Integer i : indexesOfSessionExercisesToCopy)
+        {
+            SessionExercise sessionExerciseCopy = new SessionExercise(newRoutineSession, sessionExercises.get(i));
+            sessionExercises.add(sessionExerciseCopy);
+        }
+
+        // [TODO] need to copy exercise sets as well, when those get implemented
+        return(newRoutineSession);
+    }
+
+    @Override
+    public void deleteRoutineSession(RoutineSession routineSession) {
+        List<Integer> indexesToDrop = new ArrayList<Integer>();
+        for(int i = sessionExercises.size()-1; i>0; i--)
+        {
+            if(sessionExercises.get(i).getIdRoutineSession() == routineSession.getIdRoutineSession())
+            {
+                indexesToDrop.add(i);
+            }
+        }
+        // and then drop those SessionExercises
+        for(Integer i : indexesToDrop)
+        {
+            sessionExercises.remove(i);
+        }
+        // Note: we iterate backwards to produce indexesToDrop so that when we do a remove, items are not shifted over
+        // which would change the indexes when we do a sequence of remove()
+        // Collections.sort(indexesToDrop, Collections.reverseOrder()) // If the backwards iteration does not work, this can be done first to reverse the order.
+        // Find any SessionExercises linked to the RoutineSession
+
+        // [TODO] need to remove exercise sets when that is implemented
+
+        // There should only be 1 of this index, so we break out of the loop once it is found
+        int indexToDrop = -1;
+        for(int i = 0; i<routineSessions.size(); i++)
+        {
+            if(routineSessions.get(i).getIdRoutineSession() == routineSession.getIdRoutineSession())
+            {
+                indexToDrop = i;
+                break;
+            }
+        }
+        // and then drop that index.
+        if(indexToDrop != -1)
+        {
+            routineSessions.remove(indexToDrop);
+        }
     }
 
 

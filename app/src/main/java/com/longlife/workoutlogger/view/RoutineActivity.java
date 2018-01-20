@@ -1,5 +1,6 @@
 package com.longlife.workoutlogger.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
@@ -30,7 +32,6 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
     private RoutineExerciseController controller;
 
     private List<SessionExercise> sessionExercises;
-    private int selectedItemPosition;
     private Routine thisRoutine;
     private RoutineSession thisRoutineSession;
 
@@ -43,8 +44,8 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         Intent intent = getIntent();
         thisRoutine = intent.getParcelableExtra("Routine");
 
-        TextView nameTxt = (TextView) findViewById(R.id.text_routine_name);
-        TextView descripTxt = (TextView) findViewById(R.id.text_routine_description);
+        TextView nameTxt = (TextView) findViewById(R.id.edittext_routine_name);
+        TextView descripTxt = (TextView) findViewById(R.id.edittext_routine_description);
 
         nameTxt.setText(thisRoutine.getName());
         descripTxt.setText(thisRoutine.getDescription());
@@ -53,8 +54,8 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         layoutInflater = getLayoutInflater();
 
         controller = new RoutineExerciseController(this, new DataAccessor(), thisRoutine);
-        // by default, select the latest session
-        thisRoutineSession = controller.getLatestRoutineSession(thisRoutine);
+        // on create, create a new RoutineSession. By default, it will copy the last routine session.
+        thisRoutineSession = controller.createRoutineSessionCopy(controller.getLatestRoutineSession(thisRoutine));//new RoutineSession(controller.getLatestRoutineSession(thisRoutine));
 
         FloatingActionButton addExerciseButton = (FloatingActionButton) findViewById(R.id.floatingButton_add_exercise);
         addExerciseButton.setOnClickListener(this);
@@ -76,8 +77,8 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         if(requestCode == ExerciseRequestCode.getRequestExercise()){
             if(resultCode == RESULT_OK)
             {
-                TextView nameTxt = (TextView) findViewById(R.id.text_routine_name);
-                TextView descripTxt = (TextView) findViewById(R.id.text_routine_description);
+                TextView nameTxt = (TextView) findViewById(R.id.edittext_routine_name);
+                TextView descripTxt = (TextView) findViewById(R.id.edittext_routine_description);
 
                 int idExerciseToSave = data.getIntExtra("ExerciseId", -1);
                 String nameToSave = data.getStringExtra("ExerciseName");
@@ -100,6 +101,30 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
                 // do stuff
             }
         }
+    }
+
+    public void saveChanges(View v)
+    {
+        EditText nameTxt = (EditText) findViewById(R.id.edittext_routine_name);
+        EditText descripTxt = (EditText) findViewById(R.id.edittext_routine_description);
+
+        Intent i = getIntent();
+        /*
+        i.putExtra("ExerciseId", idRoutineSession);
+        */
+        i.putExtra("RoutineName", nameTxt.getText().toString());
+        i.putExtra("RoutineDescription", descripTxt.getText().toString());
+
+        setResult(Activity.RESULT_OK, i);
+        finish();
+    }
+
+    public void cancelChanges(View v)
+    {
+        controller.deleteRoutineSession(thisRoutineSession);
+
+        setResult(Activity.RESULT_CANCELED);
+        finish();
     }
 
     @Override
@@ -242,9 +267,7 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
                 //ViewHolder (this) in the Adapter. This is how we get the correct Data.
                 if(v.getId()== editExercise.getId())
                 {
-                    selectedItemPosition = this.getAdapterPosition();
-
-                    SessionExercise sessionExercise = sessionExercises.get(selectedItemPosition);
+                    SessionExercise sessionExercise = sessionExercises.get(this.getAdapterPosition());
 
                     Exercise selectedExercise = controller.getExerciseFromSession(sessionExercise);
 

@@ -15,11 +15,20 @@ public class RoutineSession {
 
     public RoutineSession(Routine routine)
     {
-        this.idRoutineSession = (RoutineSession.IDENTITY += 1);
+        this.idRoutineSession = IDENTITY += 1;
         this.idRoutine = routine.getIdRoutine();
 
         this.sessionDate = (new GregorianCalendar()).getTime();
     }
+
+    // copy constructor
+    public RoutineSession(RoutineSession routineSession)
+    {
+        this.idRoutineSession = IDENTITY += 1;
+        this.idRoutine = routineSession.getIdRoutine();
+        this.sessionDate = (new GregorianCalendar()).getTime();
+    }
+
     // makes a blank RoutineSession, to be filled later
     public RoutineSession()
     {

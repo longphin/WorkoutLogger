@@ -18,4 +18,7 @@ public interface DataAccessorInterface {
     Exercise getExerciseFromSession(SessionExercise sessionExercise);
     void saveExercise(Exercise exercise);
     SessionExercise createBlankSessionExercise(RoutineSession sessionToAddTo);
+
+    RoutineSession createRoutineSessionCopy(RoutineSession routineSession);
+    void deleteRoutineSession(RoutineSession routineSession);
 }

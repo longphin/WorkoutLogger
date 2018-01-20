@@ -23,40 +23,62 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_icon_note_add_48px" />
 
-    <TextView
-        android:id="@+id/text_routine_name"
+    <EditText
+        android:id="@+id/edittext_routine_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_saveRoutineChanges"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/text_routine_description"
+    <EditText
+        android:id="@+id/edittext_routine_description"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_cancelRoutineChanges"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_routine_name" />
+        app:layout_constraintTop_toBottomOf="@+id/edittext_routine_name" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_exercises"
         android:layout_width="344dp"
-        android:layout_height="353dp"
+        android:layout_height="334dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/floatingButton_add_exercise"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_routine_description" />
+        app:layout_constraintTop_toBottomOf="@+id/edittext_routine_description" />
+
+    <Button
+        android:id="@+id/button_saveRoutineChanges"
+        android:layout_width="88dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:onClick="saveChanges"
+        android:text="@string/text_save"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edittext_routine_name"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/button_cancelRoutineChanges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:onClick="cancelChanges"
+        android:text="@string/text_cancel"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edittext_routine_description"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

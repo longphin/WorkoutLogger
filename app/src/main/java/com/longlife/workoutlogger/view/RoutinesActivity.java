@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.enums.RoutineRequestCode;
 import com.longlife.workoutlogger.model.DataAccessor;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.controller.RoutineController;
@@ -37,12 +38,48 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
         controller = new RoutineController(this, new DataAccessor());
     }
 
+    // go to Routine activity for a result. It creates a new RoutineSession which can be saved or canceled.
     @Override
     public void startRoutineActivity(Routine routine) {
         Intent i = new Intent(this, RoutineActivity.class);
         i.putExtra("Routine", routine);
 
-        startActivity(i);
+        //startActivity(i);
+        startActivityForResult(i, RoutineRequestCode.getRequestRoutine());
+    }
+    // when the Routine activity comes back, determine if the routine session should be saved
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == RoutineRequestCode.getRequestRoutine()){
+            if(resultCode == RESULT_OK)
+            {
+                /*
+                TextView nameTxt = (TextView) findViewById(R.id.text_routine_name);
+                TextView descripTxt = (TextView) findViewById(R.id.text_routine_description);
+
+                int idExerciseToSave = data.getIntExtra("ExerciseId", -1);
+                String nameToSave = data.getStringExtra("ExerciseName");
+                String descripToSave = data.getStringExtra("ExerciseDescription");
+
+                Exercise exerciseToSave = new Exercise(idExerciseToSave, nameToSave, descripToSave);
+
+                controller.saveExercise(exerciseToSave);
+
+                //adapter.notifyDataSetChanged();
+                for(SessionExercise se : sessionExercises)
+                {
+                    if(se.getIdExercise() == idExerciseToSave) {
+                        adapter.notifyItemChanged(se.getDisplayOrder());
+                    }
+                }
+                */
+            }
+            if(resultCode == RESULT_CANCELED)
+            {
+                // do stuff
+            }
+        }
     }
 
     @Override

@@ -15,9 +15,17 @@ public class SessionExercise {
 
     public SessionExercise(RoutineSession routineSession, Exercise exercise)
     {
-        idSessionExercise = IDENTITY += 1;
+        this.idSessionExercise = IDENTITY += 1;
         this.idRoutineSession = routineSession.getIdRoutineSession();
         this.idExercise = exercise.getIdExercise();
+    }
+
+    // copy constructor
+    public SessionExercise(RoutineSession routineSession, SessionExercise sessionExerciseToCopy)
+    {
+        this.idSessionExercise = IDENTITY += 1;
+        this.idRoutineSession = routineSession.getIdRoutineSession();
+        this.idExercise = sessionExerciseToCopy.getIdExercise();
     }
     /*
     public SessionExercise(int idRoutineSession, int idExercise)

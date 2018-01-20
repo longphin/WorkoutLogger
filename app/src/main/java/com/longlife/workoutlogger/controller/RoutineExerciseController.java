@@ -71,4 +71,14 @@ public class RoutineExerciseController {
     {
         return(dataSource.getLatestRoutineSession(routine));
     }
+
+    public RoutineSession createRoutineSessionCopy(RoutineSession routineSession)
+    {
+        return(dataSource.createRoutineSessionCopy(routineSession));
+    }
+
+    public void deleteRoutineSession(RoutineSession routineSession)
+    {
+        dataSource.deleteRoutineSession(routineSession);
+    }
 }
