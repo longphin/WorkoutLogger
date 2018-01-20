@@ -2,7 +2,6 @@ package com.longlife.workoutlogger.controller;
 
 import com.longlife.workoutlogger.model.DataAccessorInterface;
 import com.longlife.workoutlogger.model.Routine;
-import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.view.RoutinesInterface;
 
 /**
@@ -10,10 +9,6 @@ import com.longlife.workoutlogger.view.RoutinesInterface;
  */
 
 public class RoutineController {
-    /*
-    private ViewInterface view;
-    private DataSourceInterface dataSource;
-    */
     private RoutinesInterface view;
     private DataAccessorInterface dataSource;
 
@@ -47,8 +42,14 @@ public class RoutineController {
         );
     }
 
+    public void saveRoutine(Routine routineToSave) {
+        dataSource.saveRoutine(routineToSave);
+    }
+
+    /* // [TODO] remove
     public void deleteRoutineSession(RoutineSession routineSession)
     {
         dataSource.deleteRoutineSession(routineSession);
     }
+    */
 }

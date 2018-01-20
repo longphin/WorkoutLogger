@@ -9,7 +9,7 @@ public class SessionExercise {
     private final int idSessionExercise;
     private final int idRoutineSession;
     private final int idExercise;
-    private int displayOrder; // [TODO] this will updated whenever the exercise item is moved
+    private int displayOrder;
     private int defaultNumberOfSets; // [TODO] this will updated to be the number of sets in the previous session
     private long defaultRestTime; // [TODO] this will be used to give a default rest time
 

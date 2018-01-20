@@ -11,17 +11,27 @@ import java.util.GregorianCalendar;
  */
 
 public class RoutineSession implements Parcelable {
+    public static final Creator<RoutineSession> CREATOR = new Creator<RoutineSession>() {
+        @Override
+        public RoutineSession createFromParcel(Parcel in) {
+            return new RoutineSession(in);
+        }
+
+        @Override
+        public RoutineSession[] newArray(int size) {
+            return new RoutineSession[size];
+        }
+    };
     private static int IDENTITY = 0;
     private final int idRoutineSession;
     private final int idRoutine;
-    private Date sessionDate;
+    private Date sessionDate = (new GregorianCalendar()).getTime();
+    private boolean wasPerformed = false;
 
     public RoutineSession(Routine routine)
     {
         this.idRoutineSession = IDENTITY += 1;
         this.idRoutine = routine.getIdRoutine();
-
-        this.sessionDate = (new GregorianCalendar()).getTime();
     }
 
     // copy constructor
@@ -29,7 +39,6 @@ public class RoutineSession implements Parcelable {
     {
         this.idRoutineSession = IDENTITY += 1;
         this.idRoutine = routineSession.getIdRoutine();
-        this.sessionDate = (new GregorianCalendar()).getTime();
     }
 
     // makes a blank RoutineSession, to be filled later
@@ -45,17 +54,13 @@ public class RoutineSession implements Parcelable {
         this.idRoutine = parcel.readInt();
     }
 
-    public static final Creator<RoutineSession> CREATOR = new Creator<RoutineSession>() {
-        @Override
-        public RoutineSession createFromParcel(Parcel in) {
-            return new RoutineSession(in);
-        }
+    public boolean getWasPerformed() {
+        return wasPerformed;
+    }
 
-        @Override
-        public RoutineSession[] newArray(int size) {
-            return new RoutineSession[size];
-        }
-    };
+    public void setWasPerformed(boolean wasPerformed) {
+        this.wasPerformed = wasPerformed;
+    }
 
     @Override
     public int describeContents() {
@@ -78,5 +83,9 @@ public class RoutineSession implements Parcelable {
 
     public Date getSessionDate() {
         return sessionDate;
+    }
+
+    public void setSessionDate(Date sessionDate) {
+        this.sessionDate = sessionDate;
     }
 }

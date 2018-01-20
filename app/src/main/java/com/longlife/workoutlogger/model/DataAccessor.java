@@ -1,7 +1,6 @@
 package com.longlife.workoutlogger.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -68,28 +67,6 @@ public class DataAccessor implements DataAccessorInterface {
         return(routines);
     }
 
-    /*
-    @Override
-    public int getLatestIdRoutineSession(int idRoutine) {
-        Date latestRoutineDate = new Date();
-        int latestIdRoutineSession = -1;
-
-        for(RoutineSession rs : routineSessions)
-        {
-            if(rs.getIdRoutine() == idRoutine)
-            {
-                if(latestIdRoutineSession == -1 || rs.getSessionDate().after(latestRoutineDate))
-                {
-                    latestRoutineDate = rs.getSessionDate();
-                    latestIdRoutineSession = rs.getIdRoutineSession();
-                }
-            }
-        }
-
-        return(latestIdRoutineSession);
-    }
-    */
-
     @Override
     public RoutineSession getLatestRoutineSession(Routine routine) {
         Date latestRoutineDate = new Date();
@@ -128,9 +105,10 @@ public class DataAccessor implements DataAccessorInterface {
 
     @Override
     public Exercise getExerciseFromSession(SessionExercise sessionExercise) {
+        int idSessionExerciseToFind = sessionExercise.getIdSessionExercise();
         for(SessionExercise se : sessionExercises)
         {
-            if(se.getIdSessionExercise() == sessionExercise.getIdSessionExercise())
+            if (se.getIdSessionExercise() == idSessionExerciseToFind)
             {
                 // now that we found the idSessionExercise, find the exercise
                 for(Exercise exercise : exercises)
@@ -148,23 +126,15 @@ public class DataAccessor implements DataAccessorInterface {
 
     @Override
     public void saveExercise(Exercise exerciseToSave) {
-
+        int idExerciseToSave = exerciseToSave.getIdExercise();
         for(Exercise exercise : exercises)
         {
-            if(exerciseToSave.getIdExercise() == exercise.getIdExercise())
+            if (exercise.getIdExercise() == idExerciseToSave)
             {
                 exercise.setName(exerciseToSave.getName());
                 exercise.setDescription(exerciseToSave.getDescription());
             }
         }
-    }
-
-    @Override
-    public SessionExercise createBlankSessionExercise(RoutineSession sessionToAddTo) {
-        Exercise newExercise = new Exercise("unnamed", "");
-        SessionExercise newSessionExercise = new SessionExercise(sessionToAddTo, newExercise); // [TODO] create a new instance of SessionExercise. Needs Routine and Exercise.
-
-        return(newSessionExercise);
     }
 
     // create a new RoutineSession that will create copies of SessionExercises and Exercise sets as well.
@@ -196,6 +166,7 @@ public class DataAccessor implements DataAccessorInterface {
         return(newRoutineSession);
     }
 
+    /* // [TODO] maybe if adding deleteRoutine(), something like this would be implemented for the whole routine
     @Override
     public void deleteRoutineSession(RoutineSession routineSession) {
         List<Integer> indexesToDrop = new ArrayList<Integer>();
@@ -234,6 +205,16 @@ public class DataAccessor implements DataAccessorInterface {
             routineSessions.remove(indexToDrop);
         }
     }
+    */
 
-
+    @Override
+    public void saveRoutine(Routine routineToSave) {
+        int idRoutineToSave = routineToSave.getIdRoutine();
+        for (Routine routine : routines) {
+            if (routine.getIdRoutine() == idRoutineToSave) {
+                routine.setName(routineToSave.getName());
+                routine.setDescription(routineToSave.getDescription());
+            }
+        }
+    }
 }

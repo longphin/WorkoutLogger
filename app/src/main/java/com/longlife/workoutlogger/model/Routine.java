@@ -8,6 +8,18 @@ import android.os.Parcelable;
  */
 
 public class Routine implements Parcelable {
+    public static final Parcelable.Creator<Routine> CREATOR = new Parcelable.Creator<Routine>() {
+
+        @Override
+        public Routine createFromParcel(Parcel parcel) {
+            return (new Routine(parcel));
+        }
+
+        @Override
+        public Routine[] newArray(int size) {
+            return (new Routine[size]);
+        }
+    };
     private static int IDENTITY = 0;
     private int idRoutine;
     private String name = "new";
@@ -17,6 +29,7 @@ public class Routine implements Parcelable {
     // alternative to DaysOfWeek, the routine may be performed every x days
     private int DaysToNext;
     private boolean IsPremade;
+    private int displayOrder;
 
     public Routine() {
         this.idRoutine = Routine.IDENTITY += 1;
@@ -46,6 +59,14 @@ public class Routine implements Parcelable {
         IsPremade = parcel.readByte() != 0;
     }
 
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(idRoutine);
@@ -53,34 +74,19 @@ public class Routine implements Parcelable {
         parcel.writeString(description);
         parcel.writeByte((byte) (IsPremade ? 1 : 0));
     }
-
-    public static final Parcelable.Creator<Routine> CREATOR = new Parcelable.Creator<Routine>()
-    {
-
-        @Override
-        public Routine createFromParcel(Parcel parcel) {
-            return(new Routine(parcel));
-        }
-
-        @Override
-        public Routine[] newArray(int size) {
-            return(new Routine[size]);
-        }
-    };
     /* end Parcelable definitions */
 
     public String getName() {
         return name;
     }
 
-    public int getIdRoutine() {
-        return idRoutine;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
+    public int getIdRoutine() {
+        return idRoutine;
+    }
 
     public String getDescription() {
         return description;

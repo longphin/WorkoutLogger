@@ -12,10 +12,6 @@ import com.longlife.workoutlogger.view.RoutineExerciseInterface;
  */
 
 public class RoutineExerciseController {
-    /*
-    private ViewInterface view;
-    private DataSourceInterface dataSource;
-    */
     private RoutineExerciseInterface view;
     private DataAccessorInterface dataSource;
 
@@ -60,13 +56,6 @@ public class RoutineExerciseController {
         dataSource.saveExercise(exercise);
     }
 
-    public SessionExercise createBlankSessionExercise(RoutineSession sessionToAddTo) {
-        SessionExercise newSessionExercise = dataSource.createBlankSessionExercise(sessionToAddTo);
-        //view.addNewSessionExercise(sessionToAddTo);
-
-        return(newSessionExercise);
-    }
-
     public RoutineSession getLatestRoutineSession(Routine routine)
     {
         return(dataSource.getLatestRoutineSession(routine));
@@ -77,8 +66,10 @@ public class RoutineExerciseController {
         return(dataSource.createRoutineSessionCopy(routineSession));
     }
 
+    /*
     public void deleteRoutineSession(RoutineSession routineSession)
     {
         dataSource.deleteRoutineSession(routineSession);
     }
+    */
 }

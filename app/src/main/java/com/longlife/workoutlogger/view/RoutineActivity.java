@@ -40,24 +40,30 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routine);
+        TextView idTxt = (TextView) findViewById(R.id.text_idRoutineSession); // [TODO] remove id textbox?
+        TextView nameTxt = (TextView) findViewById(R.id.edittext_routine_name);
+        TextView descripTxt = (TextView) findViewById(R.id.edittext_routine_description);
 
         // get data from Parcelable
         Intent intent = getIntent();
         thisRoutine = intent.getParcelableExtra("Routine");
-
-        TextView nameTxt = (TextView) findViewById(R.id.edittext_routine_name);
-        TextView descripTxt = (TextView) findViewById(R.id.edittext_routine_description);
-
         nameTxt.setText(thisRoutine.getName());
         descripTxt.setText(thisRoutine.getDescription());
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_exercises);
         layoutInflater = getLayoutInflater();
-
         controller = new RoutineExerciseController(this, new DataAccessor(), thisRoutine);
-        // on create, create a new RoutineSession. By default, it will copy the last routine session.
-        thisRoutineSession = controller.createRoutineSessionCopy(controller.getLatestRoutineSession(thisRoutine));//new RoutineSession(controller.getLatestRoutineSession(thisRoutine));
 
+        // Get latest RoutineSession for this Routine.
+        RoutineSession latestRoutineSession = controller.getLatestRoutineSession(thisRoutine);
+        if (!latestRoutineSession.getWasPerformed())
+            // If the latest RoutineSession was not performed, then set it as thisRoutineSession.
+            thisRoutineSession = latestRoutineSession;
+        else
+            // Else, create a copy of the session.
+            thisRoutineSession = controller.createRoutineSessionCopy(latestRoutineSession);//new RoutineSession(controller.getLatestRoutineSession(thisRoutine));
+
+        idTxt.setText(String.valueOf(thisRoutineSession.getIdRoutineSession()));
         FloatingActionButton addExerciseButton = (FloatingActionButton) findViewById(R.id.floatingButton_add_exercise);
         addExerciseButton.setOnClickListener(this);
     }
@@ -81,19 +87,11 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
                 TextView nameTxt = (TextView) findViewById(R.id.edittext_routine_name);
                 TextView descripTxt = (TextView) findViewById(R.id.edittext_routine_description);
 
+                // Get the exercise with its changes. And then save it into the database.
                 Exercise exerciseToSave = data.getParcelableExtra(ExerciseRequestCode.getRequestExercise_OK_Parcel());
-
-                /*
-                int idExerciseToSave = data.getIntExtra("ExerciseId", -1);
-                String nameToSave = data.getStringExtra("ExerciseName");
-                String descripToSave = data.getStringExtra("ExerciseDescription");
-
-                Exercise exerciseToSave = new Exercise(idExerciseToSave, nameToSave, descripToSave);
-                */
-
                 controller.saveExercise(exerciseToSave);
 
-                //adapter.notifyDataSetChanged();
+                // For each Exercise that the changes were applied to, update the fields in the recyclerview.
                 for(SessionExercise se : sessionExercises)
                 {
                     if(se.getIdExercise() == exerciseToSave.getIdExercise()) {
@@ -103,7 +101,6 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
             }
             if(resultCode == RESULT_CANCELED)
             {
-                // do stuff
             }
         }
     }
@@ -114,13 +111,6 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         EditText descripTxt = (EditText) findViewById(R.id.edittext_routine_description);
 
         Intent i = getIntent();
-        /*
-        i.putExtra("ExerciseId", idRoutineSession);
-        */
-        /*
-        i.putExtra("RoutineName", nameTxt.getText().toString());
-        i.putExtra("RoutineDescription", descripTxt.getText().toString());
-        */
         thisRoutine.setName(nameTxt.getText().toString());
         thisRoutine.setDescription(descripTxt.getText().toString());
         i.putExtra(RoutineRequestCode.getRequestRoutine_OK_Parcel(), thisRoutine);
@@ -131,11 +121,13 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
 
     public void cancelChanges(View v)
     {
-        //controller.deleteRoutineSession(thisRoutineSession);
+        /*
         Intent i = getIntent();
         i.putExtra(RoutineRequestCode.getRequestRoutine_Cancel_Parcel(), thisRoutineSession);
 
         setResult(Activity.RESULT_CANCELED, i);
+        */
+        setResult(Activity.RESULT_CANCELED);
         finish();
     }
 
@@ -147,6 +139,7 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         recyclerView.setAdapter(adapter);
     }
 
+    /* [TODO] need to implement these methods when adding a SessionExercise
     @Override
     public void addNewSessionExercise(RoutineSession routineSession) {
         sessionExercises.add(controller.createBlankSessionExercise(routineSession));
@@ -157,14 +150,15 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
 
         recyclerView.smoothScrollToPosition(endPosition);
     }
+    */
 
-    // On click, create a new exercise
+    // [TODO] Need to implement this when adding SessionExercise
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
         if(viewId == R.id.floatingButton_add_exercise)
         {
-            controller.createBlankSessionExercise(thisRoutineSession);
+            //controller.createBlankSessionExercise(thisRoutineSession);
         }
     }
 

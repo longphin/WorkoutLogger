@@ -1,8 +1,8 @@
 package com.longlife.workoutlogger.view;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,11 +12,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.controller.RoutineController;
 import com.longlife.workoutlogger.enums.RoutineRequestCode;
 import com.longlife.workoutlogger.model.DataAccessor;
 import com.longlife.workoutlogger.model.Routine;
-import com.longlife.workoutlogger.controller.RoutineController;
-import com.longlife.workoutlogger.model.RoutineSession;
 
 import java.util.List;
 
@@ -55,33 +54,21 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
         if(requestCode == RoutineRequestCode.getRequestRoutine()){
             if(resultCode == RESULT_OK)
             {
-                /*
-                TextView nameTxt = (TextView) findViewById(R.id.text_routine_name);
-                TextView descripTxt = (TextView) findViewById(R.id.text_routine_description);
+                Routine routineToSave = data.getParcelableExtra(RoutineRequestCode.getRequestRoutine_OK_Parcel());
+                controller.saveRoutine(routineToSave);
 
-                int idExerciseToSave = data.getIntExtra("ExerciseId", -1);
-                String nameToSave = data.getStringExtra("ExerciseName");
-                String descripToSave = data.getStringExtra("ExerciseDescription");
-
-                Exercise exerciseToSave = new Exercise(idExerciseToSave, nameToSave, descripToSave);
-
-                controller.saveExercise(exerciseToSave);
-
-                //adapter.notifyDataSetChanged();
-                for(SessionExercise se : sessionExercises)
+                for (Routine r : routines)
                 {
-                    if(se.getIdExercise() == idExerciseToSave) {
-                        adapter.notifyItemChanged(se.getDisplayOrder());
+                    if (r.getIdRoutine() == routineToSave.getIdRoutine()) {
+                        adapter.notifyItemChanged(r.getDisplayOrder());
                     }
                 }
-                */
             }
             if(resultCode == RESULT_CANCELED)
             {
                 // [TODO] need to debug why deleting the routine session causes an error.
-                RoutineSession routineSession = data.getParcelableExtra(RoutineRequestCode.getRequestRoutine_Cancel_Parcel());
-                controller.deleteRoutineSession(routineSession);
-                // do stuff
+                //RoutineSession routineSession = data.getParcelableExtra(RoutineRequestCode.getRequestRoutine_Cancel_Parcel());
+                //controller.deleteRoutineSession(routineSession);
             }
         }
     }
@@ -139,6 +126,7 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
         public void onBindViewHolder(CustomAdapter.CustomViewHolder holder, int position) {
             //11. and now the ViewHolder data
             Routine currentItem = routines.get(position);
+            currentItem.setDisplayOrder(position);
 
             holder.name.setText(currentItem.getName());
             holder.description.setText(currentItem.getDescription());
