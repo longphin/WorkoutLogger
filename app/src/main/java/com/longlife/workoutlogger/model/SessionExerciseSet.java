@@ -5,14 +5,39 @@ package com.longlife.workoutlogger.model;
  */
 
 public class SessionExerciseSet {
+    private static int IDENTITY = 0;
+    private final int idSessionExerciseSet;
     private final int idSessionExercise;
+    private int displayOrder;
     private int reps;
     private int weights;
     private float rest;
+    private float duration;
 
-    public SessionExerciseSet(int idSessionExercise)
+    public SessionExerciseSet(SessionExercise sessionExercise)
     {
-        this.idSessionExercise = idSessionExercise;
+        this.idSessionExerciseSet = IDENTITY += 1;
+        this.idSessionExercise = sessionExercise.getIdSessionExercise();
+    }
+
+    public int getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
+
+    public int getIdSessionExercise() {
+        return idSessionExercise;
+    }
+
+    public float getDuration() {
+        return duration;
+    }
+
+    public void setDuration(float duration) {
+        this.duration = duration;
     }
 
     public int getReps() {

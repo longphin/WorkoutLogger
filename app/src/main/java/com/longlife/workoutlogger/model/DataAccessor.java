@@ -13,6 +13,7 @@ public class DataAccessor implements DataAccessorInterface {
     private static List<Exercise> exercises;
     private static List<RoutineSession> routineSessions;
     private static List<SessionExercise> sessionExercises;
+    private static List<SessionExerciseSet> sessionExerciseSets;
     private static boolean dataIsCreated = false;
 
     public DataAccessor()
@@ -52,6 +53,19 @@ public class DataAccessor implements DataAccessorInterface {
 
             sessionExercises.add(new SessionExercise(routineSessions.get(2), exercises.get(1)));
             sessionExercises.add(new SessionExercise(routineSessions.get(2), exercises.get(2)));
+
+            sessionExerciseSets = new ArrayList<SessionExerciseSet>();
+            sessionExerciseSets.add(new SessionExerciseSet(sessionExercises.get(0)));
+            sessionExerciseSets.add(new SessionExerciseSet(sessionExercises.get(0)));
+            sessionExerciseSets.add(new SessionExerciseSet(sessionExercises.get(0)));
+            sessionExerciseSets.add(new SessionExerciseSet(sessionExercises.get(1)));
+            sessionExerciseSets.add(new SessionExerciseSet(sessionExercises.get(1)));
+            sessionExerciseSets.add(new SessionExerciseSet(sessionExercises.get(2)));
+
+            sessionExerciseSets.add(new SessionExerciseSet(sessionExercises.get(3)));
+            sessionExerciseSets.add(new SessionExerciseSet(sessionExercises.get(3)));
+            sessionExerciseSets.add(new SessionExerciseSet(sessionExercises.get(3)));
+            sessionExerciseSets.add(new SessionExerciseSet(sessionExercises.get(3)));
 
             dataIsCreated = true;
         }
@@ -216,5 +230,18 @@ public class DataAccessor implements DataAccessorInterface {
                 routine.setDescription(routineToSave.getDescription());
             }
         }
+    }
+
+    @Override
+    public List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise) {
+        List<SessionExerciseSet> exerciseSets = new ArrayList<SessionExerciseSet>();
+
+        int sessionExerciseId = sessionExercise.getIdSessionExercise();
+        for (SessionExerciseSet ses : sessionExerciseSets) {
+            if (ses.getIdSessionExercise() == sessionExerciseId) {
+                exerciseSets.add(ses);
+            }
+        }
+        return (exerciseSets);
     }
 }

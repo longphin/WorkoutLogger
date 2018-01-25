@@ -1,41 +1,28 @@
 package com.longlife.workoutlogger.model;
 
 /**
- * Created by Longphi on 1/4/2018.
+ * All Exercises should extend this class.
  */
 
 abstract class ExerciseAbstract {
+    // Each Exercise will be given an Id.
     final private int idExercise;
-    private int idExerciseShared; // this will be the idExercise for an exercise in the official database
+    // For Exercises that are copies of the shared database, this will be the idExercise from the shared database.
+    private int idExerciseShared;
     private String name = "new";
     private String description = "";
+    // Official Exercises will have this flag as true.
     private boolean IsPremade;
 
-    public ExerciseAbstract(int idExercise, boolean IsPremade)
-    {
+    // Normal constructor.
+    public ExerciseAbstract(int idExercise, boolean IsPremade) {
         this.idExercise = idExercise;
         this.IsPremade = IsPremade;
     }
 
-    public ExerciseAbstract(int idExercise)
-    {
+    // Default constructor for non-premade Exercises.
+    public ExerciseAbstract(int idExercise) {
         this(idExercise, false);
-    }
-
-    public void setIsPremade(boolean premade) {
-        IsPremade = premade;
-    }
-
-    public void setIdExerciseShared(int idExerciseShared) {
-        this.idExerciseShared = idExerciseShared;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public int getIdExercise() {
@@ -47,15 +34,31 @@ abstract class ExerciseAbstract {
         return idExerciseShared;
     }
 
+    public void setIdExerciseShared(int idExerciseShared) {
+        this.idExerciseShared = idExerciseShared;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public boolean getIsPremade() {
         return IsPremade;
+    }
+
+    public void setIsPremade(boolean premade) {
+        IsPremade = premade;
     }
 }

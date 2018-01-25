@@ -12,7 +12,7 @@ import java.util.List;
 public interface RoutineExerciseInterface {
     void startExerciseActivity(Exercise exercise);
 
-    void setUpAdapterAndView(List<SessionExercise> sessionExercises);
+    void setSessionExercises(List<SessionExercise> sessionExercises);
 
     //void addNewSessionExercise(RoutineSession routineSession); // [TODO] add back in when adding add Session Exercise button
 }

@@ -5,7 +5,10 @@ import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.view.RoutineExerciseInterface;
+
+import java.util.List;
 
 /**
  * Created by Longphi on 1/6/2018.
@@ -41,7 +44,7 @@ public class RoutineExerciseController {
      * mainThread (UI Thread). See my full projects for examples of this.
      */
     public void getExercisesFromDataSource(RoutineSession routineSession){
-        view.setUpAdapterAndView(
+        view.setSessionExercises(
                 dataSource.getSessionExercises(routineSession)
         );
     }
@@ -64,6 +67,10 @@ public class RoutineExerciseController {
     public RoutineSession createRoutineSessionCopy(RoutineSession routineSession)
     {
         return(dataSource.createRoutineSessionCopy(routineSession));
+    }
+
+    public List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise) {
+        return (dataSource.getSessionExerciseSets(sessionExercise));
     }
 
     /*

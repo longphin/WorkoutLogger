@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.adapters.CustomExerciseAdapter;
 import com.longlife.workoutlogger.controller.RoutineExerciseController;
 import com.longlife.workoutlogger.enums.ExerciseRequestCode;
 import com.longlife.workoutlogger.enums.RoutineRequestCode;
@@ -23,14 +25,16 @@ import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.model.SessionExerciseSet;
 
 import java.util.List;
 
 public class RoutineActivity extends AppCompatActivity implements RoutineExerciseInterface, View.OnClickListener{
     private LayoutInflater layoutInflater;
     private RecyclerView recyclerView;
-    private CustomAdapter adapter;
-    private RoutineExerciseController controller;
+    //private CustomAdapter adapter;
+    private CustomExerciseAdapter adapter;
+    private RoutineExerciseController routineExerciseController;
 
     private List<SessionExercise> sessionExercises;
     private Routine thisRoutine;
@@ -43,6 +47,7 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         TextView idTxt = (TextView) findViewById(R.id.text_idRoutineSession); // [TODO] remove id textbox?
         TextView nameTxt = (TextView) findViewById(R.id.edittext_routine_name);
         TextView descripTxt = (TextView) findViewById(R.id.edittext_routine_description);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_exercises);
 
         // get data from Parcelable
         Intent intent = getIntent();
@@ -50,18 +55,23 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         nameTxt.setText(thisRoutine.getName());
         descripTxt.setText(thisRoutine.getDescription());
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_exercises);
+        // Set up routineExerciseController.
+        routineExerciseController = new RoutineExerciseController(this, new DataAccessor(), thisRoutine);
+
+        // Set up adapter.
         layoutInflater = getLayoutInflater();
-        controller = new RoutineExerciseController(this, new DataAccessor(), thisRoutine);
+        adapter = new CustomExerciseAdapter(getApplicationContext(), sessionExercises, routineExerciseController);//new CustomAdapter(getApplicationContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         // Get latest RoutineSession for this Routine.
-        RoutineSession latestRoutineSession = controller.getLatestRoutineSession(thisRoutine);
+        RoutineSession latestRoutineSession = routineExerciseController.getLatestRoutineSession(thisRoutine);
         if (!latestRoutineSession.getWasPerformed())
             // If the latest RoutineSession was not performed, then set it as thisRoutineSession.
             thisRoutineSession = latestRoutineSession;
         else
             // Else, create a copy of the session.
-            thisRoutineSession = controller.createRoutineSessionCopy(latestRoutineSession);//new RoutineSession(controller.getLatestRoutineSession(thisRoutine));
+            thisRoutineSession = routineExerciseController.createRoutineSessionCopy(latestRoutineSession);
 
         idTxt.setText(String.valueOf(thisRoutineSession.getIdRoutineSession()));
         FloatingActionButton addExerciseButton = (FloatingActionButton) findViewById(R.id.floatingButton_add_exercise);
@@ -89,7 +99,7 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
 
                 // Get the exercise with its changes. And then save it into the database.
                 Exercise exerciseToSave = data.getParcelableExtra(ExerciseRequestCode.getRequestExercise_OK_Parcel());
-                controller.saveExercise(exerciseToSave);
+                routineExerciseController.saveExercise(exerciseToSave);
 
                 // For each Exercise that the changes were applied to, update the fields in the recyclerview.
                 for(SessionExercise se : sessionExercises)
@@ -132,17 +142,18 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
     }
 
     @Override
-    public void setUpAdapterAndView(List<SessionExercise> sessionExercises) {
+    public void setSessionExercises(List<SessionExercise> sessionExercises) {
         this.sessionExercises = sessionExercises;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CustomAdapter();
-        recyclerView.setAdapter(adapter);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //adapter = new CustomExerciseAdapter(getApplicationContext(), sessionExercises, routineExerciseController);//new CustomAdapter(getApplicationContext());
+        //recyclerView.setAdapter(adapter);
     }
 
     /* [TODO] need to implement these methods when adding a SessionExercise
     @Override
     public void addNewSessionExercise(RoutineSession routineSession) {
-        sessionExercises.add(controller.createBlankSessionExercise(routineSession));
+        sessionExercises.add(routineExerciseController.createBlankSessionExercise(routineSession));
 
         // notify adapter
         int endPosition = sessionExercises.size()-1;
@@ -158,7 +169,7 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         int viewId = v.getId();
         if(viewId == R.id.floatingButton_add_exercise)
         {
-            //controller.createBlankSessionExercise(thisRoutineSession);
+            //routineExerciseController.createBlankSessionExercise(thisRoutineSession);
         }
     }
 
@@ -178,7 +189,13 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
      * That being said, you don't *have* to nest the Adapter. Do what makes sense for the Software
      * Architecture in front of you.
      */
+
     private class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomViewHolder> {//6
+        private Context context;
+
+        public CustomAdapter(Context context) {
+            this.context = context;
+        }
 
         /**
          * 13.
@@ -205,13 +222,19 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
          */
         @Override
         public void onBindViewHolder(CustomAdapter.CustomViewHolder holder, int position) {
-            //11. and now the ViewHolder data
-            SessionExercise currentItem = sessionExercises.get(position);
-            currentItem.setDisplayOrder(position);
+            SessionExercise currentItem = sessionExercises.get(holder.getAdapterPosition());//position);
+            currentItem.setDisplayOrder(holder.getAdapterPosition());
 
-            Exercise currentExercise = controller.getExerciseFromSession(currentItem);
+            Exercise currentExercise = routineExerciseController.getExerciseFromSession(currentItem);
             holder.name.setText(currentExercise.getName());
             holder.description.setText(currentExercise.getDescription());
+
+            //CustomLinearLayoutManager llnsub = new CustomLinearLayoutManager(context);
+            //LinearLayoutManager llnsub = new LinearLayoutManager(context); // temp
+            //holder.recyclerView.setLayoutManager(llnsub); // temp
+            // create sub adapter for sets
+            // CustomAdapterSub newsubadapter = new CustomAdapterSub(currentItem);  // temp
+            // holder.recyclerView.setAdapter(newsubadapter);  // temp
         }
 
         /**
@@ -231,8 +254,7 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
          * Each ViewHolder contains Bindings to the Views we wish to populate with Data.
          */
         class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-            //10. now that we've made our layouts, let's bind them
+            public RecyclerView recyclerView;
             private ViewGroup container;
             private TextView name;
             private TextView description;
@@ -275,13 +297,81 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
                 {
                     SessionExercise sessionExercise = sessionExercises.get(this.getAdapterPosition());
 
-                    Exercise selectedExercise = controller.getExerciseFromSession(sessionExercise);
+                    Exercise selectedExercise = routineExerciseController.getExerciseFromSession(sessionExercise);
 
-                    controller.onExerciseClick(
+                    routineExerciseController.onExerciseClick(
                             selectedExercise
                     );
                 } else {
                     //Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        // [TODO] need to figure out a way to list the Sets per Exercise. Do we have to make a separate CustomAdapter?
+        private class CustomAdapterSub extends RecyclerView.Adapter<RoutineActivity.CustomAdapter.CustomAdapterSub.CustomViewHolder> {
+            private TextView subDescription;
+            private List<SessionExerciseSet> sessionExerciseSets;
+
+            public CustomAdapterSub(SessionExercise sessionExercise) {
+                sessionExerciseSets = routineExerciseController.getSessionExerciseSets(sessionExercise);
+            }
+
+            @Override
+            public RoutineActivity.CustomAdapter.CustomAdapterSub.CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View v = layoutInflater.inflate(R.layout.activity_exercise_set, parent, false);
+                return new RoutineActivity.CustomAdapter.CustomAdapterSub.CustomViewHolder(v);
+            }
+
+            @Override
+            public void onBindViewHolder(RoutineActivity.CustomAdapter.CustomAdapterSub.CustomViewHolder holder, int position) {
+                SessionExerciseSet currentItem = sessionExerciseSets.get(holder.getAdapterPosition());
+                currentItem.setDisplayOrder(holder.getAdapterPosition());
+                /*
+                holder.name.setText(currentItem.getName());
+                holder.description.setText(currentItem.getDescription());
+                */
+            }
+
+            @Override
+            public int getItemCount() {
+                return sessionExercises.size();
+            }
+
+            class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+                //10. now that we've made our layouts, let's bind them
+                private TextView previousSet;
+                private EditText rep;
+                private EditText weight;
+
+                public CustomViewHolder(View itemView) {
+                    super(itemView);
+
+                    this.previousSet = (TextView) itemView.findViewById(R.id.text_exerciseSet_previous);
+                    this.rep = (EditText) itemView.findViewById(R.id.editText_exerciseSet_rep);
+                    this.weight = (EditText) itemView.findViewById(R.id.editText_exerciseSet_weight);
+
+                    //itemView.setOnClickListener(this);
+                    //editExercise.setOnClickListener(this);
+                }
+
+                @Override
+                public void onClick(View v) {
+                    /*
+                    if(v.getId()== editExercise.getId())
+                    {
+                        SessionExercise sessionExercise = sessionExercises.get(this.getAdapterPosition());
+
+                        Exercise selectedExercise = routineExerciseController.getExerciseFromSession(sessionExercise);
+
+                        routineExerciseController.onExerciseClick(
+                                selectedExercise
+                        );
+                    } else {
+                        //Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                    }
+                    */
                 }
             }
         }

@@ -4,10 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Longphi on 1/3/2018.
+ * This will be the Routine object.
  */
 
 public class Routine implements Parcelable {
+    // For Parcel.
     public static final Parcelable.Creator<Routine> CREATOR = new Parcelable.Creator<Routine>() {
 
         @Override
@@ -20,26 +21,42 @@ public class Routine implements Parcelable {
             return (new Routine[size]);
         }
     };
+    // Incremented value to ensure each Routine gets a unique Id.
     private static int IDENTITY = 0;
     private int idRoutine;
     private String name = "new";
     private String description = "";
-    // true when the routine is to be performed on certain days
+    // For each day of the week, a true value indicates that the Routine will be performed on that day.
     private boolean[] DaysOfWeek = new boolean[7];
-    // alternative to DaysOfWeek, the routine may be performed every x days
+    // Alternative to DaysOfWeek, the Routine may be performed every "x" days
     private int DaysToNext;
+    // Flag to indicate if the Routine is premade.
     private boolean IsPremade;
+    // Order that the Routine is displayed in RoutinesActivity.
     private int displayOrder;
 
+    /**
+     * Constructor that only sets the Id.
+     */
     public Routine() {
         this.idRoutine = Routine.IDENTITY += 1;
     }
 
-    public Routine(String name, String description)
-    {
+    /**
+     * Constructor for non-premade Routines.
+     *
+     * @param name
+     * @param description
+     */
+    public Routine(String name, String description) {
         this(name, description, false);
     }
 
+    /** Constructor with a chosen IsPremade flag.
+     * @param name
+     * @param description
+     * @param IsPremade
+     */
     public Routine(String name, String description, boolean IsPremade) {
 
         this.idRoutine = Routine.IDENTITY += 1;
@@ -48,25 +65,31 @@ public class Routine implements Parcelable {
         this.IsPremade = IsPremade;
     }
 
-    /*
-    * Definitions for Parcelable
+    /** Constructor for Parcel.
+     * @param parcel
      */
-    public Routine(Parcel parcel)
-    {
+    public Routine(Parcel parcel) {
         idRoutine = parcel.readInt();
         name = parcel.readString();
         description = parcel.readString();
         IsPremade = parcel.readByte() != 0;
     }
 
+    /** Display order for the Routine.
+     * @return int
+     */
     public int getDisplayOrder() {
         return displayOrder;
     }
 
+    /** Set display order for the Routine.
+     * @param displayOrder
+     */
     public void setDisplayOrder(int displayOrder) {
         this.displayOrder = displayOrder;
     }
 
+    // For Parcel.
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(idRoutine);
@@ -74,7 +97,6 @@ public class Routine implements Parcelable {
         parcel.writeString(description);
         parcel.writeByte((byte) (IsPremade ? 1 : 0));
     }
-    /* end Parcelable definitions */
 
     public String getName() {
         return name;
@@ -96,6 +118,7 @@ public class Routine implements Parcelable {
         this.description = description;
     }
 
+    // For Parcel.
     @Override
     public int describeContents() {
         return 0;

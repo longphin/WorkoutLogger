@@ -2,7 +2,11 @@ package com.longlife.workoutlogger.controller;
 
 import com.longlife.workoutlogger.model.DataAccessorInterface;
 import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.view.RoutinesInterface;
+
+import java.util.List;
 
 /**
  * Created by Longphi on 1/6/2018.
@@ -46,6 +50,9 @@ public class RoutineController {
         dataSource.saveRoutine(routineToSave);
     }
 
+    public List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise) {
+        return (dataSource.getSessionExerciseSets(sessionExercise));
+    }
     /* // [TODO] remove
     public void deleteRoutineSession(RoutineSession routineSession)
     {

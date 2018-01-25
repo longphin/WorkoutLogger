@@ -27,14 +27,6 @@ public class SessionExercise {
         this.idRoutineSession = routineSession.getIdRoutineSession();
         this.idExercise = sessionExerciseToCopy.getIdExercise();
     }
-    /*
-    public SessionExercise(int idRoutineSession, int idExercise)
-    {
-        idSessionExercise = IDENTITY += 1;
-        this.idRoutineSession = idRoutineSession;
-        this.idExercise = idExercise;
-    }
-    */
 
     public int getDisplayOrder() {
         return displayOrder;
