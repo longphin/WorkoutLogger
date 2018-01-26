@@ -9,61 +9,54 @@
 
     <TextView
         android:id="@+id/text_exerciseListItem_description"
-        android:layout_width="179dp"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="4dp"
         android:ellipsize="end"
         android:text="An exercise"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/list_sets"
         app:layout_constraintEnd_toStartOf="@+id/button_editExercise"
-        app:layout_constraintStart_toEndOf="@+id/imv_icon"
         app:layout_constraintTop_toBottomOf="@+id/text_exerciseListItem_name" />
 
     <TextView
         android:id="@+id/text_exerciseListItem_name"
         android:layout_width="0dp"
         android:layout_height="12dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
         android:text="Last Performed on 10/10/2010"
         android:textColor="@color/subheaderText"
         android:textSize="10sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imv_icon"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imv_icon"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/exercise_48dp_xhdpi" />
 
     <Button
         android:id="@+id/button_editExercise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/text_EditExercise"
-        app:layout_constraintBottom_toTopOf="@+id/list_sets"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView
+    <ImageView
+        android:id="@+id/image_exerciseListItem_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/exercise_48dp_xhdpi" />
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/list_sets"
         android:layout_width="344dp"
-        android:layout_height="435dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_exerciseListItem_description" />
 
 </android.support.constraint.ConstraintLayout>

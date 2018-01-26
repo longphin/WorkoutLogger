@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.SessionExercise;
 
 import java.util.List;
-
 /**
  * This adapter is used to show the Exercise list item on the RoutinesActivity.
  */
@@ -22,13 +22,14 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
     private Context context;
     private List<SessionExercise> sessionExercises;
     private RoutineExerciseController routineExerciseController;
+    private CustomExerciseSetAdapter setAdapter;
 
+    //private RecyclerView recyclerView;
     public CustomExerciseAdapter(Context context, List<SessionExercise> sessionExercises, RoutineExerciseController routineExerciseController) {
         this.context = context;
         this.sessionExercises = sessionExercises;
         this.routineExerciseController = routineExerciseController;
     }
-
     /**
      * 13.
      * Inflates a new View (in this case, R.layout.item_data), and then creates/returns a new
@@ -43,7 +44,6 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
         View v = LayoutInflater.from(context).inflate(R.layout.activity_exercise_list_item, parent, false);
         return new CustomViewHolder(v);
     }
-
     /**
      * This method "Binds" or assigns Data (from listOfData) to each View (ViewHolder).
      *
@@ -56,11 +56,14 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
     public void onBindViewHolder(CustomExerciseAdapter.CustomViewHolder holder, int position) {
         SessionExercise currentItem = sessionExercises.get(holder.getAdapterPosition());//position);
         currentItem.setDisplayOrder(holder.getAdapterPosition());
-
         Exercise currentExercise = routineExerciseController.getExerciseFromSession(currentItem);
         holder.name.setText(currentExercise.getName());
         holder.description.setText(currentExercise.getDescription());
 
+        // set up adapter for set recycler view
+        setAdapter = new CustomExerciseSetAdapter(context, routineExerciseController.getSessionExerciseSets(currentItem));
+        holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        holder.recyclerView.setAdapter(setAdapter);
         //CustomLinearLayoutManager llnsub = new CustomLinearLayoutManager(context);
         //LinearLayoutManager llnsub = new LinearLayoutManager(context); // temp
         //holder.recyclerView.setLayoutManager(llnsub); // temp
@@ -68,7 +71,6 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
         // CustomAdapterSub newsubadapter = new CustomAdapterSub(currentItem);  // temp
         // holder.recyclerView.setAdapter(newsubadapter);  // temp
     }
-
     /**
      * This method let's our Adapter determine how many ViewHolders it needs to create, based on
      * the size of the Dataset (List) which it is working with.
@@ -80,7 +82,6 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
         // 12. Returning 0 here will tell our Adapter not to make any Items. Let's fix that.
         return sessionExercises.size();
     }
-
     /**
      * 5.
      * Each ViewHolder contains Bindings to the Views we wish to populate with Data.
@@ -91,15 +92,13 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
         private TextView name;
         private TextView description;
         private Button editExercise;
-
         public CustomViewHolder(View itemView) {
             super(itemView);
-
             this.container = (ViewGroup) itemView.findViewById(R.id.root_exerciseListItem);
             this.name = (TextView) itemView.findViewById(R.id.text_exerciseListItem_name);
             this.description = (TextView) itemView.findViewById(R.id.text_exerciseListItem_description);
             this.editExercise = (Button) itemView.findViewById(R.id.button_editExercise);
-
+            this.recyclerView = (RecyclerView) itemView.findViewById(R.id.list_sets);
                 /*
                 We can pass "this" as an Argument, because "this", which refers to the Current
                 Instance of type CustomViewHolder currently conforms to (implements) the
@@ -111,7 +110,6 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
             itemView.setOnClickListener(this);
             editExercise.setOnClickListener(this);
         }
-
         /**
          * 6.
          * Since I'm ok with the whole Container being the Listener, View v isn't super useful
@@ -127,9 +125,7 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
             //ViewHolder (this) in the Adapter. This is how we get the correct Data.
             if (v.getId() == editExercise.getId()) {
                 SessionExercise sessionExercise = sessionExercises.get(this.getAdapterPosition());
-
                 Exercise selectedExercise = routineExerciseController.getExerciseFromSession(sessionExercise);
-
                 routineExerciseController.onExerciseClick(
                         selectedExercise
                 );
@@ -139,4 +135,3 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
         }
     }
 }
-

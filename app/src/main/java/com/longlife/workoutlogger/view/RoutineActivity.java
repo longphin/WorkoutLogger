@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
+import com.longlife.workoutlogger.utils.CustomLinearLayoutManager;
 
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         // Set up adapter.
         layoutInflater = getLayoutInflater();
         adapter = new CustomExerciseAdapter(getApplicationContext(), sessionExercises, routineExerciseController);//new CustomAdapter(getApplicationContext());
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new CustomLinearLayoutManager(this));//(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
         // Get latest RoutineSession for this Routine.
