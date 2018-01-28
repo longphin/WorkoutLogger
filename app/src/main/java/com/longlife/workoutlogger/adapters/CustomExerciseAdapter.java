@@ -23,7 +23,6 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
     private List<SessionExercise> sessionExercises;
     private RoutineExerciseController routineExerciseController;
     private CustomExerciseSetAdapter setAdapter;
-
     //private RecyclerView recyclerView;
     public CustomExerciseAdapter(Context context, List<SessionExercise> sessionExercises, RoutineExerciseController routineExerciseController) {
         this.context = context;

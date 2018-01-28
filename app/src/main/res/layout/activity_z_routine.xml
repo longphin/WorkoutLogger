@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.longlife.workoutlogger.view.zRoutineActivity">
+
+    <ExpandableListView
+        android:id="@+id/expRecycler_exercises"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/colorTransparentBlack"
+        android:dividerHeight="2dp"
+        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft" />
+</RelativeLayout>

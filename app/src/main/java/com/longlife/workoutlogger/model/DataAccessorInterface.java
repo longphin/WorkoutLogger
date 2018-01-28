@@ -1,5 +1,6 @@
 package com.longlife.workoutlogger.model;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -55,6 +56,14 @@ public interface DataAccessorInterface {
      * @param routineToSave
      */
     void saveRoutine(Routine routineToSave);
+
+    /**
+     * Get the sessionExerciseSetHash.
+     *
+     * @param Hash map of <idSessionExercise, List<SessionExerciseSet>>
+     * @return
+     */
+    HashMap<Integer, List<SessionExerciseSet>> getSessionExerciseSetHash();
 
     List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise);
     //void deleteRoutineSession(RoutineSession routineSession); // [TODO] remove

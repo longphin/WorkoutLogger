@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.controller.RoutineController;
 import com.longlife.workoutlogger.enums.RoutineRequestCode;
-import com.longlife.workoutlogger.model.DataAccessor;
 import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.z_DataAccessor;
 
 import java.util.List;
 
@@ -35,13 +35,14 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
         recyclerView = (RecyclerView) findViewById(R.id.recycler_premaderoutines);
         layoutInflater = getLayoutInflater();
 
-        controller = new RoutineController(this, new DataAccessor());
+        controller = new RoutineController(this, new z_DataAccessor());
     }
 
     // go to Routine activity for a result. It creates a new RoutineSession which can be saved or canceled.
     @Override
     public void startRoutineActivity(Routine routine) {
-        Intent i = new Intent(this, RoutineActivity.class);
+        //Intent i = new Intent(this, RoutineActivity.class);
+        Intent i = new Intent(this, zRoutineActivity.class);
         i.putExtra("Routine", routine);
 
         //startActivity(i);
@@ -140,6 +141,7 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
          */
         @Override
         public int getItemCount() {
+            if (routines == null) return (0);
             // 12. Returning 0 here will tell our Adapter not to make any Items. Let's fix that.
             return routines.size();
         }

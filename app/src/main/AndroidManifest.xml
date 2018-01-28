@@ -60,7 +60,10 @@
         <activity android:name=".view.RoutineListItemActivity" />
         <activity android:name=".view.ExerciseActivity" />
         <activity android:name=".view.ExerciseListItemActivity" />
-        <activity android:name=".view.ExerciseSetActivity"></activity>
+        <activity android:name=".view.ExerciseSetActivity" />
+        <activity android:name=".view.zRoutineActivity" />
+        <activity android:name=".view.zExerciseListItemActivity" />
+        <activity android:name=".view.zSetListItemActivity"></activity>
     </application>
 
 </manifest>

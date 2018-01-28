@@ -41,7 +41,9 @@ public class RoutineSession implements Parcelable {
         this.idRoutine = routineSession.getIdRoutine();
     }
 
-    // makes a blank RoutineSession, to be filled later
+    /**
+     * Makes a blank RoutineSession, to be filled later.
+     */
     public RoutineSession()
     {
         this.idRoutineSession = -1;

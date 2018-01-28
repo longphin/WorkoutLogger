@@ -16,6 +16,16 @@ public class SessionExerciseSet {
         this.idSessionExerciseSet = IDENTITY += 1;
         this.idSessionExercise = sessionExercise.getIdSessionExercise();
     }
+
+    public SessionExerciseSet(SessionExerciseSet sessionExerciseSetToCopy) {
+        this.idSessionExerciseSet = IDENTITY += 1;
+        this.idSessionExercise = sessionExerciseSetToCopy.getIdSessionExercise();
+    }
+
+    public int getIdSessionExerciseSet() {
+        return idSessionExerciseSet;
+    }
+
     public int getDisplayOrder() {
         return displayOrder;
     }

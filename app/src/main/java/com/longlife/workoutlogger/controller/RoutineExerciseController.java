@@ -79,4 +79,10 @@ public class RoutineExerciseController {
         dataSource.deleteRoutineSession(routineSession);
     }
     */
+    /*
+    private static HashMap<Integer, List<RoutineSession>> routineSessionHash; // <idRoutine, List<RoutineSession>>
+    private static HashMap<Integer, List<SessionExercise>> sessionExerciseHash; // <idRoutineSession, List<SessionExercise>>
+    private static HashMap<Integer, List<SessionExerciseSet>> sessionExerciseSetHash; // <idSessionExercise, List<SessionExerciseSet>>
+
+     */
 }

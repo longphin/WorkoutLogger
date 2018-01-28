@@ -61,7 +61,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_exercises"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="110dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toTopOf="@+id/floatingButton_add_exercise"
