@@ -19,12 +19,12 @@ import com.longlife.workoutlogger.adapters.CustomExerciseAdapter;
 import com.longlife.workoutlogger.controller.RoutineExerciseController;
 import com.longlife.workoutlogger.enums.ExerciseRequestCode;
 import com.longlife.workoutlogger.enums.RoutineRequestCode;
-import com.longlife.workoutlogger.model.DataAccessor;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
+import com.longlife.workoutlogger.model.z_DataAccessor;
 import com.longlife.workoutlogger.utils.CustomLinearLayoutManager;
 
 import java.util.List;
@@ -44,7 +44,6 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routine);
-        TextView idTxt = (TextView) findViewById(R.id.text_idRoutineSession); // [TODO] remove id textbox?
         TextView nameTxt = (TextView) findViewById(R.id.edittext_routine_name);
         TextView descripTxt = (TextView) findViewById(R.id.edittext_routine_description);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_exercises);
@@ -56,7 +55,7 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
         descripTxt.setText(thisRoutine.getDescription());
 
         // Set up routineExerciseController.
-        routineExerciseController = new RoutineExerciseController(this, new DataAccessor(), thisRoutine);
+        routineExerciseController = new RoutineExerciseController(this, z_DataAccessor.getInstance(), thisRoutine);
 
         // Set up adapter.
         layoutInflater = getLayoutInflater();
@@ -73,7 +72,6 @@ public class RoutineActivity extends AppCompatActivity implements RoutineExercis
             // Else, create a copy of the session.
             thisRoutineSession = routineExerciseController.createRoutineSessionCopy(latestRoutineSession);
 
-        idTxt.setText(String.valueOf(thisRoutineSession.getIdRoutineSession()));
         FloatingActionButton addExerciseButton = (FloatingActionButton) findViewById(R.id.floatingButton_add_exercise);
         addExerciseButton.setOnClickListener(this);
     }

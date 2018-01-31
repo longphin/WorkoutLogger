@@ -15,31 +15,23 @@ public class z_DataAccessor implements DataAccessorInterface {
     //private static List<RoutineSession> routineSessions;
     //private static List<SessionExercise> sessionExercises;
     //private static List<SessionExerciseSet> sessionExerciseSets;
-    private static boolean dataIsCreated = false;
     // hashmaps
     private static HashMap<Integer, List<RoutineSession>> routineSessionHash = new HashMap<>(); // <idRoutine, List<RoutineSession>>
     private static HashMap<Integer, List<SessionExercise>> sessionExerciseHash = new HashMap(); // <idRoutineSession, List<SessionExercise>>
     private static HashMap<Integer, List<SessionExerciseSet>> sessionExerciseSetHash = new HashMap(); // <idSessionExercise, List<SessionExerciseSet>>
 
-    public z_DataAccessor() {
-        if (!dataIsCreated) {
+    private z_DataAccessor() {
             // sample routines
             routines = new ArrayList<Routine>();
-            routines.add(new Routine("routine1", "1st routine", true));
-            routines.add(new Routine("routine2", "2nd routine", true));
-            routines.add(new Routine("routine3", "3rd routine", true));
-            routines.add(new Routine("routine4", "4th routine", true));
-            routines.add(new Routine("routine5", "5th routine", true));
-            routines.add(new Routine("routine6", "6th routine", true));
-            routines.add(new Routine("routine7", "7th routine", true));
-            routines.add(new Routine("routine8", "8th routine", true));
-            routines.add(new Routine("routine9", "9th routine", true));
+        for (int i = 0; i < 9; i++) {
+            routines.add(new Routine("routine " + String.valueOf(i) + " name", "routine " + String.valueOf(i) + " description", true));
+        }
 
             // sample exercises
             exercises = new ArrayList<Exercise>();
-            exercises.add(new Exercise("exercise1", "1st exercise", true));
-            exercises.add(new Exercise("exercise2", "2nd exercise", true));
-            exercises.add(new Exercise("exercise3", "3rd exercise", true));
+        for (int i = 0; i < 9; i++) {
+            exercises.add(new Exercise("exercise " + String.valueOf(i) + " name", "exercise " + String.valueOf(i) + " description", true));
+        }
 
             // routineSessionHash
             AddToRoutineSessionHash(routines.get(0));
@@ -56,6 +48,25 @@ public class z_DataAccessor implements DataAccessorInterface {
             AddToSessionExerciseSetHash(addedSessionExercise);
             addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(1));
             AddToSessionExerciseSetHash(addedSessionExercise);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(2));
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(3));
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(4));
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(5));
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(6));
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(7));
+        AddToSessionExerciseSetHash(addedSessionExercise);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(8));
 
             // routine 2
             addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(2));
@@ -76,34 +87,10 @@ public class z_DataAccessor implements DataAccessorInterface {
 
             // routine 4
             addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(3)), exercises.get(0));
+    }
 
-            /*
-            // sessionExerciseHash
-            AddToSessionExerciseHash(routineSessions.get(0), exercises.get(0));
-            AddToSessionExerciseHash(routineSessions.get(0), exercises.get(1));
-            AddToSessionExerciseHash(routineSessions.get(0), exercises.get(0));
-
-            AddToSessionExerciseHash(routineSessions.get(1), exercises.get(0));
-
-            AddToSessionExerciseHash(routineSessions.get(2), exercises.get(1));
-            AddToSessionExerciseHash(routineSessions.get(2), exercises.get(2));
-
-            // sessionExerciseSetHash
-            AddToSessionExerciseSetHash(sessionExercises.get(0));
-            AddToSessionExerciseSetHash(sessionExercises.get(0));
-            AddToSessionExerciseSetHash(sessionExercises.get(0));
-            AddToSessionExerciseSetHash(sessionExercises.get(1));
-            AddToSessionExerciseSetHash(sessionExercises.get(1));
-            AddToSessionExerciseSetHash(sessionExercises.get(2));
-
-            AddToSessionExerciseSetHash(sessionExercises.get(3));
-            AddToSessionExerciseSetHash(sessionExercises.get(3));
-            AddToSessionExerciseSetHash(sessionExercises.get(3));
-            AddToSessionExerciseSetHash(sessionExercises.get(3));
-            */
-
-            dataIsCreated = true;
-        }
+    public static z_DataAccessor getInstance() {
+        return DataAccessorHelper.INSTANCE;
     }
 
     private void AddToRoutineSessionHash(Routine routineToAdd) {
@@ -203,7 +190,7 @@ public class z_DataAccessor implements DataAccessorInterface {
         return (latestRoutineSession);
     }
 
-    // [TODO] make this an overloaded function instead the interace
+    @Override
     public RoutineSession getOrCreateLatestRoutineSession(Routine routine) {
         Date latestRoutineDate = new Date();
         int latestIdRoutineSession = -1;
@@ -284,6 +271,17 @@ public class z_DataAccessor implements DataAccessorInterface {
         return (newRoutineSession);
     }
 
+    @Override
+    public void saveRoutine(Routine routineToSave) {
+        int idRoutineToSave = routineToSave.getIdRoutine();
+        for (Routine routine : routines) {
+            if (routine.getIdRoutine() == idRoutineToSave) {
+                routine.setName(routineToSave.getName());
+                routine.setDescription(routineToSave.getDescription());
+            }
+        }
+    }
+
     /* // [TODO] maybe if adding deleteRoutine(), something like this would be implemented for the whole routine
     @Override
     public void deleteRoutineSession(RoutineSession routineSession) {
@@ -326,17 +324,6 @@ public class z_DataAccessor implements DataAccessorInterface {
     */
 
     @Override
-    public void saveRoutine(Routine routineToSave) {
-        int idRoutineToSave = routineToSave.getIdRoutine();
-        for (Routine routine : routines) {
-            if (routine.getIdRoutine() == idRoutineToSave) {
-                routine.setName(routineToSave.getName());
-                routine.setDescription(routineToSave.getDescription());
-            }
-        }
-    }
-
-    @Override
     public HashMap<Integer, List<SessionExerciseSet>> getSessionExerciseSetHash() {
         return (sessionExerciseSetHash);
     }
@@ -344,5 +331,9 @@ public class z_DataAccessor implements DataAccessorInterface {
     @Override
     public List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise) {
         return (sessionExerciseSetHash.get(sessionExercise.getIdSessionExercise()));
+    }
+
+    private static class DataAccessorHelper {
+        private static final z_DataAccessor INSTANCE = new z_DataAccessor();
     }
 }

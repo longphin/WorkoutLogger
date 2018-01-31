@@ -58,14 +58,14 @@ public class ExpandableExerciseListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getGroupId(int i) {
-        //return(sessionExercises.get(i).getIdSessionExercise());
-        return (i);
+        return (sessionExercises.get(i).getIdSessionExercise());
+        //return (i);
     }
 
     @Override
     public long getChildId(int i, int i1) {
-        //return(sessionExerciseSetHash.get(sessionExercises.get(i).getIdSessionExercise()).get(i1).getIdSessionExerciseSet());
-        return (i1);
+        return (sessionExerciseSetHash.get(sessionExercises.get(i).getIdSessionExercise()).get(i1).getIdSessionExerciseSet());
+        //return (i1);
     }
 
     @Override
@@ -103,6 +103,6 @@ public class ExpandableExerciseListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int i, int i1) {
-        return (true);
+        return (false);
     }
 }

@@ -15,15 +15,13 @@ public class DataAccessor implements DataAccessorInterface {
     private static List<RoutineSession> routineSessions;
     private static List<SessionExercise> sessionExercises;
     private static List<SessionExerciseSet> sessionExerciseSets;
-    private static boolean dataIsCreated = false;
     // hashmaps
     private static HashMap<Integer, List<RoutineSession>> routineSessionHash = new HashMap<>(); // <idRoutine, List<RoutineSession>>
     private static HashMap<Integer, List<SessionExercise>> sessionExerciseHash = new HashMap(); // <idRoutineSession, List<SessionExercise>>
     private static HashMap<Integer, List<SessionExerciseSet>> sessionExerciseSetHash = new HashMap(); // <idSessionExercise, List<SessionExerciseSet>>
 
-    public DataAccessor()
+    private DataAccessor()
     {
-        if(!dataIsCreated) {
             // sample routines
             routines = new ArrayList<Routine>();
             routines.add(new Routine("routine1", "1st routine", true));
@@ -102,9 +100,10 @@ public class DataAccessor implements DataAccessorInterface {
             AddToSessionExerciseSetHash(sessionExercises.get(3));
             AddToSessionExerciseSetHash(sessionExercises.get(3));
             AddToSessionExerciseSetHash(sessionExercises.get(3));
+    }
 
-            dataIsCreated = true;
-        }
+    public static DataAccessor getInstance() {
+        return DataAccessorHelper.INSTANCE;
     }
 
     private void AddToRoutineSessionHash(Routine routineToAdd) {
@@ -237,6 +236,17 @@ public class DataAccessor implements DataAccessorInterface {
         return(newRoutineSession);
     }
 
+    @Override
+    public void saveRoutine(Routine routineToSave) {
+        int idRoutineToSave = routineToSave.getIdRoutine();
+        for (Routine routine : routines) {
+            if (routine.getIdRoutine() == idRoutineToSave) {
+                routine.setName(routineToSave.getName());
+                routine.setDescription(routineToSave.getDescription());
+            }
+        }
+    }
+
     /* // [TODO] maybe if adding deleteRoutine(), something like this would be implemented for the whole routine
     @Override
     public void deleteRoutineSession(RoutineSession routineSession) {
@@ -279,17 +289,6 @@ public class DataAccessor implements DataAccessorInterface {
     */
 
     @Override
-    public void saveRoutine(Routine routineToSave) {
-        int idRoutineToSave = routineToSave.getIdRoutine();
-        for (Routine routine : routines) {
-            if (routine.getIdRoutine() == idRoutineToSave) {
-                routine.setName(routineToSave.getName());
-                routine.setDescription(routineToSave.getDescription());
-            }
-        }
-    }
-
-    @Override
     public HashMap<Integer, List<SessionExerciseSet>> getSessionExerciseSetHash() {
         return (sessionExerciseSetHash);
     }
@@ -305,5 +304,15 @@ public class DataAccessor implements DataAccessorInterface {
             }
         }
         return (exerciseSets);
+    }
+
+    // [TODO] Not implemented
+    @Override
+    public RoutineSession getOrCreateLatestRoutineSession(Routine routine) {
+        return null;
+    }
+
+    private static class DataAccessorHelper {
+        private static final DataAccessor INSTANCE = new DataAccessor();
     }
 }

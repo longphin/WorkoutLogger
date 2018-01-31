@@ -43,7 +43,7 @@ public class zRoutineActivity extends AppCompatActivity implements RoutineExerci
         thisRoutine = intent.getParcelableExtra("Routine");
 
         // Create controller to interact with database.
-        routineExerciseController = new z_RoutineExerciseController(new z_DataAccessor());
+        routineExerciseController = new z_RoutineExerciseController(z_DataAccessor.getInstance());
 
         // Get latest RoutineSession for this Routine.
         RoutineSession latestRoutineSession = routineExerciseController.getLatestRoutineSession(thisRoutine);
@@ -62,6 +62,9 @@ public class zRoutineActivity extends AppCompatActivity implements RoutineExerci
         recyclerAdapter = new ExpandableExerciseListAdapter(this, sessionExercises, sessionExerciseSetHash);
 
         recyclerView.setAdapter(recyclerAdapter);
+
+        for (int i = 0; i < recyclerAdapter.getGroupCount(); i++)
+            recyclerView.expandGroup(i);
 
         // add expand/collapse listener
         /*

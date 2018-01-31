@@ -66,5 +66,8 @@ public interface DataAccessorInterface {
     HashMap<Integer, List<SessionExerciseSet>> getSessionExerciseSetHash();
 
     List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise);
+
+    RoutineSession getOrCreateLatestRoutineSession(Routine routine);
+
     //void deleteRoutineSession(RoutineSession routineSession); // [TODO] remove
 }

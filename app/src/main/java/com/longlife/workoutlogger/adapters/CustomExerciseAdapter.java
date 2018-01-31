@@ -78,7 +78,7 @@ public class CustomExerciseAdapter extends RecyclerView.Adapter<CustomExerciseAd
      */
     @Override
     public int getItemCount() {
-        // 12. Returning 0 here will tell our Adapter not to make any Items. Let's fix that.
+        if (sessionExercises == null) return (0);
         return sessionExercises.size();
     }
     /**

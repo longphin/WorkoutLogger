@@ -43,6 +43,7 @@ public class CustomExerciseSetAdapter extends RecyclerView.Adapter<CustomExercis
 
     @Override
     public int getItemCount() {
+        if (sessionExerciseSets == null) return (0);
         return (sessionExerciseSets.size());
     }
 

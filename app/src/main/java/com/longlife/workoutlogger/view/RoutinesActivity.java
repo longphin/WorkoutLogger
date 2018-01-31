@@ -35,14 +35,14 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
         recyclerView = (RecyclerView) findViewById(R.id.recycler_premaderoutines);
         layoutInflater = getLayoutInflater();
 
-        controller = new RoutineController(this, new z_DataAccessor());
+        controller = new RoutineController(this, z_DataAccessor.getInstance());
     }
 
     // go to Routine activity for a result. It creates a new RoutineSession which can be saved or canceled.
     @Override
     public void startRoutineActivity(Routine routine) {
         //Intent i = new Intent(this, RoutineActivity.class);
-        Intent i = new Intent(this, zRoutineActivity.class);
+        Intent i = new Intent(this, RoutineActivity.class);
         i.putExtra("Routine", routine);
 
         //startActivity(i);
@@ -67,7 +67,6 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
             }
             if(resultCode == RESULT_CANCELED)
             {
-                // [TODO] need to debug why deleting the routine session causes an error.
                 //RoutineSession routineSession = data.getParcelableExtra(RoutineRequestCode.getRequestRoutine_Cancel_Parcel());
                 //controller.deleteRoutineSession(routineSession);
             }
