@@ -28,7 +28,7 @@ public class RoutineController {
         this.view = view;
         this.dataSource = dataSource;
 
-        getRoutinesFromDataSource();
+        //getRoutinesFromDataSource();
     }
 
     public void onRoutineClick(Routine selectedItem){
@@ -40,10 +40,15 @@ public class RoutineController {
      * calls to Services like a Database/Server should be executed on a seperate thread that the
      * mainThread (UI Thread). See my full projects for examples of this.
      */
+    /*
     public void getRoutinesFromDataSource(){
         view.setUpAdapterAndView(
                 dataSource.getRoutines()
         );
+    }
+    */
+    public List<Routine> getRoutines() {
+        return (dataSource.getRoutines());
     }
 
     public void saveRoutine(Routine routineToSave) {

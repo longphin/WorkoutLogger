@@ -63,7 +63,8 @@
         <activity android:name=".view.ExerciseSetActivity" />
         <activity android:name=".view.zRoutineActivity" />
         <activity android:name=".view.zExerciseListItemActivity" />
-        <activity android:name=".view.zSetListItemActivity"></activity>
+        <activity android:name=".view.zSetListItemActivity" />
+        <activity android:name=".view.a_RoutineActivity"></activity>
     </application>
 
 </manifest>

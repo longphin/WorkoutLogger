@@ -36,13 +36,19 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
         layoutInflater = getLayoutInflater();
 
         controller = new RoutineController(this, z_DataAccessor.getInstance());
+
+        this.routines = controller.getRoutines();
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new CustomAdapter();
+        recyclerView.setAdapter(adapter);
     }
 
     // go to Routine activity for a result. It creates a new RoutineSession which can be saved or canceled.
     @Override
     public void startRoutineActivity(Routine routine) {
         //Intent i = new Intent(this, RoutineActivity.class);
-        Intent i = new Intent(this, RoutineActivity.class);
+        Intent i = new Intent(this, a_RoutineActivity.class);
         i.putExtra("Routine", routine);
 
         //startActivity(i);
@@ -73,6 +79,7 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
         }
     }
 
+    /*
     @Override
     public void setUpAdapterAndView(List<Routine> routines) {
         this.routines = routines;
@@ -80,6 +87,7 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
         adapter = new CustomAdapter();
         recyclerView.setAdapter(adapter);
     }
+    */
 
     /**
      * 4.
