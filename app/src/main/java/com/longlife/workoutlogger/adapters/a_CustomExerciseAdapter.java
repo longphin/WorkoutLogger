@@ -1,11 +1,11 @@
 package com.longlife.workoutlogger.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
@@ -23,6 +23,7 @@ import java.util.List;
 
 public class a_CustomExerciseAdapter extends RecyclerView.Adapter<a_CustomExerciseAdapter.CustomViewHolder> {//6
     private Context context;
+    private a_CustomExerciseSetAdapter setAdapter;
     private List<SessionExercise> sessionExercises;
     //private HashMap<Integer, List<SessionExerciseSet>> sessionExerciseSetHash; // <idSessionExercise, List<SessionExerciseSet>>
     private DataAccessorInterface dataSource;
@@ -36,7 +37,7 @@ public class a_CustomExerciseAdapter extends RecyclerView.Adapter<a_CustomExerci
 
     @Override
     public a_CustomExerciseAdapter.CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.activity_exercise_list_item, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.activity_z_exercise_list_item, parent, false);
         return new CustomViewHolder(v);
     }
 
@@ -46,8 +47,11 @@ public class a_CustomExerciseAdapter extends RecyclerView.Adapter<a_CustomExerci
         currentItem.setDisplayOrder(holder.getAdapterPosition());
 
         Exercise currentExercise = dataSource.getExerciseFromSession(currentItem);
+        setAdapter = new a_CustomExerciseSetAdapter(context, dataSource.getSessionExerciseSets(currentItem));
         holder.name.setText(currentExercise.getName());
-        holder.description.setText(currentExercise.getDescription());
+        holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        holder.recyclerView.setAdapter(setAdapter);
+        //holder.description.setText(currentExercise.getDescription());
     }
 
     @Override
@@ -58,18 +62,13 @@ public class a_CustomExerciseAdapter extends RecyclerView.Adapter<a_CustomExerci
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
         public RecyclerView recyclerView;
-        private ViewGroup container;
         private TextView name;
-        private TextView description;
-        private Button editExercise;
 
         public CustomViewHolder(View itemView) {
             super(itemView);
 
-            this.container = (ViewGroup) itemView.findViewById(R.id.root_exerciseListItem);
-            this.name = (TextView) itemView.findViewById(R.id.text_exerciseListItem_name);
-            this.description = (TextView) itemView.findViewById(R.id.text_exerciseListItem_description);
-            this.editExercise = (Button) itemView.findViewById(R.id.button_editExercise);
+            this.recyclerView = (RecyclerView) itemView.findViewById(R.id.parentRecycler);
+            this.name = (TextView) itemView.findViewById(R.id.parentTitle);
         }
     }
 }

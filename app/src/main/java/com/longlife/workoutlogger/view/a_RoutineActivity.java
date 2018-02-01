@@ -3,7 +3,6 @@ package com.longlife.workoutlogger.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.longlife.workoutlogger.R;
@@ -15,6 +14,7 @@ import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.model.z_DataAccessor;
+import com.longlife.workoutlogger.utils.CustomLinearLayoutManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +61,7 @@ public class a_RoutineActivity extends AppCompatActivity implements RoutineExerc
         recyclerAdapter = new a_CustomExerciseAdapter(this, thisRoutineSession);
 
         recyclerView.setAdapter(recyclerAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this)); // [TODO] need to use custom linear layout
+        recyclerView.setLayoutManager(new CustomLinearLayoutManager(this)); // [TODO] need to use custom linear layout
 
         // add expand/collapse listener
         /*
