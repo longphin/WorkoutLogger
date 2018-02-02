@@ -18,12 +18,12 @@ import java.util.List;
  * Created by Longphi on 1/26/2018.
  */
 
-public class ExpandableExerciseListAdapter extends BaseExpandableListAdapter {
+public class z_ExpandableExerciseListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<SessionExercise> sessionExercises;
     private HashMap<Integer, List<SessionExerciseSet>> sessionExerciseSetHash; // <idSessionExercise, List<SessionExerciseSet>>
 
-    public ExpandableExerciseListAdapter(Context context, List<SessionExercise> sessionExercises, HashMap<Integer, List<SessionExerciseSet>> sessionExerciseSetHash) {
+    public z_ExpandableExerciseListAdapter(Context context, List<SessionExercise> sessionExercises, HashMap<Integer, List<SessionExerciseSet>> sessionExerciseSetHash) {
         this.context = context;
         this.sessionExercises = sessionExercises;
         this.sessionExerciseSetHash = sessionExerciseSetHash;
@@ -79,7 +79,7 @@ public class ExpandableExerciseListAdapter extends BaseExpandableListAdapter {
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.activity_z_exercise_list_item, null);
+            view = inflater.inflate(R.layout.activity_exercise_list_item, null);
         }
 
         TextView exerciseName = (TextView) view.findViewById(R.id.parentTitle); // we're getting the idExercise instead for testing.

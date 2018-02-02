@@ -48,23 +48,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.MainActivity" />
         </activity>
-        <activity
-            android:name=".view.RoutineActivity"
-            android:parentActivityName=".view.RoutinesActivity">
-
-            <!-- meta-data tag required to support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.RoutinesActivity" />
-        </activity>
         <activity android:name=".view.RoutineListItemActivity" />
         <activity android:name=".view.ExerciseActivity" />
-        <activity android:name=".view.ExerciseListItemActivity" />
         <activity android:name=".view.ExerciseSetActivity" />
-        <activity android:name=".view.zRoutineActivity" />
-        <activity android:name=".view.zExerciseListItemActivity" />
-        <activity android:name=".view.zSetListItemActivity" />
-        <activity android:name=".view.a_RoutineActivity"></activity>
+        <activity android:name=".view.z_RoutineActivity" />
+        <activity android:name=".view.ExerciseListItemActivity" />
+        <activity android:name=".view.z_SetListItemActivity" />
+        <activity android:name=".view.RoutineActivity"></activity>
     </application>
 
 </manifest>

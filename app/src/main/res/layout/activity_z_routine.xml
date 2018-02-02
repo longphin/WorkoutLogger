@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.longlife.workoutlogger.view.zRoutineActivity">
+    tools:context="com.longlife.workoutlogger.view.z_RoutineActivity">
 
     <ExpandableListView
         android:id="@+id/expRecycler_exercises"

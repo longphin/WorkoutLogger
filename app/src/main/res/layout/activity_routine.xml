@@ -2,97 +2,23 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_routine"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.longlife.workoutlogger.view.RoutineActivity">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingButton_add_exercise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_icon_note_add_48px" />
-
-    <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
-    <LinearLayout
-        android:layout_width="0px"
-        android:layout_height="0px"
-        android:focusable="true"
-        android:focusableInTouchMode="true"></LinearLayout>
-    <!-- :nextFocusUp and :nextFocusLeft have been set to the id of this component
-    to prevent the dummy from receiving focus again -->
-    <AutoCompleteTextView
-        android:id="@+id/dummytext"
-        android:layout_width="0px"
-        android:layout_height="0px"
-        android:nextFocusLeft="@id/dummytext"
-        android:nextFocusUp="@id/dummytext" />
-
-    <EditText
-        android:id="@+id/edittext_routine_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/button_saveRoutineChanges"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edittext_routine_description"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/button_cancelRoutineChanges"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_routine_name" />
-
-    <Button
-        android:id="@+id/button_saveRoutineChanges"
-        android:layout_width="88dp"
-        android:layout_height="55dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:onClick="saveChanges"
-        android:text="@string/text_save"
-        app:layout_constraintBaseline_toBaselineOf="@+id/edittext_routine_name"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/button_cancelRoutineChanges"
-        android:layout_width="wrap_content"
-        android:layout_height="55dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:onClick="cancelChanges"
-        android:text="@string/text_cancel"
-        app:layout_constraintBaseline_toBaselineOf="@+id/edittext_routine_description"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_exercises"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/a_expRecycler_exercises"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:scrollbarSize="8dp"
-        android:scrollbarStyle="outsideInset"
-        app:layout_constraintBottom_toTopOf="@+id/floatingButton_add_exercise"
+        android:childDivider="#00000000"
+        android:descendantFocusability="afterDescendants"
+        android:divider="@color/BLUE"
+        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_routine_description"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

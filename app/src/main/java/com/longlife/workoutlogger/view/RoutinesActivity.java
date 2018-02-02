@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.controller.RoutineController;
 import com.longlife.workoutlogger.enums.RoutineRequestCode;
+import com.longlife.workoutlogger.model.DataAccessor;
 import com.longlife.workoutlogger.model.Routine;
-import com.longlife.workoutlogger.model.z_DataAccessor;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
         recyclerView = (RecyclerView) findViewById(R.id.recycler_premaderoutines);
         layoutInflater = getLayoutInflater();
 
-        controller = new RoutineController(this, z_DataAccessor.getInstance());
+        controller = new RoutineController(this, DataAccessor.getInstance());
 
         this.routines = controller.getRoutines();
 
@@ -47,8 +47,7 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
     // go to Routine activity for a result. It creates a new RoutineSession which can be saved or canceled.
     @Override
     public void startRoutineActivity(Routine routine) {
-        //Intent i = new Intent(this, RoutineActivity.class);
-        Intent i = new Intent(this, a_RoutineActivity.class);
+        Intent i = new Intent(this, RoutineActivity.class);
         i.putExtra("Routine", routine);
 
         //startActivity(i);
@@ -78,16 +77,6 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
             }
         }
     }
-
-    /*
-    @Override
-    public void setUpAdapterAndView(List<Routine> routines) {
-        this.routines = routines;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CustomAdapter();
-        recyclerView.setAdapter(adapter);
-    }
-    */
 
     /**
      * 4.

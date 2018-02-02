@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.longlife.workoutlogger.R;
 
-public class zSetListItemActivity extends AppCompatActivity {
+public class z_SetListItemActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

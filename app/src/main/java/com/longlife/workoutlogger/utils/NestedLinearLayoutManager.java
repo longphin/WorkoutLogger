@@ -9,16 +9,16 @@ import android.view.ViewGroup;
 /**
  * A custom Linear Layout Manager for a RecyclerView inside a RecyclerView.
  */
-public class CustomLinearLayoutManager extends LinearLayoutManager {
+public class NestedLinearLayoutManager extends LinearLayoutManager {
 
-    private static final String TAG = CustomLinearLayoutManager.class.getSimpleName();
+    private static final String TAG = NestedLinearLayoutManager.class.getSimpleName();
     private int[] mMeasuredDimension = new int[2];
 
-    public CustomLinearLayoutManager(Context context) {
+    public NestedLinearLayoutManager(Context context) {
         super(context);
     }
 
-    public CustomLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+    public NestedLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
     }
 

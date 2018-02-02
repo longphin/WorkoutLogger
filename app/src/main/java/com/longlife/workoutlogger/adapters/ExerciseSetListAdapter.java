@@ -16,20 +16,20 @@ import java.util.List;
  * Created by Longphi on 1/31/2018.
  */
 
-public class a_CustomExerciseSetAdapter extends RecyclerView.Adapter<a_CustomExerciseSetAdapter.CustomViewHolder> {
+public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetListAdapter.CustomViewHolder> {
 
     Context context;
     private List<SessionExerciseSet> sessionExerciseSets;
 
-    public a_CustomExerciseSetAdapter(Context context, List<SessionExerciseSet> sessionExerciseSets) {
+    public ExerciseSetListAdapter(Context context, List<SessionExerciseSet> sessionExerciseSets) {
         this.context = context;
         this.sessionExerciseSets = sessionExerciseSets;
     }
 
     @Override
-    public a_CustomExerciseSetAdapter.CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ExerciseSetListAdapter.CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_exercise_set, parent, false);
-        return (new a_CustomExerciseSetAdapter.CustomViewHolder(v));
+        return (new ExerciseSetListAdapter.CustomViewHolder(v));
     }
 
     @Override
