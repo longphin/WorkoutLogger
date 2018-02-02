@@ -1,6 +1,11 @@
 package com.longlife.workoutlogger.model;
 
+import com.longlife.workoutlogger.utils.ExerciseComparator;
+import com.longlife.workoutlogger.utils.RoutineComparator;
+import com.longlife.workoutlogger.utils.SessionExerciseComparator;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +15,8 @@ import java.util.List;
  */
 
 public class z_DataAccessor implements DataAccessorInterface {
-    private static List<Routine> routines;
-    private static List<Exercise> exercises;
+    private static HashMap<Integer, Routine> routines = new HashMap<>();//List<Routine> routines;
+    private static HashMap<Integer, Exercise> exercises = new HashMap<>();//List<Exercise> exercises;
     //private static List<RoutineSession> routineSessions;
     //private static List<SessionExercise> sessionExercises;
     //private static List<SessionExerciseSet> sessionExerciseSets;
@@ -21,6 +26,7 @@ public class z_DataAccessor implements DataAccessorInterface {
     private static HashMap<Integer, List<SessionExerciseSet>> sessionExerciseSetHash = new HashMap(); // <idSessionExercise, List<SessionExerciseSet>>
 
     private z_DataAccessor() {
+        /*
             // sample routines
             routines = new ArrayList<Routine>();
         for (int i = 0; i < 9; i++) {
@@ -32,61 +38,65 @@ public class z_DataAccessor implements DataAccessorInterface {
         for (int i = 0; i < 9; i++) {
             exercises.add(new Exercise("exercise " + String.valueOf(i) + " name", "exercise " + String.valueOf(i) + " description", true));
         }
+        */
+
+
+        for (int i = 0; i < 9; i++) {
+            Routine routineToAdd = new Routine("", "", true);
+            routineToAdd.setName("routine " + String.valueOf(routineToAdd.getIdRoutine()) + " name");
+            routineToAdd.setDescription("routine " + String.valueOf(routineToAdd.getIdRoutine()) + " description");
+            routines.put(routineToAdd.getIdRoutine(), routineToAdd);
+        }
+
+        for (int i = 0; i < 9; i++) {
+            Exercise exerciseToAdd = new Exercise("", "", true);
+            exerciseToAdd.setName("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " name");
+            exerciseToAdd.setDescription("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " description");
+            exercises.put(exerciseToAdd.getIdExercise(), exerciseToAdd);
+        }
 
             // routineSessionHash
-            AddToRoutineSessionHash(routines.get(0));
             AddToRoutineSessionHash(routines.get(1));
             AddToRoutineSessionHash(routines.get(2));
             AddToRoutineSessionHash(routines.get(3));
+        AddToRoutineSessionHash(routines.get(4));
 
             // sessionExerciseHash
             SessionExercise addedSessionExercise;
             // routine 1
-            addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(0));
-            AddToSessionExerciseSetHash(addedSessionExercise);
-            AddToSessionExerciseSetHash(addedSessionExercise);
-            AddToSessionExerciseSetHash(addedSessionExercise);
-            addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(1));
-            AddToSessionExerciseSetHash(addedSessionExercise);
-        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(2));
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(3));
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(4));
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(5));
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(6));
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(7));
-        AddToSessionExerciseSetHash(addedSessionExercise);
-        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(0)), exercises.get(8));
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(1));
+        AddToSessionExerciseSetHash(addedSessionExercise, 3);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(2));
+        AddToSessionExerciseSetHash(addedSessionExercise, 1);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(3));
+        AddToSessionExerciseSetHash(addedSessionExercise, 3);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(4));
+        AddToSessionExerciseSetHash(addedSessionExercise, 1);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(5));
+        AddToSessionExerciseSetHash(addedSessionExercise, 3);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(6));
+        AddToSessionExerciseSetHash(addedSessionExercise, 1);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(7));
+        AddToSessionExerciseSetHash(addedSessionExercise, 3);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(8));
+        AddToSessionExerciseSetHash(addedSessionExercise, 1);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(9));
 
             // routine 2
-            addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(2));
-            AddToSessionExerciseSetHash(addedSessionExercise);
-            AddToSessionExerciseSetHash(addedSessionExercise);
-            addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(1));
-            AddToSessionExerciseSetHash(addedSessionExercise);
-            AddToSessionExerciseSetHash(addedSessionExercise);
-            addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(2));
-            AddToSessionExerciseSetHash(addedSessionExercise);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(2)), exercises.get(3));
+        AddToSessionExerciseSetHash(addedSessionExercise, 2);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(2)), exercises.get(2));
+        AddToSessionExerciseSetHash(addedSessionExercise, 2);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(2)), exercises.get(3));
+        AddToSessionExerciseSetHash(addedSessionExercise, 1);
 
             // routine 3
-            addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(2)), exercises.get(0));
-            AddToSessionExerciseSetHash(addedSessionExercise);
-            AddToSessionExerciseSetHash(addedSessionExercise);
-            AddToSessionExerciseSetHash(addedSessionExercise);
-            addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(2)), exercises.get(0));
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(3)), exercises.get(1));
+        AddToSessionExerciseSetHash(addedSessionExercise, 3);
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(3)), exercises.get(1));
 
             // routine 4
-            addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(3)), exercises.get(0));
+        addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(4)), exercises.get(1));
     }
 
     public static z_DataAccessor getInstance() {
@@ -94,24 +104,10 @@ public class z_DataAccessor implements DataAccessorInterface {
     }
 
     private void AddToRoutineSessionHash(Routine routineToAdd) {
-        /*
-        if(routineSessionHash.get(routineToAdd.getIdRoutine()) == null)
-        {
-            routineSessionHash.put(routineToAdd.getIdRoutine(), new ArrayList<RoutineSession>());
-        }
-        routineSessionHash.get(routineToAdd.getIdRoutine()).add(new RoutineSession(routineToAdd));
-        */
         AddToRoutineSessionHash(routineToAdd.getIdRoutine(), new RoutineSession(routineToAdd));
     }
 
     private void AddToRoutineSessionHash(RoutineSession routineSessionToAdd) {
-        /*
-        if(routineSessionHash.get(routineSessionToAdd.getIdRoutine()) == null)
-        {
-            routineSessionHash.put(routineSessionToAdd.getIdRoutine(), new ArrayList<RoutineSession>());
-        }
-        routineSessionHash.get(routineSessionToAdd.getIdRoutine()).add(routineSessionToAdd);
-        */
         AddToRoutineSessionHash(routineSessionToAdd.getIdRoutine(), routineSessionToAdd);
     }
 
@@ -123,13 +119,6 @@ public class z_DataAccessor implements DataAccessorInterface {
     }
 
     private SessionExercise AddToSessionExerciseHash(RoutineSession routineSession, Exercise exercise) {
-        /*
-        if(sessionExerciseHash.get(routineSession.getIdRoutineSession()) == null)
-        {
-            sessionExerciseHash.put(routineSession.getIdRoutineSession(), new ArrayList<SessionExercise>());
-        }
-        sessionExerciseHash.get(routineSession.getIdRoutineSession()).add(new SessionExercise(routineSession, exercise));
-        */
         return (AddToSessionExerciseHash(routineSession.getIdRoutineSession(), new SessionExercise(routineSession, exercise)));
     }
 
@@ -143,14 +132,13 @@ public class z_DataAccessor implements DataAccessorInterface {
     }
 
     private void AddToSessionExerciseSetHash(SessionExercise sessionExercise) {
-        /*
-        if(sessionExerciseSetHash.get(sessionExercise.getIdSessionExercise()) == null)
-        {
-            sessionExerciseSetHash.put(sessionExercise.getIdSessionExercise(), new ArrayList<SessionExerciseSet>());
-        }
-        sessionExerciseSetHash.get(sessionExercise.getIdSessionExercise()).add(new SessionExerciseSet(sessionExercise));
-        */
         AddToSessionExerciseSetHash(sessionExercise.getIdSessionExercise(), new SessionExerciseSet(sessionExercise));
+    }
+
+    private void AddToSessionExerciseSetHash(SessionExercise sessionExercise, int numberOfSets) {
+        for (int i = 0; i < numberOfSets; i++) {
+            AddToSessionExerciseSetHash(sessionExercise.getIdSessionExercise(), new SessionExerciseSet(sessionExercise));
+        }
     }
 
     private void AddToSessionExerciseSetHash(Integer idSessionExercise, SessionExerciseSet sessionExerciseSetToAdd) {
@@ -162,12 +150,26 @@ public class z_DataAccessor implements DataAccessorInterface {
 
     @Override
     public List<Exercise> getExercises() {
-        return (exercises);
+        List<Exercise> exercisesList = new ArrayList<Exercise>();
+        for (Exercise ex : exercises.values()) {
+            exercisesList.add(ex);
+        }
+
+        Collections.sort(exercisesList, new ExerciseComparator());
+
+        return (exercisesList);
     }
 
     @Override
     public List<Routine> getRoutines() {
-        return (routines);
+        List<Routine> routinesList = new ArrayList<Routine>();
+        for (Routine ro : routines.values()) {
+            routinesList.add(ro);
+        }
+
+        Collections.sort(routinesList, new RoutineComparator());
+
+        return routinesList;
     }
 
     @Override
@@ -177,9 +179,12 @@ public class z_DataAccessor implements DataAccessorInterface {
         RoutineSession latestRoutineSession = new RoutineSession();
 
         List<RoutineSession> routineSessions = routineSessionHash.get(routine.getIdRoutine());
-        if (routineSessions == null) return (latestRoutineSession);
+        if (routineSessions == null) {
+            routineSessionHash.put(routine.getIdRoutine(), new ArrayList<RoutineSession>());
+            return (latestRoutineSession);
+        }
 
-        for (RoutineSession rs : routineSessionHash.get(routine.getIdRoutine())) {
+        for (RoutineSession rs : routineSessions) {
             if (latestIdRoutineSession == -1 || rs.getSessionDate().after(latestRoutineDate)) {
                 latestRoutineDate = rs.getSessionDate();
                 latestIdRoutineSession = rs.getIdRoutineSession();
@@ -196,48 +201,69 @@ public class z_DataAccessor implements DataAccessorInterface {
         int latestIdRoutineSession = -1;
         RoutineSession latestRoutineSession = new RoutineSession();
 
-        for (RoutineSession rs : routineSessionHash.get(routine.getIdRoutine())) {
-            if (rs.getIdRoutine() == routine.getIdRoutine()) {
-                if (latestIdRoutineSession == -1 || rs.getSessionDate().after(latestRoutineDate)) {
-                    latestRoutineDate = rs.getSessionDate();
-                    latestIdRoutineSession = rs.getIdRoutineSession();
-                    latestRoutineSession = rs;
-                }
+        if (routine == null)
+            throw new NullPointerException("Could not create session for null routine.");
+
+        // Initialize the RoutineSessionHash(idRoutine) if needed, or if no RoutineSession exists.
+        List<RoutineSession> routineSessions = routineSessionHash.get(routine.getIdRoutine());
+        if (routineSessions == null || routineSessions.size() == 0) {
+            RoutineSession createdRoutineSession = createRoutineSessionCopy(latestRoutineSession);
+            return (createdRoutineSession);
+        }
+
+        // If there exist RoutineSessions, then find the latest one.
+        for (RoutineSession rs : routineSessions) {
+            if (latestIdRoutineSession == -1 ||
+                    //latestRoutineSession.getIdRoutine() == -1 ||
+                    rs.getSessionDate().after(latestRoutineDate)) {
+                latestRoutineDate = rs.getSessionDate();
+                latestIdRoutineSession = rs.getIdRoutineSession();
+                latestRoutineSession = rs;
             }
         }
 
-        if (!latestRoutineSession.getWasPerformed())
+        // Check if the picked RoutineSession was performed. If it was, then return it. If not,
+        // then return a copy of it.
+        if (!latestRoutineSession.getWasPerformed()) {
             // If the latest RoutineSession was not performed, then set it as thisRoutineSession.
             return (latestRoutineSession);
-        else
-            // Else, create a copy of the session.
-            return (createRoutineSessionCopy(latestRoutineSession));
+        } else {// Else, create a copy of the session.
+            RoutineSession createdRoutineSession = createRoutineSessionCopy(latestRoutineSession);
+            return (createdRoutineSession);
+        }
     }
 
     @Override
     public List<SessionExercise> getSessionExercises(RoutineSession routineSession) {
-        return (sessionExerciseHash.get(routineSession.getIdRoutineSession()));
+        List<SessionExercise> sessionExercises = sessionExerciseHash.get(routineSession.getIdRoutineSession());
+        if (sessionExercises == null) return (null);
+
+        Collections.sort(sessionExercises, new SessionExerciseComparator());
+        return (sessionExercises);
     }
 
     @Override
     public Exercise getExerciseFromSession(SessionExercise sessionExercise) {
-        int idSessionExerciseToFind = sessionExercise.getIdSessionExercise();
-        for (SessionExercise se : sessionExerciseHash.get(sessionExercise.getIdRoutineSession())) {
-            if (se.getIdSessionExercise() == idSessionExerciseToFind) {
-                // now that we found the idSessionExercise, find the exercise
-                for (Exercise exercise : exercises) {
-                    if (exercise.getIdExercise() == se.getIdExercise()) {
-                        return (exercise);
-                    }
-                }
+        Exercise foundExercise = exercises.get(sessionExercise.getIdExercise());
+        if (foundExercise != null) return (foundExercise);
+
+        /*
+        int idExerciseToFind = sessionExercise.getIdExercise();
+        for(int i = 0; i<exercises.size(); i++)
+        {
+            if(exercises.get(i).getIdExercise() == idExerciseToFind)
+            {
+                return(exercises.get(i));
             }
         }
-
+        */
         return (null);
     }
 
     @Override
     public void saveExercise(Exercise exerciseToSave) {
+        exercises.put(exerciseToSave.getIdExercise(), exerciseToSave);
+        /*
         int idExerciseToSave = exerciseToSave.getIdExercise();
         for (Exercise exercise : exercises) {
             if (exercise.getIdExercise() == idExerciseToSave) {
@@ -245,6 +271,7 @@ public class z_DataAccessor implements DataAccessorInterface {
                 exercise.setDescription(exerciseToSave.getDescription());
             }
         }
+        */
     }
 
     // create a new RoutineSession that will create copies of SessionExercises and Exercise sets as well.
@@ -257,10 +284,22 @@ public class z_DataAccessor implements DataAccessorInterface {
         //routineSessions.add(newRoutineSession);
         AddToRoutineSessionHash(newRoutineSession);
 
+        List<SessionExercise> sessionExercises = sessionExerciseHash.get(newRoutineSession.getIdRoutineSession());
+        if (sessionExercises == null || sessionExercises.size() == 0) {
+            sessionExerciseHash.put(newRoutineSession.getIdRoutineSession(), new ArrayList<SessionExercise>());
+            return (newRoutineSession);
+        }
+
         // find SessionExercises that need to be copied.
-        for (SessionExercise se : sessionExerciseHash.get(newRoutineSession.getIdRoutineSession())) {
+        for (SessionExercise se : sessionExercises) {
             SessionExercise sessionExerciseCopy = new SessionExercise(newRoutineSession, se);
             AddToSessionExerciseHash(sessionExerciseCopy.getIdRoutineSession(), sessionExerciseCopy);
+
+            List<SessionExerciseSet> exerciseSets = sessionExerciseSetHash.get(se.getIdSessionExercise());
+            if (exerciseSets == null) {
+                sessionExerciseSetHash.put(se.getIdSessionExercise(), new ArrayList<SessionExerciseSet>());
+                break;
+            }
 
             // Insert SessionExerciseSets copies for the SessionExerciseCopy.
             for (SessionExerciseSet ses : sessionExerciseSetHash.get(se.getIdSessionExercise())) {
@@ -273,6 +312,8 @@ public class z_DataAccessor implements DataAccessorInterface {
 
     @Override
     public void saveRoutine(Routine routineToSave) {
+        routines.put(routineToSave.getIdRoutine(), routineToSave);
+        /*
         int idRoutineToSave = routineToSave.getIdRoutine();
         for (Routine routine : routines) {
             if (routine.getIdRoutine() == idRoutineToSave) {
@@ -280,48 +321,8 @@ public class z_DataAccessor implements DataAccessorInterface {
                 routine.setDescription(routineToSave.getDescription());
             }
         }
+        */
     }
-
-    /* // [TODO] maybe if adding deleteRoutine(), something like this would be implemented for the whole routine
-    @Override
-    public void deleteRoutineSession(RoutineSession routineSession) {
-        List<Integer> indexesToDrop = new ArrayList<Integer>();
-        for(int i = sessionExercises.size()-1; i>0; i--)
-        {
-            if(sessionExercises.get(i).getIdRoutineSession() == routineSession.getIdRoutineSession())
-            {
-                indexesToDrop.add(i);
-            }
-        }
-        // and then drop those SessionExercises
-        for(Integer i : indexesToDrop)
-        {
-            sessionExercises.remove(i);
-        }
-        // Note: we iterate backwards to produce indexesToDrop so that when we do a remove, items are not shifted over
-        // which would change the indexes when we do a sequence of remove()
-        // Collections.sort(indexesToDrop, Collections.reverseOrder()) // If the backwards iteration does not work, this can be done first to reverse the order.
-        // Find any SessionExercises linked to the RoutineSession
-
-        // [TODO] need to remove exercise sets when that is implemented
-
-        // There should only be 1 of this index, so we break out of the loop once it is found
-        int indexToDrop = -1;
-        for(int i = 0; i<routineSessions.size(); i++)
-        {
-            if(routineSessions.get(i).getIdRoutineSession() == routineSession.getIdRoutineSession())
-            {
-                indexToDrop = i;
-                break;
-            }
-        }
-        // and then drop that index.
-        if(indexToDrop != -1)
-        {
-            routineSessions.remove(indexToDrop);
-        }
-    }
-    */
 
     @Override
     public HashMap<Integer, List<SessionExerciseSet>> getSessionExerciseSetHash() {

@@ -58,10 +58,4 @@ public class RoutineController {
     public List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise) {
         return (dataSource.getSessionExerciseSets(sessionExercise));
     }
-    /* // [TODO] remove
-    public void deleteRoutineSession(RoutineSession routineSession)
-    {
-        dataSource.deleteRoutineSession(routineSession);
-    }
-    */
 }

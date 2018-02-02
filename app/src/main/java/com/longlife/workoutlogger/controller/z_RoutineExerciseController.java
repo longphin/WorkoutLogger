@@ -38,4 +38,8 @@ public class z_RoutineExerciseController {
     public HashMap<Integer, List<SessionExerciseSet>> getSessionExerciseSetHash() {
         return (dataSource.getSessionExerciseSetHash());
     }
+
+    public RoutineSession getOrCreateLatestRoutineSession(Routine routine) {
+        return (dataSource.getOrCreateLatestRoutineSession(routine));
+    }
 }
