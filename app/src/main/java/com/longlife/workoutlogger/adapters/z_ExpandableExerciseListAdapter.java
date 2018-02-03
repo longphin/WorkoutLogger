@@ -82,7 +82,7 @@ public class z_ExpandableExerciseListAdapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.activity_exercise_list_item, null);
         }
 
-        TextView exerciseName = (TextView) view.findViewById(R.id.parentTitle); // we're getting the idExercise instead for testing.
+        TextView exerciseName = view.findViewById(R.id.parentTitle); // we're getting the idExercise instead for testing.
         exerciseName.setText(String.valueOf(sessionExercise.getIdExercise()));
         return (view);
     }
@@ -96,7 +96,7 @@ public class z_ExpandableExerciseListAdapter extends BaseExpandableListAdapter {
             view = inflater.inflate(R.layout.activity_z_set_list_item, null);
         }
 
-        TextView setName = (TextView) view.findViewById(R.id.childTitle);
+        TextView setName = view.findViewById(R.id.childTitle);
         setName.setText(String.valueOf(sessionExerciseSet.getIdSessionExerciseSet()));
         return (view);
     }

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_exerciseSet"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context="com.longlife.workoutlogger.view.ExerciseSetActivity">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/text_exerciseSet_previous"
@@ -15,13 +13,15 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
         android:background="@color/headerText"
+        android:gravity="center_vertical"
+        android:padding="4dp"
         android:text="SampleText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText_exerciseSet_rep"
+        android:id="@+id/editText_exerciseSet_exerciseType"
         android:layout_width="118dp"
         android:layout_height="30dp"
         android:layout_marginBottom="4dp"
@@ -29,14 +29,15 @@
         android:layout_marginTop="4dp"
         android:background="@color/headerText"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:gravity="center_vertical"
+        android:inputType="numberDecimal"
+        android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/text_exerciseSet_previous"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText_exerciseSet_weight"
+        android:id="@+id/editText_exerciseSet_measurementType"
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_marginBottom="4dp"
@@ -45,12 +46,13 @@
         android:layout_marginTop="4dp"
         android:background="@color/headerText"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:gravity="center_vertical"
+        android:inputType="number"
+        android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/editText_exerciseSet_rep"
+        app:layout_constraintStart_toEndOf="@+id/editText_exerciseSet_exerciseType"
         app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -3,6 +3,8 @@ package com.longlife.workoutlogger.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.longlife.workoutlogger.enums.ExerciseRequestCode;
+
 /**
  * This will be the Exercise object.
  */
@@ -25,17 +27,17 @@ public class Exercise extends ExerciseAbstract implements Parcelable {
 
     // Create a standard Exercise with a unique Id.
     public Exercise() {
-        super(IDENTITY += 1);
+        super(IDENTITY += 1, ExerciseRequestCode.ExerciseType.WEIGHT, ExerciseRequestCode.MeasurementType.REP.REP);
     }
 
     // Create an Exercise with given a name and description.
-    public Exercise(String name, String description) {
-        this(name, description, false);
+    public Exercise(String name, String description, ExerciseRequestCode.ExerciseType et, ExerciseRequestCode.MeasurementType mt) {
+        this(name, description, et, mt, false);
     }
 
     // Create a premade Exercise with a given name and description.
-    public Exercise(String name, String description, boolean IsPremade) {
-        super(IDENTITY += 1, IsPremade);
+    public Exercise(String name, String description, ExerciseRequestCode.ExerciseType et, ExerciseRequestCode.MeasurementType mt, boolean IsPremade) {
+        super(IDENTITY += 1, ExerciseRequestCode.ExerciseType.WEIGHT, ExerciseRequestCode.MeasurementType.REP.REP, IsPremade);
         setName(name);
         setDescription(description);
 
@@ -45,15 +47,18 @@ public class Exercise extends ExerciseAbstract implements Parcelable {
     }
 
     // Used to set the name and description for an existing idExercise
-    public Exercise(int idExercise, String name, String description) {
-        super(idExercise, false);
+    public Exercise(int idExercise, String name, String description, ExerciseRequestCode.ExerciseType et, ExerciseRequestCode.MeasurementType mt) {
+        super(idExercise, et, mt, false);
         setName(name);
         setDescription(description);
     }
 
     // Used to create an Exercise to Parcel.
     public Exercise(Parcel parcel) {
-        super(parcel.readInt());
+        super(parcel.readInt(),
+                ExerciseRequestCode.ExerciseType.values()[parcel.readInt()], // the parcel is an int, so find the corresponding ExerciseType
+                ExerciseRequestCode.MeasurementType.values()[parcel.readInt()]); // the parcel is an int, so find the corresponding MeasurementType
+
         setName(parcel.readString());
         setDescription(parcel.readString());
         setIsPremade(parcel.readByte() != 0);
@@ -69,6 +74,8 @@ public class Exercise extends ExerciseAbstract implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(getIdExercise());
+        parcel.writeInt(getExerciseType().ordinal()); // parcel the exerciseType as an int
+        parcel.writeInt(getMeasurementType().ordinal()); // parcel the measurementType as an int
         parcel.writeString(getName());
         parcel.writeString(getDescription());
         parcel.writeByte((byte) (getIsPremade() ? 1 : 0));

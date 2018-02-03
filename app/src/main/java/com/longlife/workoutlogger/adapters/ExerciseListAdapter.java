@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.DataAccessor;
-import com.longlife.workoutlogger.model.DataAccessorInterface;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
@@ -47,11 +45,10 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
         currentItem.setDisplayOrder(holder.getAdapterPosition());
 
         Exercise currentExercise = dataSource.getExerciseFromSession(currentItem);
-        setAdapter = new ExerciseSetListAdapter(context, dataSource.getSessionExerciseSets(currentItem));
+        setAdapter = new ExerciseSetListAdapter(context, dataSource.getSessionExerciseSets(currentItem), dataSource.getExerciseFromSession(currentItem));
         holder.name.setText(currentExercise.getName());
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         holder.recyclerView.setAdapter(setAdapter);
-        //holder.description.setText(currentExercise.getDescription());
     }
 
     @Override
@@ -67,8 +64,8 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
         public CustomViewHolder(View itemView) {
             super(itemView);
 
-            this.recyclerView = (RecyclerView) itemView.findViewById(R.id.parentRecycler);
-            this.name = (TextView) itemView.findViewById(R.id.parentTitle);
+            this.recyclerView = itemView.findViewById(R.id.parentRecycler);
+            this.name = itemView.findViewById(R.id.parentTitle);
         }
     }
 }

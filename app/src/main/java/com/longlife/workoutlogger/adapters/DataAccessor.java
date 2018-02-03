@@ -1,5 +1,11 @@
-package com.longlife.workoutlogger.model;
+package com.longlife.workoutlogger.adapters;
 
+import com.longlife.workoutlogger.enums.ExerciseRequestCode;
+import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.RoutineSession;
+import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.utils.ExerciseComparator;
 import com.longlife.workoutlogger.utils.RoutineComparator;
 import com.longlife.workoutlogger.utils.SessionExerciseComparator;
@@ -49,7 +55,7 @@ public class DataAccessor implements DataAccessorInterface {
         }
 
         for (int i = 0; i < 9; i++) {
-            Exercise exerciseToAdd = new Exercise("", "", true);
+            Exercise exerciseToAdd = new Exercise("", "", ExerciseRequestCode.ExerciseType.BODYWEIGHT, ExerciseRequestCode.MeasurementType.REP, true);
             exerciseToAdd.setName("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " name");
             exerciseToAdd.setDescription("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " description");
             exercises.put(exerciseToAdd.getIdExercise(), exerciseToAdd);
@@ -150,10 +156,7 @@ public class DataAccessor implements DataAccessorInterface {
 
     @Override
     public List<Exercise> getExercises() {
-        List<Exercise> exercisesList = new ArrayList<Exercise>();
-        for (Exercise ex : exercises.values()) {
-            exercisesList.add(ex);
-        }
+        List<Exercise> exercisesList = new ArrayList<Exercise>(exercises.values());
 
         Collections.sort(exercisesList, new ExerciseComparator());
 
@@ -162,10 +165,7 @@ public class DataAccessor implements DataAccessorInterface {
 
     @Override
     public List<Routine> getRoutines() {
-        List<Routine> routinesList = new ArrayList<Routine>();
-        for (Routine ro : routines.values()) {
-            routinesList.add(ro);
-        }
+        List<Routine> routinesList = new ArrayList<Routine>(routines.values());
 
         Collections.sort(routinesList, new RoutineComparator());
 

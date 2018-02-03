@@ -7,9 +7,9 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.adapters.DataAccessor;
 import com.longlife.workoutlogger.adapters.z_ExpandableExerciseListAdapter;
 import com.longlife.workoutlogger.controller.RoutineExerciseController;
-import com.longlife.workoutlogger.model.DataAccessor;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
@@ -33,7 +33,7 @@ public class z_RoutineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_z_routine);
 
-        recyclerView = (ExpandableListView) findViewById(R.id.expRecycler_exercises);
+        recyclerView = findViewById(R.id.expRecycler_exercises);
 
         // get data from Parcelable
         Intent intent = getIntent();

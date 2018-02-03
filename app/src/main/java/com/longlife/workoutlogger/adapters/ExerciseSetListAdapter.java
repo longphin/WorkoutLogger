@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.enums.ExerciseRequestCode;
+import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 
 import java.util.List;
@@ -17,19 +19,20 @@ import java.util.List;
  */
 
 public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetListAdapter.CustomViewHolder> {
-
-    Context context;
+    private Context context;
     private List<SessionExerciseSet> sessionExerciseSets;
+    private Exercise exercise;
 
-    public ExerciseSetListAdapter(Context context, List<SessionExerciseSet> sessionExerciseSets) {
+    public ExerciseSetListAdapter(Context context, List<SessionExerciseSet> sessionExerciseSets, Exercise exercise) {
         this.context = context;
         this.sessionExerciseSets = sessionExerciseSets;
+        this.exercise = exercise;
     }
 
     @Override
     public ExerciseSetListAdapter.CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_exercise_set, parent, false);
-        return (new ExerciseSetListAdapter.CustomViewHolder(v));
+        return (new ExerciseSetListAdapter.CustomViewHolder(v, this.exercise));
     }
 
     @Override
@@ -38,9 +41,9 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
         Integer weight = bindingSessionExerciseSet.getReps();
         Integer reps = bindingSessionExerciseSet.getWeights();
         if (weight != null)
-            holder.weights.setText(String.valueOf(weight));
+            holder.exerciseTypeText.setText(String.valueOf(weight));
         if (reps != null)
-            holder.reps.setText(String.valueOf(reps));
+            holder.measurementTypeText.setText(String.valueOf(reps));
     }
 
     @Override
@@ -50,15 +53,31 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        public EditText weights;
-        public EditText reps;
+        public EditText exerciseTypeText;
+        public EditText measurementTypeText;
         public ViewGroup container;
 
-        public CustomViewHolder(View itemView) {
+        public CustomViewHolder(View itemView, Exercise exercise) {
             super(itemView);
-            this.container = (ViewGroup) itemView.findViewById(R.id.root_exerciseSet);
-            this.weights = (EditText) itemView.findViewById(R.id.editText_exerciseSet_weight);
-            this.reps = (EditText) itemView.findViewById(R.id.editText_exerciseSet_rep);
+            this.container = itemView.findViewById(R.id.root_exerciseSet);
+            this.exerciseTypeText = itemView.findViewById(R.id.editText_exerciseSet_exerciseType);
+            this.measurementTypeText = itemView.findViewById(R.id.editText_exerciseSet_measurementType);
+
+            ExerciseRequestCode.ExerciseType exerciseType = exercise.getExerciseType();
+            /*
+            if(exerciseType == ExerciseRequestCode.ExerciseType.BODYWEIGHT
+                    || exerciseType == ExerciseRequestCode.ExerciseType.WEIGHT)
+            {
+                exerciseTypeText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            }else if (exerciseType == ExerciseRequestCode.ExerciseType.DISTANCE)
+            {
+                exerciseTypeText.setInputType(InputType.TYPE_CLASS_TEXT);
+            }
+            */
+            exerciseTypeText.setInputType(ExerciseRequestCode.getExerciseTypeInputType(exerciseType));
+
+            ExerciseRequestCode.MeasurementType measurementType = exercise.getMeasurementType();
+            measurementTypeText.setInputType(ExerciseRequestCode.getMeasurementTypeInputType(measurementType));
         }
     }
 }

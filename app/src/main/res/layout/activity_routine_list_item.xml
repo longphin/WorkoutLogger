@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_routine_list_item"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
-    tools:context="com.longlife.workoutlogger.view.RoutineListItemActivity">
+    android:layout_height="72dp">
 
     <TextView
         android:id="@+id/text_routine_list_item_description"

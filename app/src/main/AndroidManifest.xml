@@ -48,11 +48,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.MainActivity" />
         </activity>
-        <activity android:name=".view.RoutineListItemActivity" />
         <activity android:name=".view.ExerciseActivity" />
-        <activity android:name=".view.ExerciseSetActivity" />
         <activity android:name=".view.z_RoutineActivity" />
-        <activity android:name=".view.ExerciseListItemActivity" />
         <activity android:name=".view.z_SetListItemActivity" />
         <activity android:name=".view.RoutineActivity"></activity>
     </application>

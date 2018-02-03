@@ -23,8 +23,8 @@ public class ExerciseActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.exercise = intent.getParcelableExtra("Exercise");
 
-        EditText nameTxt = (EditText) findViewById(R.id.edittext_exercise_name);
-        EditText descripTxt = (EditText) findViewById(R.id.edittext_exercise_description);
+        EditText nameTxt = findViewById(R.id.edittext_exercise_name);
+        EditText descripTxt = findViewById(R.id.edittext_exercise_description);
 
         //idExercise = exercise.getIdExercise();
         nameTxt.setText(exercise.getName());
@@ -33,8 +33,8 @@ public class ExerciseActivity extends AppCompatActivity {
 
     public void saveChanges(View v)
     {
-        EditText nameTxt = (EditText) findViewById(R.id.edittext_exercise_name);
-        EditText descripTxt = (EditText) findViewById(R.id.edittext_exercise_description);
+        EditText nameTxt = findViewById(R.id.edittext_exercise_name);
+        EditText descripTxt = findViewById(R.id.edittext_exercise_description);
 
         exercise.setName(nameTxt.getText().toString());
         exercise.setDescription(descripTxt.getText().toString());

@@ -12,9 +12,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.adapters.DataAccessor;
 import com.longlife.workoutlogger.controller.RoutineController;
 import com.longlife.workoutlogger.enums.RoutineRequestCode;
-import com.longlife.workoutlogger.model.DataAccessor;
 import com.longlife.workoutlogger.model.Routine;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routines);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_premaderoutines);
+        recyclerView = findViewById(R.id.recycler_premaderoutines);
         layoutInflater = getLayoutInflater();
 
         controller = new RoutineController(this, DataAccessor.getInstance());
@@ -157,10 +157,10 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
             public CustomViewHolder(View itemView) {
                 super(itemView);
 
-                this.container = (ViewGroup) itemView.findViewById(R.id.root_routine_list_item);
-                this.name = (TextView) itemView.findViewById(R.id.text_routine_list_item_name);
-                this.description = (TextView) itemView.findViewById(R.id.text_routine_list_item_description);
-                this.editRoutine = (Button) itemView.findViewById(R.id.button_performRoutine);
+                this.container = itemView.findViewById(R.id.root_routine_list_item);
+                this.name = itemView.findViewById(R.id.text_routine_list_item_name);
+                this.description = itemView.findViewById(R.id.text_routine_list_item_description);
+                this.editRoutine = itemView.findViewById(R.id.button_performRoutine);
 
                 /*
                 We can pass "this" as an Argument, because "this", which refers to the Current

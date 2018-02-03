@@ -1,6 +1,6 @@
 package com.longlife.workoutlogger.controller;
 
-import com.longlife.workoutlogger.model.DataAccessorInterface;
+import com.longlife.workoutlogger.adapters.DataAccessorInterface;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;

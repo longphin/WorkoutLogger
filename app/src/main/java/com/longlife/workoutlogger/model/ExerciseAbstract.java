@@ -1,5 +1,7 @@
 package com.longlife.workoutlogger.model;
 
+import com.longlife.workoutlogger.enums.ExerciseRequestCode;
+
 /**
  * All Exercises should extend this class.
  */
@@ -14,15 +16,36 @@ abstract class ExerciseAbstract {
     // Official Exercises will have this flag as true.
     private boolean IsPremade;
 
+    private ExerciseRequestCode.ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
+    private ExerciseRequestCode.MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
+
     // Normal constructor.
-    public ExerciseAbstract(int idExercise, boolean IsPremade) {
+    public ExerciseAbstract(int idExercise, ExerciseRequestCode.ExerciseType et, ExerciseRequestCode.MeasurementType mt, boolean IsPremade) {
         this.idExercise = idExercise;
         this.IsPremade = IsPremade;
+        this.exerciseType = et;
+        this.measurementType = mt;
     }
 
     // Default constructor for non-premade Exercises.
-    public ExerciseAbstract(int idExercise) {
-        this(idExercise, false);
+    public ExerciseAbstract(int idExercise, ExerciseRequestCode.ExerciseType et, ExerciseRequestCode.MeasurementType mt) {
+        this(idExercise, et, mt, false);
+    }
+
+    public ExerciseRequestCode.MeasurementType getMeasurementType() {
+        return measurementType;
+    }
+
+    public void setMeasurementType(ExerciseRequestCode.MeasurementType measurementType) {
+        this.measurementType = measurementType;
+    }
+
+    public ExerciseRequestCode.ExerciseType getExerciseType() {
+        return exerciseType;
+    }
+
+    public void setExerciseType(ExerciseRequestCode.ExerciseType exerciseType) {
+        this.exerciseType = exerciseType;
     }
 
     public int getIdExercise() {

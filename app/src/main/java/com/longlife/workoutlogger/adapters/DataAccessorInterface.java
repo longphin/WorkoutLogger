@@ -1,4 +1,10 @@
-package com.longlife.workoutlogger.model;
+package com.longlife.workoutlogger.adapters;
+
+import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.RoutineSession;
+import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.model.SessionExerciseSet;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,16 +64,12 @@ public interface DataAccessorInterface {
     void saveRoutine(Routine routineToSave);
 
     /**
-     * Get the sessionExerciseSetHash.
-     *
-     * @param Hash map of <idSessionExercise, List<SessionExerciseSet>>
-     * @return
+     * Get the HashMap for the SessionExerciseSet
+     * @return Hashmap of Sets
      */
     HashMap<Integer, List<SessionExerciseSet>> getSessionExerciseSetHash();
 
     List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise);
 
     RoutineSession getOrCreateLatestRoutineSession(Routine routine);
-
-    //void deleteRoutineSession(RoutineSession routineSession); // [TODO] remove
 }
