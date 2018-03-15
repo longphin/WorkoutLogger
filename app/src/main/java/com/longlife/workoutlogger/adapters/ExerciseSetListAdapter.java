@@ -5,10 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.enums.ExerciseRequestCode;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 
@@ -40,10 +40,12 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
         SessionExerciseSet bindingSessionExerciseSet = sessionExerciseSets.get(position);
         Integer weight = bindingSessionExerciseSet.getReps();
         Integer reps = bindingSessionExerciseSet.getWeights();
+        /*
         if (weight != null)
             holder.exerciseTypeText.setText(String.valueOf(weight));
         if (reps != null)
             holder.measurementTypeText.setText(String.valueOf(reps));
+        */
     }
 
     @Override
@@ -53,31 +55,47 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        public EditText exerciseTypeText;
-        public EditText measurementTypeText;
+        private final View.OnClickListener setOnClickListener = new SetOnClickListenerType();
+        private final View.OnClickListener scoreOnClickListener = new SetOnClickListenerScore();
+        public TextView typeText;
+        public TextView scoreText;
         public ViewGroup container;
 
         public CustomViewHolder(View itemView, Exercise exercise) {
             super(itemView);
             this.container = itemView.findViewById(R.id.root_exerciseSet);
-            this.exerciseTypeText = itemView.findViewById(R.id.editText_exerciseSet_exerciseType);
-            this.measurementTypeText = itemView.findViewById(R.id.editText_exerciseSet_measurementType);
 
-            ExerciseRequestCode.ExerciseType exerciseType = exercise.getExerciseType();
-            /*
-            if(exerciseType == ExerciseRequestCode.ExerciseType.BODYWEIGHT
-                    || exerciseType == ExerciseRequestCode.ExerciseType.WEIGHT)
-            {
-                exerciseTypeText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            }else if (exerciseType == ExerciseRequestCode.ExerciseType.DISTANCE)
-            {
-                exerciseTypeText.setInputType(InputType.TYPE_CLASS_TEXT);
+            this.typeText = itemView.findViewById(R.id.text_exerciseSet_type);
+            this.scoreText = itemView.findViewById(R.id.text_exerciseSet_score);
+            this.typeText.setOnClickListener(setOnClickListener);
+            this.scoreText.setOnClickListener(scoreOnClickListener);
+        }
+
+        // OnClick listener for the entire set container
+        private class SetOnClickListenerType implements View.OnClickListener {
+            // [TODO] When this is clicked, set it as the focus of the app and bring up a custom keyboard based on the exercise type.
+            @Override
+            public void onClick(View view) {
+                int pos = getAdapterPosition();
+
+                // Check if the item still exists in the position. For example, it will fail when the recycler view data is changed.
+                if (pos != RecyclerView.NO_POSITION) {
+                    Toast.makeText(context, "type click at " + Integer.toString(pos), Toast.LENGTH_SHORT).show();
+                }
             }
-            */
-            exerciseTypeText.setInputType(ExerciseRequestCode.getExerciseTypeInputType(exerciseType));
+        }
 
-            ExerciseRequestCode.MeasurementType measurementType = exercise.getMeasurementType();
-            measurementTypeText.setInputType(ExerciseRequestCode.getMeasurementTypeInputType(measurementType));
+        private class SetOnClickListenerScore implements View.OnClickListener {
+            // [TODO] When this is clicked, set it as the focus of the app and bring up a custom keyboard based on the measurement type.
+            @Override
+            public void onClick(View view) {
+                int pos = getAdapterPosition();
+
+                // Check if the item still exists in the position. For example, it will fail when the recycler view data is changed.
+                if (pos != RecyclerView.NO_POSITION) {
+                    Toast.makeText(context, "score click at " + Integer.toString(pos), Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 }
