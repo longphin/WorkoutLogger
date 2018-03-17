@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +70,7 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
         private final View.OnClickListener scoreOnClickListener = new SetOnClickListenerScore();
         //private final View.OnTouchListener scoreOnTouchListener = new SetOnTouchListenerScore();
         public TextView typeText;
-        public EditText scoreText;
+        public TextView scoreText;
         public ViewGroup container;
 
         public CustomViewHolder(View itemView) {
@@ -98,6 +97,9 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
                     this.scoreText.setTextColor(Color.parseColor("#4256f4"));
                     this.scoreText.requestFocus();
                 }
+
+                // [TODO] When the focus is reset, also open up the keyboard fragment.
+                ((RoutineActivity) context).createKeyboardFragment();
             }
         }
 
