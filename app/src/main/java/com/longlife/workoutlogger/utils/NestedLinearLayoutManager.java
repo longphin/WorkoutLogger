@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 /**
  * A custom Linear Layout Manager for a RecyclerView inside a RecyclerView.
+ * Thank you to user Khay at https://stackoverflow.com/questions/34569217/how-to-add-a-recyclerview-inside-another-recyclerview
  */
 public class NestedLinearLayoutManager extends LinearLayoutManager {
 
