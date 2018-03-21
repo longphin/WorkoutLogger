@@ -2,15 +2,20 @@ package com.longlife.workoutlogger.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.adapters.DataAccessor;
 import com.longlife.workoutlogger.adapters.ExerciseListAdapter;
 import com.longlife.workoutlogger.controller.RoutineExerciseController;
+import com.longlife.workoutlogger.enums.ExerciseRequestCode;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
+import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.utils.NestedLinearLayoutManager;
 import com.longlife.workoutlogger.utils.NumericKeyboardFragment;
 
@@ -22,6 +27,9 @@ public class RoutineActivity extends AppCompatActivity {
 
     private Routine thisRoutine;
     private RoutineSession thisRoutineSession;
+
+    // This is the set that is in focus
+    private SessionExerciseSet focusedSet; // [TODO] use this when setting the value when keyboard if pressed.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +51,51 @@ public class RoutineActivity extends AppCompatActivity {
         }
     }
 
-    public void createKeyboardFragment() {
-        // Create an instance of the fragment.
-        NumericKeyboardFragment kbFragment = new NumericKeyboardFragment();
+    public void setFocusedExerciseSet(SessionExerciseSet toFocus) {
+        focusedSet = toFocus;
+    }
 
-        // In case this activity was started with special instructions from an Intent,
-        // pass the Intent's extras to the fragment as arguments.
-        kbFragment.setArguments(getIntent().getExtras());
+    public void createKeyboardFragment(SessionExerciseSet sessionExerciseSet) {
+        // [TODO] Add view type parameter to createKeyboardFragment(), so that it can decide between typeText type and scoreText type
 
-        // Add the fragment to the fragment container.
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, kbFragment)
-                .commit();
+        /*
+         [TODO] add a InputType parameter, where the keyboard that is created depends on the type.
+         For example, numeric input, time input, etc.
+          */
+
+        ExerciseRequestCode.ExerciseType exerciseType = routineExerciseController.getExerciseType(sessionExerciseSet);
+
+        if (exerciseType == ExerciseRequestCode.ExerciseType.WEIGHT || exerciseType == ExerciseRequestCode.ExerciseType.WEIGHT) {
+            // Create an instance of the fragment.
+            NumericKeyboardFragment kbFragment = new NumericKeyboardFragment();
+
+            // In case this activity was started with special instructions from an Intent,
+            // pass the Intent's extras to the fragment as arguments.
+            kbFragment.setArguments(getIntent().getExtras());
+
+            // Add the fragment to the fragment container.
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, kbFragment)
+                    .commit();
+        } else {
+            // Clear all fragments in fragment container.
+            FragmentManager fm = getSupportFragmentManager();
+            for (Fragment fragment : fm.getFragments()) {
+                fm.beginTransaction()
+                        .remove(fragment)
+                        .commit();
+            }
+        }
+    }
+
+    public void addFocusValue(int val) {
+        if (focusedSet == null) return;
+
+        routineExerciseController.addValueToExerciseSet(focusedSet, val);
+
+        // [TODO] iterate through recycler views and get the focus item, then append val to the current value.
+        Toast.makeText(getApplicationContext(), String.valueOf(val),
+                Toast.LENGTH_SHORT).show();
     }
 
     private void initRoutineData() {

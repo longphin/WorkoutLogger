@@ -1,5 +1,6 @@
 package com.longlife.workoutlogger.adapters;
 
+import com.longlife.workoutlogger.enums.ExerciseRequestCode;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
@@ -69,7 +70,39 @@ public interface DataAccessorInterface {
      */
     HashMap<Integer, List<SessionExerciseSet>> getSessionExerciseSetHash();
 
+    /**
+     * Get the List of exercise sets for the session.
+     *
+     * @param sessionExercise
+     * @return
+     */
     List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise);
 
+    /**
+     * Get the latest routine session for the routine. Will create one if there is no non-performed session.
+     * @param routine
+     * @return
+     */
     RoutineSession getOrCreateLatestRoutineSession(Routine routine);
+
+    /**
+     * Get the exercise type for the session exercise.
+     *
+     * @param sessionExerciseSet
+     * @return
+     */
+    ExerciseRequestCode.ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet);
+
+    /**
+     * Get the measurement type for the session exercise.
+     *
+     * @param sessionExerciseSet
+     * @return
+     */
+    ExerciseRequestCode.MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet);
+
+    /**
+     *
+     */
+    void addValueToExerciseSet(SessionExerciseSet ses, int s);
 }

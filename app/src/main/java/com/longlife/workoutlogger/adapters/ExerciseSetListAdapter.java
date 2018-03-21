@@ -45,18 +45,19 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
     @Override
     public void onBindViewHolder(CustomViewHolder holder, int position) {
         SessionExerciseSet bindingSessionExerciseSet = sessionExerciseSets.get(position);
-        Integer weight = bindingSessionExerciseSet.getReps();
-        Integer reps = bindingSessionExerciseSet.getWeights();
+
+        // Set the values for the exercise set.
+        Double typeValue = bindingSessionExerciseSet.getWeights();
+        Integer scoreValue = bindingSessionExerciseSet.getReps();
+        if (typeValue != null)
+            holder.typeText.setText(String.valueOf(typeValue));
+
+        if (scoreValue != null)
+            holder.scoreText.setText(String.valueOf(scoreValue));
 
         // When the "focused" view is out of the screen, it is deleted. So we need to reset the focus
         // when the view comes back onto the screen.
         holder.resetFocusOnCreate(position);
-        /*
-        if (weight != null)
-            holder.exerciseTypeText.setText(String.valueOf(weight));
-        if (reps != null)
-            holder.measurementTypeText.setText(String.valueOf(reps));
-        */
     }
 
     @Override
@@ -79,14 +80,19 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
 
             this.typeText = itemView.findViewById(R.id.text_exerciseSet_type);
             this.scoreText = itemView.findViewById(R.id.text_exerciseSet_score);
+
+
             this.typeText.setOnClickListener(setOnClickListener);
             this.scoreText.setOnClickListener(scoreOnClickListener);
             //this.scoreText.setOnTouchListener(scoreOnTouchListener);
         }
 
-        // [TODO] Not working. It is supposed to set the newly binded view if it was the focus.
+        /***
+         * Reset focus to the view at the position @pos, if it is the focused view.
+         * @param pos
+         */
         private void resetFocusOnCreate(int pos) {
-            if (pos != RecyclerView.NO_POSITION
+            if (pos != RecyclerView.NO_POSITION // Check if the item still exists in the position. For example, it will fail when the recycler view data is changed.
                     && sessionExerciseSets.get(pos).getIdSessionExercise() == FocusedIdSessionExercise
                     && sessionExerciseSets.get(pos).getIdSessionExerciseSet() == FocusedIdSessionExerciseSet) {
                 if (this.typeText.getId() == FocusedIdView) {
@@ -98,11 +104,13 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
                     this.scoreText.requestFocus();
                 }
 
-                // [TODO] When the focus is reset, also open up the keyboard fragment.
-                ((RoutineActivity) context).createKeyboardFragment();
+                // When the focus is reset, also open up the keyboard fragment.
+                RoutineActivity ra = (RoutineActivity) context;
+                ra.createKeyboardFragment(sessionExerciseSets.get(pos));
             }
         }
 
+        // Set the focus to the view.
         private void setFocusedSetInfo(int pos, View v) {
             if (pos != RecyclerView.NO_POSITION
                     && (
@@ -124,7 +132,8 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
 
                 // Create keyboard based on the selected view's type
                 RoutineActivity ra = (RoutineActivity) context;
-                ra.createKeyboardFragment();
+                ra.setFocusedExerciseSet(sessionExerciseSets.get(pos));
+                ra.createKeyboardFragment(sessionExerciseSets.get(pos));
             }
         }
 
@@ -134,15 +143,6 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         view.requestFocus();
-                        /*
-                        int pos = getAdapterPosition();
-
-                        // Check if the item still exists in the position. For example, it will fail when the recycler view data is changed.
-                        if (pos != RecyclerView.NO_POSITION) {
-                            //[TODO] This should not set the focus because it switches unnecessarily
-                            setFocusedSetInfo(pos, view);
-                        }
-                        */
                         break;
                 }
                 return (false);
@@ -155,10 +155,7 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
             public void onClick(View view) {
                 int pos = getAdapterPosition();
 
-                // Check if the item still exists in the position. For example, it will fail when the recycler view data is changed.
-                if (pos != RecyclerView.NO_POSITION) {
-                    setFocusedSetInfo(pos, view);
-                }
+                setFocusedSetInfo(pos, view);
             }
         }
 
@@ -168,10 +165,7 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
             public void onClick(View view) {
                 int pos = getAdapterPosition();
 
-                // Check if the item still exists in the position. For example, it will fail when the recycler view data is changed.
-                if (pos != RecyclerView.NO_POSITION) {
-                    setFocusedSetInfo(pos, view);
-                }
+                setFocusedSetInfo(pos, view);
             }
         }
     }

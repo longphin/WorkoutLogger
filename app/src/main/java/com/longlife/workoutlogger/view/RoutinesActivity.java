@@ -27,6 +27,8 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
 
     private List<Routine> routines;
 
+    // [TODO] Need to fix. Not all routines are listed and not the order is not consistent.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

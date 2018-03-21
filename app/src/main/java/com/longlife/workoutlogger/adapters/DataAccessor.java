@@ -21,8 +21,8 @@ import java.util.List;
  */
 
 public class DataAccessor implements DataAccessorInterface {
-    private static HashMap<Integer, Routine> routines = new HashMap<>();//List<Routine> routines;
-    private static HashMap<Integer, Exercise> exercises = new HashMap<>();//List<Exercise> exercises;
+    private static HashMap<Integer, Routine> routines = new HashMap<>();// <IdRoutine, Routine> routines;
+    private static HashMap<Integer, Exercise> exercises = new HashMap<>();// <IdExercise, Exercise> exercises;
     //private static List<RoutineSession> routineSessions;
     //private static List<SessionExercise> sessionExercises;
     //private static List<SessionExerciseSet> sessionExerciseSets;
@@ -61,15 +61,15 @@ public class DataAccessor implements DataAccessorInterface {
             exercises.put(exerciseToAdd.getIdExercise(), exerciseToAdd);
         }
 
-            // routineSessionHash
-            AddToRoutineSessionHash(routines.get(1));
-            AddToRoutineSessionHash(routines.get(2));
-            AddToRoutineSessionHash(routines.get(3));
+        // routineSessionHash
+        AddToRoutineSessionHash(routines.get(1));
+        AddToRoutineSessionHash(routines.get(2));
+        AddToRoutineSessionHash(routines.get(3));
         AddToRoutineSessionHash(routines.get(4));
 
-            // sessionExerciseHash
-            SessionExercise addedSessionExercise;
-            // routine 1
+        // sessionExerciseHash
+        SessionExercise addedSessionExercise;
+        // routine 1
         addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(1));
         AddToSessionExerciseSetHash(addedSessionExercise, 3);
         addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(2));
@@ -88,7 +88,7 @@ public class DataAccessor implements DataAccessorInterface {
         AddToSessionExerciseSetHash(addedSessionExercise, 1);
         addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(1)), exercises.get(9));
 
-            // routine 2
+        // routine 2
         addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(2)), exercises.get(3));
         AddToSessionExerciseSetHash(addedSessionExercise, 2);
         addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(2)), exercises.get(2));
@@ -96,12 +96,12 @@ public class DataAccessor implements DataAccessorInterface {
         addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(2)), exercises.get(3));
         AddToSessionExerciseSetHash(addedSessionExercise, 1);
 
-            // routine 3
+        // routine 3
         addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(3)), exercises.get(1));
         AddToSessionExerciseSetHash(addedSessionExercise, 3);
         addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(3)), exercises.get(1));
 
-            // routine 4
+        // routine 4
         addedSessionExercise = AddToSessionExerciseHash(getOrCreateLatestRoutineSession(routines.get(4)), exercises.get(1));
     }
 
@@ -334,6 +334,42 @@ public class DataAccessor implements DataAccessorInterface {
         return (sessionExerciseSetHash.get(sessionExercise.getIdSessionExercise()));
     }
 
+    @Override
+    public ExerciseRequestCode.ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet) {
+        Exercise exercise = exercises.get(sessionExerciseSet.getIdExercise());
+        if (exercise != null) {
+            return (exercise.getExerciseType());
+        }
+
+        return (null);
+    }
+
+    @Override
+    public ExerciseRequestCode.MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet) {
+        Exercise exercise = exercises.get(sessionExerciseSet.getIdExercise());
+        if (exercise != null) {
+            return (exercise.getMeasurementType());
+        }
+
+        return (null);
+    }
+
+    @Override
+    public void addValueToExerciseSet(SessionExerciseSet sesToInsertInto, int s) {
+        List<SessionExerciseSet> listOfSets = sessionExerciseSetHash.get(sesToInsertInto.getIdSessionExercise());
+
+        int idSesToInsertInto = sesToInsertInto.getIdSessionExerciseSet();
+        for (SessionExerciseSet ses : listOfSets) {
+            if (ses.getIdSessionExerciseSet() == idSesToInsertInto) {
+                String currentVal = ses.getWeights().toString();
+                currentVal += String.valueOf(s);
+                ses.setWeights(Double.parseDouble(currentVal));
+                return; // exit after added
+            }
+        }
+    }
+
+    // Singleton accessor
     private static class DataAccessorHelper {
         private static final DataAccessor INSTANCE = new DataAccessor();
     }

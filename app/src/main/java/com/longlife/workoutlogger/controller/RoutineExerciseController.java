@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.controller;
 
 import com.longlife.workoutlogger.adapters.DataAccessorInterface;
+import com.longlife.workoutlogger.enums.ExerciseRequestCode;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
@@ -41,5 +42,21 @@ public class RoutineExerciseController {
 
     public RoutineSession getOrCreateLatestRoutineSession(Routine routine) {
         return (dataSource.getOrCreateLatestRoutineSession(routine));
+    }
+
+    /*
+        private ExerciseRequestCode.ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
+    private ExerciseRequestCode.MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
+     */
+    public ExerciseRequestCode.ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet) {
+        return (dataSource.getExerciseType(sessionExerciseSet));
+    }
+
+    public ExerciseRequestCode.MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet) {
+        return (dataSource.getMeasurementType(sessionExerciseSet));
+    }
+
+    public void addValueToExerciseSet(SessionExerciseSet ses, int s) {
+        dataSource.addValueToExerciseSet(ses, s);
     }
 }
