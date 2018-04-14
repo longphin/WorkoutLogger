@@ -361,7 +361,13 @@ public class DataAccessor implements DataAccessorInterface {
         int idSesToInsertInto = sesToInsertInto.getIdSessionExerciseSet();
         for (SessionExerciseSet ses : listOfSets) {
             if (ses.getIdSessionExerciseSet() == idSesToInsertInto) {
-                String currentVal = ses.getWeights().toString();
+                String currentVal = "";
+
+                Double currentWeights = ses.getWeights();
+                if (currentWeights != null) {
+                    currentVal = ses.getWeights().toString();
+                }
+
                 currentVal += String.valueOf(s);
                 ses.setWeights(Double.parseDouble(currentVal));
                 return; // exit after added
