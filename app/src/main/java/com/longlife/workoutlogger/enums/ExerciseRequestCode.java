@@ -50,13 +50,51 @@ public class ExerciseRequestCode {
     }
 
     public enum ExerciseType {
-        WEIGHT,
-        BODYWEIGHT,
-        DISTANCE
+        WEIGHT(0),
+        BODYWEIGHT(1),
+        DISTANCE(2);
+
+        private int _value;
+
+        ExerciseType(int val) {
+            this._value = val;
+        }
+
+        public static ExerciseType fromInt(int i) {
+            for (ExerciseType et : ExerciseType.values()) {
+                if (et.asInt() == i) {
+                    return (et);
+                }
+            }
+            return (null);
+        }
+
+        public int asInt() {
+            return _value;
+        }
     }
 
     public enum MeasurementType {
-        REP,
-        DURATION
+        REP(0),
+        DURATION(1);
+
+        private int _value;
+
+        MeasurementType(int val) {
+            this._value = val;
+        }
+
+        public static MeasurementType fromInt(int i) {
+            for (MeasurementType et : MeasurementType.values()) {
+                if (et.asInt() == i) {
+                    return (et);
+                }
+            }
+            return (null);
+        }
+
+        public int asInt() {
+            return _value;
+        }
     }
 }

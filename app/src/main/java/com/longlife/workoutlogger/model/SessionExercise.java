@@ -1,11 +1,23 @@
 package com.longlife.workoutlogger.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by Longphi on 1/4/2018.
  */
 
+@Entity(foreignKeys = {
+        @ForeignKey(entity = RoutineSession.class, parentColumns = "idRoutineSession", childColumns = "idRoutineSession", onDelete = ForeignKey.CASCADE),
+        // [TODO] This cascade is not preferred. Rather than deleting exercises, we should maybe hide them. Only delete exercises when they have no references.
+        @ForeignKey(entity = Exercise.class, parentColumns = "idExercise", childColumns = "idExercise", onDelete = ForeignKey.CASCADE)
+})
 public class SessionExercise {
+    @Ignore
     private static int IDENTITY = 0;
+    @PrimaryKey
     private final int idSessionExercise;
     private final int idRoutineSession;
     private final int idExercise;

@@ -1,5 +1,7 @@
 package com.longlife.workoutlogger.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,6 +11,7 @@ import com.longlife.workoutlogger.enums.ExerciseRequestCode;
  * This will be the Exercise object.
  */
 
+@Entity
 public class Exercise extends ExerciseAbstract implements Parcelable {
     // For Parcel.
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
@@ -23,6 +26,7 @@ public class Exercise extends ExerciseAbstract implements Parcelable {
         }
     };
     // Used to give a unique identifier to each instance if necessary.
+    @Ignore
     private static int IDENTITY = 0;
 
     // Create a standard Exercise with a unique Id.

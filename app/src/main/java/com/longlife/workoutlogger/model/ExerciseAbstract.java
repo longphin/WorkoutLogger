@@ -1,14 +1,18 @@
 package com.longlife.workoutlogger.model;
 
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
 import com.longlife.workoutlogger.enums.ExerciseRequestCode;
+import com.longlife.workoutlogger.utils.ExerciseComparator;
 
 /**
  * All Exercises should extend this class.
  */
-
 abstract class ExerciseAbstract {
     // Each Exercise will be given an Id.
-    final private int idExercise;
+    @PrimaryKey
+    private int idExercise;
     // For Exercises that are copies of the shared database, this will be the idExercise from the shared database.
     private int idExerciseShared;
     private String name = "new";
@@ -16,7 +20,9 @@ abstract class ExerciseAbstract {
     // Official Exercises will have this flag as true.
     private boolean IsPremade;
 
+    @TypeConverters({ExerciseComparator.class})
     private ExerciseRequestCode.ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
+    @TypeConverters({ExerciseComparator.class})
     private ExerciseRequestCode.MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
 
     // Normal constructor.
@@ -46,6 +52,10 @@ abstract class ExerciseAbstract {
 
     public void setExerciseType(ExerciseRequestCode.ExerciseType exerciseType) {
         this.exerciseType = exerciseType;
+    }
+
+    public void setIdExercise(int val) {
+        idExercise = val;
     }
 
     public int getIdExercise() {

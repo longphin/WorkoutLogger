@@ -1,12 +1,15 @@
 package com.longlife.workoutlogger.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
  * This will be the Routine object.
  */
-
+@Entity
 public class Routine implements Parcelable {
     // For Parcel.
     public static final Parcelable.Creator<Routine> CREATOR = new Parcelable.Creator<Routine>() {
@@ -22,7 +25,9 @@ public class Routine implements Parcelable {
         }
     };
     // Incremented value to ensure each Routine gets a unique Id.
+    @Ignore
     private static int IDENTITY = 0;
+    @PrimaryKey
     private int idRoutine;
     private String name = "new";
     private String description = "";

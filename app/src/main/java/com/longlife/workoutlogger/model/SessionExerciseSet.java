@@ -1,9 +1,18 @@
 package com.longlife.workoutlogger.model;
+
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by Longphi on 1/4/2018.
  */
+@Entity(foreignKeys = @ForeignKey(entity = SessionExercise.class, parentColumns = "idSessionExercise", childColumns = "idSessionExercise", onDelete = ForeignKey.CASCADE))
 public class SessionExerciseSet {
+    @Ignore
     private static int IDENTITY = 0;
+    @PrimaryKey
     private final int idSessionExerciseSet;
     private final int idSessionExercise;
     private final int idExercise; // This makes it easier to get the exercise types.

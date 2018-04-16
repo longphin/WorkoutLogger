@@ -1,5 +1,9 @@
 package com.longlife.workoutlogger.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,7 +13,7 @@ import java.util.GregorianCalendar;
 /**
  * Created by Longphi on 1/7/2018.
  */
-
+@Entity(foreignKeys = @ForeignKey(entity = Routine.class, parentColumns = "idRoutine", childColumns = "idRoutine", onDelete = ForeignKey.CASCADE))
 public class RoutineSession implements Parcelable {
     public static final Creator<RoutineSession> CREATOR = new Creator<RoutineSession>() {
         @Override
@@ -22,7 +26,9 @@ public class RoutineSession implements Parcelable {
             return new RoutineSession[size];
         }
     };
+    @Ignore
     private static int IDENTITY = 0;
+    @PrimaryKey
     private final int idRoutineSession;
     private final int idRoutine;
     private Date sessionDate = (new GregorianCalendar()).getTime();
