@@ -4,18 +4,21 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Index;
 
 /**
  * Created by Longphi on 1/4/2018.
  */
-@Entity(foreignKeys = @ForeignKey(entity = SessionExercise.class, parentColumns = "idSessionExercise", childColumns = "idSessionExercise", onDelete = ForeignKey.CASCADE))
+@Entity(foreignKeys = @ForeignKey(entity = SessionExercise.class, parentColumns = "idSessionExercise", childColumns = "idSessionExercise", onDelete = ForeignKey.CASCADE),
+    indices = {@Index(value = {"idSessionExercise"})}
+)
 public class SessionExerciseSet {
     @Ignore
     private static int IDENTITY = 0;
     @PrimaryKey
-    private final int idSessionExerciseSet;
-    private final int idSessionExercise;
-    private final int idExercise; // This makes it easier to get the exercise types.
+    private int idSessionExerciseSet;
+    private int idSessionExercise;
+    private int idExercise; // This makes it easier to get the exercise types.
 
     private Integer reps;
     private Double weights;
