@@ -3,10 +3,13 @@ package com.longlife.workoutlogger.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.arch.persistence.room.Index;
+
+import com.longlife.workoutlogger.enums.DateConverter;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -33,6 +36,7 @@ public class RoutineSession implements Parcelable {
     @PrimaryKey
     private int idRoutineSession;
     private int idRoutine;
+    @TypeConverters({DateConverter.class})
     private Date sessionDate = (new GregorianCalendar()).getTime();
     private boolean wasPerformed = false;
 

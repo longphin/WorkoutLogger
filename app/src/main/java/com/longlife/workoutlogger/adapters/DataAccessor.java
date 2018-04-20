@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.adapters;
 
-import com.longlife.workoutlogger.enums.ExerciseRequestCode;
+import com.longlife.workoutlogger.enums.ExerciseType;
+import com.longlife.workoutlogger.enums.MeasurementType;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
@@ -55,7 +56,7 @@ public class DataAccessor implements DataAccessorInterface {
         }
 
         for (int i = 0; i < 9; i++) {
-            Exercise exerciseToAdd = new Exercise("", "", ExerciseRequestCode.ExerciseType.BODYWEIGHT, ExerciseRequestCode.MeasurementType.REP, true);
+            Exercise exerciseToAdd = new Exercise("", "", ExerciseType.BODYWEIGHT, MeasurementType.REP, true);
             exerciseToAdd.setName("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " name");
             exerciseToAdd.setDescription("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " description");
             exercises.put(exerciseToAdd.getIdExercise(), exerciseToAdd);
@@ -156,7 +157,7 @@ public class DataAccessor implements DataAccessorInterface {
 
     @Override
     public List<Exercise> getExercises() {
-        List<Exercise> exercisesList = new ArrayList<Exercise>(exercises.values());
+        List<Exercise> exercisesList = new ArrayList<>(exercises.values());
 
         Collections.sort(exercisesList, new ExerciseComparator());
 
@@ -165,7 +166,7 @@ public class DataAccessor implements DataAccessorInterface {
 
     @Override
     public List<Routine> getRoutines() {
-        List<Routine> routinesList = new ArrayList<Routine>(routines.values());
+        List<Routine> routinesList = new ArrayList<>(routines.values());
 
         Collections.sort(routinesList, new RoutineComparator());
 
@@ -335,7 +336,7 @@ public class DataAccessor implements DataAccessorInterface {
     }
 
     @Override
-    public ExerciseRequestCode.ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet) {
+    public ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet) {
         Exercise exercise = exercises.get(sessionExerciseSet.getIdExercise());
         if (exercise != null) {
             return (exercise.getExerciseType());
@@ -345,7 +346,7 @@ public class DataAccessor implements DataAccessorInterface {
     }
 
     @Override
-    public ExerciseRequestCode.MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet) {
+    public MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet) {
         Exercise exercise = exercises.get(sessionExerciseSet.getIdExercise());
         if (exercise != null) {
             return (exercise.getMeasurementType());

@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.adapters;
 
-import com.longlife.workoutlogger.enums.ExerciseRequestCode;
+import com.longlife.workoutlogger.enums.ExerciseType;
+import com.longlife.workoutlogger.enums.MeasurementType;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
@@ -91,7 +92,7 @@ public interface DataAccessorInterface {
      * @param sessionExerciseSet
      * @return
      */
-    ExerciseRequestCode.ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet);
+    ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet);
 
     /**
      * Get the measurement type for the session exercise.
@@ -99,7 +100,7 @@ public interface DataAccessorInterface {
      * @param sessionExerciseSet
      * @return
      */
-    ExerciseRequestCode.MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet);
+    MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet);
 
     /**
      *

@@ -4,14 +4,11 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.longlife.workoutlogger.enums.ExerciseRequestCode;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
-import com.longlife.workoutlogger.model.SessionExerciseSet;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -72,7 +69,7 @@ public interface Dao {
     /**
      * Save information from an Exercise to the database.
      *
-     * @param exerciseToSave
+     * @param rs
      */
     //void saveExercise(Exercise exerciseToSave);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -87,7 +84,7 @@ public interface Dao {
      * @param routineSession
      * @return A copy of the routineSession.
      */
-    RoutineSession createRoutineSessionCopy(RoutineSession routineSession);
+    //RoutineSession createRoutineSessionCopy(RoutineSession routineSession); //[TODO]
 
     /**
      * Save information from a Routine to the database.
@@ -104,7 +101,7 @@ public interface Dao {
      *
      * @return Hashmap of Sets
      */
-    HashMap<Integer, List<SessionExerciseSet>> getSessionExerciseSetHash();
+    //HashMap<Integer, List<SessionExerciseSet>> getSessionExerciseSetHash(); //[TODO] maybe?
 
     /**
      * Get the List of exercise sets for the session.
@@ -112,7 +109,7 @@ public interface Dao {
      * @param sessionExercise
      * @return
      */
-    List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise);
+    //List<SessionExerciseSet> getSessionExerciseSets(SessionExercise sessionExercise); //[TODO]
 
     /**
      * Get the latest routine session for the routine. Will create one if there is no non-performed session.
@@ -120,7 +117,7 @@ public interface Dao {
      * @param routine
      * @return
      */
-    RoutineSession getOrCreateLatestRoutineSession(Routine routine);
+    //RoutineSession getOrCreateLatestRoutineSession(Routine routine); //[TODO]
 
     /**
      * Get the exercise type for the session exercise.
@@ -128,7 +125,7 @@ public interface Dao {
      * @param sessionExerciseSet
      * @return
      */
-    ExerciseRequestCode.ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet);
+    //ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet); //[TODO]
 
     /**
      * Get the measurement type for the session exercise.
@@ -136,10 +133,10 @@ public interface Dao {
      * @param sessionExerciseSet
      * @return
      */
-    ExerciseRequestCode.MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet);
+    //MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet); //[TODO]
 
     /**
      *
      */
-    void addValueToExerciseSet(SessionExerciseSet ses, int s);
+    //void addValueToExerciseSet(SessionExerciseSet ses, int s); // [should no longer need]
 }

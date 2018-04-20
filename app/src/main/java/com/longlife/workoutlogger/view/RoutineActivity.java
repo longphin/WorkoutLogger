@@ -12,7 +12,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.adapters.DataAccessor;
 import com.longlife.workoutlogger.adapters.ExerciseListAdapter;
 import com.longlife.workoutlogger.controller.RoutineExerciseController;
-import com.longlife.workoutlogger.enums.ExerciseRequestCode;
+import com.longlife.workoutlogger.enums.ExerciseType;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
@@ -63,9 +63,9 @@ public class RoutineActivity extends AppCompatActivity {
          For example, numeric input, time input, etc.
           */
 
-        ExerciseRequestCode.ExerciseType exerciseType = routineExerciseController.getExerciseType(sessionExerciseSet);
+        ExerciseType exerciseType = routineExerciseController.getExerciseType(sessionExerciseSet);
 
-        if (exerciseType == ExerciseRequestCode.ExerciseType.WEIGHT || exerciseType == ExerciseRequestCode.ExerciseType.WEIGHT) {
+        if (exerciseType == ExerciseType.WEIGHT || exerciseType == ExerciseType.BODYWEIGHT) {
             // Create an instance of the fragment.
             NumericKeyboardFragment kbFragment = new NumericKeyboardFragment();
 

@@ -3,8 +3,10 @@ package com.longlife.workoutlogger.model;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
-import com.longlife.workoutlogger.enums.ExerciseRequestCode;
-import com.longlife.workoutlogger.utils.ExerciseComparator;
+import com.longlife.workoutlogger.enums.ExerciseType;
+import com.longlife.workoutlogger.enums.ExerciseTypeConverter;
+import com.longlife.workoutlogger.enums.MeasurementType;
+import com.longlife.workoutlogger.enums.MeasurementTypeConverter;
 
 /**
  * All Exercises should extend this class.
@@ -20,13 +22,13 @@ abstract class ExerciseAbstract {
     // Official Exercises will have this flag as true.
     private boolean IsPremade;
 
-    @TypeConverters({ExerciseComparator.class})
-    private ExerciseRequestCode.ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
-    @TypeConverters({ExerciseComparator.class})
-    private ExerciseRequestCode.MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
+    @TypeConverters({ExerciseTypeConverter.class})
+    private ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
+    @TypeConverters({MeasurementTypeConverter.class})
+    private MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
 
     // Normal constructor.
-    public ExerciseAbstract(int idExercise, ExerciseRequestCode.ExerciseType et, ExerciseRequestCode.MeasurementType mt, boolean IsPremade) {
+    public ExerciseAbstract(int idExercise, ExerciseType et, MeasurementType mt, boolean IsPremade) {
         this.idExercise = idExercise;
         this.IsPremade = IsPremade;
         this.exerciseType = et;
@@ -34,23 +36,23 @@ abstract class ExerciseAbstract {
     }
 
     // Default constructor for non-premade Exercises.
-    public ExerciseAbstract(int idExercise, ExerciseRequestCode.ExerciseType et, ExerciseRequestCode.MeasurementType mt) {
+    public ExerciseAbstract(int idExercise, ExerciseType et, MeasurementType mt) {
         this(idExercise, et, mt, false);
     }
 
-    public ExerciseRequestCode.MeasurementType getMeasurementType() {
+    public MeasurementType getMeasurementType() {
         return measurementType;
     }
 
-    public void setMeasurementType(ExerciseRequestCode.MeasurementType measurementType) {
+    public void setMeasurementType(MeasurementType measurementType) {
         this.measurementType = measurementType;
     }
 
-    public ExerciseRequestCode.ExerciseType getExerciseType() {
+    public ExerciseType getExerciseType() {
         return exerciseType;
     }
 
-    public void setExerciseType(ExerciseRequestCode.ExerciseType exerciseType) {
+    public void setExerciseType(ExerciseType exerciseType) {
         this.exerciseType = exerciseType;
     }
 

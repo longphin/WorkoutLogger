@@ -4,7 +4,8 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.longlife.workoutlogger.enums.ExerciseRequestCode;
+import com.longlife.workoutlogger.enums.ExerciseType;
+import com.longlife.workoutlogger.enums.MeasurementType;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
@@ -45,7 +46,7 @@ public abstract class Database extends RoomDatabase {
 
     private static Database INSTANCE;
 
-    private Database() {
+    public Database() {
         for (int i = 0; i < 9; i++) {
             Routine routineToAdd = new Routine("", "", true);
             routineToAdd.setName("routine " + String.valueOf(routineToAdd.getIdRoutine()) + " name");
@@ -54,7 +55,7 @@ public abstract class Database extends RoomDatabase {
         }
 
         for (int i = 0; i < 9; i++) {
-            Exercise exerciseToAdd = new Exercise("", "", ExerciseRequestCode.ExerciseType.BODYWEIGHT, ExerciseRequestCode.MeasurementType.REP, true);
+            Exercise exerciseToAdd = new Exercise("", "", ExerciseType.BODYWEIGHT, MeasurementType.REP, true);
             exerciseToAdd.setName("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " name");
             exerciseToAdd.setDescription("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " description");
             exercises.put(exerciseToAdd.getIdExercise(), exerciseToAdd);
@@ -335,7 +336,7 @@ public abstract class Database extends RoomDatabase {
         return (sessionExerciseSetHash.get(sessionExercise.getIdSessionExercise()));
     }
 
-    public ExerciseRequestCode.ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet) {
+    public ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet) {
         Exercise exercise = exercises.get(sessionExerciseSet.getIdExercise());
         if (exercise != null) {
             return (exercise.getExerciseType());
@@ -344,7 +345,7 @@ public abstract class Database extends RoomDatabase {
         return (null);
     }
 
-    public ExerciseRequestCode.MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet) {
+    public MeasurementType getMeasurementType(SessionExerciseSet sessionExerciseSet) {
         Exercise exercise = exercises.get(sessionExerciseSet.getIdExercise());
         if (exercise != null) {
             return (exercise.getMeasurementType());
