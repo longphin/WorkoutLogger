@@ -11,6 +11,7 @@ import com.longlife.workoutlogger.v2.model.RoutineSession;
 import com.longlife.workoutlogger.v2.model.SessionExercise;
 import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -43,19 +44,23 @@ public interface Dao {
 
     // Inserts
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    void addExercises(Exercise... ex);
+    void insertExercises(ArrayList<Exercise> ex);
 
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    void addRoutines(Routine... r);
+    void insertRoutines(ArrayList<Routine> r);
+
+    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
+    void insertRoutine(Routine r);
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void addRoutineSession(RoutineSession rs);
+    void insertRoutineSession(RoutineSession rs);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void addSessionExercises(SessionExercise... se);
+    void insertSessionExercises(ArrayList<SessionExercise> se);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void addSessionExerciseSets(SessionExerciseSet... ses);
+    void insertSessionExerciseSets(ArrayList<SessionExerciseSet> ses);
 
     // Deletes
     @Delete

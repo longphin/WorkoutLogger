@@ -1,32 +1,14 @@
 package com.longlife.workoutlogger.v2.model;
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 /**
  * This will be the Routine object.
  */
 @Entity
-public class Routine implements Parcelable {
-    // For Parcel.
-    public static final Creator<Routine> CREATOR = new Creator<Routine>() {
-
-        @Override
-        public Routine createFromParcel(Parcel parcel) {
-            return (new Routine(parcel));
-        }
-
-        @Override
-        public Routine[] newArray(int size) {
-            return (new Routine[size]);
-        }
-    };
+public class Routine {
     // Incremented value to ensure each Routine gets a unique Id.
-    @Ignore
-    private static int IDENTITY = 0;
     @PrimaryKey
     private int idRoutine;
     private String name = "new";
@@ -46,75 +28,16 @@ public class Routine implements Parcelable {
     // Order that the Routine is displayed in RoutinesActivity.
     private int displayOrder;
 
-    /**
-     * Constructor that only sets the Id.
-     */
+
     public Routine() {
-        this.idRoutine = Routine.IDENTITY += 1;
+
     }
 
-    /**
-     * Constructor for non-premade Routines.
-     *
-     * @param name
-     * @param description
-     */
-    public Routine(String name, String description) {
-        this(name, description, false);
-    }
-
-    /**
-     * Constructor with a chosen IsPremade flag.
-     *
-     * @param name
-     * @param description
-     * @param IsPremade
-     */
-    public Routine(String name, String description, boolean IsPremade) {
-
-        this.idRoutine = Routine.IDENTITY += 1;
-        this.name = name;
-        this.description = description;
-        this.IsPremade = IsPremade;
-    }
-
-    /**
-     * Constructor for Parcel.
-     *
-     * @param parcel
-     */
-    public Routine(Parcel parcel) {
-        idRoutine = parcel.readInt();
-        name = parcel.readString();
-        description = parcel.readString();
-        IsPremade = parcel.readByte() != 0;
-    }
-
-    /**
-     * Display order for the Routine.
-     *
-     * @return int
-     */
     public int getDisplayOrder() {
         return displayOrder;
     }
-
-    /**
-     * Set display order for the Routine.
-     *
-     * @param displayOrder
-     */
     public void setDisplayOrder(int displayOrder) {
         this.displayOrder = displayOrder;
-    }
-
-    // For Parcel.
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(idRoutine);
-        parcel.writeString(name);
-        parcel.writeString(description);
-        parcel.writeByte((byte) (IsPremade ? 1 : 0));
     }
 
     public String getName() {
@@ -211,12 +134,5 @@ public class Routine implements Parcelable {
 
     public void setIsPremade(boolean b) {
         IsPremade = b;
-    }
-
-
-    // For Parcel.
-    @Override
-    public int describeContents() {
-        return 0;
     }
 }

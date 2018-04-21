@@ -2,7 +2,6 @@ package com.longlife.workoutlogger.v2.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -13,8 +12,6 @@ import android.arch.persistence.room.PrimaryKey;
         indices = {@Index(value = {"idSessionExercise"})}
 )
 public class SessionExerciseSet {
-    @Ignore
-    private static int IDENTITY = 0;
     @PrimaryKey
     private int idSessionExerciseSet;
     private int idSessionExercise;
@@ -26,19 +23,7 @@ public class SessionExerciseSet {
     private float duration;
 
     public SessionExerciseSet() {
-        idSessionExerciseSet = IDENTITY += 1;
-    }
 
-    public SessionExerciseSet(SessionExercise sessionExercise) {
-        this.idSessionExerciseSet = IDENTITY += 1;
-        this.idExercise = sessionExercise.getIdExercise();
-        this.idSessionExercise = sessionExercise.getIdSessionExercise();
-    }
-
-    public SessionExerciseSet(SessionExerciseSet sessionExerciseSetToCopy) {
-        this.idSessionExerciseSet = IDENTITY += 1;
-        this.idExercise = sessionExerciseSetToCopy.getIdExercise();
-        this.idSessionExercise = sessionExerciseSetToCopy.getIdSessionExercise();
     }
 
     public int getIdSessionExerciseSet() {

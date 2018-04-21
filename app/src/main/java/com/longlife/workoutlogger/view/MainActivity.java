@@ -1,8 +1,8 @@
 package com.longlife.workoutlogger.view;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.longlife.workoutlogger.R;
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     public void gotoRoutines(View view)
     {
         //Intent intent = new Intent(this, RoutinesActivity.class);
-        Intent intent = new Intent(this, RoutinesActivity.class);
+        Intent intent = new Intent(this, com.longlife.workoutlogger.v2.RoutineOverview.RoutinesOverviewActivity.class);
         startActivity(intent);
     }
 

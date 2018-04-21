@@ -20,12 +20,12 @@ public class DatabaseInitializer {
     }
 
     private static void addRoutine(final Database db, Routine routine) {
-        db.dao().addRoutines(routine);
+        db.dao().insertRoutine(routine);
     }
 
     private static void populateWithTestData(Database db) {
         for (int i = 0; i < 9; i++) {
-            Routine routineToAdd = new Routine("", "", true);
+            Routine routineToAdd = new Routine();
             routineToAdd.setName("routine " + String.valueOf(routineToAdd.getIdRoutine()) + " name");
             routineToAdd.setDescription("routine " + String.valueOf(routineToAdd.getIdRoutine()) + " description");
             //routines.put(routineToAdd.getIdRoutine(), routineToAdd);

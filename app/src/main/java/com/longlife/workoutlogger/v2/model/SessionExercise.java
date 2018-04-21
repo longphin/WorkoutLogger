@@ -2,7 +2,6 @@ package com.longlife.workoutlogger.v2.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -23,8 +22,6 @@ import android.arch.persistence.room.PrimaryKey;
         }
 )
 public class SessionExercise {
-    @Ignore
-    private static int IDENTITY = 0;
     @PrimaryKey
     private int idSessionExercise;
     private int idRoutineSession;
@@ -34,20 +31,7 @@ public class SessionExercise {
     private long defaultRestTime; // [TODO] this will be used to give a default rest time
 
     public SessionExercise() {
-        this.idSessionExercise = IDENTITY += 1;
-    }
 
-    public SessionExercise(RoutineSession routineSession, Exercise exercise) {
-        this.idSessionExercise = IDENTITY += 1;
-        this.idRoutineSession = routineSession.getIdRoutineSession();
-        this.idExercise = exercise.getIdExercise();
-    }
-
-    // copy constructor
-    public SessionExercise(RoutineSession routineSession, SessionExercise sessionExerciseToCopy) {
-        this.idSessionExercise = IDENTITY += 1;
-        this.idRoutineSession = routineSession.getIdRoutineSession();
-        this.idExercise = sessionExerciseToCopy.getIdExercise();
     }
 
     public int getDisplayOrder() {
