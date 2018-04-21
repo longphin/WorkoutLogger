@@ -1,9 +1,9 @@
-package com.longlife.workoutlogger.adapters;
+package com.longlife.workoutlogger.v2.data;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.v2.model.Routine;
 
 /**
  * Created by Longphi on 4/15/2018.

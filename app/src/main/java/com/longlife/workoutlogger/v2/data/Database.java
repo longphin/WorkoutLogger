@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.adapters;
+package com.longlife.workoutlogger.v2.data;
 
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
@@ -6,14 +6,14 @@ import android.content.Context;
 
 import com.longlife.workoutlogger.enums.ExerciseType;
 import com.longlife.workoutlogger.enums.MeasurementType;
-import com.longlife.workoutlogger.model.Exercise;
-import com.longlife.workoutlogger.model.Routine;
-import com.longlife.workoutlogger.model.RoutineSession;
-import com.longlife.workoutlogger.model.SessionExercise;
-import com.longlife.workoutlogger.model.SessionExerciseSet;
-import com.longlife.workoutlogger.utils.ExerciseComparator;
-import com.longlife.workoutlogger.utils.RoutineComparator;
-import com.longlife.workoutlogger.utils.SessionExerciseComparator;
+import com.longlife.workoutlogger.v2.model.Exercise;
+import com.longlife.workoutlogger.v2.model.Routine;
+import com.longlife.workoutlogger.v2.model.RoutineSession;
+import com.longlife.workoutlogger.v2.model.SessionExercise;
+import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
+import com.longlife.workoutlogger.v2.model.comparators.ExerciseComparator;
+import com.longlife.workoutlogger.v2.model.comparators.RoutineComparator;
+import com.longlife.workoutlogger.v2.model.comparators.SessionExerciseComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +55,7 @@ public abstract class Database extends RoomDatabase {
         }
 
         for (int i = 0; i < 9; i++) {
-            Exercise exerciseToAdd = new Exercise("", "", ExerciseType.BODYWEIGHT, MeasurementType.REP, true);
+            Exercise exerciseToAdd = new Exercise();
             exerciseToAdd.setName("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " name");
             exerciseToAdd.setDescription("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " description");
             exercises.put(exerciseToAdd.getIdExercise(), exerciseToAdd);

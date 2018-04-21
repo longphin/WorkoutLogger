@@ -52,7 +52,8 @@
         <activity android:name=".view.z_RoutineActivity" />
         <activity android:name=".view.z_SetListItemActivity" />
         <activity android:name=".view.RoutineActivity" />
-        <activity android:name=".view.RoutinesListActivity"></activity>
+        <activity android:name=".view.RoutinesListActivity" />
+        <activity android:name=".v2.RoutineOverview.RoutinesOverviewActivity"></activity>
     </application>
 
 </manifest>

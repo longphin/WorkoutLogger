@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.adapters.Database;
-import com.longlife.workoutlogger.adapters.DatabaseInitializer;
+import com.longlife.workoutlogger.v2.data.Database;
+import com.longlife.workoutlogger.v2.data.DatabaseInitializer;
 
 public class RoutinesListActivity extends AppCompatActivity {
 
