@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     public void gotoRoutines(View view)
     {
         //Intent intent = new Intent(this, RoutinesActivity.class);
-        Intent intent = new Intent(this, com.longlife.workoutlogger.v2.RoutineOverview.RoutinesOverviewActivity.class);
+        Intent intent = new Intent(this, com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewActivity.class);
         startActivity(intent);
     }
 

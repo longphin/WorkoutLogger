@@ -1,23 +1,28 @@
-package com.longlife.workoutlogger.v2.RoutineOverview;
+package com.longlife.workoutlogger.v2.view.RoutineOverview;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.v2.data.Database;
-import com.longlife.workoutlogger.v2.model.Routine;
+import com.longlife.workoutlogger.utils.BaseActivity;
 
-import java.util.ArrayList;
-import java.util.List;
+public class RoutinesOverviewActivity extends BaseActivity {
+    private static final String TAG_FRAG = "ROUTINESOVERVIEW_FRAG";
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_routines_overview);
 
-public class RoutinesOverviewActivity extends AppCompatActivity {
+        FragmentManager manager = getSupportFragmentManager();
+        RoutinesOverviewFragment fragment = (RoutinesOverviewFragment) manager.findFragmentByTag(TAG_FRAG);
+        if (fragment == null) {
+            fragment = RoutinesOverviewFragment.newInstance();
+        }
+
+        addFragmentToActivity(manager, fragment, R.id.root_routines_overview, TAG_FRAG);
+    }
+/*
     private RecyclerView rv_routinesList;
 
     private Observable<List<Routine>> routines;// = Database.getInstance(this).getRoutines();
@@ -49,7 +54,7 @@ public class RoutinesOverviewActivity extends AppCompatActivity {
 
         db.dao().insertRoutines(routinesToAdd);
 
-        // Subscribe to get data
+        // Subscribe to get data // [TODO] Need
         db.dao().getRoutines()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread());
@@ -64,4 +69,5 @@ public class RoutinesOverviewActivity extends AppCompatActivity {
             Log.e("routine name: ", routines.get(i).getName());
         }
     }
+    */
 }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".v2.RoutineOverview.RoutinesOverviewActivity">
+    android:id="@+id/root_routines_overview"
+    tools:context=".v2.view.RoutineOverview.RoutinesOverviewActivity">
 
     <!-- This will be a nested recyclerview with rv_routinesList showing the routines. -->
     <android.support.v7.widget.RecyclerView
