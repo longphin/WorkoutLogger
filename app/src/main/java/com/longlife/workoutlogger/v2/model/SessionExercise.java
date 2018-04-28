@@ -5,6 +5,8 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
+import io.reactivex.annotations.NonNull;
+
 /**
  * Created by Longphi on 1/4/2018.
  */
@@ -23,6 +25,7 @@ import android.arch.persistence.room.PrimaryKey;
 )
 public class SessionExercise {
     @PrimaryKey
+    @NonNull
     private int idSessionExercise;
     private int idRoutineSession;
     private int idExercise;

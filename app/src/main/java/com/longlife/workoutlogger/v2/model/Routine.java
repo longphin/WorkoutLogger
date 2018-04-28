@@ -3,6 +3,8 @@ package com.longlife.workoutlogger.v2.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import io.reactivex.annotations.NonNull;
+
 /**
  * This will be the Routine object.
  */
@@ -10,6 +12,7 @@ import android.arch.persistence.room.PrimaryKey;
 public class Routine {
     // Incremented value to ensure each Routine gets a unique Id.
     @PrimaryKey
+    @NonNull
     private int idRoutine;
     private String name = "new";
     private String description = "";

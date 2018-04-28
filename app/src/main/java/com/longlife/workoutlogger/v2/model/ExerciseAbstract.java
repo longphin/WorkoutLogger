@@ -8,12 +8,15 @@ import com.longlife.workoutlogger.enums.ExerciseTypeConverter;
 import com.longlife.workoutlogger.enums.MeasurementType;
 import com.longlife.workoutlogger.enums.MeasurementTypeConverter;
 
+import io.reactivex.annotations.NonNull;
+
 /**
  * All Exercises should extend this class.
  */
 abstract class ExerciseAbstract {
     // Each Exercise will be given an Id.
     @PrimaryKey
+    @NonNull
     private int idExercise;
     // For Exercises that are copies of the shared database, this will be the idExercise from the shared database.
     private int idExerciseShared;

@@ -1,10 +1,13 @@
 package com.longlife.workoutlogger.v2.dependencyinjection;
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.persistence.room.Room;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.v2.data.Dao;
 import com.longlife.workoutlogger.v2.data.Database;
+import com.longlife.workoutlogger.v2.data.Repository;
+import com.longlife.workoutlogger.v2.view.CustomViewModelFactory;
 
 import javax.inject.Singleton;
 
@@ -12,10 +15,10 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class RoomModule {
+public class DatabaseModule {
     private final Database database;
 
-    public RoomModule(MyApplication application) {
+    public DatabaseModule(MyApplication application) {
         this.database =
                 Room.databaseBuilder(
                         application,
@@ -36,12 +39,16 @@ public class RoomModule {
         return (db.dao());
     }
 
-    /*
     @Provides
     @Singleton
-    ViewModelProvider.Factory provideViewModelFactory(Database db)
-    {
-        return(new CustomViewModelFactory(db));
+    Repository provideRepository(Dao dao) {
+        return (new Repository(dao));
     }
-    */
+
+    @Provides
+    @Singleton
+    ViewModelProvider.Factory provideViewModelFactory(Repository repo)
+    {
+        return (new CustomViewModelFactory(repo));
+    }
 }

@@ -1,6 +1,6 @@
 package com.longlife.workoutlogger;
 
-import com.longlife.workoutlogger.v2.dependencyinjection.RoomModule;
+import com.longlife.workoutlogger.v2.dependencyinjection.DatabaseModule;
 
 import javax.inject.Singleton;
 
@@ -13,7 +13,7 @@ import dagger.android.AndroidInjector;
         modules = {
                 AndroidInjectionModule.class,
                 MyApplicationModule.class,
-                RoomModule.class
+                DatabaseModule.class
         }
 )
 public interface MyApplicationComponent extends AndroidInjector<MyApplication> {

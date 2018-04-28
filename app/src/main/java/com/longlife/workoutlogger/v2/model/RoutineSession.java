@@ -11,6 +11,8 @@ import com.longlife.workoutlogger.enums.DateConverter;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import io.reactivex.annotations.NonNull;
+
 /**
  * Created by Longphi on 1/7/2018.
  */
@@ -18,6 +20,7 @@ import java.util.GregorianCalendar;
         indices = {@Index(value = {"idRoutine"})})
 public class RoutineSession {
     @PrimaryKey
+    @NonNull
     private int idRoutineSession;
     private int idRoutine;
     @TypeConverters({DateConverter.class})
