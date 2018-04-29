@@ -19,7 +19,7 @@ import io.reactivex.annotations.NonNull;
 @Entity(foreignKeys = @ForeignKey(entity = Routine.class, parentColumns = "idRoutine", childColumns = "idRoutine", onDelete = ForeignKey.CASCADE),
         indices = {@Index(value = {"idRoutine"})})
 public class RoutineSession {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     private int idRoutineSession;
     private int idRoutine;

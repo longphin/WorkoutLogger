@@ -14,7 +14,7 @@ import io.reactivex.annotations.NonNull;
         indices = {@Index(value = {"idSessionExercise"})}
 )
 public class SessionExerciseSet {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     private int idSessionExerciseSet;
     private int idSessionExercise;

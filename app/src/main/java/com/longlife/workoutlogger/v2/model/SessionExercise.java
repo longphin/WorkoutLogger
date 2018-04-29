@@ -24,7 +24,7 @@ import io.reactivex.annotations.NonNull;
         }
 )
 public class SessionExercise {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     private int idSessionExercise;
     private int idRoutineSession;

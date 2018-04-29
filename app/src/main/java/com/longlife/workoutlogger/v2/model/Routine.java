@@ -11,7 +11,7 @@ import io.reactivex.annotations.NonNull;
 @Entity
 public class Routine {
     // Incremented value to ensure each Routine gets a unique Id.
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     private int idRoutine;
     private String name = "new";

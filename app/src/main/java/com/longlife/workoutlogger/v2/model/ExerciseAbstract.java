@@ -15,7 +15,7 @@ import io.reactivex.annotations.NonNull;
  */
 abstract class ExerciseAbstract {
     // Each Exercise will be given an Id.
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     private int idExercise;
     // For Exercises that are copies of the shared database, this will be the idExercise from the shared database.

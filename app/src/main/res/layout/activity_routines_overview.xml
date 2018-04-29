@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root_routines_overview"
-    tools:context=".v2.view.RoutineOverview.RoutinesOverviewActivity">
-
-    <!-- This will be a nested recyclerview with rv_routinesList showing the routines. -->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_routinesList"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-</android.support.constraint.ConstraintLayout>
+    tools:context=".v2.view.RoutineOverview.RoutinesOverviewActivity"
+    android:id="@+id/root_routines_overview" />
