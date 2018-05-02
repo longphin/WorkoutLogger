@@ -1,25 +1,23 @@
 package com.longlife.workoutlogger;
 
-import android.app.Activity;
 import android.app.Application;
 
-import javax.inject.Inject;
+import com.longlife.workoutlogger.v2.data.RoomModule;
 
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
-
-public class MyApplication extends Application implements HasActivityInjector {
-    @Inject
-    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
+public class MyApplication extends Application {
+    private MyApplicationComponent component;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        DaggerMyApplicationComponent.create().inject(this);
+
+        component = DaggerMyApplicationComponent.builder()
+                .myApplicationModule(new MyApplicationModule(this))
+                .roomModule(new RoomModule(this))
+                .build();
     }
 
-    @Override
-    public DispatchingAndroidInjector<Activity> activityInjector() {
-        return (dispatchingAndroidInjector);
+    public MyApplicationComponent getApplicationComponent() {
+        return (component);
     }
 }

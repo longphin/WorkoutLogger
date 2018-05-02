@@ -1,12 +1,25 @@
 package com.longlife.workoutlogger;
 
-import com.longlife.workoutlogger.view.MainActivity;
+import android.app.Application;
 
 import dagger.Module;
-import dagger.android.ContributesAndroidInjector;
+import dagger.Provides;
 
 @Module
-public abstract class MyApplicationModule {
-    @ContributesAndroidInjector
-    abstract MainActivity contributeActivityInjector();
+public class MyApplicationModule {
+    private final MyApplication application;
+
+    public MyApplicationModule(MyApplication application) {
+        this.application = application;
+    }
+
+    @Provides
+    MyApplication provideMyApplication() {
+        return (application);
+    }
+
+    @Provides
+    Application provideApplication() {
+        return (application);
+    }
 }

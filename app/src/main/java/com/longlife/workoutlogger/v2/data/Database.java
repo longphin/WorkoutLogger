@@ -14,7 +14,6 @@ import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
  * Created by Longphi on 1/5/2018.
  */
 
-
 @android.arch.persistence.room.Database(
         entities =
                 {
@@ -24,16 +23,13 @@ import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
                         SessionExercise.class,
                         SessionExerciseSet.class
                 },
-        version = 1
+        version = Database.VERSION
 )
 public abstract class Database extends RoomDatabase {
+    public static final int VERSION = 1; // Initial version
+
     private static Database INSTANCE;
-
     public abstract Dao dao();
-
-    public Database() {
-
-    }
 
     public static Database getInstance(Context context) {
         if (INSTANCE == null) {

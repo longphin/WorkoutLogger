@@ -6,8 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.v2.data.Repository;
+
+import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
+    @Inject
+    public Repository repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
