@@ -14,9 +14,6 @@ import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Flowable;
-import io.reactivex.Maybe;
-
 /**
  * Created by Longphi on 1/3/2018.
  */
@@ -33,16 +30,16 @@ public interface Dao {
     List<Routine> getRoutines();
 
     @Query("SELECT * FROM RoutineSession WHERE idRoutine = :idRoutine AND wasPerformed = 0 ORDER BY sessionDate DESC LIMIT 1")
-    Maybe<RoutineSession> getLatestRoutineSession(int idRoutine);
+    RoutineSession getLatestRoutineSession(int idRoutine);
 
     @Query("SELECT * FROM SessionExercise WHERE idRoutineSession = :idRoutineSession")
-    Flowable<List<SessionExercise>> getSessionExercises(int idRoutineSession);
+    List<SessionExercise> getSessionExercises(int idRoutineSession);
 
     @Query("SELECT e.*" +
             " FROM SessionExercise as se" +
             " INNER JOIN Exercise as e on se.idExercise=e.idExercise" +
             " WHERE se.idSessionExercise = :idSessionExercise")
-    Flowable<Exercise> getExerciseFromSession(int idSessionExercise);
+    Exercise getExerciseFromSession(int idSessionExercise);
 
     // Inserts
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
@@ -52,8 +49,7 @@ public interface Dao {
     void insertRoutines(ArrayList<Routine> r);
 
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    void insertRoutine(Routine r);
-
+    Long insertRoutine(Routine r);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertRoutineSession(RoutineSession rs);

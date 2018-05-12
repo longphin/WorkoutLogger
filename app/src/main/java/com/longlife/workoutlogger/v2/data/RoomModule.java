@@ -19,7 +19,7 @@ public class RoomModule {
         db = Room.databaseBuilder(
                 application,
                 Database.class,
-                "Database")
+                "Database.db")
                 .build();
     }
 

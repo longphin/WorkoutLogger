@@ -1,8 +1,6 @@
 package com.longlife.workoutlogger.v2.data;
 
-import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.content.Context;
 
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.Routine;
@@ -28,8 +26,10 @@ import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
 public abstract class Database extends RoomDatabase {
     public static final int VERSION = 1; // Initial version
 
-    private static Database INSTANCE;
     public abstract Dao dao();
+
+    /*
+    private static Database INSTANCE;
 
     public static Database getInstance(Context context) {
         if (INSTANCE == null) {
@@ -38,6 +38,5 @@ public abstract class Database extends RoomDatabase {
         }
         return (INSTANCE);
     }
-
-
+    */
 }
