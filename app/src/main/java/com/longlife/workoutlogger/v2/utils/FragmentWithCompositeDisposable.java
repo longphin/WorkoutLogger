@@ -1,18 +1,18 @@
 package com.longlife.workoutlogger.v2.utils;
 
-import android.arch.lifecycle.ViewModel;
+import android.support.v4.app.Fragment;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public abstract class ViewModelWithCompositeDisposable extends ViewModel {
-    public CompositeDisposable composite = new CompositeDisposable();
+public class FragmentWithCompositeDisposable extends Fragment {
+    private CompositeDisposable composite = new CompositeDisposable();
 
     public void addDisposable(Disposable d) {
         composite.add(d);
     }
 
-    public void clearComposite() {
+    public void clearDisposables() {
         composite.clear();
     }
 }

@@ -1,19 +1,13 @@
 package com.longlife.workoutlogger.v2.view.RoutineOverview;
 
+import android.arch.lifecycle.ViewModel;
+
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.model.Routine;
-import com.longlife.workoutlogger.v2.utils.ViewModelWithCompositeDisposable;
 
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-
-// [TODO] do this a different way. Look up Room and RxJava2
-public class RoutinesOverviewViewModel extends ViewModelWithCompositeDisposable {
+public class RoutinesOverviewViewModel extends ViewModel {
     private Repository repo;
 
     public RoutinesOverviewViewModel(Repository repo) {
@@ -21,11 +15,37 @@ public class RoutinesOverviewViewModel extends ViewModelWithCompositeDisposable 
     }
 
     public List<Routine> getRoutines() {
+        /*
+        composite.add(
+                Observable.fromCallable(() -> repo.getRoutines())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(
+                                new DisposableObserver<List<Routine>>() {
+                                    @Override
+                                    protected void onStart() {
+                                        super.onStart();
+                                    }
+
+                                    @Override
+                                    public void onNext(@NonNull List<Routine> routines) {
+                                    }
+
+                                    @Override
+                                    public void onError(@NonNull Throwable e) {
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                    }
+                                }
+                        ));
+        */
 
         return (repo.getRoutines());
     }
 
-    public void insertRoutine(Routine routine) {
+    public Long insertRoutine(Routine routine) {
         /*
         composite.add(repo.insertRoutine(routine)
                 .subscribeOn(Schedulers.io())
@@ -50,10 +70,12 @@ public class RoutinesOverviewViewModel extends ViewModelWithCompositeDisposable 
         ));
         */
 
+        /*
+        composite.add(
         Observable.fromCallable(() -> repo.insertRoutine(routine))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
+                .subscribeWith(
                         new DisposableObserver<Long>() {
                             @Override
                             protected void onStart() {
@@ -72,9 +94,13 @@ public class RoutinesOverviewViewModel extends ViewModelWithCompositeDisposable 
                             public void onComplete() {
                             }
                         }
-                );
+                ));
+                */
+        return (repo.insertRoutine(routine));
 
     }
 
     //[TODO] add method for adding and deleting routines
+
+    // [TODO] clear composite by calling clearComposite() (in abstract class)
 }

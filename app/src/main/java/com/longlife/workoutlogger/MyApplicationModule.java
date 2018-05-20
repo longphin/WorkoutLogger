@@ -9,6 +9,9 @@ import dagger.Provides;
 public class MyApplicationModule {
     private final MyApplication application;
 
+    //@Inject
+    //public Repository repo;
+
     public MyApplicationModule(MyApplication application) {
         this.application = application;
     }
