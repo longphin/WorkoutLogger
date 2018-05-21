@@ -22,11 +22,9 @@ import java.util.List;
 public interface Dao {
     // Gets
     @Query("SELECT * FROM Exercise")
-    //Flowable<List<Exercise>> getExercises(); // [TODO] need to use RxJava2 Observable()
     List<Exercise> getExercises();
 
     @Query("SELECT * FROM Routine")
-        //Flowable<List<Routine>> getRoutines(); // [TODO] need to use RxJava2 Observable()
     List<Routine> getRoutines();
 
     @Query("SELECT * FROM RoutineSession WHERE idRoutine = :idRoutine AND wasPerformed = 0 ORDER BY sessionDate DESC LIMIT 1")

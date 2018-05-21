@@ -30,7 +30,7 @@ public class SessionExercise {
     private int idRoutineSession;
     private int idExercise;
     private int displayOrder;
-    private int defaultNumberOfSets; // [TODO] this will updated to be the number of sets in the previous session
+    private int defaultNumberOfSets; // [TODO] this will be updated to be the number of sets in the previous session
     private long defaultRestTime; // [TODO] this will be used to give a default rest time
 
     public SessionExercise() {

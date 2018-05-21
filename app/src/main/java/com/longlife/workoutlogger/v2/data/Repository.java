@@ -19,12 +19,9 @@ public class Repository {
     @Inject
     public Repository(Dao dataAccessor) {
         this.dao = dataAccessor;
-
-        // Add initial data
-        //initialData();
     }
 
-    private void initialData() {
+    private void initialData() { // [TODO] remove, not needed because RoomModule initializes the data already.
         Observable.fromCallable(() -> dao.insertRoutine(new Routine()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -82,6 +79,4 @@ public class Repository {
     public Long insertRoutine(Routine routine) {
         return (dao.insertRoutine(routine));
     }
-
-    // [TODO] add all of the methods that are implemented in the DAO and call them from here
 }
