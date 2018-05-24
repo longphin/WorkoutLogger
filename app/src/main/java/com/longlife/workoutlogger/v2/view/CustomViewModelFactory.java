@@ -20,10 +20,11 @@ public class CustomViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(RoutinesOverviewViewModel.class))
+        if (modelClass.isAssignableFrom(RoutinesOverviewViewModel.class)) {
             return ((T) new RoutinesOverviewViewModel(repo));
-        else
+        } else {
             throw new IllegalArgumentException("ViewModel not found");
+        }
 
     }
 }

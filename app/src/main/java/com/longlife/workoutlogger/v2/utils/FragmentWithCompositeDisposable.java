@@ -15,4 +15,10 @@ public class FragmentWithCompositeDisposable extends Fragment {
     public void clearDisposables() {
         composite.clear();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        clearDisposables();
+    }
 }

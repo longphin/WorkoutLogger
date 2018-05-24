@@ -39,6 +39,9 @@ public interface Dao {
             " WHERE se.idSessionExercise = :idSessionExercise")
     Exercise getExerciseFromSession(int idSessionExercise);
 
+    @Query("SELECT * FROM Routine WHERE idRoutine = :idRoutine")
+    Routine getRoutine(int idRoutine);
+
     // Inserts
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
     void insertExercises(ArrayList<Exercise> ex);

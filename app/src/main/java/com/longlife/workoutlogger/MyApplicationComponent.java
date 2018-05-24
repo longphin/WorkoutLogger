@@ -6,7 +6,9 @@ import com.longlife.workoutlogger.v2.data.Dao;
 import com.longlife.workoutlogger.v2.data.Database;
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.data.RoomModule;
+import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewActivity;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewFragment;
+import com.longlife.workoutlogger.v2.view.Routine_Insert.RoutineCreateFragment;
 import com.longlife.workoutlogger.view.MainActivity;
 
 import javax.inject.Singleton;
@@ -26,6 +28,10 @@ public interface MyApplicationComponent {
     void inject(MainActivity mainActivity);
 
     void inject(RoutinesOverviewFragment rof);
+
+    void inject(RoutineCreateFragment rcf);
+
+    void inject(RoutinesOverviewActivity roa);
     //void inject(MyApplication application);
 
     Dao dao();

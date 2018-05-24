@@ -13,7 +13,6 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class Repository {
-    private final static String TAG = "REPOSITORY";
     private final Dao dao;
 
     @Inject
@@ -78,5 +77,9 @@ public class Repository {
 
     public Long insertRoutine(Routine routine) {
         return (dao.insertRoutine(routine));
+    }
+
+    public Routine getRoutine(int idRoutine) {
+        return (dao.getRoutine(idRoutine));
     }
 }

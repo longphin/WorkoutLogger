@@ -22,7 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".view.RoutinesActivity"
             android:parentActivityName=".view.MainActivity">
@@ -54,7 +53,8 @@
         <activity android:name=".view.z_RoutineActivity" />
         <activity android:name=".view.z_SetListItemActivity" />
         <activity android:name=".view.RoutineActivity" />
-        <activity android:name=".v2.view.RoutineOverview.RoutinesOverviewActivity"></activity>
+        <activity android:name=".v2.view.RoutineOverview.RoutinesOverviewActivity" />
+        <activity android:name=".v2.view.Routine_Insert.RoutineCreateActivity"></activity>
     </application>
 
 </manifest>
