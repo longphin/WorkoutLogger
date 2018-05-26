@@ -64,7 +64,7 @@ public class RoutinesOverviewFragment extends FragmentWithCompositeDisposable {
         View v = inflater.inflate(R.layout.fragment_routines_overview, container, false);
 
         // Add listener to "add routine button"
-        FloatingActionButton btn_addRoutine = (FloatingActionButton) v.findViewById(R.id.btn_addRoutine);
+        FloatingActionButton btn_addRoutine = v.findViewById(R.id.btn_addRoutine);
         btn_addRoutine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -26,6 +26,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         clearDisposables();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, 0);
+    }
+
     public void addFragmentToActivity(FragmentManager fragmentManager,
                                       Fragment fragment,
                                       int frameId,

@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
@@ -47,6 +49,18 @@ public class RoutineCreateFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_routine_create, container, false);
+
+        TextView name = v.findViewById(R.id.edit_routineCreateName);
+        TextView descrip = v.findViewById(R.id.edit_routineCreateDescrip);
+        Button cancelButton = v.findViewById(R.id.btn_routineCreateCancel);
+        Button saveButton = v.findViewById(R.id.btn_routineCreateSave);
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
 
         return (v);
     }
