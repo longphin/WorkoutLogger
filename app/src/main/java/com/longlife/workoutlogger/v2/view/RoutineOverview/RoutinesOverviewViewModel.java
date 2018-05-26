@@ -12,8 +12,13 @@ import io.reactivex.subjects.BehaviorSubject;
 public class RoutinesOverviewViewModel extends ViewModel {
     private Repository repo;
 
+    // The Observable that will emit a value whenever the "add routine" button is clicked.
+    // Views can listen to the stream to find out if that button is clicked.
     public BehaviorSubject<Boolean> addNewRoutine = BehaviorSubject.createDefault(false);
 
+    ///
+    /// Constructors
+    ///
     public RoutinesOverviewViewModel(Repository repo) {
         this.repo = repo;
     }

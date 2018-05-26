@@ -36,10 +36,24 @@ public class RoutinesOverviewActivity extends BaseActivity {
                 ViewModelProviders.of(this, viewModelFactory)
                         .get(RoutinesOverviewViewModel.class);
 
-        // add fragments
+        // Initialize RoutinesOverviewFragment.
         initializeFragments();
 
-        // listeners to viewModel
+        // Initialize a subscriber that observes when to start a RoutineCreateFragment.
+        initializeRoutineCreateListener();
+    }
+
+    public void initializeFragments() {
+        RoutinesOverviewFragment fragment = (RoutinesOverviewFragment) manager.findFragmentByTag(RoutinesOverviewFragment.TAG);
+        if (fragment == null) {
+            fragment = RoutinesOverviewFragment.newInstance();
+        }
+
+        addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutinesOverviewFragment.TAG);
+    }
+
+    // Initialize a subscriber that listens to when it is desired to open a RoutineCreateFragment.
+    public void initializeRoutineCreateListener() {
         DisposableObserver<Boolean> observer1 =
                 new DisposableObserver<Boolean>() {
                     @Override
@@ -48,6 +62,10 @@ public class RoutinesOverviewActivity extends BaseActivity {
                             RoutineCreateFragment fragment = (RoutineCreateFragment) manager.findFragmentByTag(RoutineCreateFragment.TAG);
                             if (fragment == null) {
                                 fragment = RoutineCreateFragment.newInstance();
+                                manager.beginTransaction()
+                                        .replace(R.id.root_routines_overview, fragment, RoutineCreateFragment.TAG)
+                                        .addToBackStack(null)
+                                        .commit();
                             }
 
                             addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutineCreateFragment.TAG);
@@ -66,49 +84,5 @@ public class RoutinesOverviewActivity extends BaseActivity {
                 };
         viewModel.addNewRoutine.subscribe(observer1);
         addDisposable(observer1);
-        /*
-        Observable addNewRoutineClicked = Observable.fromCallable(() -> viewModel.startCreateFragment())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-
-        DisposableObserver startCreateFragment = new DisposableObserver<Boolean>() {
-            @Override
-            protected void onStart() {
-                super.onStart();
-            }
-
-            @Override
-            public void onNext(@NonNull Boolean b) {
-                //[TODO] it seems that the observable is emitting data right away, instead of when the viewModel.startCreateFragment is called from the fragment, which causes an error.
-                RoutineCreateFragment fragment = (RoutineCreateFragment) manager.findFragmentByTag(RoutineCreateFragment.TAG);
-                if (fragment == null) {
-                    fragment = RoutineCreateFragment.newInstance();
-                }
-
-                addFragmentToActivity(manager, fragment, R.id.root_routine_create, RoutineCreateFragment.TAG);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        };
-
-        addNewRoutineClicked.subscribeWith(startCreateFragment);
-        addDisposable(startCreateFragment);
-        */
-    }
-
-    public void initializeFragments() {
-        //FragmentManager manager = getSupportFragmentManager();
-        RoutinesOverviewFragment fragment = (RoutinesOverviewFragment) manager.findFragmentByTag(RoutinesOverviewFragment.TAG);
-        if (fragment == null) {
-            fragment = RoutinesOverviewFragment.newInstance();
-        }
-
-        addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutinesOverviewFragment.TAG);
     }
 }
