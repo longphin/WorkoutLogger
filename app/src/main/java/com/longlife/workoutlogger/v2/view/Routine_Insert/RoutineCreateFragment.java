@@ -21,8 +21,8 @@ public class RoutineCreateFragment extends Fragment {
     public static final String TAG = "RoutineCreate_FRAG";
 
     @Inject
-    ViewModelProvider.Factory viewModelFactory;
-    RoutinesOverviewViewModel viewModel;
+    public ViewModelProvider.Factory viewModelFactory;
+    private RoutinesOverviewViewModel viewModel;
 
     public RoutineCreateFragment() {
         // Required empty public constructor

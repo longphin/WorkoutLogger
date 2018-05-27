@@ -54,7 +54,8 @@
         <activity android:name=".view.z_SetListItemActivity" />
         <activity android:name=".view.RoutineActivity" />
         <activity android:name=".v2.view.RoutineOverview.RoutinesOverviewActivity" />
-        <activity android:name=".v2.view.Routine_Insert.RoutineCreateActivity"></activity>
+        <activity android:name=".v2.view.Routine_Insert.RoutineCreateActivity" />
+        <activity android:name=".v2.view.ExercisesOverview.ExercisesOverviewActivity"></activity>
     </application>
 
 </manifest>

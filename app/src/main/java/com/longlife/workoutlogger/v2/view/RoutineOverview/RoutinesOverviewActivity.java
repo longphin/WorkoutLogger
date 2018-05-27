@@ -1,27 +1,19 @@
 package com.longlife.workoutlogger.v2.view.RoutineOverview;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.BaseActivity;
 import com.longlife.workoutlogger.v2.view.Routine_Insert.RoutineCreateFragment;
 
-import javax.inject.Inject;
-
 import io.reactivex.observers.DisposableObserver;
 
 public class RoutinesOverviewActivity extends BaseActivity {
-    private static final String TAG = "RoutineOverview_ACT";
+    private static final String TAG = "RoutinesOverview_ACT";
 
-    @Inject
-    ViewModelProvider.Factory viewModelFactory;
-    RoutinesOverviewViewModel viewModel;
-
-    private FragmentManager manager = getSupportFragmentManager();
+    private RoutinesOverviewViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

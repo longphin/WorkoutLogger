@@ -7,6 +7,8 @@ import android.view.View;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.data.Repository;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewActivity;
+import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewActivity;
 
 import javax.inject.Inject;
 
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public void gotoRoutines(View view)
     {
         //Intent intent = new Intent(this, RoutinesActivity.class);
-        Intent intent = new Intent(this, com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewActivity.class);
+        Intent intent = new Intent(this, RoutinesOverviewActivity.class);
         startActivity(intent);
     }
 
@@ -37,9 +39,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Called when user presses the Goals button.
-    public void gotoGoals(View view)
+    public void gotoExercises(View view)
     {
-        Intent intent = new Intent(this, GoalsActivity.class);
+        Intent intent = new Intent(this, ExercisesOverviewActivity.class);
 
         startActivity(intent);
     }

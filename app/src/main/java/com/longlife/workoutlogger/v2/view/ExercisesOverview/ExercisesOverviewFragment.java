@@ -1,10 +1,11 @@
-package com.longlife.workoutlogger.v2.view.RoutineOverview;
+package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,8 +14,9 @@ import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.v2.model.Routine;
+import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.FragmentWithCompositeDisposable;
+import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesAdapter;
 
 import java.util.List;
 
@@ -24,20 +26,23 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class RoutinesOverviewFragment extends FragmentWithCompositeDisposable {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
     public static final String TAG = "RoutineOverview_FRAG";
 
-    private RoutinesOverviewViewModel viewModel;
+    private ExercisesOverviewViewModel viewModel;
 
     private RecyclerView recyclerView;
     private RoutinesAdapter adapter;
 
-    public RoutinesOverviewFragment() {
+    public ExercisesOverviewFragment() {
 
     }
 
-    public static RoutinesOverviewFragment newInstance() {
-        return (new RoutinesOverviewFragment());
+    public static ExercisesOverviewFragment newInstance() {
+        return (new ExercisesOverviewFragment());
     }
 
     @Override
@@ -50,7 +55,7 @@ public class RoutinesOverviewFragment extends FragmentWithCompositeDisposable {
 
         viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
                 ViewModelProviders.of(getActivity(), viewModelFactory)
-                        .get(RoutinesOverviewViewModel.class);
+                        .get(ExercisesOverviewViewModel.class);
     }
 
     @Nullable
@@ -63,7 +68,7 @@ public class RoutinesOverviewFragment extends FragmentWithCompositeDisposable {
         btn_addRoutine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.startCreateFragment();
+                //viewModel.startCreateFragment(); // [TODO] add back in once a fragment to create exercises is made.
             }
         });
 
@@ -81,20 +86,20 @@ public class RoutinesOverviewFragment extends FragmentWithCompositeDisposable {
 
     private void populateRecyclerView() {
         // Get Routines.
-        Observable obs2 = Observable.fromCallable(() -> viewModel.getRoutines())
+        Observable observableGetExercises = Observable.fromCallable(() -> viewModel.getExercises())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        DisposableObserver observer2 = new DisposableObserver<List<Routine>>() {
+        DisposableObserver oGetExercises = new DisposableObserver<List<Exercise>>() {
             @Override
             protected void onStart() {
                 super.onStart();
             }
 
             @Override
-            public void onNext(@NonNull List<Routine> routines) {
+            public void onNext(@NonNull List<Exercise> exercises) {
                 // Populate the recycler view with the obtained routines list.
-                adapter.setRoutines(routines);
+                //adapter.setRoutines(routines); // [TODO] add back in once recyclerview adapters are created.
             }
 
             @Override
@@ -106,7 +111,7 @@ public class RoutinesOverviewFragment extends FragmentWithCompositeDisposable {
             }
         };
 
-        obs2.subscribeWith(observer2);
-        addDisposable(observer2);
+        observableGetExercises.subscribeWith(oGetExercises);
+        addDisposable(oGetExercises);
     }
 }

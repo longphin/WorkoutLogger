@@ -3,7 +3,7 @@
     <!-- strings on MainActivity -->
     <string name="Routines_button">Routines</string>
     <string name="History_Button">History</string>
-    <string name="Goals_Button">Goals</string>
+    <string name="Exercises_button">Exercises</string>
 
     <!-- strings on RoutinesActivity -->
     <string name="Header_MyRoutines">My Routines</string>

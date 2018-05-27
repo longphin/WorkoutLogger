@@ -6,6 +6,8 @@ import com.longlife.workoutlogger.v2.data.Dao;
 import com.longlife.workoutlogger.v2.data.Database;
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.data.RoomModule;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewActivity;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewActivity;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewFragment;
 import com.longlife.workoutlogger.v2.view.Routine_Insert.RoutineCreateFragment;
@@ -27,12 +29,14 @@ import dagger.android.AndroidInjectionModule;
 public interface MyApplicationComponent {
     void inject(MainActivity mainActivity);
 
+    void inject(RoutinesOverviewActivity roa);
     void inject(RoutinesOverviewFragment rof);
 
     void inject(RoutineCreateFragment rcf);
 
-    void inject(RoutinesOverviewActivity roa);
-    //void inject(MyApplication application);
+    void inject(ExercisesOverviewActivity eoa);
+
+    void inject(ExercisesOverviewFragment eof);
 
     Dao dao();
 
