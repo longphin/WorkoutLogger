@@ -21,7 +21,6 @@ public class RoutinesAdapter extends RecyclerView.Adapter<RoutinesViewHolder> {
     public void setRoutines(List<Routine> routines) {
         if (routines == null) return;
 
-        //this.routines.clear();
         this.routines = routines;
         notifyDataSetChanged();
     }

@@ -24,5 +24,16 @@ public class ExercisesOverviewActivity extends BaseActivity {
         viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
                 ViewModelProviders.of(this, viewModelFactory)
                         .get(ExercisesOverviewViewModel.class);
+
+        initializeFragments();
+    }
+
+    public void initializeFragments() {
+        ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
+        if (fragment == null) {
+            fragment = ExercisesOverviewFragment.newInstance();
+        }
+
+        addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
     }
 }

@@ -37,5 +37,7 @@ public class Repository {
         return (dao.insertRoutine(routine));
     }
 
-
+    public Long insertExercise(Exercise exercise) {
+        return (dao.insertExercise(exercise));
+    }
 }

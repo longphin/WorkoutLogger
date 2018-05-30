@@ -20,7 +20,9 @@ import java.util.List;
 
 @android.arch.persistence.room.Dao
 public interface Dao {
-    // Gets
+    ///
+    /// Gets
+    ///
     @Query("SELECT * FROM Exercise")
     List<Exercise> getExercises();
 
@@ -42,9 +44,14 @@ public interface Dao {
     @Query("SELECT * FROM Routine WHERE idRoutine = :idRoutine")
     Routine getRoutine(int idRoutine);
 
-    // Inserts
+    ///
+    /// Inserts
+    ///
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
     void insertExercises(ArrayList<Exercise> ex);
+
+    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
+    Long insertExercise(Exercise ex);
 
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
     void insertRoutines(ArrayList<Routine> r);
@@ -61,7 +68,9 @@ public interface Dao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertSessionExerciseSets(ArrayList<SessionExerciseSet> ses);
 
-    // Deletes
+    ///
+    /// Deletes
+    ///
     @Delete
     void deleteExercise(Exercise ex);
 

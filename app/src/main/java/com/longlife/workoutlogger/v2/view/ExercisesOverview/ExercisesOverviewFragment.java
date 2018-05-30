@@ -16,7 +16,6 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.FragmentWithCompositeDisposable;
-import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesAdapter;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
     private ExercisesOverviewViewModel viewModel;
 
     private RecyclerView recyclerView;
-    private RoutinesAdapter adapter;
+    private ExercisesAdapter adapter;
 
     public ExercisesOverviewFragment() {
 
@@ -61,10 +60,10 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_routines_overview, container, false);
+        View v = inflater.inflate(R.layout.fragment_exercises_overview, container, false);
 
         // Add listener to "add routine button"
-        FloatingActionButton btn_addRoutine = v.findViewById(R.id.btn_addRoutine);
+        FloatingActionButton btn_addRoutine = v.findViewById(R.id.btn_addExercise);
         btn_addRoutine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,9 +72,9 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
         });
 
         // Initialize recyclerview.
-        recyclerView = v.findViewById(R.id.rv_routinesOverview);
+        recyclerView = v.findViewById(R.id.rv_exercisesOverview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        adapter = new RoutinesAdapter();
+        adapter = new ExercisesAdapter();
         recyclerView.setAdapter(adapter);
 
         // populate recycler view with all data
@@ -99,7 +98,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
             @Override
             public void onNext(@NonNull List<Exercise> exercises) {
                 // Populate the recycler view with the obtained routines list.
-                //adapter.setRoutines(routines); // [TODO] add back in once recyclerview adapters are created.
+                adapter.setExercises(exercises); // [TODO] add back in once recyclerview adapters are created.
             }
 
             @Override

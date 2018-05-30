@@ -21,10 +21,10 @@ import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
                         SessionExercise.class,
                         SessionExerciseSet.class
                 },
-        version = Database.VERSION
+        version = DatabaseVersion.CURRENT
 )
 public abstract class Database extends RoomDatabase {
-    public static final int VERSION = 1; // Initial version
+    public static final int VERSION = DatabaseVersion.CURRENT;
 
     public abstract Dao dao();
 
