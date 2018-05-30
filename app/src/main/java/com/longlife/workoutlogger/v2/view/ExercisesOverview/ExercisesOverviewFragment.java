@@ -67,7 +67,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
         btn_addRoutine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //viewModel.startCreateFragment(); // [TODO] add back in once a fragment to create exercises is made.
+                viewModel.startCreateFragment();
             }
         });
 

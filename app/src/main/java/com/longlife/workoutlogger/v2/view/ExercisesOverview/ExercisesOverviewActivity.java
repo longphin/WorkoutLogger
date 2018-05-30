@@ -6,6 +6,9 @@ import android.os.Bundle;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.BaseActivity;
+import com.longlife.workoutlogger.v2.view.Exercise_Insert.ExerciseCreateFragment;
+
+import io.reactivex.observers.DisposableObserver;
 
 public class ExercisesOverviewActivity extends BaseActivity {
     private static final String TAG = "ExercisesOverview_ACT";
@@ -25,7 +28,11 @@ public class ExercisesOverviewActivity extends BaseActivity {
                 ViewModelProviders.of(this, viewModelFactory)
                         .get(ExercisesOverviewViewModel.class);
 
+        // Add initial fragments.
         initializeFragments();
+
+        // Add listener for when user wants to add Exercise.
+        initializeExerciseCreateListener();
     }
 
     public void initializeFragments() {
@@ -35,5 +42,39 @@ public class ExercisesOverviewActivity extends BaseActivity {
         }
 
         addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
+    }
+
+    // Initialize a subscriber that listens to when it is desired to open a RoutineCreateFragment.
+    public void initializeExerciseCreateListener() {
+        DisposableObserver<Boolean> observer1 =
+                new DisposableObserver<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
+                            if (fragment == null) {
+                                fragment = ExerciseCreateFragment.newInstance();
+                                manager.beginTransaction()
+                                        .replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
+                                        .addToBackStack(null)
+                                        .commit();
+                            }
+
+                            addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                };
+        viewModel.addNewExercise.subscribe(observer1);
+        addDisposable(observer1);
     }
 }

@@ -6,6 +6,7 @@ import com.longlife.workoutlogger.v2.data.Dao;
 import com.longlife.workoutlogger.v2.data.Database;
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.data.RoomModule;
+import com.longlife.workoutlogger.v2.view.Exercise_Insert.ExerciseCreateFragment;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewActivity;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewActivity;
@@ -35,8 +36,9 @@ public interface MyApplicationComponent {
     void inject(RoutineCreateFragment rcf);
 
     void inject(ExercisesOverviewActivity eoa);
-
     void inject(ExercisesOverviewFragment eof);
+
+    void inject(ExerciseCreateFragment ecf);
 
     Dao dao();
 

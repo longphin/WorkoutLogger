@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".v2.view.Routine_Insert.RoutineCreateFragment">
+    tools:context=".v2.view.Exercise_Insert.ExerciseCreateFragment">
 
     <EditText
-        android:id="@+id/edit_routineCreateName"
+        android:id="@+id/edit_exerciseCreateName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/edit_routineCreateDescrip"
+        android:id="@+id/edit_exerciseCreateDescrip"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
@@ -30,10 +30,10 @@
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_routineCreateName" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_exerciseCreateName" />
 
     <Button
-        android:id="@+id/btn_routineCreateSave"
+        android:id="@+id/btn_exerciseCreateSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -43,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/btn_routineCreateCancel"
+        android:id="@+id/btn_exerciseCreateCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -51,7 +51,7 @@
         android:layout_marginStart="8dp"
         android:text="Cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_routineCreateSave"
+        app:layout_constraintEnd_toStartOf="@+id/btn_exerciseCreateSave"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>
