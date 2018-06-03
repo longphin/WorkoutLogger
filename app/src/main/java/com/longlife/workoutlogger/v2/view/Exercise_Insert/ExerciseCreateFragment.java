@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.InsertExerciseResponse;
 
 import javax.inject.Inject;
 
@@ -63,6 +65,45 @@ public class ExerciseCreateFragment extends Fragment {
             }
         });
 
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.insertExercise(new Exercise(name.getText().toString(), descrip.getText().toString()));
+            }
+        });
+
+        viewModel.insertResponse().observe(this, response -> processInsertResponse(response));
+
         return (v);
+    }
+
+    ///
+    /// INSERT EXERCISE RENDERING
+    ///
+    private void processInsertResponse(InsertExerciseResponse response) {
+        switch (response.status) {
+            // [TODO] Current re-renders entire list. We don't need to do this, we only need to render the new item added.
+            case LOADING:
+                renderLoadingState();
+                break;
+            case SUCCESS:
+                renderInsertExercise(response.id);
+                break;
+            case ERROR:
+                renderErrorState(response.error);
+                break;
+        }
+    }
+
+    private void renderInsertExercise(Long id) {
+        // [TODO] when exercise is added, update the rendered item.
+    }
+
+    private void renderLoadingState() {
+        // change anything while data is being loaded
+    }
+
+    private void renderErrorState(Throwable throwable) {
+        // change anything if loading data had an error.
     }
 }

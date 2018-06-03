@@ -46,8 +46,8 @@ public class RoutineExerciseController {
     }
 
     /*
-        private ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
-    private MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
+        private ExerciseType exerciseType; // The type of exercises, such as weight, bodyweight, distance.
+    private MeasurementType measurementType; // The measurement of the exercises, such as reps or duration.
      */
     public ExerciseType getExerciseType(SessionExerciseSet sessionExerciseSet) {
         return (dataSource.getExerciseType(sessionExerciseSet));

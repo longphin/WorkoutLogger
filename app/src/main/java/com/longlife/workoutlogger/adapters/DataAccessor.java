@@ -43,7 +43,7 @@ public class DataAccessor implements DataAccessorInterface {
             // sample exercises
             exercises = new ArrayList<Exercise>();
         for (int i = 0; i < 9; i++) {
-            exercises.add(new Exercise("exercise " + String.valueOf(i) + " name", "exercise " + String.valueOf(i) + " description", true));
+            exercises.add(new Exercise("exercises " + String.valueOf(i) + " name", "exercises " + String.valueOf(i) + " description", true));
         }
         */
 
@@ -57,8 +57,8 @@ public class DataAccessor implements DataAccessorInterface {
 
         for (int i = 0; i < 9; i++) {
             Exercise exerciseToAdd = new Exercise("", "", ExerciseType.BODYWEIGHT, MeasurementType.REP, true);
-            exerciseToAdd.setName("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " name");
-            exerciseToAdd.setDescription("exercise " + String.valueOf(exerciseToAdd.getIdExercise()) + " description");
+            exerciseToAdd.setName("exercises " + String.valueOf(exerciseToAdd.getIdExercise()) + " name");
+            exerciseToAdd.setDescription("exercises " + String.valueOf(exerciseToAdd.getIdExercise()) + " description");
             exercises.put(exerciseToAdd.getIdExercise(), exerciseToAdd);
         }
 
@@ -266,10 +266,10 @@ public class DataAccessor implements DataAccessorInterface {
         exercises.put(exerciseToSave.getIdExercise(), exerciseToSave);
         /*
         int idExerciseToSave = exerciseToSave.getIdExercise();
-        for (Exercise exercise : exercises) {
-            if (exercise.getIdExercise() == idExerciseToSave) {
-                exercise.setName(exerciseToSave.getName());
-                exercise.setDescription(exerciseToSave.getDescription());
+        for (Exercise exercises : exercises) {
+            if (exercises.getIdExercise() == idExerciseToSave) {
+                exercises.setName(exerciseToSave.getName());
+                exercises.setDescription(exerciseToSave.getDescription());
             }
         }
         */

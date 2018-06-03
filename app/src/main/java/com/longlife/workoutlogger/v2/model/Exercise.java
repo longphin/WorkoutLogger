@@ -11,4 +11,8 @@ public class Exercise extends ExerciseAbstract {
     public Exercise() {
 
     }
+
+    public Exercise(String name, String descrip) {
+        super(name, descrip);
+    }
 }

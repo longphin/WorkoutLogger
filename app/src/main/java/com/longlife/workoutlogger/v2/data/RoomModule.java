@@ -144,7 +144,7 @@ public class RoomModule {
                 ContentValues exerciseContent = new ContentValues();
                 exerciseContent.put("name", "name1");
                 exerciseContent.put("description", "descrip1");
-                db.insert("exercise", OnConflictStrategy.REPLACE, exerciseContent);
+                db.insert("exercises", OnConflictStrategy.REPLACE, exerciseContent);
                 */
             }
 

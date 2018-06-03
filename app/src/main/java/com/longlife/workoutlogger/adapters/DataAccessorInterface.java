@@ -87,7 +87,7 @@ public interface DataAccessorInterface {
     RoutineSession getOrCreateLatestRoutineSession(Routine routine);
 
     /**
-     * Get the exercise type for the session exercise.
+     * Get the exercises type for the session exercises.
      *
      * @param sessionExerciseSet
      * @return

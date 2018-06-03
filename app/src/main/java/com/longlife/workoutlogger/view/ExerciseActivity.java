@@ -26,7 +26,7 @@ public class ExerciseActivity extends AppCompatActivity {
         EditText nameTxt = findViewById(R.id.edittext_exercise_name);
         EditText descripTxt = findViewById(R.id.edittext_exercise_description);
 
-        //idExercise = exercise.getIdExercise();
+        //idExercise = exercises.getIdExercise();
         nameTxt.setText(exercise.getName());
         descripTxt.setText(exercise.getDescription());
     }

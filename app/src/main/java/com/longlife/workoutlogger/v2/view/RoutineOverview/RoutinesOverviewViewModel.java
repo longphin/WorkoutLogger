@@ -15,6 +15,7 @@ public class RoutinesOverviewViewModel extends ViewModel {
     // The Observable that will emit a value whenever the "add routine" button is clicked.
     // Views can listen to the stream to find out if that button is clicked.
     public BehaviorSubject<Boolean> addNewRoutine = BehaviorSubject.createDefault(false);
+    //public PublishSubject<Boolean> addNewRoutine = PublishSubject.create();
 
     ///
     /// Constructors

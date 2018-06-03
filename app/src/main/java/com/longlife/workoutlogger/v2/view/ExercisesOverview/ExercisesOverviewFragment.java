@@ -78,13 +78,48 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
         recyclerView.setAdapter(adapter);
 
         // populate recycler view with all data
-        populateRecyclerView();
+        //populateRecyclerView();
+
+        viewModel.loadResponse().observe(this, response -> processResponse(response));
+
+        viewModel.loadExercises();
 
         return (v);
     }
 
+    ///
+    /// GET EXERCISES RENDERING
+    ///
+    private void processResponse(GetExercisesResponse response) {
+        switch (response.status) {
+            case LOADING:
+                renderLoadingState();
+                break;
+            case SUCCESS:
+                renderDataState(response.exercises);
+                break;
+            case ERROR:
+                renderErrorState(response.error);
+                break;
+        }
+    }
+
+    private void renderLoadingState() {
+        // change anything while data is being loaded
+    }
+
+    private void renderDataState(List<Exercise> exercises) {
+        viewModel.setExercises(exercises);
+        adapter.setExercises(exercises);
+    }
+
+    private void renderErrorState(Throwable throwable) {
+        // change anything if loading data had an error.
+    }
+    ///
+
     private void populateRecyclerView() {
-        // Get Routines.
+        // Get Exercises.
         Observable observableGetExercises = Observable.fromCallable(() -> viewModel.getExercises())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

@@ -34,6 +34,11 @@ abstract class ExerciseAbstract {
 
     }
 
+    public ExerciseAbstract(String name, String descrip) {
+        this.name = name;
+        this.description = descrip;
+    }
+
     public MeasurementType getMeasurementType() {
         return measurementType;
     }

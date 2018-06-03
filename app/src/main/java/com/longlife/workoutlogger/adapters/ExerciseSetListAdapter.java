@@ -22,9 +22,9 @@ import java.util.List;
  */
 
 public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetListAdapter.CustomViewHolder> {
-    private static int FocusedIdSessionExercise; // The Id for the parent session exercise containing the selected view.
-    private static int FocusedIdSessionExerciseSet; // The Id for the session exercise set containing the selected view.
-    private static int FocusedIdView; // The Id for the selected view in the exercise set.
+    private static int FocusedIdSessionExercise; // The Id for the parent session exercises containing the selected view.
+    private static int FocusedIdSessionExerciseSet; // The Id for the session exercises set containing the selected view.
+    private static int FocusedIdView; // The Id for the selected view in the exercises set.
     private Context context;
     private List<SessionExerciseSet> sessionExerciseSets;
     private Exercise exercise;
@@ -46,7 +46,7 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
     public void onBindViewHolder(CustomViewHolder holder, int position) {
         SessionExerciseSet bindingSessionExerciseSet = sessionExerciseSets.get(position);
 
-        // Set the values for the exercise set.
+        // Set the values for the exercises set.
         Double typeValue = bindingSessionExerciseSet.getWeights();
         Integer scoreValue = bindingSessionExerciseSet.getReps();
         if (typeValue != null)
@@ -150,7 +150,7 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
         }
         // OnClick listener for the entire set container
         private class SetOnClickListenerType implements View.OnClickListener {
-            // [TODO] When this is clicked, set it as the focus of the app and bring up a custom keyboard based on the exercise type.
+            // [TODO] When this is clicked, set it as the focus of the app and bring up a custom keyboard based on the exercises type.
             @Override
             public void onClick(View view) {
                 int pos = getAdapterPosition();

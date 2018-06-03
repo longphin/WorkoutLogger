@@ -83,7 +83,7 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
                 int itemPosition = recyclerView.getChildAdapterPosition(view);
 
                 Toast.makeText(context,
-                        "exercise #: " + String.valueOf(sessionExercises.get(itemPosition).getIdSessionExercise()),
+                        "exercises #: " + String.valueOf(sessionExercises.get(itemPosition).getIdSessionExercise()),
                         Toast.LENGTH_SHORT).show();
             }
         }

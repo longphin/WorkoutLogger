@@ -18,7 +18,7 @@ public class SessionExerciseSet {
     @PrimaryKey
     private int idSessionExerciseSet;
     private int idSessionExercise;
-    private int idExercise; // This makes it easier to get the exercise types.
+    private int idExercise; // This makes it easier to get the exercises types.
 
     private Integer reps;
     private Double weights;

@@ -14,6 +14,8 @@ import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Single;
+
 /**
  * Created by Longphi on 1/3/2018.
  */
@@ -24,7 +26,7 @@ public interface Dao {
     /// Gets
     ///
     @Query("SELECT * FROM Exercise")
-    List<Exercise> getExercises();
+    Single<List<Exercise>> getExercises();
 
     @Query("SELECT * FROM Routine")
     List<Routine> getRoutines();
