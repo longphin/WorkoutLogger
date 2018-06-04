@@ -1,6 +1,9 @@
 package com.longlife.workoutlogger;
 
 import android.app.Application;
+import android.content.Context;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -23,6 +26,12 @@ public class MyApplicationModule {
 
     @Provides
     Application provideApplication() {
+        return (application);
+    }
+
+    @Singleton
+    @Provides
+    Context provideContext(MyApplication application) {
         return (application);
     }
 }

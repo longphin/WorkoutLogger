@@ -25,6 +25,8 @@ import javax.inject.Inject;
 
 public class ExerciseCreateFragment extends Fragment {
     public static final String TAG = "ExerciseCreate_FRAG";
+    @Inject
+    public Context context; // application context
 
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
@@ -35,15 +37,12 @@ public class ExerciseCreateFragment extends Fragment {
     private Button cancelButton;
     private Button saveButton;
 
-    private Context context;
-
-    public ExerciseCreateFragment(Context context) { // [TODO] the context is only for the toast message
+    public ExerciseCreateFragment() { // [TODO] the context is only for the toast message
         // Required empty public constructor
-        this.context = context;
     }
 
-    public static ExerciseCreateFragment newInstance(Context context) {
-        return (new ExerciseCreateFragment(context));
+    public static ExerciseCreateFragment newInstance() {
+        return (new ExerciseCreateFragment());
     }
 
     @Override

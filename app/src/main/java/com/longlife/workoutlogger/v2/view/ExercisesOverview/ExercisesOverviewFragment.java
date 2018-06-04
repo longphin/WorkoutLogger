@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import com.longlife.workoutlogger.v2.utils.FragmentWithCompositeDisposable;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -33,19 +36,21 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
     public static final String TAG = "RoutineOverview_FRAG";
-    private Context context;
+    @Inject
+    public Context context;
 
+    @Inject
+    public ViewModelProvider.Factory viewModelFactory;
     private ExercisesOverviewViewModel viewModel;
 
     private RecyclerView recyclerView;
     private ExercisesAdapter adapter;
 
-    public ExercisesOverviewFragment(Context context) {
-        this.context = context;
+    public ExercisesOverviewFragment() {
     }
 
-    public static ExercisesOverviewFragment newInstance(Context context) {
-        return (new ExercisesOverviewFragment(context));
+    public static ExercisesOverviewFragment newInstance() {
+        return (new ExercisesOverviewFragment());
     }
 
     @Override
@@ -116,8 +121,8 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
 
     private void renderSuccessState(List<Exercise> exercises) {
         StringBuilder sb = new StringBuilder();
-        sb.append(exercises.size());
-        sb.append("exercises obtained");
+        sb.append(exercises == null ? 0 : exercises.size());
+        sb.append(" exercises obtained");
 
         Toast.makeText(context, sb.toString(), Toast.LENGTH_SHORT);
 

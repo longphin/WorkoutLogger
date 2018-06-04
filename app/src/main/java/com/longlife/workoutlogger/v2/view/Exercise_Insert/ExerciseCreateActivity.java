@@ -17,7 +17,7 @@ public class ExerciseCreateActivity extends BaseActivity {
         FragmentManager manager = getSupportFragmentManager();
         ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
         if (fragment == null) {
-            fragment = ExerciseCreateFragment.newInstance(getApplicationContext());
+            fragment = ExerciseCreateFragment.newInstance();
         }
 
         addFragmentToActivity(manager, fragment, R.id.root_exercise_create, ExerciseCreateFragment.TAG);

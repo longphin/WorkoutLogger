@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.v2.view.RoutineOverview;
 
 
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +19,8 @@ import com.longlife.workoutlogger.v2.utils.FragmentWithCompositeDisposable;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -26,6 +29,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RoutinesOverviewFragment extends FragmentWithCompositeDisposable {
     public static final String TAG = "RoutineOverview_FRAG";
+
+    @Inject
+    public ViewModelProvider.Factory viewModelFactory;
 
     private RoutinesOverviewViewModel viewModel;
 

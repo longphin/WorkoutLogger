@@ -38,7 +38,7 @@ public class ExercisesOverviewActivity extends BaseActivity {
     public void initializeFragments() {
         ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
         if (fragment == null) {
-            fragment = ExercisesOverviewFragment.newInstance(this);
+            fragment = ExercisesOverviewFragment.newInstance();
         }
 
         addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
@@ -53,7 +53,7 @@ public class ExercisesOverviewActivity extends BaseActivity {
                         if (aBoolean) {
                             ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
                             if (fragment == null) {
-                                fragment = ExerciseCreateFragment.newInstance(getApplicationContext());
+                                fragment = ExerciseCreateFragment.newInstance();
                                 manager.beginTransaction()
                                         .replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
                                         .addToBackStack(null)
