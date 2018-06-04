@@ -78,6 +78,7 @@ public class ExercisesOverviewViewModel extends ViewModel {
                 repo.insertExercise(ex)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(__ -> insertResponse.setValue(InsertExerciseResponse.loading()))
                         .subscribe(id -> insertResponse.setValue(InsertExerciseResponse.success(id)),
                                 throwable -> insertResponse.setValue(InsertExerciseResponse.error(throwable))));
     }

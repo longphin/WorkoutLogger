@@ -20,7 +20,20 @@ public enum ExerciseType {
         return (null);
     }
 
+    public static ExerciseType fromLong(Long l) {
+        for (ExerciseType et : ExerciseType.values()) {
+            if (et.asLong() == l) {
+                return (et);
+            }
+        }
+        return null;
+    }
+
     public int asInt() {
         return _value;
+    }
+
+    public Long asLong() {
+        return Long.valueOf(_value);
     }
 }

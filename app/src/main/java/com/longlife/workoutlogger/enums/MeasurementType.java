@@ -10,16 +10,16 @@ public enum MeasurementType {
         this._value = val;
     }
 
-    public static MeasurementType fromInt(int i) {
+    public static MeasurementType fromLong(Long l) {
         for (MeasurementType et : MeasurementType.values()) {
-            if (et.asInt() == i) {
+            if (et.asLong() == l) {
                 return (et);
             }
         }
         return (null);
     }
 
-    public int asInt() {
-        return _value;
+    public Long asLong() {
+        return Long.valueOf(_value);
     }
 }

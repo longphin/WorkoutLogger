@@ -3,14 +3,17 @@ package com.longlife.workoutlogger.v2.view.Exercise_Insert;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
@@ -27,12 +30,20 @@ public class ExerciseCreateFragment extends Fragment {
     public ViewModelProvider.Factory viewModelFactory;
     private ExercisesOverviewViewModel viewModel;
 
-    public ExerciseCreateFragment() {
+    private TextView name;
+    private TextView descrip;
+    private Button cancelButton;
+    private Button saveButton;
+
+    private Context context;
+
+    public ExerciseCreateFragment(Context context) {
         // Required empty public constructor
+        this.context = context;
     }
 
-    public static ExerciseCreateFragment newInstance() {
-        return (new ExerciseCreateFragment());
+    public static ExerciseCreateFragment newInstance(Context context) {
+        return (new ExerciseCreateFragment(context));
     }
 
     @Override
@@ -53,10 +64,10 @@ public class ExerciseCreateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_exercise_create, container, false);
 
-        TextView name = v.findViewById(R.id.edit_exerciseCreateName);
-        TextView descrip = v.findViewById(R.id.edit_exerciseCreateDescrip);
-        Button cancelButton = v.findViewById(R.id.btn_exerciseCreateCancel);
-        Button saveButton = v.findViewById(R.id.btn_exerciseCreateSave);
+        this.name = v.findViewById(R.id.edit_exerciseCreateName);
+        this.descrip = v.findViewById(R.id.edit_exerciseCreateDescrip);
+        this.cancelButton = v.findViewById(R.id.btn_exerciseCreateCancel);
+        this.saveButton = v.findViewById(R.id.btn_exerciseCreateSave);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,13 +108,20 @@ public class ExerciseCreateFragment extends Fragment {
 
     private void renderInsertExercise(Long id) {
         // [TODO] when exercise is added, update the rendered item.
+        Toast.makeText(context, "inserted exercise", Toast.LENGTH_SHORT);
+
+        Log.d(TAG, ": inserted exercise");
     }
 
     private void renderLoadingState() {
         // change anything while data is being loaded
+        Toast.makeText(context, "loading exercise", Toast.LENGTH_SHORT);
+        Log.d(TAG, ": loading exercise");
     }
 
     private void renderErrorState(Throwable throwable) {
         // change anything if loading data had an error.
+        Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT);
+        Log.d(TAG, throwable.getMessage());
     }
 }

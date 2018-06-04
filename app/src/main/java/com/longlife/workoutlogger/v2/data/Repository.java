@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 public class Repository {
@@ -39,7 +40,7 @@ public class Repository {
         return (dao.insertRoutine(routine));
     }
 
-    public Single<Long> insertExercise(Exercise exercise) {
-        return (Single.fromCallable(() -> dao.insertExercise(exercise)));
+    public Flowable<Long> insertExercise(Exercise exercise) {
+        return Flowable.fromCallable(() -> dao.insertExercise(exercise));//(Single.fromCallable(() -> dao.insertExercise(exercise)));
     }
 }

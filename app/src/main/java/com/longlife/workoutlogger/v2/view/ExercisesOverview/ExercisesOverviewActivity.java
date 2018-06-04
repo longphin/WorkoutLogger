@@ -53,7 +53,7 @@ public class ExercisesOverviewActivity extends BaseActivity {
                         if (aBoolean) {
                             ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
                             if (fragment == null) {
-                                fragment = ExerciseCreateFragment.newInstance();
+                                fragment = ExerciseCreateFragment.newInstance(getApplicationContext());
                                 manager.beginTransaction()
                                         .replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
                                         .addToBackStack(null)

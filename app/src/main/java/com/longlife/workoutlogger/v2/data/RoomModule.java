@@ -158,8 +158,9 @@ public class RoomModule {
                 application,
                 Database.class,
                 "Database.db")
-                .addCallback(populateData)
-                .addMigrations(MIGRATION_1_4)
+                //.addCallback(populateData)
+                //.addMigrations(MIGRATION_1_4)
+                .fallbackToDestructiveMigration()
                 .build();
     }
 
