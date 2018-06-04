@@ -36,7 +36,8 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesViewHolder> 
 
     @Override
     public int getItemCount() {
-        return 0;
+        if (exercises == null) return 0;
+        return exercises.size();
     }
 
     public void setExercises(List<Exercise> exercises) {

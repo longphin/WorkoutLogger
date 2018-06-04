@@ -13,8 +13,8 @@ public class ExercisesViewHolder extends RecyclerView.ViewHolder {
     public ExercisesViewHolder(View itemView) {
         super(itemView);
 
-        this.name = itemView.findViewById(R.id.txt_routineName);
-        this.descrip = itemView.findViewById(R.id.txt_routineDescrip);
+        this.name = itemView.findViewById(R.id.txt_exerciseName);
+        this.descrip = itemView.findViewById(R.id.txt_exerciseDescrip);
     }
 
     public void setNameText(String s) {

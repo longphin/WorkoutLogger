@@ -59,7 +59,11 @@ public class ExercisesOverviewViewModel extends ViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(__ -> getResponse.setValue(GetExercisesResponse.loading()))
-                .subscribe(ex -> getResponse.setValue(GetExercisesResponse.success(ex)),
+                .subscribe(ex ->
+                        {
+                            this.exercises = ex;
+                            getResponse.setValue(GetExercisesResponse.success(ex));
+                        },
                         throwable -> getResponse.setValue(GetExercisesResponse.error(throwable)))
         );
     }

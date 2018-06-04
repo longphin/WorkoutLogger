@@ -37,7 +37,7 @@ public class ExerciseCreateFragment extends Fragment {
 
     private Context context;
 
-    public ExerciseCreateFragment(Context context) {
+    public ExerciseCreateFragment(Context context) { // [TODO] the context is only for the toast message
         // Required empty public constructor
         this.context = context;
     }
@@ -98,7 +98,7 @@ public class ExerciseCreateFragment extends Fragment {
                 renderLoadingState();
                 break;
             case SUCCESS:
-                renderInsertExercise(response.id);
+                renderSuccessState(response.id);
                 break;
             case ERROR:
                 renderErrorState(response.error);
@@ -106,11 +106,14 @@ public class ExerciseCreateFragment extends Fragment {
         }
     }
 
-    private void renderInsertExercise(Long id) {
-        // [TODO] when exercise is added, update the rendered item.
-        Toast.makeText(context, "inserted exercise", Toast.LENGTH_SHORT);
+    private void renderSuccessState(Long id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("inserted exercise ");
+        sb.append(id.toString());
 
-        Log.d(TAG, ": inserted exercise");
+        Toast.makeText(context, sb.toString(), Toast.LENGTH_SHORT);
+
+        Log.d(TAG, sb.toString());
     }
 
     private void renderLoadingState() {

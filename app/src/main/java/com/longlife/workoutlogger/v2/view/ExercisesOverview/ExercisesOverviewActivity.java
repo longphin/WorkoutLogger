@@ -38,7 +38,7 @@ public class ExercisesOverviewActivity extends BaseActivity {
     public void initializeFragments() {
         ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
         if (fragment == null) {
-            fragment = ExercisesOverviewFragment.newInstance();
+            fragment = ExercisesOverviewFragment.newInstance(this);
         }
 
         addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);

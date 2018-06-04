@@ -2,15 +2,18 @@ package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
@@ -30,18 +33,19 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
     public static final String TAG = "RoutineOverview_FRAG";
+    private Context context;
 
     private ExercisesOverviewViewModel viewModel;
 
     private RecyclerView recyclerView;
     private ExercisesAdapter adapter;
 
-    public ExercisesOverviewFragment() {
-
+    public ExercisesOverviewFragment(Context context) {
+        this.context = context;
     }
 
-    public static ExercisesOverviewFragment newInstance() {
-        return (new ExercisesOverviewFragment());
+    public static ExercisesOverviewFragment newInstance(Context context) {
+        return (new ExercisesOverviewFragment(context));
     }
 
     @Override
@@ -96,7 +100,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
                 renderLoadingState();
                 break;
             case SUCCESS:
-                renderDataState(response.exercises);
+                renderSuccessState(response.exercises);
                 break;
             case ERROR:
                 renderErrorState(response.error);
@@ -105,16 +109,27 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
     }
 
     private void renderLoadingState() {
-        // change anything while data is being loaded
+        Toast.makeText(context, "loading exercises", Toast.LENGTH_SHORT);
+
+        Log.d(TAG, "loading exercises");
     }
 
-    private void renderDataState(List<Exercise> exercises) {
-        viewModel.setExercises(exercises);
+    private void renderSuccessState(List<Exercise> exercises) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(exercises.size());
+        sb.append("exercises obtained");
+
+        Toast.makeText(context, sb.toString(), Toast.LENGTH_SHORT);
+
+        Log.d(TAG, sb.toString());
+
         adapter.setExercises(exercises);
     }
 
     private void renderErrorState(Throwable throwable) {
         // change anything if loading data had an error.
+        Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT);
+        Log.d(TAG, throwable.getMessage());
     }
     ///
 
