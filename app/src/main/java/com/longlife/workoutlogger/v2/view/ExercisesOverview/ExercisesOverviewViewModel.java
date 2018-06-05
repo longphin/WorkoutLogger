@@ -5,26 +5,28 @@ import android.arch.lifecycle.ViewModel;
 
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.model.Exercise;
+import com.longlife.workoutlogger.v2.utils.ResponseBoolean;
+import com.longlife.workoutlogger.v2.utils.ResponseListExercise;
+import com.longlife.workoutlogger.v2.utils.ResponseLong;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.BehaviorSubject;
 
 public class ExercisesOverviewViewModel extends ViewModel {
-    private Repository repo;
+    private final static String TAG = "ExercisesOverviewVM";
     private final CompositeDisposable disposables = new CompositeDisposable();
-    private final MutableLiveData<GetExercisesResponse> getResponse = new MutableLiveData<>();
-    private final MutableLiveData<InsertExerciseResponse> insertResponse = new MutableLiveData<>();
-    private List<Exercise> exercises;
-
+    private final MutableLiveData<ResponseListExercise> getResponse = new MutableLiveData<>();
+    private final MutableLiveData<ResponseLong> insertResponse = new MutableLiveData<>();
+    private final MutableLiveData<ResponseBoolean> startExerciseCreateFragmentResponse = new MutableLiveData<>();
     // The Observable that will emit a value whenever the "add routine" button is clicked.
     // Views can listen to the stream to find out if that button is clicked.
-    public BehaviorSubject<Boolean> addNewExercise = BehaviorSubject.createDefault(false);
-    //public PublishSubject<Boolean> addNewExercise = PublishSubject.create();
+    private Repository repo;
+    private List<Exercise> exercises;
 
     ///
     /// Constructors
@@ -35,13 +37,6 @@ public class ExercisesOverviewViewModel extends ViewModel {
 
     public Single<List<Exercise>> getExercises() {
         return (repo.getExercises());
-    }
-    //public Long insertExercise(Exercise ex){return(repo.insertExercise(ex));} // [TODO] neeed to create an observable and observables upon insert.
-
-    public Boolean startCreateFragment() // [TODO] probably better to change this to return a Completable
-    {
-        addNewExercise.onNext(true);
-        return (true);
     }
 
     public void setExercises(List<Exercise> exercises) {
@@ -54,44 +49,50 @@ public class ExercisesOverviewViewModel extends ViewModel {
         disposables.clear();
     }
 
+    public void startCreateFragment() {
+        disposables.add(Observable.just("this observable emits data whenever the 'Add new Exercise button' is clicked")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(__ -> startExerciseCreateFragmentResponse.setValue(ResponseBoolean.loading()))
+                .subscribe(b -> startExerciseCreateFragmentResponse.setValue(ResponseBoolean.success(true)),
+                        throwable -> startExerciseCreateFragmentResponse.setValue(ResponseBoolean.error(throwable))));
+
+    }
+
     public void loadExercises() {
         disposables.add(repo.getExercises()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(__ -> getResponse.setValue(GetExercisesResponse.loading()))
+                .doOnSubscribe(__ -> getResponse.setValue(ResponseListExercise.loading()))
                 .subscribe(ex ->
                         {
                             this.exercises = ex;
-                            getResponse.setValue(GetExercisesResponse.success(ex));
+                            getResponse.setValue(ResponseListExercise.success(ex));
                         },
-                        throwable -> getResponse.setValue(GetExercisesResponse.error(throwable)))
+                        throwable -> getResponse.setValue(ResponseListExercise.error(throwable)))
         );
     }
 
     public void insertExercise(Exercise ex) {
-        /*
-        disposables.add(repo.insertExercise(ex)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe( __ -> loadResponse.setValue(GetExercisesResponse.loading()))
-                .subscribe(ex -> loadResponse.setValue(GetExercisesResponse.success(ex)),
-                        throwable -> loadResponse.setValue(GetExercisesResponse.error(throwable)))
-        );
-        */
         disposables.add(//Observable.fromCallable(() -> repo.insertExercise(ex))
                 repo.insertExercise(ex)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(__ -> insertResponse.setValue(InsertExerciseResponse.loading()))
-                        .subscribe(id -> insertResponse.setValue(InsertExerciseResponse.success(id)),
-                                throwable -> insertResponse.setValue(InsertExerciseResponse.error(throwable))));
+                        .doOnSubscribe(__ -> insertResponse.setValue(ResponseLong.loading()))
+                        .subscribe(id -> insertResponse.setValue(ResponseLong.success(id)),
+                                throwable -> insertResponse.setValue(ResponseLong.error(throwable)))
+        );
     }
 
-    public MutableLiveData<GetExercisesResponse> loadResponse() {
-        return (getResponse);
+    public MutableLiveData<ResponseListExercise> loadResponse() {
+        return getResponse;
     }
 
-    public MutableLiveData<InsertExerciseResponse> insertResponse() {
-        return (insertResponse);
+    public MutableLiveData<ResponseLong> insertResponse() {
+        return insertResponse;
+    }
+
+    public MutableLiveData<ResponseBoolean> newExerciseResponse() {
+        return startExerciseCreateFragmentResponse;
     }
 }

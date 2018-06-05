@@ -18,8 +18,8 @@ import android.widget.Toast;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
+import com.longlife.workoutlogger.v2.utils.ResponseLong;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
-import com.longlife.workoutlogger.v2.view.ExercisesOverview.InsertExerciseResponse;
 
 import javax.inject.Inject;
 
@@ -37,7 +37,7 @@ public class ExerciseCreateFragment extends Fragment {
     private Button cancelButton;
     private Button saveButton;
 
-    public ExerciseCreateFragment() { // [TODO] the context is only for the toast message
+    public ExerciseCreateFragment() {
         // Required empty public constructor
     }
 
@@ -56,6 +56,8 @@ public class ExerciseCreateFragment extends Fragment {
         viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
                 ViewModelProviders.of(getActivity(), viewModelFactory)
                         .get(ExercisesOverviewViewModel.class);
+
+        viewModel.insertResponse().observe(this, response -> processInsertResponse(response));
     }
 
     @Nullable
@@ -82,15 +84,13 @@ public class ExerciseCreateFragment extends Fragment {
             }
         });
 
-        viewModel.insertResponse().observe(this, response -> processInsertResponse(response));
-
         return (v);
     }
 
     ///
     /// INSERT EXERCISE RENDERING
     ///
-    private void processInsertResponse(InsertExerciseResponse response) {
+    private void processInsertResponse(ResponseLong response) {
         switch (response.status) {
             // [TODO] Current re-renders entire list. We don't need to do this, we only need to render the new item added.
             case LOADING:

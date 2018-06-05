@@ -2,13 +2,13 @@ package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.BaseActivity;
+import com.longlife.workoutlogger.v2.utils.ResponseBoolean;
 import com.longlife.workoutlogger.v2.view.Exercise_Insert.ExerciseCreateFragment;
-
-import io.reactivex.observers.DisposableObserver;
 
 public class ExercisesOverviewActivity extends BaseActivity {
     private static final String TAG = "ExercisesOverview_ACT";
@@ -31,8 +31,8 @@ public class ExercisesOverviewActivity extends BaseActivity {
         // Add initial fragments.
         initializeFragments();
 
-        // Add listener for when user wants to add Exercise.
-        initializeExerciseCreateListener();
+        // Observer for when 'Add new exercise' button is clicked.
+        viewModel.newExerciseResponse().observe(this, response -> processNewExerciseResponse(response));
     }
 
     public void initializeFragments() {
@@ -44,37 +44,32 @@ public class ExercisesOverviewActivity extends BaseActivity {
         addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
     }
 
-    // Initialize a subscriber that listens to when it is desired to open a RoutineCreateFragment.
-    public void initializeExerciseCreateListener() {
-        DisposableObserver<Boolean> observer1 =
-                new DisposableObserver<Boolean>() {
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
-                            if (fragment == null) {
-                                fragment = ExerciseCreateFragment.newInstance();
-                                manager.beginTransaction()
-                                        .replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
-                                        .addToBackStack(null)
-                                        .commit();
-                            }
+    private void processNewExerciseResponse(ResponseBoolean response) {
+        switch (response.status) {
+            case LOADING:
+                //renderLoadingState();
+                break;
+            case SUCCESS:
+                startCreateExerciseFragment();
+                break;
+            case ERROR:
+                //renderErrorState(response.error);
+                break;
+        }
+    }
 
-                            addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG);
-                        }
-                    }
+    private void startCreateExerciseFragment() {
+        ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
+        if (fragment == null) {
+            fragment = ExerciseCreateFragment.newInstance();
+            manager.beginTransaction()
+                    .replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
+                    .addToBackStack(null)
+                    .commit();
+        }
 
-                    @Override
-                    public void onError(Throwable e) {
+        addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG);
 
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                };
-        viewModel.addNewExercise.subscribe(observer1);
-        addDisposable(observer1);
+        Log.d(TAG, "start exercise create fragment");
     }
 }

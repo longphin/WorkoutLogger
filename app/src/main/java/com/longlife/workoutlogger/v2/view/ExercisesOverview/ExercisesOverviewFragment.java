@@ -20,16 +20,11 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.FragmentWithCompositeDisposable;
+import com.longlife.workoutlogger.v2.utils.ResponseListExercise;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,6 +59,9 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
         viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
                 ViewModelProviders.of(getActivity(), viewModelFactory)
                         .get(ExercisesOverviewViewModel.class);
+
+        // Observe events when the list of exercises is obtained.
+        viewModel.loadResponse().observe(this, response -> processResponse(response));
     }
 
     @Nullable
@@ -87,10 +85,6 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
         recyclerView.setAdapter(adapter);
 
         // populate recycler view with all data
-        //populateRecyclerView();
-
-        viewModel.loadResponse().observe(this, response -> processResponse(response));
-
         viewModel.loadExercises();
 
         return (v);
@@ -99,7 +93,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
     ///
     /// GET EXERCISES RENDERING
     ///
-    private void processResponse(GetExercisesResponse response) {
+    private void processResponse(ResponseListExercise response) {
         switch (response.status) {
             case LOADING:
                 renderLoadingState();
@@ -137,35 +131,4 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
         Log.d(TAG, throwable.getMessage());
     }
     ///
-
-    private void populateRecyclerView() {
-        // Get Exercises.
-        Observable observableGetExercises = Observable.fromCallable(() -> viewModel.getExercises())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-
-        DisposableObserver oGetExercises = new DisposableObserver<List<Exercise>>() {
-            @Override
-            protected void onStart() {
-                super.onStart();
-            }
-
-            @Override
-            public void onNext(@NonNull List<Exercise> exercises) {
-                // Populate the recycler view with the obtained routines list.
-                adapter.setExercises(exercises); // [TODO] add back in once recyclerview adapters are created.
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        };
-
-        observableGetExercises.subscribeWith(oGetExercises);
-        addDisposable(oGetExercises);
-    }
 }
