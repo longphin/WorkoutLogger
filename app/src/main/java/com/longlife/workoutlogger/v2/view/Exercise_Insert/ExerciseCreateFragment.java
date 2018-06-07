@@ -57,7 +57,8 @@ public class ExerciseCreateFragment extends Fragment {
                 ViewModelProviders.of(getActivity(), viewModelFactory)
                         .get(ExercisesOverviewViewModel.class);
 
-        viewModel.insertResponse().observe(this, response -> processInsertResponse(response));
+        //viewModel.insertResponse().observe(this, response -> processInsertResponse(response));
+        viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response));
     }
 
     @Nullable
@@ -92,15 +93,14 @@ public class ExerciseCreateFragment extends Fragment {
     ///
     private void processInsertResponse(ResponseLong response) {
         switch (response.status) {
-            // [TODO] Current re-renders entire list. We don't need to do this, we only need to render the new item added.
             case LOADING:
                 renderLoadingState();
                 break;
             case SUCCESS:
-                renderSuccessState(response.id);
+                renderSuccessState(response.getValue());
                 break;
             case ERROR:
-                renderErrorState(response.error);
+                renderErrorState(response.getError());
                 break;
         }
     }

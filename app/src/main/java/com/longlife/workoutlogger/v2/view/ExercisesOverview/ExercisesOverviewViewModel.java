@@ -21,8 +21,10 @@ public class ExercisesOverviewViewModel extends ViewModel {
     private final static String TAG = "ExercisesOverviewVM";
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final MutableLiveData<ResponseListExercise> getResponse = new MutableLiveData<>();
-    private final MutableLiveData<ResponseLong> insertResponse = new MutableLiveData<>();
     private final MutableLiveData<ResponseBoolean> startExerciseCreateFragmentResponse = new MutableLiveData<>();
+
+    public final ResponseLong insertResponse = new ResponseLong();
+
     // The Observable that will emit a value whenever the "add routine" button is clicked.
     // Views can listen to the stream to find out if that button is clicked.
     private Repository repo;
@@ -74,22 +76,22 @@ public class ExercisesOverviewViewModel extends ViewModel {
     }
 
     public void insertExercise(Exercise ex) {
-        disposables.add(//Observable.fromCallable(() -> repo.insertExercise(ex))
+        disposables.add(
                 repo.insertExercise(ex)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(__ -> insertResponse.setValue(ResponseLong.loading()))
-                        .subscribe(id -> insertResponse.setValue(ResponseLong.success(id)),
-                                throwable -> insertResponse.setValue(ResponseLong.error(throwable)))
+                        .doOnSubscribe(__ -> insertResponse.setLoading())
+                        .subscribe(id -> insertResponse.setSuccess(id),
+                                throwable -> insertResponse.setError(throwable))
         );
+    }
+
+    public Observable<ResponseLong> getInsertResponse() {
+        return insertResponse.getObservable();
     }
 
     public MutableLiveData<ResponseListExercise> loadResponse() {
         return getResponse;
-    }
-
-    public MutableLiveData<ResponseLong> insertResponse() {
-        return insertResponse;
     }
 
     public MutableLiveData<ResponseBoolean> newExerciseResponse() {

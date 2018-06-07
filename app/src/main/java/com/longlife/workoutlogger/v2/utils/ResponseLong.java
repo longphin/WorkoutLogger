@@ -1,32 +1,49 @@
 package com.longlife.workoutlogger.v2.utils;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+
 public class ResponseLong {
-    public final Status status;
+    public Status status;
+    private PublishSubject<ResponseLong> observable = PublishSubject.create();
+    @Nullable
+    private Long id;
 
     @Nullable
-    public final Long id;
+    private Throwable error;
 
-    @Nullable
-    public final Throwable error;
+    // Getters
+    public Long getValue() {
+        return id;
+    }
 
-    private ResponseLong(Status status, @Nullable Long id, @Nullable Throwable error) {
+    public Throwable getError() {
+        return error;
+    }
+
+    public void setError(@Nullable Throwable error) {
+        setStatus(Status.ERROR, null, error);
+    }
+
+    public Observable<ResponseLong> getObservable() {
+        return observable;
+    }
+
+    // Setters
+    private void setStatus(Status status, @Nullable Long id, @Nullable Throwable error) {
         this.status = status;
         this.id = id;
         this.error = error;
+        observable.onNext(this);
     }
 
-    public static ResponseLong loading() {
-        return (new ResponseLong(Status.LOADING, null, null));
+    public void setSuccess(@Nullable Long id) {
+        setStatus(Status.SUCCESS, id, null);
     }
 
-    public static ResponseLong success(@Nullable Long id) {
-        return (new ResponseLong(Status.SUCCESS, id, null));
-    }
-
-    public static ResponseLong error(@NonNull Throwable error) {
-        return (new ResponseLong(Status.ERROR, null, error));
+    public void setLoading() {
+        setStatus(Status.LOADING, null, null);
     }
 }
