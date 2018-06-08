@@ -5,9 +5,8 @@ import android.arch.lifecycle.ViewModel;
 
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.model.Exercise;
+import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.ResponseBoolean;
-import com.longlife.workoutlogger.v2.utils.ResponseListExercise;
-import com.longlife.workoutlogger.v2.utils.ResponseLong;
 
 import java.util.List;
 
@@ -20,10 +19,10 @@ import io.reactivex.schedulers.Schedulers;
 public class ExercisesOverviewViewModel extends ViewModel {
     private final static String TAG = "ExercisesOverviewVM";
     private final CompositeDisposable disposables = new CompositeDisposable();
-    private final MutableLiveData<ResponseListExercise> getResponse = new MutableLiveData<>();
+    public final Response<Long> insertResponse = new Response<>();
+    public final Response<List<Exercise>> getResponse = new Response<>();
+    //private final MutableLiveData<ResponseListExercise> getResponse = new MutableLiveData<>();
     private final MutableLiveData<ResponseBoolean> startExerciseCreateFragmentResponse = new MutableLiveData<>();
-
-    public final ResponseLong insertResponse = new ResponseLong();
 
     // The Observable that will emit a value whenever the "add routine" button is clicked.
     // Views can listen to the stream to find out if that button is clicked.
@@ -65,13 +64,12 @@ public class ExercisesOverviewViewModel extends ViewModel {
         disposables.add(repo.getExercises()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(__ -> getResponse.setValue(ResponseListExercise.loading()))
-                .subscribe(ex ->
-                        {
+                .doOnSubscribe(__ -> getResponse.setLoading())
+                .subscribe(ex -> {
                             this.exercises = ex;
-                            getResponse.setValue(ResponseListExercise.success(ex));
+                            getResponse.setSuccess(ex);
                         },
-                        throwable -> getResponse.setValue(ResponseListExercise.error(throwable)))
+                        throwable -> getResponse.setError(throwable))
         );
     }
 
@@ -86,12 +84,12 @@ public class ExercisesOverviewViewModel extends ViewModel {
         );
     }
 
-    public Observable<ResponseLong> getInsertResponse() {
+    public Observable<Response<Long>> getInsertResponse() {
         return insertResponse.getObservable();
     }
 
-    public MutableLiveData<ResponseListExercise> loadResponse() {
-        return getResponse;
+    public Observable<Response<List<Exercise>>> getLoadResponse() {
+        return getResponse.getObservable();
     }
 
     public MutableLiveData<ResponseBoolean> newExerciseResponse() {

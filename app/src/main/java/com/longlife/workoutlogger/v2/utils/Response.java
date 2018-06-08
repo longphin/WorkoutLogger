@@ -5,19 +5,19 @@ import android.support.annotation.Nullable;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
-public class ResponseLong {
+public class Response<T> {
     private Status status;
-    private PublishSubject<ResponseLong> observable = PublishSubject.create();
+    private PublishSubject<Response<T>> observable = PublishSubject.create();
 
     @Nullable
-    private Long id;
+    private T val;
 
     @Nullable
     private Throwable error;
 
     // Getters
-    public Long getValue() {
-        return id;
+    public T getValue() {
+        return val;
     }
 
     public Throwable getError() {
@@ -28,7 +28,7 @@ public class ResponseLong {
         setStatus(Status.ERROR, null, error);
     }
 
-    public Observable<ResponseLong> getObservable() {
+    public Observable<Response<T>> getObservable() {
         return observable;
     }
 
@@ -37,15 +37,15 @@ public class ResponseLong {
     }
 
     // Setters
-    private void setStatus(Status status, @Nullable Long id, @Nullable Throwable error) {
+    private void setStatus(Status status, @Nullable T val, @Nullable Throwable error) {
         this.status = status;
-        this.id = id;
+        this.val = val;
         this.error = error;
         observable.onNext(this);
     }
 
-    public void setSuccess(@Nullable Long id) {
-        setStatus(Status.SUCCESS, id, null);
+    public void setSuccess(@Nullable T val) {
+        setStatus(Status.SUCCESS, val, null);
     }
 
     public void setLoading() {

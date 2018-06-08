@@ -20,7 +20,7 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.FragmentWithCompositeDisposable;
-import com.longlife.workoutlogger.v2.utils.ResponseListExercise;
+import com.longlife.workoutlogger.v2.utils.Response;
 
 import java.util.List;
 
@@ -61,7 +61,8 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
                         .get(ExercisesOverviewViewModel.class);
 
         // Observe events when the list of exercises is obtained.
-        viewModel.loadResponse().observe(this, response -> processResponse(response));
+        //viewModel.loadResponse().observe(this, response -> processResponse(response));
+        viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response));
     }
 
     @Nullable
@@ -93,16 +94,16 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
     ///
     /// GET EXERCISES RENDERING
     ///
-    private void processResponse(ResponseListExercise response) {
-        switch (response.status) {
+    private void processLoadResponse(Response<List<Exercise>> response) {
+        switch (response.getStatus()) {
             case LOADING:
                 renderLoadingState();
                 break;
             case SUCCESS:
-                renderSuccessState(response.exercises);
+                renderSuccessState(response.getValue());
                 break;
             case ERROR:
-                renderErrorState(response.error);
+                renderErrorState(response.getError());
                 break;
         }
     }

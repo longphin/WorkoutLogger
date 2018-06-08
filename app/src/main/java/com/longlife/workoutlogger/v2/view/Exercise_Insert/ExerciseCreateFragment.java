@@ -18,7 +18,7 @@ import android.widget.Toast;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
-import com.longlife.workoutlogger.v2.utils.ResponseLong;
+import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
 
 import javax.inject.Inject;
@@ -91,8 +91,8 @@ public class ExerciseCreateFragment extends Fragment {
     ///
     /// INSERT EXERCISE RENDERING
     ///
-    private void processInsertResponse(ResponseLong response) {
-        switch (response.status) {
+    private void processInsertResponse(Response<Long> response) {
+        switch (response.getStatus()) {
             case LOADING:
                 renderLoadingState();
                 break;
