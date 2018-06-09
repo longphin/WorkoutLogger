@@ -21,7 +21,6 @@ public class ExercisesOverviewViewModel extends ViewModel {
     private final CompositeDisposable disposables = new CompositeDisposable();
     public final Response<Long> insertResponse = new Response<>();
     public final Response<List<Exercise>> getResponse = new Response<>();
-    //private final MutableLiveData<ResponseListExercise> getResponse = new MutableLiveData<>();
     private final MutableLiveData<ResponseBoolean> startExerciseCreateFragmentResponse = new MutableLiveData<>();
 
     // The Observable that will emit a value whenever the "add routine" button is clicked.

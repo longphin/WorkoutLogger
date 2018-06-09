@@ -4,22 +4,24 @@ public enum MeasurementType {
     REP(0),
     DURATION(1);
 
-    private int _value;
+    private Integer _value;
 
-    MeasurementType(int val) {
+    MeasurementType(Integer val) {
         this._value = val;
     }
 
-    public static MeasurementType fromLong(Long l) {
+    public static MeasurementType fromInt(Integer i) {
+        if(i == null) return(null);
+
         for (MeasurementType et : MeasurementType.values()) {
-            if (et.asLong() == l) {
+            if (et.asInt() == i) {
                 return (et);
             }
         }
         return (null);
     }
 
-    public Long asLong() {
-        return Long.valueOf(_value);
+    public Integer asInt() {
+        return Integer.valueOf(_value);
     }
 }

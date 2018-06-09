@@ -5,12 +5,12 @@ import android.arch.persistence.room.TypeConverter;
 public class MeasurementTypeConverter {
     // Converts MeasurementType to int and vice versa
     @TypeConverter
-    public MeasurementType IntToMeasurementType(Long val) {
-        return (MeasurementType.fromLong(val));
+    public MeasurementType IntToMeasurementType(Integer val) {
+        return (MeasurementType.fromInt(val));
     }
 
     @TypeConverter
-    public Long MeasurementTypeToInt(MeasurementType et) {
-        return (et == null ? null : et.asLong());
+    public Integer MeasurementTypeToInt(MeasurementType et) {
+        return (et == null ? null : et.asInt());
     }
 }

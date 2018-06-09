@@ -5,13 +5,15 @@ public enum ExerciseType {
     BODYWEIGHT(1),
     DISTANCE(2);
 
-    private int _value;
+    private Integer _value;
 
-    ExerciseType(int val) {
+    ExerciseType(Integer val) {
         this._value = val;
     }
 
-    public static ExerciseType fromInt(int i) {
+    public static ExerciseType fromInt(Integer i) {
+        if(i == null) return(null);
+
         for (ExerciseType et : ExerciseType.values()) {
             if (et.asInt() == i) {
                 return (et);
@@ -20,20 +22,7 @@ public enum ExerciseType {
         return (null);
     }
 
-    public static ExerciseType fromLong(Long l) {
-        for (ExerciseType et : ExerciseType.values()) {
-            if (et.asLong() == l) {
-                return (et);
-            }
-        }
-        return null;
-    }
-
     public int asInt() {
         return _value;
-    }
-
-    public Long asLong() {
-        return Long.valueOf(_value);
     }
 }
