@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.v2.data.RequiredFieldException;
+import com.longlife.workoutlogger.v2.data.Validator;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
@@ -89,15 +91,23 @@ public class ExerciseCreateFragment extends Fragment {
     }
 
     private void checkFieldsBeforeInsert() {
-        String newName = name.getText().toString();
-        String newDescrip = descrip.getText().toString();
+        Exercise newExercise = new Exercise();
+        newExercise.setName(name.getText().toString());
+        newExercise.setDescription(descrip.getText().toString());
 
-        if (newName.isEmpty() || newName.trim().isEmpty()) {
+        try {
+            if (Validator.validateForNulls(newExercise)) {
+                //Log.d(TAG, "Validations Successful");
+            }
+        } catch (RequiredFieldException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            //e.printStackTrace();
             Toast.makeText(context, getResources().getString(R.string.requiredFieldsMissing), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        viewModel.insertExercise(new Exercise(name.getText().toString(), descrip.getText().toString()));
+        viewModel.insertExercise(newExercise);
+
+        getActivity().onBackPressed();
     }
 
     ///
