@@ -81,11 +81,23 @@ public class ExerciseCreateFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewModel.insertExercise(new Exercise(name.getText().toString(), descrip.getText().toString()));
+                checkFieldsBeforeInsert();
             }
         });
 
         return (v);
+    }
+
+    private void checkFieldsBeforeInsert() {
+        String newName = name.getText().toString();
+        String newDescrip = descrip.getText().toString();
+
+        if (newName.isEmpty() || newName.trim().isEmpty()) {
+            Toast.makeText(context, getResources().getString(R.string.requiredFieldsMissing), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        viewModel.insertExercise(new Exercise(name.getText().toString(), descrip.getText().toString()));
     }
 
     ///

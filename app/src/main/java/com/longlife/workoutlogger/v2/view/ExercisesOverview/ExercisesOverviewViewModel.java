@@ -19,9 +19,10 @@ import io.reactivex.schedulers.Schedulers;
 public class ExercisesOverviewViewModel extends ViewModel {
     private final static String TAG = "ExercisesOverviewVM";
     private final CompositeDisposable disposables = new CompositeDisposable();
-    public final Response<Long> insertResponse = new Response<>();
-    public final Response<List<Exercise>> getResponse = new Response<>();
+    private final Response<Long> insertResponse = new Response<>();
+    private final Response<List<Exercise>> loadResponse = new Response<>();
     private final MutableLiveData<ResponseBoolean> startExerciseCreateFragmentResponse = new MutableLiveData<>();
+    private final Response<Boolean> startCreateFragmentResponse = new Response<>();
 
     // The Observable that will emit a value whenever the "add routine" button is clicked.
     // Views can listen to the stream to find out if that button is clicked.
@@ -49,6 +50,7 @@ public class ExercisesOverviewViewModel extends ViewModel {
         disposables.clear();
     }
 
+    /*
     public void startCreateFragment() {
         disposables.add(Observable.just("this observable emits data whenever the 'Add new Exercise button' is clicked")
                 .subscribeOn(Schedulers.io())
@@ -56,19 +58,31 @@ public class ExercisesOverviewViewModel extends ViewModel {
                 .doOnSubscribe(__ -> startExerciseCreateFragmentResponse.setValue(ResponseBoolean.loading()))
                 .subscribe(b -> startExerciseCreateFragmentResponse.setValue(ResponseBoolean.success(true)),
                         throwable -> startExerciseCreateFragmentResponse.setValue(ResponseBoolean.error(throwable))));
+        disposables.add(Observable.just("this starts create fragment"))
+    }
+    */
 
+    public void startCreateFragment() {
+        disposables.add(Observable.just(true) // this emitted value does not matter
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(__ -> startCreateFragmentResponse.setLoading())
+                .subscribe(b -> startCreateFragmentResponse.setSuccess(b),
+                        throwable -> startCreateFragmentResponse.setError(throwable)
+                )
+        );
     }
 
     public void loadExercises() {
         disposables.add(repo.getExercises()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(__ -> getResponse.setLoading())
+                .doOnSubscribe(__ -> loadResponse.setLoading())
                 .subscribe(ex -> {
                             this.exercises = ex;
-                            getResponse.setSuccess(ex);
+                            loadResponse.setSuccess(ex);
                         },
-                        throwable -> getResponse.setError(throwable))
+                        throwable -> loadResponse.setError(throwable))
         );
     }
 
@@ -88,7 +102,11 @@ public class ExercisesOverviewViewModel extends ViewModel {
     }
 
     public Observable<Response<List<Exercise>>> getLoadResponse() {
-        return getResponse.getObservable();
+        return loadResponse.getObservable();
+    }
+
+    public Observable<Response<Boolean>> startCreateFragmentResponse() {
+        return startCreateFragmentResponse.getObservable();
     }
 
     public MutableLiveData<ResponseBoolean> newExerciseResponse() {

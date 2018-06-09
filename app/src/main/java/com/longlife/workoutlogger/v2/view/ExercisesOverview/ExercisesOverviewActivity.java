@@ -7,7 +7,7 @@ import android.util.Log;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.BaseActivity;
-import com.longlife.workoutlogger.v2.utils.ResponseBoolean;
+import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.view.Exercise_Insert.ExerciseCreateFragment;
 
 public class ExercisesOverviewActivity extends BaseActivity {
@@ -32,7 +32,8 @@ public class ExercisesOverviewActivity extends BaseActivity {
         initializeFragments();
 
         // Observer for when 'Add new exercise' button is clicked.
-        viewModel.newExerciseResponse().observe(this, response -> processNewExerciseResponse(response));
+        //viewModel.newExerciseResponse().observe(this, response -> processNewExerciseResponse(response));
+        viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response));
     }
 
     public void initializeFragments() {
@@ -44,8 +45,8 @@ public class ExercisesOverviewActivity extends BaseActivity {
         addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
     }
 
-    private void processNewExerciseResponse(ResponseBoolean response) {
-        switch (response.status) {
+    private void processNewExerciseResponse(Response<Boolean> response) {
+        switch (response.getStatus()) {
             case LOADING:
                 //renderLoadingState();
                 break;
