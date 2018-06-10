@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.model.Exercise;
@@ -8,24 +9,26 @@ import com.longlife.workoutlogger.v2.utils.Response;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class ExercisesOverviewViewModel extends ViewModel {
     private final static String TAG = ExercisesOverviewViewModel.class.getSimpleName();
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
     // Observable for when inserting a new exercise.
     private final Response<Long> insertResponse = new Response<>();
     // Observable for when requesting list of all exercises.
     private final Response<List<Exercise>> loadResponse = new Response<>();
-
-    private final CompositeDisposable disposables = new CompositeDisposable();
     // Observable for when to start creating a new exercise fragment.
     private final Response<Boolean> startCreateFragmentResponse = new Response<>();
-    // Observable for when an item should be deleted
-    private final Response<Integer> deleteResponse = new Response<>();
+
     private Repository repo;
     private List<Exercise> exercises;
 
@@ -81,31 +84,28 @@ public class ExercisesOverviewViewModel extends ViewModel {
         );
     }
 
-    /* [TODO] need to learn how to work with DELETE for Room (it returns either void or int, but RxJava needs Void or Int
-    public void deleteExercise(int id)
-    {
-        disposables.add(
-                //repo.deleteExercise(id)
-                repo.deleteExercise(id)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(__ -> deleteResponse.setLoading())
-                    .subscribe(b -> deleteResponse.setSuccess(b),
-                            throwable -> deleteResponse.setError(throwable))
-        );
-    }
+    // Reference: Ala Hammad - https://medium.com/@alahammad/database-with-room-using-rxjava-764ee6124974
     public void deleteExercise(Exercise ex)
     {
-        disposables.add(
-                repo.deleteExercise(ex)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(__ -> deleteResponse.setLoading())
-                        .subscribe(b -> deleteResponse.setSuccess(b),
-                                throwable -> deleteResponse.setError(throwable))
-        );
+        Completable.fromAction(() -> repo.deleteExercise(ex))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "Delete successful.");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.getMessage();
+                    }
+                });
     }
-    */
 
     public Observable<Response<Long>> getInsertResponse() {
         return insertResponse.getObservable();

@@ -143,7 +143,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
                     // For other dismiss events, permanently delete the exercise.
                     Log.d(TAG, "Exercise deleted permanently.");
-                    //viewModel.deleteExercise(deletedItem);
+                    viewModel.deleteExercise(deletedItem);
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);

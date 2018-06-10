@@ -52,11 +52,8 @@ public class Repository {
     ///
     /// DELETE methods
     ///
-    public Integer deleteExercise(int idExercise) {
-        return (Integer) dao.deleteExercise(idExercise);
-    }
-
-    public Integer deleteExercise(Exercise ex) {
-        return (Integer) dao.deleteExercise(ex);
+    public void deleteExercise(Exercise ex) {
+        dao.deleteExercise(ex);
+        return;
     }
 }

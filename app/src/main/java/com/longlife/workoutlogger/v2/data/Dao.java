@@ -79,10 +79,7 @@ public interface Dao {
     /// Deletes
     ///
     @Delete
-    int deleteExercise(Exercise ex);
-
-    @Query("DELETE FROM exercise WHERE idExercise = :idExercise")
-    int deleteExercise(int idExercise);
+    void deleteExercise(Exercise ex);
 
     @Delete
     void deleteRoutine(Routine r);
