@@ -55,8 +55,7 @@ public class ExercisesOverviewViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(__ -> startCreateFragmentResponse.setLoading())
                 .subscribe(b -> startCreateFragmentResponse.setSuccess(b),
-                        throwable -> startCreateFragmentResponse.setError(throwable)
-                )
+                        throwable -> startCreateFragmentResponse.setError(throwable))
         );
     }
 
@@ -124,5 +123,29 @@ public class ExercisesOverviewViewModel extends ViewModel {
     ///
     public List<Exercise> getCachedExercises() {
         return exercises;
+    }
+
+    ///
+    /// UPDATE
+    ///
+    public void updateFavorite(int idExercise, boolean favorited) {
+        Completable.fromAction(() -> repo.updateFavorite(idExercise, favorited))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "Update successful.");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.getMessage();
+                    }
+                });
     }
 }

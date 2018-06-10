@@ -38,6 +38,11 @@ public class Repository {
         return dao.getExercise(name);
     }
 
+    // UPDATES
+    public void updateFavorite(int idExercise, boolean favorited) {
+        dao.updateFavorite(idExercise, favorited);
+    }
+
     ///
     /// INSERT methods
     ///

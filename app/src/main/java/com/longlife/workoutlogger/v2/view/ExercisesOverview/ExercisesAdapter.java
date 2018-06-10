@@ -12,6 +12,11 @@ import java.util.List;
 
 public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesViewHolder> {
     private List<Exercise> exercises;
+    private ExercisesOverviewViewModel viewModel;
+
+    public ExercisesAdapter(ExercisesOverviewViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
 
     @Override
     public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -32,6 +37,26 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesViewHolder> 
 
         holder.setNameText(sbName.toString());
         holder.setDescripText(ex.getDescription());
+
+        if (ex.getFavorited()) {
+            holder.setFavoriteIcon(R.drawable.ic_favorite_black_24dp);
+        } else {
+            holder.setFavoriteIcon(R.drawable.ic_favorite_border_black_24dp);
+        }
+
+        holder.favoriteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ex.setFavorited(!ex.getFavorited());
+                if (ex.getFavorited()) {
+                    holder.setFavoriteIcon(R.drawable.ic_favorite_black_24dp);
+                } else {
+                    holder.setFavoriteIcon(R.drawable.ic_favorite_border_black_24dp);
+                }
+
+                viewModel.updateFavorite(ex.getIdExercise(), ex.getFavorited());
+            }
+        });
     }
 
     @Override

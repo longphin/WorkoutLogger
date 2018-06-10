@@ -26,12 +26,15 @@ public interface Dao {
     ///
     /// Gets
     ///
-    @Query("SELECT * FROM Exercise ORDER BY favorited, name")
+    @Query("SELECT * FROM Exercise ORDER BY favorited DESC, name ASC")
     Single<List<Exercise>> getExercises();
 
     @Query("SELECT idExercise FROM Exercise WHERE name = :name")
         // check if the exercise exists in the database already
     Maybe<Integer> getExercise(String name);
+
+    @Query("SELECT EXISTS (SELECT 1 FROM Exercise WHERE idExercise = :idExercise)")
+    int exerciseExists(int idExercise);
 
     @Query("SELECT * FROM Routine")
     List<Routine> getRoutines();
@@ -50,6 +53,12 @@ public interface Dao {
 
     @Query("SELECT * FROM Routine WHERE idRoutine = :idRoutine")
     Routine getRoutine(int idRoutine);
+
+    ///
+    /// UPDATE
+    ///
+    @Query("UPDATE Exercise SET favorited = :favorited WHERE idExercise = :idExercise")
+    void updateFavorite(int idExercise, boolean favorited);
 
     ///
     /// Inserts

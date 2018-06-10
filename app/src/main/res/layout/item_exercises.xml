@@ -17,8 +17,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/padding_10"
-            android:src="@drawable/ic_delete_black_24dp" />
-        <!-- [TODO] need to make vectorDrawable compatible with older versions -->
+            app:srcCompat="@drawable/ic_delete_black_24dp" />
     </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
@@ -31,13 +30,13 @@
         <TextView
             android:id="@+id/txt_exerciseName"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="15dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="TextView"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/icon_exercise_favorite"
             app:layout_constraintStart_toEndOf="@+id/icon_exercise"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,7 +50,7 @@
             android:layout_marginTop="8dp"
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/icon_exercise_favorite"
             app:layout_constraintStart_toEndOf="@+id/icon_exercise"
             app:layout_constraintTop_toBottomOf="@+id/txt_exerciseName" />
 
@@ -66,5 +65,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_menu_upload" />
+
+        <ImageView
+            android:id="@+id/icon_exercise_favorite"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

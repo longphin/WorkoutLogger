@@ -97,7 +97,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
     private void initializeRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        adapter = new ExercisesAdapter();
+        adapter = new ExercisesAdapter(viewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
