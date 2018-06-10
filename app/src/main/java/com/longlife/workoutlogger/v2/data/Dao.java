@@ -14,6 +14,7 @@ import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 /**
@@ -25,8 +26,12 @@ public interface Dao {
     ///
     /// Gets
     ///
-    @Query("SELECT * FROM Exercise")
+    @Query("SELECT * FROM Exercise ORDER BY favorited, name")
     Single<List<Exercise>> getExercises();
+
+    @Query("SELECT idExercise FROM Exercise WHERE name = :name")
+        // check if the exercise exists in the database already
+    Maybe<Integer> getExercise(String name);
 
     @Query("SELECT * FROM Routine")
     List<Routine> getRoutines();
@@ -74,7 +79,10 @@ public interface Dao {
     /// Deletes
     ///
     @Delete
-    void deleteExercise(Exercise ex);
+    int deleteExercise(Exercise ex);
+
+    @Query("DELETE FROM exercise WHERE idExercise = :idExercise")
+    int deleteExercise(int idExercise);
 
     @Delete
     void deleteRoutine(Routine r);

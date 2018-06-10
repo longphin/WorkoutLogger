@@ -46,4 +46,14 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesViewHolder> 
         this.exercises = exercises;
         notifyDataSetChanged();
     }
+
+    public void removeExercise(int position) {
+        exercises.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreExercise(Exercise ex, int position) {
+        exercises.add(position, ex);
+        notifyItemInserted(position);
+    }
 }

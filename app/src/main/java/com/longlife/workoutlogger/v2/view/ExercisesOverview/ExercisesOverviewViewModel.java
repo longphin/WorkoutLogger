@@ -1,12 +1,10 @@
 package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.Response;
-import com.longlife.workoutlogger.v2.utils.ResponseBoolean;
 
 import java.util.List;
 
@@ -17,15 +15,17 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class ExercisesOverviewViewModel extends ViewModel {
-    private final static String TAG = "ExercisesOverviewVM";
-    private final CompositeDisposable disposables = new CompositeDisposable();
+    private final static String TAG = ExercisesOverviewViewModel.class.getSimpleName();
+    // Observable for when inserting a new exercise.
     private final Response<Long> insertResponse = new Response<>();
+    // Observable for when requesting list of all exercises.
     private final Response<List<Exercise>> loadResponse = new Response<>();
-    private final MutableLiveData<ResponseBoolean> startExerciseCreateFragmentResponse = new MutableLiveData<>();
-    private final Response<Boolean> startCreateFragmentResponse = new Response<>();
 
-    // The Observable that will emit a value whenever the "add routine" button is clicked.
-    // Views can listen to the stream to find out if that button is clicked.
+    private final CompositeDisposable disposables = new CompositeDisposable();
+    // Observable for when to start creating a new exercise fragment.
+    private final Response<Boolean> startCreateFragmentResponse = new Response<>();
+    // Observable for when an item should be deleted
+    private final Response<Integer> deleteResponse = new Response<>();
     private Repository repo;
     private List<Exercise> exercises;
 
@@ -40,27 +40,11 @@ public class ExercisesOverviewViewModel extends ViewModel {
         return (repo.getExercises());
     }
 
-    public void setExercises(List<Exercise> exercises) {
-        this.exercises = exercises;
-    }
-
     @Override
     public void onCleared() {
         super.onCleared();
         disposables.clear();
     }
-
-    /*
-    public void startCreateFragment() {
-        disposables.add(Observable.just("this observable emits data whenever the 'Add new Exercise button' is clicked")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(__ -> startExerciseCreateFragmentResponse.setValue(ResponseBoolean.loading()))
-                .subscribe(b -> startExerciseCreateFragmentResponse.setValue(ResponseBoolean.success(true)),
-                        throwable -> startExerciseCreateFragmentResponse.setValue(ResponseBoolean.error(throwable))));
-        disposables.add(Observable.just("this starts create fragment"))
-    }
-    */
 
     public void startCreateFragment() {
         disposables.add(Observable.just(true) // this emitted value does not matter
@@ -97,6 +81,32 @@ public class ExercisesOverviewViewModel extends ViewModel {
         );
     }
 
+    /* [TODO] need to learn how to work with DELETE for Room (it returns either void or int, but RxJava needs Void or Int
+    public void deleteExercise(int id)
+    {
+        disposables.add(
+                //repo.deleteExercise(id)
+                repo.deleteExercise(id)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(__ -> deleteResponse.setLoading())
+                    .subscribe(b -> deleteResponse.setSuccess(b),
+                            throwable -> deleteResponse.setError(throwable))
+        );
+    }
+    public void deleteExercise(Exercise ex)
+    {
+        disposables.add(
+                repo.deleteExercise(ex)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(__ -> deleteResponse.setLoading())
+                        .subscribe(b -> deleteResponse.setSuccess(b),
+                                throwable -> deleteResponse.setError(throwable))
+        );
+    }
+    */
+
     public Observable<Response<Long>> getInsertResponse() {
         return insertResponse.getObservable();
     }
@@ -109,7 +119,10 @@ public class ExercisesOverviewViewModel extends ViewModel {
         return startCreateFragmentResponse.getObservable();
     }
 
-    public MutableLiveData<ResponseBoolean> newExerciseResponse() {
-        return startExerciseCreateFragmentResponse;
+    ///
+    /// GETTERS
+    ///
+    public List<Exercise> getCachedExercises() {
+        return exercises;
     }
 }

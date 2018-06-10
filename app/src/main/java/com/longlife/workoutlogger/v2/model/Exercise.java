@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.v2.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
@@ -16,8 +17,12 @@ import io.reactivex.annotations.NonNull;
  * This will be the Exercise object.
  */
 
-@Entity
-public class Exercise {//} extends ExerciseAbstract {
+@Entity(indices = {
+        @Index(value = {"favorited", "name"}),
+        @Index(value = {"premade", "name"}, unique = true)
+}
+)
+public class Exercise {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     private int idExercise;
@@ -27,7 +32,9 @@ public class Exercise {//} extends ExerciseAbstract {
     private String name;
     private String description;
     // Official Exercises will have this flag as true.
-    private boolean IsPremade;
+    private boolean premade;
+
+    private boolean favorited;
 
     @TypeConverters({ExerciseTypeConverter.class})
     private ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
@@ -43,33 +50,20 @@ public class Exercise {//} extends ExerciseAbstract {
         this.description = descrip;
     }
 
-    public MeasurementType getMeasurementType() {
-        return measurementType;
-    }
-
-    public void setMeasurementType(MeasurementType measurementType) {
-        this.measurementType = measurementType;
-    }
-
-    public ExerciseType getExerciseType() {
-        return exerciseType;
-    }
-
-    public void setExerciseType(ExerciseType exerciseType) {
-        this.exerciseType = exerciseType;
-    }
-
+    ///
+    /// GETTERS
+    ///
     public int getIdExercise() {
 
         return idExercise;
     }
 
-    public void setIdExercise(int val) {
-        idExercise = val;
-    }
-
     public int getIdExerciseShared() {
         return idExerciseShared;
+    }
+
+    public void setIdExercise(int val) {
+        idExercise = val;
     }
 
     public void setIdExerciseShared(int idExerciseShared) {
@@ -80,23 +74,50 @@ public class Exercise {//} extends ExerciseAbstract {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
+    }
+
+    public boolean getPremade() {
+        return premade;
+    }
+
+    ///
+    /// SETTERS
+    ///
+    public void setPremade(boolean premade) {
+        this.premade = premade;
+    }
+
+    public boolean getFavorited() {
+        return favorited;
+    }
+
+    public void setFavorited(boolean favorited) {
+        this.favorited = favorited;
+    }
+
+    public ExerciseType getExerciseType() {
+        return exerciseType;
+    }
+
+    public void setExerciseType(ExerciseType exerciseType) {
+        this.exerciseType = exerciseType;
+    }
+
+    public MeasurementType getMeasurementType() {
+        return measurementType;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public boolean getIsPremade() {
-        return IsPremade;
+    public void setMeasurementType(MeasurementType measurementType) {
+        this.measurementType = measurementType;
     }
 
-    public void setIsPremade(boolean premade) {
-        IsPremade = premade;
+    public void setName(String name) {
+        this.name = name;
     }
 }

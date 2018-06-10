@@ -26,7 +26,7 @@ import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewVie
 import javax.inject.Inject;
 
 public class ExerciseCreateFragment extends Fragment {
-    public static final String TAG = "ExerciseCreate_FRAG";
+    public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
     @Inject
     public Context context; // application context
 
@@ -104,6 +104,8 @@ public class ExerciseCreateFragment extends Fragment {
             Toast.makeText(context, getResources().getString(R.string.requiredFieldsMissing), Toast.LENGTH_SHORT).show();
             return;
         }
+
+        //viewModel.getExercise(name.getText().toString()); //[TODO] need to check if the exercise exists in the database, and give an error message if it does.
 
         viewModel.insertExercise(newExercise);
 

@@ -7,7 +7,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.BaseActivity;
 
 public class RoutineCreateActivity extends BaseActivity {
-    private static final String TAG = "RoutineCreate_ACT";
+    private static final String TAG = RoutineCreateActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -28,7 +28,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class RoutinesOverviewFragment extends FragmentWithCompositeDisposable {
-    public static final String TAG = "RoutineOverview_FRAG";
+    public static final String TAG = RoutinesOverviewFragment.class.getSimpleName();
 
     @Inject
     public ViewModelProvider.Factory viewModelFactory;

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 public class Repository {
@@ -33,6 +34,10 @@ public class Repository {
         return (dao.getExercises());
     }
 
+    public Maybe<Integer> getExercise(String name) {
+        return dao.getExercise(name);
+    }
+
     ///
     /// INSERT methods
     ///
@@ -42,5 +47,16 @@ public class Repository {
 
     public Flowable<Long> insertExercise(Exercise exercise) {
         return Flowable.fromCallable(() -> dao.insertExercise(exercise));//(Single.fromCallable(() -> dao.insertExercise(exercise)));
+    }
+
+    ///
+    /// DELETE methods
+    ///
+    public Integer deleteExercise(int idExercise) {
+        return (Integer) dao.deleteExercise(idExercise);
+    }
+
+    public Integer deleteExercise(Exercise ex) {
+        return (Integer) dao.deleteExercise(ex);
     }
 }

@@ -4,12 +4,18 @@ package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +26,7 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.FragmentWithCompositeDisposable;
+import com.longlife.workoutlogger.v2.utils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.v2.utils.Response;
 
 import java.util.List;
@@ -29,8 +36,8 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
-    public static final String TAG = "RoutineOverview_FRAG";
+public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+    public static final String TAG = ExercisesOverviewFragment.class.getSimpleName();
     @Inject
     public Context context;
 
@@ -39,6 +46,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
     private ExercisesOverviewViewModel viewModel;
 
     private RecyclerView recyclerView;
+    private ConstraintLayout coordinatorLayout; // layout for recycler view
     private ExercisesAdapter adapter;
 
     public ExercisesOverviewFragment() {
@@ -81,14 +89,66 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable {
 
         // Initialize recyclerview.
         recyclerView = v.findViewById(R.id.rv_exercisesOverview);
+        coordinatorLayout = v.findViewById(R.id.exercises_overview_layout);
+        initializeRecyclerView();
+
+        return (v);
+    }
+
+    private void initializeRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         adapter = new ExercisesAdapter();
         recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         // populate recycler view with all data
         viewModel.loadExercises();
+    }
 
-        return (v);
+    // On Swipe for recycler view item.
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof ExercisesViewHolder) {
+            // get the removed item name to display it in snack bar
+            List<Exercise> exercises = viewModel.getCachedExercises();
+            String name = exercises.get(viewHolder.getAdapterPosition()).getName();//exercises.get(viewHolder.getAdapterPosition()).getName();
+
+            // backup of removed item for undo purpose
+            final Exercise deletedItem = exercises.get(viewHolder.getAdapterPosition());
+            final int deletedIndex = viewHolder.getAdapterPosition();
+
+            // remove the item from recycler view
+            adapter.removeExercise(viewHolder.getAdapterPosition());
+
+            // showing snack bar with Undo option
+            Snackbar snackbar = Snackbar
+                    .make(coordinatorLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // undo is selected, restore the deleted item
+                    adapter.restoreExercise(deletedItem, deletedIndex);
+                }
+            });
+            snackbar.addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    // If the snackbar was dismissed via clicking the action (Undo button), then do not permanently delete the exercise.
+                    if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) return;
+
+                    // For other dismiss events, permanently delete the exercise.
+                    Log.d(TAG, "Exercise deleted permanently.");
+                    //viewModel.deleteExercise(deletedItem);
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+        }
     }
 
     ///

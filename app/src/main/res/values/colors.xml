@@ -12,4 +12,6 @@
     <color name="verticalScrollbar">#3293BEBD</color>
     <color name="LightBlue">#454fc9</color>
     <color name="Black">#000000</color>
+
+    <color name="item_background">#fa315b</color>
 </resources>

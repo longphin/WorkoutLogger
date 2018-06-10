@@ -11,7 +11,7 @@ import com.longlife.workoutlogger.v2.view.Routine_Insert.RoutineCreateFragment;
 import io.reactivex.observers.DisposableObserver;
 
 public class RoutinesOverviewActivity extends BaseActivity {
-    private static final String TAG = "RoutinesOverview_ACT";
+    private static final String TAG = RoutinesOverviewActivity.class.getSimpleName();
 
     private RoutinesOverviewViewModel viewModel;
 

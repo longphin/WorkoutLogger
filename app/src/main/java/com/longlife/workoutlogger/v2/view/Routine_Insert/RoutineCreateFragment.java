@@ -18,7 +18,7 @@ import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewViewMo
 import javax.inject.Inject;
 
 public class RoutineCreateFragment extends Fragment {
-    public static final String TAG = "RoutineCreate_FRAG";
+    public static final String TAG = RoutineCreateFragment.class.getSimpleName();
 
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
