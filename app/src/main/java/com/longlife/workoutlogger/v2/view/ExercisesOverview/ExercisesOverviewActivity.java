@@ -6,9 +6,8 @@ import android.util.Log;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.utils.BaseActivity;
+import com.longlife.workoutlogger.v2.utils.BaseActivity;
 import com.longlife.workoutlogger.v2.utils.Response;
-import com.longlife.workoutlogger.v2.view.Exercise_Insert.ExerciseCreateFragment;
 
 public class ExercisesOverviewActivity extends BaseActivity {
     private static final String TAG = ExercisesOverviewActivity.class.getSimpleName();

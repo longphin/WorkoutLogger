@@ -6,13 +6,13 @@ import com.longlife.workoutlogger.v2.data.Dao;
 import com.longlife.workoutlogger.v2.data.Database;
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.data.RoomModule;
-import com.longlife.workoutlogger.v2.view.Exercise_Insert.ExerciseCreateFragment;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExerciseCreateFragment;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewActivity;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
+import com.longlife.workoutlogger.v2.view.MainActivity;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewActivity;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewFragment;
 import com.longlife.workoutlogger.v2.view.Routine_Insert.RoutineCreateFragment;
-import com.longlife.workoutlogger.view.MainActivity;
 
 import javax.inject.Singleton;
 

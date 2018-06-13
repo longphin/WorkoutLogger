@@ -2,6 +2,9 @@ package com.longlife.workoutlogger.enums;
 
 import android.text.InputType;
 
+import com.longlife.workoutlogger.v2.enums.ExerciseType;
+import com.longlife.workoutlogger.v2.enums.MeasurementType;
+
 import java.util.HashMap;
 import java.util.Map;
 

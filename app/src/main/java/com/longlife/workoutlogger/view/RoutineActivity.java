@@ -12,12 +12,12 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.adapters.DataAccessor;
 import com.longlife.workoutlogger.adapters.ExerciseListAdapter;
 import com.longlife.workoutlogger.controller.RoutineExerciseController;
-import com.longlife.workoutlogger.enums.ExerciseType;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.utils.NestedLinearLayoutManager;
 import com.longlife.workoutlogger.utils.NumericKeyboardFragment;
+import com.longlife.workoutlogger.v2.enums.ExerciseType;
 
 public class RoutineActivity extends AppCompatActivity {
     private RecyclerView recyclerView;

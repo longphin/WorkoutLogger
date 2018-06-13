@@ -26,7 +26,8 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(ExercisesViewHolder holder, int position) {
+    public void onBindViewHolder(ExercisesViewHolder holder, int pos) {
+        int position = holder.getAdapterPosition();
         Exercise ex = exercises.get(position);
 
         StringBuilder sbName = new StringBuilder(100);

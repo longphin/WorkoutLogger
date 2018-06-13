@@ -5,8 +5,8 @@ import android.arch.persistence.room.Ignore;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.longlife.workoutlogger.enums.ExerciseType;
-import com.longlife.workoutlogger.enums.MeasurementType;
+import com.longlife.workoutlogger.v2.enums.ExerciseType;
+import com.longlife.workoutlogger.v2.enums.MeasurementType;
 
 /**
  * This will be the Exercise object.

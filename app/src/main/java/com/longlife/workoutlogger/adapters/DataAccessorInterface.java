@@ -1,12 +1,12 @@
 package com.longlife.workoutlogger.adapters;
 
-import com.longlife.workoutlogger.enums.ExerciseType;
-import com.longlife.workoutlogger.enums.MeasurementType;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
+import com.longlife.workoutlogger.v2.enums.ExerciseType;
+import com.longlife.workoutlogger.v2.enums.MeasurementType;
 
 import java.util.HashMap;
 import java.util.List;

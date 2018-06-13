@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.MainActivity">
+        <activity android:name=".v2.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,30 +24,30 @@
         </activity>
         <activity
             android:name=".view.RoutinesActivity"
-            android:parentActivityName=".view.MainActivity">
+            android:parentActivityName=".v2.view.MainActivity">
 
             <!-- meta-data tag required to support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.MainActivity" />
+                android:value=".v2.view.MainActivity" />
         </activity>
         <activity
             android:name=".view.HistoryActivity"
-            android:parentActivityName=".view.MainActivity">
+            android:parentActivityName=".v2.view.MainActivity">
 
             <!-- meta-data tag required to support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.MainActivity" />
+                android:value=".v2.view.MainActivity" />
         </activity>
         <activity
             android:name=".view.GoalsActivity"
-            android:parentActivityName=".view.MainActivity">
+            android:parentActivityName=".v2.view.MainActivity">
 
             <!-- meta-data tag required to support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.MainActivity" />
+                android:value=".v2.view.MainActivity" />
         </activity>
         <activity android:name=".view.ExerciseActivity" />
         <activity android:name=".view.z_RoutineActivity" />

@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.enums;
+package com.longlife.workoutlogger.v2.enums;
 
 public enum MeasurementType {
     REP(0),

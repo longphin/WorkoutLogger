@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.view;
+package com.longlife.workoutlogger.v2.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewActivity;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewActivity;
+import com.longlife.workoutlogger.view.HistoryActivity;
 
 import javax.inject.Inject;
 

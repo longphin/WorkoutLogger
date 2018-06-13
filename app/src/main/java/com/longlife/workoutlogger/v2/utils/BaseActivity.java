@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.utils;
+package com.longlife.workoutlogger.v2.utils;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.v4.app.Fragment;

@@ -26,7 +26,7 @@ public interface Dao {
     ///
     /// Gets
     ///
-    @Query("SELECT * FROM Exercise ORDER BY favorited DESC, name ASC")
+    @Query("SELECT * FROM Exercise ORDER BY favorited DESC, LOWER(name) ASC")
     Single<List<Exercise>> getExercises();
 
     @Query("SELECT idExercise FROM Exercise WHERE name = :name")

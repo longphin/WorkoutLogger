@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.utils.BaseActivity;
+import com.longlife.workoutlogger.v2.utils.BaseActivity;
 import com.longlife.workoutlogger.v2.view.Routine_Insert.RoutineCreateFragment;
 
 import io.reactivex.observers.DisposableObserver;

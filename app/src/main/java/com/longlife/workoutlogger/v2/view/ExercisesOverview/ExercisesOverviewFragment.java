@@ -111,18 +111,20 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
     // On Swipe for recycler view item.
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos) {
         if (viewHolder instanceof ExercisesViewHolder) {
+            int position = viewHolder.getAdapterPosition();
+
             // get the removed item name to display it in snack bar
             List<Exercise> exercises = viewModel.getCachedExercises();
-            String name = exercises.get(viewHolder.getAdapterPosition()).getName();//exercises.get(viewHolder.getAdapterPosition()).getName();
+            String name = exercises.get(position).getName();
 
             // backup of removed item for undo purpose
-            final Exercise deletedItem = exercises.get(viewHolder.getAdapterPosition());
-            final int deletedIndex = viewHolder.getAdapterPosition();
+            final Exercise deletedItem = exercises.get(position);
+            final int deletedIndex = position;
 
             // remove the item from recycler view
-            adapter.removeExercise(viewHolder.getAdapterPosition());
+            adapter.removeExercise(position);
 
             // showing snack bar with Undo option
             Snackbar snackbar = Snackbar

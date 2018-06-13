@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.v2.view.Exercise_Insert;
+package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 
 
 import android.arch.lifecycle.ViewModelProvider;
@@ -21,7 +21,6 @@ import com.longlife.workoutlogger.v2.data.RequiredFieldException;
 import com.longlife.workoutlogger.v2.data.Validator;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.Response;
-import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
 
 import javax.inject.Inject;
 

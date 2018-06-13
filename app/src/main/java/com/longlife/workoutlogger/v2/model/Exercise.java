@@ -5,11 +5,11 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
-import com.longlife.workoutlogger.enums.ExerciseType;
-import com.longlife.workoutlogger.enums.ExerciseTypeConverter;
-import com.longlife.workoutlogger.enums.MeasurementType;
-import com.longlife.workoutlogger.enums.MeasurementTypeConverter;
 import com.longlife.workoutlogger.v2.data.Required;
+import com.longlife.workoutlogger.v2.enums.ExerciseType;
+import com.longlife.workoutlogger.v2.enums.ExerciseTypeConverter;
+import com.longlife.workoutlogger.v2.enums.MeasurementType;
+import com.longlife.workoutlogger.v2.enums.MeasurementTypeConverter;
 
 import io.reactivex.annotations.NonNull;
 

@@ -4,7 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.utils.BaseActivity;
+import com.longlife.workoutlogger.v2.utils.BaseActivity;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExerciseCreateFragment;
 
 public class ExerciseCreateActivity extends BaseActivity {
     private static final String TAG = ExerciseCreateActivity.class.getSimpleName();
