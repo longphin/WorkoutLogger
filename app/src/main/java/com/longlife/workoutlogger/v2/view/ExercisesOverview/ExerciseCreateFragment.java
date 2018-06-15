@@ -114,7 +114,7 @@ public class ExerciseCreateFragment extends Fragment {
     ///
     /// INSERT EXERCISE RENDERING
     ///
-    private void processInsertResponse(Response<Long> response) {
+    private void processInsertResponse(Response<Integer> response) {
         switch (response.getStatus()) {
             case LOADING:
                 renderLoadingState();
@@ -128,7 +128,7 @@ public class ExerciseCreateFragment extends Fragment {
         }
     }
 
-    private void renderSuccessState(Long id) {
+    private void renderSuccessState(Integer id) {
         StringBuilder sb = new StringBuilder();
         sb.append("inserted exercise ");
         sb.append(id.toString());

@@ -46,6 +46,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(frameId, fragment, tag);
+        //transaction.hide(fragment);
+        //transaction.add(R.id.root_exercises_overview, fragment);
         transaction.commit();
     }
 }

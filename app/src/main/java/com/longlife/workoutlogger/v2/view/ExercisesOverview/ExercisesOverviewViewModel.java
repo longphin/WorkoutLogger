@@ -5,8 +5,11 @@ import android.util.Log;
 
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.model.Exercise;
+import com.longlife.workoutlogger.v2.model.comparators.ExerciseComparators;
+import com.longlife.workoutlogger.v2.utils.Conversions;
 import com.longlife.workoutlogger.v2.utils.Response;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -23,7 +26,7 @@ public class ExercisesOverviewViewModel extends ViewModel {
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     // Observable for when inserting a new exercise.
-    private final Response<Long> insertResponse = new Response<>();
+    private final Response<Integer> insertResponse = new Response<>();
     // Observable for when requesting list of all exercises.
     private final Response<List<Exercise>> loadResponse = new Response<>();
     // Observable for when to start creating a new exercise fragment.
@@ -64,9 +67,11 @@ public class ExercisesOverviewViewModel extends ViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(__ -> loadResponse.setLoading())
-                .subscribe(ex -> {
+                .subscribe((List<Exercise> ex) -> {
+                            // sort the list of exercises //[TODO] Set the comparator to what the user chooses
+                            Collections.sort(ex, ExerciseComparators.getDefaultComparator());
                             this.exercises = ex;
-                            loadResponse.setSuccess(ex);
+                            loadResponse.setSuccess(this.exercises);
                         },
                         throwable -> loadResponse.setError(throwable))
         );
@@ -78,7 +83,21 @@ public class ExercisesOverviewViewModel extends ViewModel {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(__ -> insertResponse.setLoading())
-                        .subscribe(id -> insertResponse.setSuccess(id),
+                        .subscribe(id ->
+                                {
+                                    ex.setIdExercise(Conversions.safeLongToInt(id));
+                                    this.exercises.add(ex);
+                                    // sort the list of exercises //[TODO] Set the comparator to what the user chooses
+                                    Collections.sort(this.exercises, ExerciseComparators.getDefaultComparator());
+                                    for (int i = 0; i < this.exercises.size(); i++) {
+                                        if (exercises.get(i).getIdExercise() == ex.getIdExercise()) {
+                                            insertResponse.setSuccess(i);
+                                            return;
+                                        }
+                                    }
+                                    Log.d(TAG, "Error: Could not find position of newly inserted exercise.");
+                                    //insertResponse.setSuccess(-1);
+                                },
                                 throwable -> insertResponse.setError(throwable))
         );
     }
@@ -106,7 +125,7 @@ public class ExercisesOverviewViewModel extends ViewModel {
                 });
     }
 
-    public Observable<Response<Long>> getInsertResponse() {
+    public Observable<Response<Integer>> getInsertResponse() {
         return insertResponse.getObservable();
     }
 

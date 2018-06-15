@@ -49,6 +49,8 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
     private ConstraintLayout coordinatorLayout; // layout for recycler view
     private ExercisesAdapter adapter;
 
+    private View mView;
+
     public ExercisesOverviewFragment() {
     }
 
@@ -71,28 +73,36 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
         // Observe events when the list of exercises is obtained.
         //viewModel.loadResponse().observe(this, response -> processResponse(response));
         viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response));
+        viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response));
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_exercises_overview, container, false);
+        if (mView == null) {
+            View v = inflater.inflate(R.layout.fragment_exercises_overview, container, false);
 
-        // Add listener to "add routine button"
-        FloatingActionButton btn_addRoutine = v.findViewById(R.id.btn_addExercise);
-        btn_addRoutine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewModel.startCreateFragment();
-            }
-        });
+            // Add listener to "add routine button"
+            FloatingActionButton btn_addRoutine = v.findViewById(R.id.btn_addExercise);
+            btn_addRoutine.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewModel.startCreateFragment();
+                }
+            });
 
-        // Initialize recyclerview.
-        recyclerView = v.findViewById(R.id.rv_exercisesOverview);
-        coordinatorLayout = v.findViewById(R.id.exercises_overview_layout);
-        initializeRecyclerView();
+            // Initialize recyclerview.
+            recyclerView = v.findViewById(R.id.rv_exercisesOverview);
+            coordinatorLayout = v.findViewById(R.id.exercises_overview_layout);
+            initializeRecyclerView();
 
-        return (v);
+            mView = v;
+
+            return (v);
+        } else {
+            return (mView);
+        }
+
     }
 
     private void initializeRecyclerView() {
@@ -144,7 +154,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
                     if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) return;
 
                     // For other dismiss events, permanently delete the exercise.
-                    Log.d(TAG, "Exercise deleted permanently.");
+                    Log.d(TAG, "Exercise deleted permanently. " + String.valueOf(deletedItem.getIdExercise()));
                     viewModel.deleteExercise(deletedItem);
                 }
             });
@@ -193,5 +203,38 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
         Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT);
         Log.d(TAG, throwable.getMessage());
     }
-    ///
+
+    // Insertion Response
+    private void processInsertResponse(Response<Integer> response) {
+        switch (response.getStatus()) {
+            case LOADING:
+                renderInsertLoadingState();
+                break;
+            case SUCCESS:
+                renderInsertSuccessState(response.getValue());
+                break;
+            case ERROR:
+                renderInsertErrorState(response.getError());
+                break;
+        }
+    }
+
+    private void renderInsertLoadingState() {
+        Toast.makeText(context, "loading exercises", Toast.LENGTH_SHORT);
+
+        Log.d(TAG, "loading exercises");
+    }
+
+    private void renderInsertSuccessState(Integer val) {
+        Log.d(TAG, val.toString());
+
+        adapter.setExercises(viewModel.getCachedExercises());
+        adapter.notifyItemRangeChanged(val, viewModel.getCachedExercises().size());
+    }
+
+    private void renderInsertErrorState(Throwable throwable) {
+        // change anything if loading data had an error.
+        Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT);
+        Log.d(TAG, throwable.getMessage());
+    }
 }
