@@ -12,10 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoutinesAdapter extends RecyclerView.Adapter<RoutinesViewHolder> {
-    private List<Routine> routines;
+    private List<Routine> routines = new ArrayList<>();
 
     public RoutinesAdapter() {
-        this.routines = new ArrayList<>();
     }
 
     public void setRoutines(List<Routine> routines) {

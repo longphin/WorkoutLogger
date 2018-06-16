@@ -14,6 +14,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textMultiLine"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,6 +26,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textMultiLine"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_exerciseCreateName" />
 
@@ -55,16 +57,15 @@
         android:id="@+id/textView4"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
+        android:gravity="bottom"
         android:text="@string/Name"
         android:textAlignment="viewStart"
         android:textColor="@android:color/black"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/edit_exerciseCreateDescrip"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_exerciseCreateName"
         app:layout_constraintEnd_toStartOf="@+id/edit_exerciseCreateName"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,7 +78,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
+        android:gravity="bottom"
         android:text="@string/Description"
         android:textColor="@android:color/black"
         android:textStyle="bold"

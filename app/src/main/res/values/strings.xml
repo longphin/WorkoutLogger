@@ -27,4 +27,5 @@
     <string name="title_activity_routine__create">Routine_Create</string>
     <string name="Name">Name</string>
     <string name="Description">Description</string>
+    <string name="AddExercise">Add Exercise</string>
 </resources>
