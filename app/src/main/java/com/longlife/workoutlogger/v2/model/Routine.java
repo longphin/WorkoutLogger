@@ -3,6 +3,8 @@ package com.longlife.workoutlogger.v2.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.longlife.workoutlogger.v2.data.Required;
+
 import io.reactivex.annotations.NonNull;
 
 /**
@@ -14,8 +16,9 @@ public class Routine {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     private int idRoutine;
-    private String name = "new";
-    private String description = "";
+    @Required
+    private String name;
+    private String description;
     // For each day of the week, a true value indicates that the Routine will be performed on that day.
     private boolean Scheduled1, // Monday
             Scheduled2, // Tuesday
@@ -27,10 +30,9 @@ public class Routine {
     // Alternative to DaysOfWeek, the Routine may be performed every "x" days
     private int RepeatAfterNumberOfDays;
     // Flag to indicate if the Routine is premade.
-    private boolean IsPremade;
+    private boolean premade;
     // Order that the Routine is displayed in RoutinesActivity.
     private int displayOrder;
-
 
     public Routine() {
 
@@ -131,11 +133,11 @@ public class Routine {
         RepeatAfterNumberOfDays = i;
     }
 
-    public boolean getIsPremade() {
-        return (IsPremade);
+    public boolean getPremade() {
+        return (premade);
     }
 
-    public void setIsPremade(boolean b) {
-        IsPremade = b;
+    public void setPremade(boolean b) {
+        premade = b;
     }
 }

@@ -2,17 +2,15 @@ package com.longlife.workoutlogger;
 
 import android.app.Application;
 
-import com.longlife.workoutlogger.v2.data.Dao;
-import com.longlife.workoutlogger.v2.data.Database;
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.data.RoomModule;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExerciseCreateFragment;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewActivity;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
 import com.longlife.workoutlogger.v2.view.MainActivity;
+import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutineCreateFragment;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewActivity;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewFragment;
-import com.longlife.workoutlogger.v2.view.Routine_Insert.RoutineCreateFragment;
 
 import javax.inject.Singleton;
 
@@ -39,10 +37,6 @@ public interface MyApplicationComponent {
     void inject(ExercisesOverviewFragment eof);
 
     void inject(ExerciseCreateFragment ecf);
-
-    Dao dao();
-
-    Database db();
 
     Repository repository();
 

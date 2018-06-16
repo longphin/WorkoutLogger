@@ -32,7 +32,6 @@ public class ExercisesOverviewActivity extends BaseActivity {
         initializeFragments();
 
         // Observer for when 'Add new exercise' button is clicked.
-        //viewModel.newExerciseResponse().observe(this, response -> processNewExerciseResponse(response));
         viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response));
     }
 

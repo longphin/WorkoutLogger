@@ -12,53 +12,70 @@ import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 public class Repository {
-    private final Dao dao;
+    private final ExerciseDao exerciseDao;
+    private final RoutineDao routineDao;
 
     @Inject
-    public Repository(Dao dataAccessor) {
-        this.dao = dataAccessor;
+    public Repository(ExerciseDao exerciseDao, RoutineDao routineDao) {
+        this.exerciseDao = exerciseDao;
+        this.routineDao = routineDao;
+    }
+
+    public ExerciseDao getExerciseDao() {
+        return exerciseDao;
+    }
+
+    public RoutineDao getRoutineDao() {
+        return routineDao;
     }
 
     ///
     /// GET methods
     ///
-    public List<Routine> getRoutines() {
-        return (dao.getRoutines());
+    public Single<List<Routine>> getRoutines() {
+        return (routineDao.getRoutines());
     }
 
-    public Routine getRoutine(int idRoutine) {
-        return (dao.getRoutine(idRoutine));
+    public Single<Routine> getRoutine(int idRoutine) {
+        return (routineDao.getRoutine(idRoutine));
     }
 
     public Single<List<Exercise>> getExercises() {
-        return (dao.getExercises());
+        return (exerciseDao.getExercises());
     }
 
     public Maybe<Integer> getExercise(String name) {
-        return dao.getExercise(name);
+        return exerciseDao.getExercise(name);
     }
 
     // UPDATES
     public void updateFavorite(int idExercise, boolean favorited) {
-        dao.updateFavorite(idExercise, favorited);
+        exerciseDao.updateFavorite(idExercise, favorited);
+    }
+
+    public void updateDisplayOrder(int idRoutine, int order) {
+        routineDao.updateDisplayOrder(idRoutine, order);
     }
 
     ///
     /// INSERT methods
     ///
-    public Long insertRoutine(Routine routine) {
-        return (dao.insertRoutine(routine));
+    public Flowable<Long> insertRoutine(Routine routine) {
+        return Flowable.fromCallable(() -> routineDao.insertRoutine(routine));
     }
 
     public Flowable<Long> insertExercise(Exercise exercise) {
-        return Flowable.fromCallable(() -> dao.insertExercise(exercise));//(Single.fromCallable(() -> dao.insertExercise(exercise)));
+        return Flowable.fromCallable(() -> exerciseDao.insertExercise(exercise));//(Single.fromCallable(() -> exerciseDao.insertExercise(exercise)));
     }
 
     ///
     /// DELETE methods
     ///
     public void deleteExercise(Exercise ex) {
-        dao.deleteExercise(ex);
-        return;
+        exerciseDao.deleteExercise(ex);
+    }
+
+    public void deleteRoutine(Routine ro) {
+        routineDao.deleteRoutine(ro);
     }
 }

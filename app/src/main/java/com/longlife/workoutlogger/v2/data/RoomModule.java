@@ -32,12 +32,12 @@ public class RoomModule {
         @Override
         public void migrate(SupportSQLiteDatabase db) {
             Observable initialRoutines = Observable.fromCallable(
-                    () -> database.dao().insertRoutine(new Routine()))
+                    () -> database.routineDao().insertRoutine(new Routine()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
 
             Observable initialExercises = Observable.fromCallable(
-                    () -> database.dao().insertExercise(new Exercise()))
+                    () -> database.exerciseDao().insertExercise(new Exercise()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
 
@@ -87,12 +87,12 @@ public class RoomModule {
 
                 // [TODO] This is supposed to pre-populate the database with routines and exercises, but it is not working.
                 Observable initialRoutines = Observable.fromCallable(
-                        () -> database.dao().insertRoutine(new Routine()))
+                        () -> database.routineDao().insertRoutine(new Routine()))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread());
 
                 Observable initialExercises = Observable.fromCallable(
-                        () -> database.dao().insertExercise(new Exercise()))
+                        () -> database.exerciseDao().insertExercise(new Exercise()))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread());
 
@@ -167,19 +167,25 @@ public class RoomModule {
     @Provides
     @Singleton
     Database provideDatabase() {
-        return (database);
+        return database;
     }
 
     @Provides
     @Singleton
-    Dao provideDao(Database db) {
-        return (db.dao());
+    ExerciseDao provideExerciseDao(Database db) {
+        return db.exerciseDao();
     }
 
     @Provides
     @Singleton
-    Repository provideRepository(Dao dao) {
-        return (new Repository(dao));
+    RoutineDao provideRoutineDao(Database db) {
+        return db.routineDao();
+    }
+
+    @Provides
+    @Singleton
+    Repository provideRepository(ExerciseDao exerciseDao, RoutineDao routineDao) {
+        return new Repository(exerciseDao, routineDao);
     }
 
     @Provides

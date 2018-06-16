@@ -3,11 +3,11 @@ package com.longlife.workoutlogger.v2.data;
 import javax.inject.Inject;
 
 public class RoutineDataSource {
-    private Dao dao;
+    private ExerciseDao exerciseDao;
 
     @Inject
-    public RoutineDataSource(Dao dao) {
-        this.dao = dao;
+    public RoutineDataSource(ExerciseDao exerciseDao) {
+        this.exerciseDao = exerciseDao;
     }
 
     /*

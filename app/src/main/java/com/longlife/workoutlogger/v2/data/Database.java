@@ -26,7 +26,9 @@ import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
 public abstract class Database extends RoomDatabase {
     public static final int VERSION = DatabaseVersion.CURRENT;
 
-    public abstract Dao dao();
+    public abstract ExerciseDao exerciseDao();
+
+    public abstract RoutineDao routineDao();
 
     /*
     private static Database INSTANCE;

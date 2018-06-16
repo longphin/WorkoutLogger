@@ -2,14 +2,15 @@ package com.longlife.workoutlogger.enums;
 
 import android.arch.persistence.room.TypeConverter;
 
+import com.longlife.workoutlogger.v2.data.UserProfile;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 public class DateConverter {
-    private static DateFormat df = new SimpleDateFormat(Constants.TIME_STAMP_FORMAT, Locale.US);
+    private static DateFormat df = new SimpleDateFormat(Constants.TIME_STAMP_FORMAT, UserProfile.getLocale());
 
     @TypeConverter
     public static Date StrToDate(String value) {

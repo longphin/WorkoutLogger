@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.v2.view.Routine_Insert;
+package com.longlife.workoutlogger.v2.view.RoutineOverview;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewViewModel;
 
 import javax.inject.Inject;
 

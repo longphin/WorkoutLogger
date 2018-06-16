@@ -6,9 +6,6 @@ import android.os.Bundle;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
-import com.longlife.workoutlogger.v2.view.Routine_Insert.RoutineCreateFragment;
-
-import io.reactivex.observers.DisposableObserver;
 
 public class RoutinesOverviewActivity extends BaseActivity {
     private static final String TAG = RoutinesOverviewActivity.class.getSimpleName();
@@ -32,7 +29,8 @@ public class RoutinesOverviewActivity extends BaseActivity {
         initializeFragments();
 
         // Initialize a subscriber that observes when to start a RoutineCreateFragment.
-        initializeRoutineCreateListener();
+        //initializeRoutineCreateListener();
+        //viewModel.startCreateFragmentResponse().subscribe(response -> processNewRoutineResponse(response));
     }
 
     public void initializeFragments() {
@@ -46,35 +44,6 @@ public class RoutinesOverviewActivity extends BaseActivity {
 
     // Initialize a subscriber that listens to when it is desired to open a RoutineCreateFragment.
     public void initializeRoutineCreateListener() {
-        DisposableObserver<Boolean> observer1 =
-                new DisposableObserver<Boolean>() {
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            RoutineCreateFragment fragment = (RoutineCreateFragment) manager.findFragmentByTag(RoutineCreateFragment.TAG);
-                            if (fragment == null) {
-                                fragment = RoutineCreateFragment.newInstance();
-                                manager.beginTransaction()
-                                        .replace(R.id.root_routines_overview, fragment, RoutineCreateFragment.TAG)
-                                        .addToBackStack(null)
-                                        .commit();
-                            }
 
-                            addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutineCreateFragment.TAG);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                };
-        viewModel.addNewRoutine.subscribe(observer1);
-        addDisposable(observer1);
     }
 }

@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
+import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutineCreateFragment;
 
 public class RoutineCreateActivity extends BaseActivity {
     private static final String TAG = RoutineCreateActivity.class.getSimpleName();

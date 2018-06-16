@@ -22,54 +22,37 @@ import io.reactivex.Single;
  */
 
 @android.arch.persistence.room.Dao
-public interface Dao {
+public interface RoutineDao {
     ///
     /// Gets
     ///
-    @Query("SELECT * FROM Exercise")
-//" ORDER BY favorited DESC, LOWER(name) ASC")
-    Single<List<Exercise>> getExercises();
-
-    @Query("SELECT idExercise FROM Exercise WHERE name = :name")
-        // check if the exercise exists in the database already
-    Maybe<Integer> getExercise(String name);
-
-    @Query("SELECT EXISTS (SELECT 1 FROM Exercise WHERE idExercise = :idExercise)")
-    int exerciseExists(int idExercise);
-
     @Query("SELECT * FROM Routine")
-    List<Routine> getRoutines();
+    Single<List<Routine>> getRoutines();
 
     @Query("SELECT * FROM RoutineSession WHERE idRoutine = :idRoutine AND wasPerformed = 0 ORDER BY sessionDate DESC LIMIT 1")
-    RoutineSession getLatestRoutineSession(int idRoutine);
+    Maybe<RoutineSession> getLatestRoutineSession(int idRoutine);
 
     @Query("SELECT * FROM SessionExercise WHERE idRoutineSession = :idRoutineSession")
-    List<SessionExercise> getSessionExercises(int idRoutineSession);
+    Maybe<List<SessionExercise>> getSessionExercises(int idRoutineSession);
 
     @Query("SELECT e.*" +
             " FROM SessionExercise as se" +
             " INNER JOIN Exercise as e on se.idExercise=e.idExercise" +
             " WHERE se.idSessionExercise = :idSessionExercise")
-    Exercise getExerciseFromSession(int idSessionExercise);
+    Maybe<Exercise> getExerciseFromSession(int idSessionExercise);
 
     @Query("SELECT * FROM Routine WHERE idRoutine = :idRoutine")
-    Routine getRoutine(int idRoutine);
+    Single<Routine> getRoutine(int idRoutine);
 
     ///
     /// UPDATE
     ///
-    @Query("UPDATE Exercise SET favorited = :favorited WHERE idExercise = :idExercise")
-    void updateFavorite(int idExercise, boolean favorited);
+    @Query("UPDATE Routine SET displayOrder = :order WHERE idRoutine = :idRoutine")
+    void updateDisplayOrder(int idRoutine, int order);
 
     ///
     /// Inserts
     ///
-    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    void insertExercises(ArrayList<Exercise> ex);
-
-    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    Long insertExercise(Exercise ex);
-
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
     void insertRoutines(ArrayList<Routine> r);
 
@@ -88,9 +71,6 @@ public interface Dao {
     ///
     /// Deletes
     ///
-    @Delete
-    void deleteExercise(Exercise ex);
-
     @Delete
     void deleteRoutine(Routine r);
 
