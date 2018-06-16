@@ -2,7 +2,6 @@ package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.longlife.workoutlogger.MyApplication;
@@ -62,7 +61,6 @@ public class ExercisesOverviewActivity extends BaseActivity {
         ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
         if (fragment == null) {
             fragment = ExerciseCreateFragment.newInstance();
-            Fragment existingFrag = manager.findFragmentByTag(ExerciseCreateFragment.TAG);
 
             manager.beginTransaction()
                     .replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)

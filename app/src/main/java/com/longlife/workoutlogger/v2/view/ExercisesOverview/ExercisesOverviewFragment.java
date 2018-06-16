@@ -71,7 +71,6 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
                         .get(ExercisesOverviewViewModel.class);
 
         // Observe events when the list of exercises is obtained.
-        //viewModel.loadResponse().observe(this, response -> processResponse(response));
         viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response));
         viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response));
     }
@@ -112,6 +111,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 
+        // Callback to detech swipe to delete motion.
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
@@ -138,7 +138,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
             // showing snack bar with Undo option
             Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
+                    .make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -196,6 +196,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
         Log.d(TAG, sb.toString());
 
         adapter.setExercises(exercises);
+        adapter.notifyDataSetChanged();
     }
 
     private void renderErrorState(Throwable throwable) {

@@ -2,10 +2,12 @@ package com.longlife.workoutlogger.v2.view.RoutineOverview;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
+import com.longlife.workoutlogger.v2.utils.Response;
 
 public class RoutinesOverviewActivity extends BaseActivity {
     private static final String TAG = RoutinesOverviewActivity.class.getSimpleName();
@@ -29,8 +31,7 @@ public class RoutinesOverviewActivity extends BaseActivity {
         initializeFragments();
 
         // Initialize a subscriber that observes when to start a RoutineCreateFragment.
-        //initializeRoutineCreateListener();
-        //viewModel.startCreateFragmentResponse().subscribe(response -> processNewRoutineResponse(response));
+        viewModel.startCreateFragmentResponse().subscribe(response -> processNewRoutineResponse(response));
     }
 
     public void initializeFragments() {
@@ -42,8 +43,33 @@ public class RoutinesOverviewActivity extends BaseActivity {
         addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutinesOverviewFragment.TAG);
     }
 
-    // Initialize a subscriber that listens to when it is desired to open a RoutineCreateFragment.
-    public void initializeRoutineCreateListener() {
+    private void processNewRoutineResponse(Response<Boolean> response) {
+        switch (response.getStatus()) {
+            case LOADING:
+                //renderLoadingState();
+                break;
+            case SUCCESS:
+                startCreateRoutineFragment();
+                break;
+            case ERROR:
+                //renderErrorState(response.error);
+                break;
+        }
+    }
 
+    private void startCreateRoutineFragment() {
+        RoutineCreateFragment fragment = (RoutineCreateFragment) manager.findFragmentByTag(RoutineCreateFragment.TAG);
+        if (fragment == null) {
+            fragment = RoutineCreateFragment.newInstance();
+
+            manager.beginTransaction()
+                    .replace(R.id.root_routines_overview, fragment, RoutineCreateFragment.TAG)
+                    .addToBackStack(null)
+                    .commit();
+        }
+
+        addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutineCreateFragment.TAG);
+
+        Log.d(TAG, "start routine create fragment");
     }
 }
