@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
@@ -181,8 +180,6 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
     }
 
     private void renderLoadingState() {
-        Toast.makeText(context, "loading exercises", Toast.LENGTH_SHORT);
-
         Log.d(TAG, "loading exercises");
     }
 
@@ -190,8 +187,6 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
         StringBuilder sb = new StringBuilder();
         sb.append(exercises == null ? 0 : exercises.size());
         sb.append(" exercises obtained");
-
-        Toast.makeText(context, sb.toString(), Toast.LENGTH_SHORT);
 
         Log.d(TAG, sb.toString());
 
@@ -201,7 +196,6 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
     private void renderErrorState(Throwable throwable) {
         // change anything if loading data had an error.
-        Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT);
         Log.d(TAG, throwable.getMessage());
     }
 
@@ -221,8 +215,6 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
     }
 
     private void renderInsertLoadingState() {
-        Toast.makeText(context, "loading exercises", Toast.LENGTH_SHORT);
-
         Log.d(TAG, "loading exercises");
     }
 
@@ -235,7 +227,6 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
     private void renderInsertErrorState(Throwable throwable) {
         // change anything if loading data had an error.
-        Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT);
         Log.d(TAG, throwable.getMessage());
     }
 }

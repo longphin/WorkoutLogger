@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 import com.longlife.workoutlogger.v2.data.Repository;
+import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.Routine;
 import com.longlife.workoutlogger.v2.model.comparators.RoutineComparators;
 import com.longlife.workoutlogger.v2.utils.Conversions;
@@ -31,9 +32,12 @@ public class RoutinesOverviewViewModel extends ViewModel {
     private final Response<List<Routine>> loadResponse = new Response<>();
     // Observable for when to start creating a new Routine fragment.
     private final Response<Boolean> startCreateFragmentResponse = new Response<>();
+    // Observable for getting list of exercises.
+    private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
 
     private Repository repo;
     private List<Routine> routines;
+    //private List<Exercise> exercises; // [TODO] check if we want to cache exercises as well.
 
     ///
     /// Constructors
@@ -77,6 +81,19 @@ public class RoutinesOverviewViewModel extends ViewModel {
         );
     }
 
+    public void loadExercises() {
+        disposables.add(
+                repo.getExercises()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(__ -> loadExercisesResponse.setLoading())
+                        .subscribe((List<Exercise> ex) ->
+                                {
+                                    loadExercisesResponse.setSuccess(ex);
+                                },
+                                throwable -> loadExercisesResponse.setError(throwable))
+        );
+    }
     public void insertRoutine(Routine ro) {
         disposables.add(
                 repo.insertRoutine(ro)
@@ -135,6 +152,10 @@ public class RoutinesOverviewViewModel extends ViewModel {
 
     public Observable<Response<Boolean>> startCreateFragmentResponse() {
         return startCreateFragmentResponse.getObservable();
+    }
+
+    public Observable<Response<List<Exercise>>> getLoadExercisesResponse() {
+        return loadExercisesResponse.getObservable();
     }
 
     ///

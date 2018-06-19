@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
+import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.StringArrayAdapter;
 
 import java.util.ArrayList;
@@ -71,6 +72,8 @@ public class RoutineCreateFragment extends Fragment {
         viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
                 ViewModelProviders.of(getActivity(), viewModelFactory)
                         .get(RoutinesOverviewViewModel.class);
+
+        viewModel.getLoadExercisesResponse().subscribe(response -> processLoadExercisesResponse(response));
     }
 
     @Nullable
@@ -84,6 +87,7 @@ public class RoutineCreateFragment extends Fragment {
         Button saveButton = v.findViewById(R.id.btn_routineCreateSave);
         Button addExerciseToRoutine = v.findViewById(R.id.btn_addExerciseToRoutine);
         searchBox = v.findViewById(R.id.txt_routineexercisecreate_searchBox);
+        searchBox.setOnItemClickListener(onItemClickListener);
 
         recyclerView = v.findViewById(R.id.rv_routineCreateExercises);
         initializeRecyclerView();
@@ -97,19 +101,10 @@ public class RoutineCreateFragment extends Fragment {
         });
 
         // OnClick add exercise.
-        addExerciseToRoutine.setOnClickListener(newView -> addExerciseToRoutine(newView));
+        addExerciseToRoutine.setOnClickListener(newView -> addExerciseToRoutine(newView)); //[TODO] remove this once all functions for adding exercise (autocomplete, search fragment, etc.) have been implemented
 
-        List<Exercise> tempExercises = new ArrayList<>();
-        tempExercises.add(new Exercise("temp1", "descrip1"));
-        tempExercises.add(new Exercise("temp2", "descrip2"));
-        tempExercises.add(new Exercise("partial temp 1", "descript1"));
-        List<String> tempStr = new ArrayList<>();
-        for (Exercise e : tempExercises) {
-            tempStr.add(e.getName());
-        }
-        StringArrayAdapter searchAdapter = new StringArrayAdapter(context, R.layout.autocompletetextview, tempStr);
-        searchBox.setAdapter(searchAdapter);
-        searchBox.setOnItemClickListener(onItemClickListener);
+        // Get exercises list.
+        viewModel.loadExercises();
 
         return (v);
     }
@@ -130,5 +125,43 @@ public class RoutineCreateFragment extends Fragment {
         adapter.addExercise(new Exercise());
         adapter.notifyItemInserted(adapter.getItemCount() - 1);
         Log.d(TAG, String.valueOf(adapter.getItemCount()) + " exercises");
+    }
+
+    private void processLoadExercisesResponse(Response<List<Exercise>> response) {
+        switch (response.getStatus()) {
+            case LOADING:
+                renderExercisesLoadingState();
+                break;
+            case SUCCESS:
+                renderExercisesSuccessState(response.getValue());
+                break;
+            case ERROR:
+                renderExercisesErrorState(response.getError());
+                break;
+        }
+    }
+
+    private void renderExercisesLoadingState() {
+        Log.d(TAG, "loading exercises");
+    }
+
+    private void renderExercisesSuccessState(List<Exercise> exercises) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(exercises == null ? 0 : exercises.size());
+        sb.append(" exercises obtained");
+
+        Log.d(TAG, sb.toString());
+
+        List<String> tempStr = new ArrayList<>();
+        for (Exercise e : exercises) {
+            tempStr.add(e.getName());
+        }
+        StringArrayAdapter searchAdapter = new StringArrayAdapter(context, R.layout.autocompletetextview, tempStr);
+        searchBox.setAdapter(searchAdapter);
+    }
+
+    private void renderExercisesErrorState(Throwable throwable) {
+        // change anything if loading data had an error.
+        Log.d(TAG, throwable.getMessage());
     }
 }
