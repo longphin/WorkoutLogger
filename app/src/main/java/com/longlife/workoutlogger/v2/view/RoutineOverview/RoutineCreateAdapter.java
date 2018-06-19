@@ -1,5 +1,6 @@
 package com.longlife.workoutlogger.v2.view.RoutineOverview;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,17 @@ import java.util.List;
 
 public class RoutineCreateAdapter extends RecyclerView.Adapter<RoutineCreateViewHolder> {
     private List<Exercise> exercisesToInclude = new ArrayList<>();
+    /*private static final String[] COUNTRIES = new String[] {
+            "Belgium", "France", "Italy", "Germany", "Spain", "Spanish"
+    };*/
+
+    private Context context;
 
     @Override
     public RoutineCreateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_routine_create_exercise, parent, false);
+        this.context = parent.getContext();
+
+        View v = LayoutInflater.from(this.context).inflate(R.layout.item_routine_create_exercise, parent, false);
 
         return (new RoutineCreateViewHolder(v));
     }
@@ -33,6 +41,11 @@ public class RoutineCreateAdapter extends RecyclerView.Adapter<RoutineCreateView
 
         holder.setNameText(sbName.toString());
         holder.setDescripText(exercise.getDescription());
+
+        /*
+        ArrayAdapter<String> exercisesListAdapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, COUNTRIES);
+        holder.newExerciseBox.setAdapter(exercisesListAdapter);
+        */
     }
 
     @Override

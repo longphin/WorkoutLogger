@@ -14,12 +14,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
+import com.longlife.workoutlogger.v2.utils.StringArrayAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -35,6 +41,16 @@ public class RoutineCreateFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RoutineCreateAdapter adapter;
+
+    private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            //Toast.makeText(context, "Selected " + adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Selected " + adapterView.getItemAtPosition(i));
+        }
+    };
+
+    private AutoCompleteTextView searchBox;
 
     public RoutineCreateFragment() {
         // Required empty public constructor
@@ -67,6 +83,7 @@ public class RoutineCreateFragment extends Fragment {
         Button cancelButton = v.findViewById(R.id.btn_routineCreateCancel);
         Button saveButton = v.findViewById(R.id.btn_routineCreateSave);
         Button addExerciseToRoutine = v.findViewById(R.id.btn_addExerciseToRoutine);
+        searchBox = v.findViewById(R.id.txt_routineexercisecreate_searchBox);
 
         recyclerView = v.findViewById(R.id.rv_routineCreateExercises);
         initializeRecyclerView();
@@ -82,10 +99,24 @@ public class RoutineCreateFragment extends Fragment {
         // OnClick add exercise.
         addExerciseToRoutine.setOnClickListener(newView -> addExerciseToRoutine(newView));
 
+        List<Exercise> tempExercises = new ArrayList<>();
+        tempExercises.add(new Exercise("temp1", "descrip1"));
+        tempExercises.add(new Exercise("temp2", "descrip2"));
+        tempExercises.add(new Exercise("partial temp 1", "descript1"));
+        List<String> tempStr = new ArrayList<>();
+        for (Exercise e : tempExercises) {
+            tempStr.add(e.getName());
+        }
+        StringArrayAdapter searchAdapter = new StringArrayAdapter(context, R.layout.autocompletetextview, tempStr);
+        searchBox.setAdapter(searchAdapter);
+        searchBox.setOnItemClickListener(onItemClickListener);
+
         return (v);
     }
 
     private void initializeRecyclerView() {
+        //LimitedLinearLayoutManager layout = new LimitedLinearLayoutManager(context, 100);
+        //recyclerView.setLayoutManager(layout);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         adapter = new RoutineCreateAdapter();
         recyclerView.setAdapter(adapter);

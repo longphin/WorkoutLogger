@@ -82,28 +82,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
+    <Button
+        android:id="@+id/btn_addExerciseToRoutine"
+        android:layout_width="71dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/AddExercise"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_routineCreateSave"
+        app:layout_constraintStart_toEndOf="@+id/btn_routineCreateCancel" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_routineCreateExercises"
         android:layout_width="344dp"
-        android:layout_height="387dp"
+        android:layout_height="333dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_addExerciseToRoutine"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_routineCreateDescrip" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btn_addExerciseToRoutine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <AutoCompleteTextView
+        android:id="@+id/txt_routineexercisecreate_searchBox"
+        android:layout_width="278dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/AddExercise"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_routineCreateSave"
-        app:layout_constraintStart_toEndOf="@+id/btn_routineCreateCancel"
-        app:layout_constraintTop_toBottomOf="@+id/rv_routineCreateExercises" />
+        android:completionThreshold="1"
+        android:contentDescription="Add Exercise"
+        app:layout_constraintBottom_toTopOf="@+id/rv_routineCreateExercises"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_routineCreateDescrip" />
 </android.support.constraint.ConstraintLayout>

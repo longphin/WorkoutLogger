@@ -39,15 +39,6 @@ public class ExercisesViewHolder extends RecyclerView.ViewHolder {
         this.descrip.setText(s);
     }
 
-    // When the favorite icon is clicked, mark the favorite status.
-    private class FavoriteListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            int pos = getAdapterPosition();
-
-        }
-    }
-
     public RelativeLayout getViewBackground() {
         return viewBackground;
     }
