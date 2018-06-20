@@ -37,7 +37,7 @@ public class RoutinesOverviewViewModel extends ViewModel {
 
     private Repository repo;
     private List<Routine> routines;
-    //private List<Exercise> exercises; // [TODO] check if we want to cache exercises as well.
+    private List<Exercise> exercises; // [TODO] check if we want to cache exercises as well.
 
     ///
     /// Constructors
@@ -75,7 +75,7 @@ public class RoutinesOverviewViewModel extends ViewModel {
                             // sort the list of exercises //[TODO] Set the comparator to what the user chooses
                             Collections.sort(ro, RoutineComparators.getDefaultComparator());
                             this.routines = ro;
-                            loadResponse.setSuccess(this.routines);
+                            loadResponse.setSuccess(ro);
                         },
                         throwable -> loadResponse.setError(throwable))
         );
@@ -89,6 +89,7 @@ public class RoutinesOverviewViewModel extends ViewModel {
                         .doOnSubscribe(__ -> loadExercisesResponse.setLoading())
                         .subscribe((List<Exercise> ex) ->
                                 {
+                                    this.exercises = ex;
                                     loadExercisesResponse.setSuccess(ex);
                                 },
                                 throwable -> loadExercisesResponse.setError(throwable))
