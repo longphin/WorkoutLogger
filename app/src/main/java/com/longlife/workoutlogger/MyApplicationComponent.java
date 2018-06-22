@@ -8,6 +8,7 @@ import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExerciseCreateFragme
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewActivity;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
 import com.longlife.workoutlogger.v2.view.MainActivity;
+import com.longlife.workoutlogger.v2.view.RoutineOverview.AddExercisesFragment.AddExercisesFragment;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutineCreateFragment;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewActivity;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewFragment;
@@ -37,6 +38,8 @@ public interface MyApplicationComponent {
     void inject(ExercisesOverviewFragment eof);
 
     void inject(ExerciseCreateFragment ecf);
+
+    void inject(AddExercisesFragment aef);
 
     Repository repository();
 

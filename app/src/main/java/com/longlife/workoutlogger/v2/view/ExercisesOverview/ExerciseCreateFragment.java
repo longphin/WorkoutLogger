@@ -133,20 +133,16 @@ public class ExerciseCreateFragment extends Fragment {
         sb.append("inserted exercise ");
         sb.append(id.toString());
 
-        Toast.makeText(context, sb.toString(), Toast.LENGTH_SHORT);
-
         Log.d(TAG, sb.toString());
     }
 
     private void renderLoadingState() {
         // change anything while data is being loaded
-        Toast.makeText(context, "loading exercise", Toast.LENGTH_SHORT);
         Log.d(TAG, ": loading exercise");
     }
 
     private void renderErrorState(Throwable throwable) {
         // change anything if loading data had an error.
-        Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT);
         Log.d(TAG, throwable.getMessage());
     }
 }

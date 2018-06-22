@@ -8,6 +8,7 @@ import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.comparators.ExerciseComparators;
 import com.longlife.workoutlogger.v2.utils.Conversions;
 import com.longlife.workoutlogger.v2.utils.Response;
+import com.longlife.workoutlogger.v2.utils.Status;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +16,6 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -30,7 +30,7 @@ public class ExercisesOverviewViewModel extends ViewModel {
     // Observable for when requesting list of all exercises.
     private final Response<List<Exercise>> loadResponse = new Response<>();
     // Observable for when to start creating a new exercise fragment.
-    private final Response<Boolean> startCreateFragmentResponse = new Response<>();
+    //private final Response<Boolean> startCreateFragmentResponse = new Response<>();
 
     private Repository repo;
     private List<Exercise> exercises;
@@ -42,17 +42,16 @@ public class ExercisesOverviewViewModel extends ViewModel {
         this.repo = repo;
     }
 
-    public Single<List<Exercise>> getExercises() {
-        return (repo.getExercises());
-    }
-
     @Override
     public void onCleared() {
         super.onCleared();
         disposables.clear();
     }
 
+    /*
     public void startCreateFragment() {
+        if(startCreateFragmentResponse.getStatus() == Status.LOADING) return;
+
         disposables.add(Observable.just(true) // this emitted value does not matter
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -61,8 +60,11 @@ public class ExercisesOverviewViewModel extends ViewModel {
                         throwable -> startCreateFragmentResponse.setError(throwable))
         );
     }
+    */
 
     public void loadExercises() {
+        if (loadResponse.getStatus() == Status.LOADING) return;
+
         disposables.add(repo.getExercises()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -78,6 +80,8 @@ public class ExercisesOverviewViewModel extends ViewModel {
     }
 
     public void insertExercise(Exercise ex) {
+        if (insertResponse.getStatus() == Status.LOADING) return;
+
         disposables.add(
                 repo.insertExercise(ex)
                         .subscribeOn(Schedulers.io())
@@ -133,9 +137,11 @@ public class ExercisesOverviewViewModel extends ViewModel {
         return loadResponse.getObservable();
     }
 
+    /*
     public Observable<Response<Boolean>> startCreateFragmentResponse() {
         return startCreateFragmentResponse.getObservable();
     }
+    */
 
     ///
     /// GETTERS

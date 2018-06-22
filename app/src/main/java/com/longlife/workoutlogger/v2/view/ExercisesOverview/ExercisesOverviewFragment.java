@@ -50,16 +50,28 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
     private View mView;
 
+    public static final String rootId_TAG = "rootId";
+    private int rootId;
+
     public ExercisesOverviewFragment() {
     }
 
-    public static ExercisesOverviewFragment newInstance() {
-        return (new ExercisesOverviewFragment());
+    public static ExercisesOverviewFragment newInstance(int rootId) {
+        ExercisesOverviewFragment fragment = new ExercisesOverviewFragment();
+
+        Bundle bundle = new Bundle(1);
+        bundle.putInt(ExercisesOverviewFragment.rootId_TAG, rootId);
+
+        fragment.setArguments(bundle);
+
+        return (fragment);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        rootId = getArguments().getInt(rootId_TAG);
 
         ((MyApplication) getActivity().getApplication())
                 .getApplicationComponent()
@@ -85,7 +97,8 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
             btn_addRoutine.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    viewModel.startCreateFragment();
+                    //viewModel.startCreateFragment();
+                    startCreateFragment();
                 }
             });
 
@@ -101,6 +114,14 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
             return (mView);
         }
 
+    }
+
+    private void startCreateFragment() {
+        ExerciseCreateFragment frag = new ExerciseCreateFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(rootId, frag, ExerciseCreateFragment.TAG)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void initializeRecyclerView() {

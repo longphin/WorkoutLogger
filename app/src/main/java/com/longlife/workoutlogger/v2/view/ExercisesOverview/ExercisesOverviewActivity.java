@@ -31,13 +31,13 @@ public class ExercisesOverviewActivity extends BaseActivity {
         initializeFragments();
 
         // Observer for when 'Add new exercise' button is clicked.
-        viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response));
+        //viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response));
     }
 
     public void initializeFragments() {
         ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
         if (fragment == null) {
-            fragment = ExercisesOverviewFragment.newInstance();
+            fragment = ExercisesOverviewFragment.newInstance(R.id.root_exercises_overview);
         }
 
         addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
@@ -62,13 +62,15 @@ public class ExercisesOverviewActivity extends BaseActivity {
         if (fragment == null) {
             fragment = ExerciseCreateFragment.newInstance();
 
+            /*
             manager.beginTransaction()
                     .replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
                     .addToBackStack(null)
                     .commit();
+            */
         }
 
-        addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG);
+        addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG, ExerciseCreateFragment.TAG);
 
         Log.d(TAG, "start exercise create fragment");
     }

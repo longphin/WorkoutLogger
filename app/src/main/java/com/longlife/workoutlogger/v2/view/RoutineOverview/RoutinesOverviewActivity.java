@@ -62,13 +62,15 @@ public class RoutinesOverviewActivity extends BaseActivity {
         if (fragment == null) {
             fragment = RoutineCreateFragment.newInstance();
 
+            /*
             manager.beginTransaction()
                     .replace(R.id.root_routines_overview, fragment, RoutineCreateFragment.TAG)
                     .addToBackStack(null)
                     .commit();
+            */
         }
 
-        addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutineCreateFragment.TAG);
+        addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutineCreateFragment.TAG, RoutineCreateFragment.TAG);
 
         Log.d(TAG, "start routine create fragment");
     }

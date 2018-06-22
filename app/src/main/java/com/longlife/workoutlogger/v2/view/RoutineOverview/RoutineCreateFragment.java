@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.MyApplication;
@@ -25,6 +28,7 @@ import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
 import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.StringArrayAdapter;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +53,13 @@ public class RoutineCreateFragment extends Fragment {
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             //Toast.makeText(context, "Selected " + adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Selected " + adapterView.getItemAtPosition(i));
+        }
+    };
+
+    private View.OnClickListener onSearchClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            startSearchExercises();
         }
     };
 
@@ -89,6 +100,7 @@ public class RoutineCreateFragment extends Fragment {
         Button addExerciseToRoutine = v.findViewById(R.id.btn_addExerciseToRoutine);
         searchBox = v.findViewById(R.id.txt_routineexercisecreate_searchBox);
         searchBox.setOnItemClickListener(onItemClickListener);
+        ImageView searchExercises = v.findViewById(R.id.btn_searchExercises);
 
         recyclerView = v.findViewById(R.id.rv_routineCreateExercises);
         initializeRecyclerView();
@@ -103,6 +115,9 @@ public class RoutineCreateFragment extends Fragment {
 
         // OnClick add exercise.
         addExerciseToRoutine.setOnClickListener(newView -> addExerciseToRoutine(newView)); //[TODO] remove this once all functions for adding exercise (autocomplete, search fragment, etc.) have been implemented
+
+        // Search exercises image.
+        searchExercises.setOnClickListener(onSearchClickListener);
 
         // Get exercises list.
         viewModel.loadExercises();
@@ -164,5 +179,46 @@ public class RoutineCreateFragment extends Fragment {
     private void renderExercisesErrorState(Throwable throwable) {
         // change anything if loading data had an error.
         Log.d(TAG, throwable.getMessage());
+    }
+
+    // Click search exercise button
+    public void startSearchExercises() {
+        /*
+        //AddExercisesFragment frag = new AddExercisesFragment();
+        ExercisesOverviewFragment frag = new ExercisesOverviewFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.root_routines_overview, frag, AddExercisesFragment.TAG)
+                .addToBackStack(null)
+                .commit();
+        */
+
+        //
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+
+        ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
+        if (fragment == null) {
+            fragment = ExercisesOverviewFragment.newInstance(R.id.root_routines_overview);
+
+            /*
+            manager.beginTransaction()
+                    .replace(R.id.root_routines_overview, fragment, ExerciseCreateFragment.TAG)
+                    .addToBackStack(null)
+                    .commit();
+            */
+        }
+
+        addFragmentToActivity(manager, fragment, R.id.root_routines_overview, ExercisesOverviewFragment.TAG, ExercisesOverviewFragment.TAG);
+    }
+
+    public void addFragmentToActivity(FragmentManager fragmentManager,
+                                      Fragment fragment,
+                                      int frameId,
+                                      String tag,
+                                      String addToBackStack) {
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(frameId, fragment, tag);
+        if (!addToBackStack.isEmpty()) transaction.addToBackStack(addToBackStack);
+        transaction.commit();
     }
 }

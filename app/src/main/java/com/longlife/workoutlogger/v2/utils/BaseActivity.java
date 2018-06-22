@@ -55,9 +55,18 @@ public abstract class BaseActivity extends AppCompatActivity {
                                       Fragment fragment,
                                       int frameId,
                                       String tag) {
+        addFragmentToActivity(fragmentManager, fragment, frameId, tag, "");
+    }
+
+    public void addFragmentToActivity(FragmentManager fragmentManager,
+                                      Fragment fragment,
+                                      int frameId,
+                                      String tag,
+                                      String addToBackStack) {
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(frameId, fragment, tag);
+        if (!addToBackStack.isEmpty()) transaction.addToBackStack(null);
         transaction.commit();
     }
 }
