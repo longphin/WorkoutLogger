@@ -11,6 +11,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,6 +51,7 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
     private View mView;
 
+    private int rootId;
     /*
     public static final String rootId_TAG = "rootId";
     private int rootId;
@@ -106,8 +108,8 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
             btn_addRoutine.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    viewModel.startCreateFragment();
-                    //startCreateFragment();
+                    //viewModel.startCreateFragment();
+                    startCreateFragment();
                 }
             });
 
@@ -125,13 +127,6 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
     }
 
-    /*
-    public void setRootId(int rootId)
-    {
-        this.rootId = rootId;
-    }
-    */
-
     private void initializeViewModel() {
         if (viewModel == null) {
             viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
@@ -140,7 +135,10 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
         }
     }
 
-    /*
+    public void setRootId(int id) {
+        rootId = id;
+    }
+
     private void startCreateFragment() {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         //initializeManager();
@@ -152,10 +150,9 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
         manager.beginTransaction()
                 .replace(rootId, fragment, ExerciseCreateFragment.TAG)
-                .addToBackStack(null)
+                .addToBackStack(ExerciseCreateFragment.TAG)
                 .commit();
     }
-    */
 
     private void initializeRecyclerView() {
         initializeViewModel(); // creates view model if the onCreateView() was called before onCreate()

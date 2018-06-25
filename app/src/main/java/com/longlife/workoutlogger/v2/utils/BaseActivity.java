@@ -38,9 +38,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (manager.getBackStackEntryCount() > 0) {
+        if (manager.getBackStackEntryCount() > 0) { // if current view is a fragment, then pop it.
             manager.popBackStack();
-        } else {
+        } else { // else, we are are at the activity level, so we call the super onBackPressed();
             super.onBackPressed();
         }
         /*

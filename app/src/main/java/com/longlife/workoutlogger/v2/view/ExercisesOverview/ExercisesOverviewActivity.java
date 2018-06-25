@@ -31,13 +31,14 @@ public class ExercisesOverviewActivity extends BaseActivity {
         initializeFragments();
 
         // Observer for when 'Add new exercise' button is clicked.
-        addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response)));
+        //addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response)));
     }
 
     public void initializeFragments() {
         ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
         if (fragment == null) {
             fragment = ExercisesOverviewFragment.newInstance();//(R.id.root_exercises_overview);
+            fragment.setRootId(R.id.root_exercises_overview);
         }
 
         addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);

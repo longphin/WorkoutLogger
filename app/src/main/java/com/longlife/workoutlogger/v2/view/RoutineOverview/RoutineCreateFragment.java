@@ -199,6 +199,7 @@ public class RoutineCreateFragment extends FragmentWithCompositeDisposable {
         ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
         if (fragment == null) {
             fragment = ExercisesOverviewFragment.newInstance();//(R.id.root_routines_overview);
+            fragment.setRootId(R.id.root_routines_overview);
 
             /*
             manager.beginTransaction()

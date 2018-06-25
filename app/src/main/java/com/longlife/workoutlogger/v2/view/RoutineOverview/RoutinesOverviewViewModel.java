@@ -37,7 +37,7 @@ public class RoutinesOverviewViewModel extends ViewModel {
 
     private Repository repo;
     private List<Routine> routines;
-    private List<Exercise> exercises; // [TODO] check if we want to cache exercises as well.
+    private List<Exercise> exercises;
 
     ///
     /// Constructors

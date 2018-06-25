@@ -120,16 +120,14 @@ public class ExerciseCreateFragment extends Fragment {
                         getResources().getString(R.string.requiredFieldsMissing),
                         //MyApplication.getStringResource(MyApplication.requiredFieldsMissing),
                         Toast.LENGTH_SHORT)
-                        .show();
+                        .show(); // [TODO] when required fields are missing, explain that the fields are missing.
             }
             return;
         }
 
         //viewModel.getExercise(name.getText().toString()); //[TODO] need to check if the exercise exists in the database, and give an error message if it does.
 
-        viewModel.insertExercise(newExercise);
-
-        //getActivity().onBackPressed();
+        viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
     }
 
     ///
@@ -163,15 +161,8 @@ public class ExerciseCreateFragment extends Fragment {
                     Toast.LENGTH_SHORT)
                     .show();
 
-            /*
-            FragmentManager manager = getActivity().getSupportFragmentManager();
-            FragmentTransaction trans = manager.beginTransaction();
-            trans.remove(this);
-            trans.commit();
-            */
-
             clearDisposables();
-            getActivity().onBackPressed(); // [TODO] this backpress seems to recreate the exercises overview fragment, which creates duplicates.
+            getActivity().onBackPressed();
         }
     }
 
