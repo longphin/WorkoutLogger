@@ -33,36 +33,51 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+// Inner Classes
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
-    public static final String TAG = ExercisesOverviewFragment.class.getSimpleName();
-    @Inject
-    public Context context;
+public class ExercisesOverviewFragment
+				extends FragmentWithCompositeDisposable
+				implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
+{
+	public static final String TAG = ExercisesOverviewFragment.class.getSimpleName();
+	// Private
+	private ExercisesOverviewViewModel viewModel;
+	private RecyclerView recyclerView;
+	private ConstraintLayout coordinatorLayout; // layout for recycler view
+	private ExercisesAdapter adapter;
+	private View mView;
+	private int rootId;
+	private int itemLayout;
+	// Public
+	@Inject
+	public Context context;
+	@Inject
+	public ViewModelProvider.Factory viewModelFactory;
 
-    @Inject
-    public ViewModelProvider.Factory viewModelFactory;
-    private ExercisesOverviewViewModel viewModel;
-
-    private RecyclerView recyclerView;
-    private ConstraintLayout coordinatorLayout; // layout for recycler view
-    private ExercisesAdapter adapter;
-
-    private View mView;
-
-    private int rootId;
+	// Constructors
     /*
     public static final String rootId_TAG = "rootId";
     private int rootId;
     */
+	public ExercisesOverviewFragment()
+	{
+	}
 
-    public ExercisesOverviewFragment() {
-    }
+	// Setters
+	public void setRootId(int id)
+	{
+		rootId = id;
+	}
 
-    public static ExercisesOverviewFragment newInstance() {
-        return new ExercisesOverviewFragment();
-    }
+	public void setItemLayout(int id)
+	{
+		itemLayout = id;
+	}
+
+	// Static methods
     /*
     public static ExercisesOverviewFragment newInstance(int rootId) {
         ExercisesOverviewFragment fragment = new ExercisesOverviewFragment();
@@ -77,214 +92,217 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
         return (fragment);
     }
     */
+	public static ExercisesOverviewFragment newInstance()
+	{
+		return new ExercisesOverviewFragment();
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	// Methods
+	private void startCreateFragment()
+	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
 
-        //rootId = getArguments().getInt(rootId_TAG);
+		ExerciseCreateFragment fragment = (ExerciseCreateFragment)manager.findFragmentByTag(ExerciseCreateFragment.TAG);
+		if(fragment == null){
+			fragment = ExerciseCreateFragment.newInstance();
+		}
 
-        //initializeManager();
+		manager.beginTransaction()
+						.replace(rootId, fragment, ExerciseCreateFragment.TAG)
+						.addToBackStack(ExerciseCreateFragment.TAG)
+						.commit();
+	}
 
-        ((MyApplication) getActivity().getApplication())
-                .getApplicationComponent()
-                .inject(this);
+	private void initializeRecyclerView()
+	{
+		initializeViewModel(); // creates view model if the onCreateView() was called before onCreate()
 
-        initializeViewModel();
+		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+		adapter = new ExercisesAdapter(viewModel, itemLayout);
+		recyclerView.setAdapter(adapter);
+		recyclerView.setItemAnimator(new DefaultItemAnimator());
+		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 
-        // Observe events when the list of exercises is obtained.
-        addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
-        addDisposable(viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
-    }
+		// Callback to detach swipe to delete motion.
+		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
+		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mView == null) {
-            View v = inflater.inflate(R.layout.fragment_exercises_overview, container, false);
+		// populate recycler view with all data
+		viewModel.loadExercises();
+	}
 
-            // Add listener to "add routine button"
-            FloatingActionButton btn_addRoutine = v.findViewById(R.id.btn_addExercise);
-            btn_addRoutine.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //viewModel.startCreateFragment();
-                    startCreateFragment();
-                }
-            });
+	private void initializeViewModel()
+	{
+		if(viewModel == null){
+			viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
+							ViewModelProviders.of(getActivity(), viewModelFactory)
+											.get(ExercisesOverviewViewModel.class);
+		}
+	}
 
-            // Initialize recyclerview.
-            recyclerView = v.findViewById(R.id.rv_exercisesOverview);
-            coordinatorLayout = v.findViewById(R.id.exercises_overview_layout);
-            initializeRecyclerView();
+	///
+	/// GET EXERCISES RENDERING
+	///
+	private void processLoadResponse(Response<List<Exercise>> response)
+	{
+		switch(response.getStatus()){
+			case LOADING:
+				renderLoadingState();
+				break;
+			case SUCCESS:
+				renderSuccessState(response.getValue());
+				break;
+			case ERROR:
+				renderErrorState(response.getError());
+				break;
+		}
+	}
 
-            mView = v;
+	// Insertion Response
+	private void processInsertResponse(Response<Integer> response)
+	{
+		switch(response.getStatus()){
+			case LOADING:
+				renderInsertLoadingState();
+				break;
+			case SUCCESS:
+				renderInsertSuccessState(response.getValue());
+				break;
+			case ERROR:
+				renderInsertErrorState(response.getError());
+				break;
+		}
+	}
 
-            return (v);
-        } else {
-            return (mView);
-        }
+	private void renderLoadingState()
+	{
+		Log.d(TAG, "loading exercises");
+	}
 
-    }
+	private void renderSuccessState(List<Exercise> exercises)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append(exercises == null ? 0 : exercises.size());
+		sb.append(" exercises obtained");
 
-    private void initializeViewModel() {
-        if (viewModel == null) {
-            viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-                    ViewModelProviders.of(getActivity(), viewModelFactory)
-                            .get(ExercisesOverviewViewModel.class);
-        }
-    }
+		Log.d(TAG, sb.toString());
 
-    public void setRootId(int id) {
-        rootId = id;
-    }
+		adapter.setExercises(exercises);
+		adapter.notifyDataSetChanged();
+	}
 
-    private void startCreateFragment() {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        //initializeManager();
+	private void renderErrorState(Throwable throwable)
+	{
+		// change anything if loading data had an error.
+		Log.d(TAG, throwable.getMessage());
+	}
 
-        ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
-        if (fragment == null) {
-            fragment = ExerciseCreateFragment.newInstance();
-        }
+	private void renderInsertLoadingState()
+	{
+		if(isAdded())
+			Log.d(TAG, "attached: loading exercises");
+		else
+			Log.d(TAG, "detached: loading exercises");
+	}
 
-        manager.beginTransaction()
-                .replace(rootId, fragment, ExerciseCreateFragment.TAG)
-                .addToBackStack(ExerciseCreateFragment.TAG)
-                .commit();
-    }
+	private void renderInsertSuccessState(Integer val)
+	{
+		if(isAdded())
+			Log.d(TAG, "attached: " + val.toString());
+		else
+			Log.d(TAG, "detached: " + val.toString());
 
-    private void initializeRecyclerView() {
-        initializeViewModel(); // creates view model if the onCreateView() was called before onCreate()
+		adapter.setExercises(viewModel.getCachedExercises());
+		adapter.notifyItemRangeChanged(val, viewModel.getCachedExercises().size());
+	}
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        adapter = new ExercisesAdapter(viewModel);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+	private void renderInsertErrorState(Throwable throwable)
+	{
+		// change anything if loading data had an error.
+		Log.d(TAG, throwable.getMessage());
+	}
 
-        // Callback to detach swipe to delete motion.
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+	// Overrides
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
 
-        // populate recycler view with all data
-        viewModel.loadExercises();
-    }
+		((MyApplication)getActivity().getApplication())
+						.getApplicationComponent()
+						.inject(this);
 
-    // On Swipe for recycler view item.
-    @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos) {
-        if (viewHolder instanceof ExercisesViewHolder) {
-            int position = viewHolder.getAdapterPosition();
+		initializeViewModel();
 
-            // get the removed item name to display it in snack bar
-            List<Exercise> exercises = viewModel.getCachedExercises();
-            String name = exercises.get(position).getName();
+		// Observe events when the list of exercises is obtained.
+		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
+		addDisposable(viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
+	}
 
-            // backup of removed item for undo purpose
-            final Exercise deletedItem = exercises.get(position);
-            final int deletedIndex = position;
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+	{
+		if(mView == null){
+			View v = inflater.inflate(R.layout.fragment_exercises_overview, container, false);
 
-            // remove the item from recycler view
-            adapter.removeExercise(position);
+			// Add listener to "add routine button"
+			FloatingActionButton btn_addRoutine = v.findViewById(R.id.btn_addExercise);
+			btn_addRoutine.setOnClickListener(view -> startCreateFragment());
 
-            // showing snack bar with Undo option
-            Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
-            snackbar.setAction("UNDO", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+			// Initialize recyclerview.
+			recyclerView = v.findViewById(R.id.rv_exercisesOverview);
+			coordinatorLayout = v.findViewById(R.id.exercises_overview_layout);
+			initializeRecyclerView();
 
-                    // undo is selected, restore the deleted item
-                    adapter.restoreExercise(deletedItem, deletedIndex);
-                }
-            });
-            snackbar.addCallback(new Snackbar.Callback() {
-                @Override
-                public void onDismissed(Snackbar snackbar, int event) {
-                    // If the snackbar was dismissed via clicking the action (Undo button), then do not permanently delete the exercise.
-                    if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) return;
+			mView = v;
 
-                    // For other dismiss events, permanently delete the exercise.
-                    Log.d(TAG, "Exercise deleted permanently. " + String.valueOf(deletedItem.getIdExercise()));
-                    viewModel.deleteExercise(deletedItem);
-                }
-            });
-            snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.show();
-        }
-    }
+			return (v);
+		}else{
+			return (mView);
+		}
 
-    ///
-    /// GET EXERCISES RENDERING
-    ///
-    private void processLoadResponse(Response<List<Exercise>> response) {
-        switch (response.getStatus()) {
-            case LOADING:
-                renderLoadingState();
-                break;
-            case SUCCESS:
-                renderSuccessState(response.getValue());
-                break;
-            case ERROR:
-                renderErrorState(response.getError());
-                break;
-        }
-    }
+	}
 
-    private void renderLoadingState() {
-        Log.d(TAG, "loading exercises");
-    }
+	// On Swipe for recycler view item.
+	@Override
+	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
+	{
+		if(viewHolder instanceof ExercisesViewHolder){
+			int position = viewHolder.getAdapterPosition();
 
-    private void renderSuccessState(List<Exercise> exercises) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(exercises == null ? 0 : exercises.size());
-        sb.append(" exercises obtained");
+			// get the removed item name to display it in snack bar
+			List<Exercise> exercises = viewModel.getCachedExercises();
+			String name = exercises.get(position).getName();
 
-        Log.d(TAG, sb.toString());
+			// backup of removed item for undo purpose
+			final Exercise deletedItem = exercises.get(position);
+			final int deletedIndex = position;
 
-        adapter.setExercises(exercises);
-        adapter.notifyDataSetChanged();
-    }
+			// remove the item from recycler view
+			adapter.removeExercise(position);
 
-    private void renderErrorState(Throwable throwable) {
-        // change anything if loading data had an error.
-        Log.d(TAG, throwable.getMessage());
-    }
+			// showing snack bar with Undo option
+			Snackbar snackbar = Snackbar
+							.make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
+			snackbar.setAction("UNDO", view -> adapter.restoreExercise(deletedItem, deletedIndex));
+			snackbar.addCallback(new Snackbar.Callback()
+			{
+				// Overrides
+				@Override
+				public void onDismissed(Snackbar snackbar, int event)
+				{
+					// If the snackbar was dismissed via clicking the action (Undo button), then do not permanently delete the exercise.
+					if(event == Snackbar.Callback.DISMISS_EVENT_ACTION)
+						return;
 
-    // Insertion Response
-    private void processInsertResponse(Response<Integer> response) {
-        switch (response.getStatus()) {
-            case LOADING:
-                renderInsertLoadingState();
-                break;
-            case SUCCESS:
-                renderInsertSuccessState(response.getValue());
-                break;
-            case ERROR:
-                renderInsertErrorState(response.getError());
-                break;
-        }
-    }
-
-    private void renderInsertLoadingState() {
-        if (isAdded()) {
-            Log.d(TAG, "attached: loading exercises");
-        } else {
-            Log.d(TAG, "detached: loading exercises");
-        }
-    }
-
-    private void renderInsertSuccessState(Integer val) {
-        if (isAdded()) Log.d(TAG, "attached: " + val.toString());
-        else Log.d(TAG, "detached: " + val.toString());
-
-        adapter.setExercises(viewModel.getCachedExercises());
-        adapter.notifyItemRangeChanged(val, viewModel.getCachedExercises().size());
-    }
-
-    private void renderInsertErrorState(Throwable throwable) {
-        // change anything if loading data had an error.
-        Log.d(TAG, throwable.getMessage());
-    }
+					// For other dismiss events, permanently delete the exercise.
+					Log.d(TAG, "Exercise deleted permanently. " + String.valueOf(deletedItem.getIdExercise()));
+					viewModel.deleteExercise(deletedItem);
+				}
+			});
+			snackbar.setActionTextColor(Color.YELLOW);
+			snackbar.show();
+		}
+	}
 }

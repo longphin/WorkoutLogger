@@ -36,6 +36,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+// Inner Classes
 public class RoutineCreateFragment extends FragmentWithCompositeDisposable {
     public static final String TAG = RoutineCreateFragment.class.getSimpleName();
 
@@ -198,15 +199,9 @@ public class RoutineCreateFragment extends FragmentWithCompositeDisposable {
 
         ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
         if (fragment == null) {
-            fragment = ExercisesOverviewFragment.newInstance();//(R.id.root_routines_overview);
+            fragment = ExercisesOverviewFragment.newInstance();
             fragment.setRootId(R.id.root_routines_overview);
-
-            /*
-            manager.beginTransaction()
-                    .replace(R.id.root_routines_overview, fragment, ExerciseCreateFragment.TAG)
-                    .addToBackStack(null)
-                    .commit();
-            */
+            fragment.setItemLayout(R.layout.item_exercises_selectable);
         }
 
         addFragmentToActivity(manager, fragment, R.id.root_routines_overview, ExercisesOverviewFragment.TAG, ExercisesOverviewFragment.TAG);
@@ -221,7 +216,7 @@ public class RoutineCreateFragment extends FragmentWithCompositeDisposable {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(frameId, fragment, tag);
         if (!addToBackStack.isEmpty())
-            transaction.addToBackStack(addToBackStack);//(null);//transaction.addToBackStack(addToBackStack);
+            transaction.addToBackStack(addToBackStack);//(null);
         transaction.commit();
     }
 }

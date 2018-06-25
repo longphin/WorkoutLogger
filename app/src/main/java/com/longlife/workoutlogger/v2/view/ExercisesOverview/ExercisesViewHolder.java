@@ -3,17 +3,20 @@ package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
 
+// Inner Classes
 public class ExercisesViewHolder extends RecyclerView.ViewHolder {
     private TextView name;
     private TextView descrip;
     private RelativeLayout viewBackground;
     private ConstraintLayout viewForeground;
+    private CheckBox selectedCheckBox;
     public ImageView favoriteIcon;
 
     public ExercisesViewHolder(View itemView) {
@@ -24,7 +27,7 @@ public class ExercisesViewHolder extends RecyclerView.ViewHolder {
         this.viewBackground = itemView.findViewById(R.id.background_exercise_item);
         this.viewForeground = itemView.findViewById(R.id.foreground_exercise_item);
         this.favoriteIcon = itemView.findViewById(R.id.icon_exercise_favorite);
-
+        this.selectedCheckBox = itemView.findViewById(R.id.ch_selectExercise);
     }
 
     public void setFavoriteIcon(int icon) {
@@ -37,6 +40,12 @@ public class ExercisesViewHolder extends RecyclerView.ViewHolder {
 
     public void setDescripText(String s) {
         this.descrip.setText(s);
+    }
+
+    // Getters
+    public CheckBox getSelectedCheckBox()
+    {
+        return selectedCheckBox;
     }
 
     public RelativeLayout getViewBackground() {

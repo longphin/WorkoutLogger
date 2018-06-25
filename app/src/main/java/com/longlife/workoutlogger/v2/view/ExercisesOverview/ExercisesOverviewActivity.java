@@ -9,67 +9,78 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
 import com.longlife.workoutlogger.v2.utils.Response;
 
-public class ExercisesOverviewActivity extends BaseActivity {
-    private static final String TAG = ExercisesOverviewActivity.class.getSimpleName();
+// Inner Classes
+public class ExercisesOverviewActivity
+				extends BaseActivity
+{
+	// Static
+	private static final String TAG = ExercisesOverviewActivity.class.getSimpleName();
+	// Private
+	private ExercisesOverviewViewModel viewModel;
 
-    private ExercisesOverviewViewModel viewModel;
+	// Methods
+	private void processNewExerciseResponse(Response<Boolean> response)
+	{
+		switch(response.getStatus()){
+			case LOADING:
+				//renderLoadingState();
+				break;
+			case SUCCESS:
+				startCreateExerciseFragment();
+				break;
+			case ERROR:
+				//renderErrorState(response.error);
+				break;
+		}
+	}
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exercises_overview);
+	private void startCreateExerciseFragment()
+	{
+		ExerciseCreateFragment fragment = (ExerciseCreateFragment)manager.findFragmentByTag(ExerciseCreateFragment.TAG);
+		if(fragment == null){
+			fragment = ExerciseCreateFragment.newInstance();
+		}
 
-        ((MyApplication) getApplication())
-                .getApplicationComponent()
-                .inject(this);
+		manager.beginTransaction()
+						.replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
+						.addToBackStack(ExerciseCreateFragment.TAG)//(null)
+						.commit();
+		//addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG, ExerciseCreateFragment.TAG);
 
-        viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-                ViewModelProviders.of(this, viewModelFactory)
-                        .get(ExercisesOverviewViewModel.class);
+		Log.d(TAG, "start exercise create fragment");
+	}
 
-        // Add initial fragments.
-        initializeFragments();
+	public void initializeFragments()
+	{
+		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
+		if(fragment == null){
+			fragment = ExercisesOverviewFragment.newInstance();//(R.id.root_exercises_overview);
+			fragment.setRootId(R.id.root_exercises_overview);
+			fragment.setItemLayout(R.layout.item_exercises);
+		}
 
-        // Observer for when 'Add new exercise' button is clicked.
-        //addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response)));
-    }
+		addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
+	}
 
-    public void initializeFragments() {
-        ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
-        if (fragment == null) {
-            fragment = ExercisesOverviewFragment.newInstance();//(R.id.root_exercises_overview);
-            fragment.setRootId(R.id.root_exercises_overview);
-        }
+	// Overrides
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_exercises_overview);
 
-        addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
-    }
+		((MyApplication)getApplication())
+						.getApplicationComponent()
+						.inject(this);
 
-    private void processNewExerciseResponse(Response<Boolean> response) {
-        switch (response.getStatus()) {
-            case LOADING:
-                //renderLoadingState();
-                break;
-            case SUCCESS:
-                startCreateExerciseFragment();
-                break;
-            case ERROR:
-                //renderErrorState(response.error);
-                break;
-        }
-    }
+		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
+						ViewModelProviders.of(this, viewModelFactory)
+										.get(ExercisesOverviewViewModel.class);
 
-    private void startCreateExerciseFragment() {
-        ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
-        if (fragment == null) {
-            fragment = ExerciseCreateFragment.newInstance();
-        }
+		// Add initial fragments.
+		initializeFragments();
 
-        manager.beginTransaction()
-                .replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
-                .addToBackStack(ExerciseCreateFragment.TAG)//(null)
-                .commit();
-        //addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG, ExerciseCreateFragment.TAG);
-
-        Log.d(TAG, "start exercise create fragment");
-    }
+		// Observer for when 'Add new exercise' button is clicked.
+		//addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response)));
+	}
 }
