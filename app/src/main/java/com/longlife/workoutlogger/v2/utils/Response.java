@@ -6,7 +6,7 @@ import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 public class Response<T> {
-    private Status status;
+    private Status status = Status.IDLE;
     private PublishSubject<Response<T>> observable = PublishSubject.create();
 
     @Nullable

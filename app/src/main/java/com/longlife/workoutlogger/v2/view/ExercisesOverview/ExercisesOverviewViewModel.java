@@ -8,7 +8,6 @@ import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.comparators.ExerciseComparators;
 import com.longlife.workoutlogger.v2.utils.Conversions;
 import com.longlife.workoutlogger.v2.utils.Response;
-import com.longlife.workoutlogger.v2.utils.Status;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +29,7 @@ public class ExercisesOverviewViewModel extends ViewModel {
     // Observable for when requesting list of all exercises.
     private final Response<List<Exercise>> loadResponse = new Response<>();
     // Observable for when to start creating a new exercise fragment.
-    //private final Response<Boolean> startCreateFragmentResponse = new Response<>();
+    private final Response<Boolean> startCreateFragmentResponse = new Response<>();
 
     private Repository repo;
     private List<Exercise> exercises;
@@ -48,9 +47,8 @@ public class ExercisesOverviewViewModel extends ViewModel {
         disposables.clear();
     }
 
-    /*
     public void startCreateFragment() {
-        if(startCreateFragmentResponse.getStatus() == Status.LOADING) return;
+        //if(startCreateFragmentResponse.getStatus() == Status.LOADING) return;
 
         disposables.add(Observable.just(true) // this emitted value does not matter
                 .subscribeOn(Schedulers.io())
@@ -60,10 +58,9 @@ public class ExercisesOverviewViewModel extends ViewModel {
                         throwable -> startCreateFragmentResponse.setError(throwable))
         );
     }
-    */
 
     public void loadExercises() {
-        if (loadResponse.getStatus() == Status.LOADING) return;
+        //if (loadResponse.getStatus() == Status.LOADING) return;
 
         disposables.add(repo.getExercises()
                 .subscribeOn(Schedulers.io())
@@ -80,7 +77,7 @@ public class ExercisesOverviewViewModel extends ViewModel {
     }
 
     public void insertExercise(Exercise ex) {
-        if (insertResponse.getStatus() == Status.LOADING) return;
+        //if (insertResponse.getStatus() == Status.LOADING) return;
 
         disposables.add(
                 repo.insertExercise(ex)
@@ -137,11 +134,9 @@ public class ExercisesOverviewViewModel extends ViewModel {
         return loadResponse.getObservable();
     }
 
-    /*
     public Observable<Response<Boolean>> startCreateFragmentResponse() {
         return startCreateFragmentResponse.getObservable();
     }
-    */
 
     ///
     /// GETTERS

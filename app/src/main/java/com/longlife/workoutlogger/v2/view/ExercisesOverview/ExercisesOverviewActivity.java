@@ -31,13 +31,13 @@ public class ExercisesOverviewActivity extends BaseActivity {
         initializeFragments();
 
         // Observer for when 'Add new exercise' button is clicked.
-        //viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response));
+        addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response)));
     }
 
     public void initializeFragments() {
         ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
         if (fragment == null) {
-            fragment = ExercisesOverviewFragment.newInstance(R.id.root_exercises_overview);
+            fragment = ExercisesOverviewFragment.newInstance();//(R.id.root_exercises_overview);
         }
 
         addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
@@ -61,16 +61,13 @@ public class ExercisesOverviewActivity extends BaseActivity {
         ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
         if (fragment == null) {
             fragment = ExerciseCreateFragment.newInstance();
-
-            /*
-            manager.beginTransaction()
-                    .replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
-                    .addToBackStack(null)
-                    .commit();
-            */
         }
 
-        addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG, ExerciseCreateFragment.TAG);
+        manager.beginTransaction()
+                .replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
+                .addToBackStack(ExerciseCreateFragment.TAG)//(null)
+                .commit();
+        //addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG, ExerciseCreateFragment.TAG);
 
         Log.d(TAG, "start exercise create fragment");
     }

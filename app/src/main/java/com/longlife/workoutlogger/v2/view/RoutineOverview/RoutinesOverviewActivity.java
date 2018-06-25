@@ -31,7 +31,7 @@ public class RoutinesOverviewActivity extends BaseActivity {
         initializeFragments();
 
         // Initialize a subscriber that observes when to start a RoutineCreateFragment.
-        viewModel.startCreateFragmentResponse().subscribe(response -> processNewRoutineResponse(response));
+        addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewRoutineResponse(response)));
     }
 
     public void initializeFragments() {

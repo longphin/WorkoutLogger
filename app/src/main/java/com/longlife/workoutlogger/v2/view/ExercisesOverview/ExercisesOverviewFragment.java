@@ -50,40 +50,49 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
     private View mView;
 
+    /*
     public static final String rootId_TAG = "rootId";
     private int rootId;
+    */
 
     public ExercisesOverviewFragment() {
     }
 
+    public static ExercisesOverviewFragment newInstance() {
+        return new ExercisesOverviewFragment();
+    }
+    /*
     public static ExercisesOverviewFragment newInstance(int rootId) {
         ExercisesOverviewFragment fragment = new ExercisesOverviewFragment();
+        fragment.setRootId(rootId);
 
         Bundle bundle = new Bundle(1);
+
         bundle.putInt(ExercisesOverviewFragment.rootId_TAG, rootId);
 
         fragment.setArguments(bundle);
 
         return (fragment);
     }
+    */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        rootId = getArguments().getInt(rootId_TAG);
+        //rootId = getArguments().getInt(rootId_TAG);
+
+        //initializeManager();
 
         ((MyApplication) getActivity().getApplication())
                 .getApplicationComponent()
                 .inject(this);
 
-        viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-                ViewModelProviders.of(getActivity(), viewModelFactory)
-                        .get(ExercisesOverviewViewModel.class);
+        initializeViewModel();
 
         // Observe events when the list of exercises is obtained.
-        viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response));
-        viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response));
+        addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
+        addDisposable(viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
     }
 
     @Nullable
@@ -97,8 +106,8 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
             btn_addRoutine.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //viewModel.startCreateFragment();
-                    startCreateFragment();
+                    viewModel.startCreateFragment();
+                    //startCreateFragment();
                 }
             });
 
@@ -116,22 +125,48 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
 
     }
 
+    /*
+    public void setRootId(int rootId)
+    {
+        this.rootId = rootId;
+    }
+    */
+
+    private void initializeViewModel() {
+        if (viewModel == null) {
+            viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
+                    ViewModelProviders.of(getActivity(), viewModelFactory)
+                            .get(ExercisesOverviewViewModel.class);
+        }
+    }
+
+    /*
     private void startCreateFragment() {
-        ExerciseCreateFragment frag = new ExerciseCreateFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(rootId, frag, ExerciseCreateFragment.TAG)
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        //initializeManager();
+
+        ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
+        if (fragment == null) {
+            fragment = ExerciseCreateFragment.newInstance();
+        }
+
+        manager.beginTransaction()
+                .replace(rootId, fragment, ExerciseCreateFragment.TAG)
                 .addToBackStack(null)
                 .commit();
     }
+    */
 
     private void initializeRecyclerView() {
+        initializeViewModel(); // creates view model if the onCreateView() was called before onCreate()
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         adapter = new ExercisesAdapter(viewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 
-        // Callback to detech swipe to delete motion.
+        // Callback to detach swipe to delete motion.
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
@@ -236,11 +271,16 @@ public class ExercisesOverviewFragment extends FragmentWithCompositeDisposable i
     }
 
     private void renderInsertLoadingState() {
-        Log.d(TAG, "loading exercises");
+        if (isAdded()) {
+            Log.d(TAG, "attached: loading exercises");
+        } else {
+            Log.d(TAG, "detached: loading exercises");
+        }
     }
 
     private void renderInsertSuccessState(Integer val) {
-        Log.d(TAG, val.toString());
+        if (isAdded()) Log.d(TAG, "attached: " + val.toString());
+        else Log.d(TAG, "detached: " + val.toString());
 
         adapter.setExercises(viewModel.getCachedExercises());
         adapter.notifyItemRangeChanged(val, viewModel.getCachedExercises().size());

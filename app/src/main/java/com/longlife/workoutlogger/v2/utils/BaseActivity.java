@@ -38,8 +38,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (manager.getBackStackEntryCount() > 0) {
+            manager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+        /*
         super.onBackPressed();
         overridePendingTransition(0, 0);
+        */
     }
 
     public void onBackPressedCustom(View view) {
@@ -66,7 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(frameId, fragment, tag);
-        if (!addToBackStack.isEmpty()) transaction.addToBackStack(null);
+        if (!addToBackStack.isEmpty()) transaction.addToBackStack(addToBackStack);//(null);
         transaction.commit();
     }
 }

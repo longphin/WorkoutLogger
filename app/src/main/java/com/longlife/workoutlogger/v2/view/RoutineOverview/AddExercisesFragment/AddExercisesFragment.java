@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
+import com.longlife.workoutlogger.v2.utils.FragmentWithCompositeDisposable;
 import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
 
@@ -24,7 +25,7 @@ import javax.inject.Inject;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddExercisesFragment extends Fragment { //[TODO] delete this if not used. Currently using ExerciseCreateOverviewFragment instead.
+public class AddExercisesFragment extends FragmentWithCompositeDisposable { //[TODO] delete this if not used. Currently using ExerciseCreateOverviewFragment instead.
     public static final String TAG = AddExercisesFragment.class.getSimpleName();
 
     @Inject
@@ -48,7 +49,7 @@ public class AddExercisesFragment extends Fragment { //[TODO] delete this if not
                         .get(ExercisesOverviewViewModel.class);
 
         // Get exercises
-        viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response));
+        addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
     }
 
     @Override

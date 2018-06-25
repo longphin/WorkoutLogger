@@ -24,6 +24,8 @@ import com.longlife.workoutlogger.v2.utils.Response;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 public class ExerciseCreateFragment extends Fragment {
     public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
     @Inject
@@ -37,6 +39,18 @@ public class ExerciseCreateFragment extends Fragment {
     private TextView descrip;
     private Button cancelButton;
     private Button saveButton;
+
+    private CompositeDisposable composite = new CompositeDisposable();
+
+    public void clearDisposables() {
+        composite.clear();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        clearDisposables();
+    }
 
     public ExerciseCreateFragment() {
         // Required empty public constructor
@@ -59,7 +73,7 @@ public class ExerciseCreateFragment extends Fragment {
                         .get(ExercisesOverviewViewModel.class);
 
         //viewModel.insertResponse().observe(this, response -> processInsertResponse(response));
-        viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response));
+        composite.add(viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
     }
 
     @Nullable
@@ -100,7 +114,14 @@ public class ExerciseCreateFragment extends Fragment {
             }
         } catch (RequiredFieldException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
             //e.printStackTrace();
-            Toast.makeText(context, getResources().getString(R.string.requiredFieldsMissing), Toast.LENGTH_SHORT).show();
+
+            if (isAdded()) {
+                Toast.makeText(context,
+                        getResources().getString(R.string.requiredFieldsMissing),
+                        //MyApplication.getStringResource(MyApplication.requiredFieldsMissing),
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
             return;
         }
 
@@ -108,7 +129,7 @@ public class ExerciseCreateFragment extends Fragment {
 
         viewModel.insertExercise(newExercise);
 
-        getActivity().onBackPressed();
+        //getActivity().onBackPressed();
     }
 
     ///
@@ -129,20 +150,48 @@ public class ExerciseCreateFragment extends Fragment {
     }
 
     private void renderSuccessState(Integer id) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("inserted exercise ");
-        sb.append(id.toString());
+        if (isAdded()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("inserted exercise ");
+            sb.append(id.toString());
 
-        Log.d(TAG, sb.toString());
+            Log.d(TAG, sb.toString());
+            //getActivity().onBackPressed();
+            Toast.makeText(context,
+                    getResources().getString(R.string.successAddItem),
+                    //MyApplication.getStringResource(MyApplication.successAddItem),
+                    Toast.LENGTH_SHORT)
+                    .show();
+
+            /*
+            FragmentManager manager = getActivity().getSupportFragmentManager();
+            FragmentTransaction trans = manager.beginTransaction();
+            trans.remove(this);
+            trans.commit();
+            */
+
+            clearDisposables();
+            getActivity().onBackPressed(); // [TODO] this backpress seems to recreate the exercises overview fragment, which creates duplicates.
+        }
     }
 
     private void renderLoadingState() {
         // change anything while data is being loaded
-        Log.d(TAG, ": loading exercise");
+        if (isAdded()) {
+            Log.d(TAG, "attached: loading insert exercise");
+        } else {
+            Log.d(TAG, "detached: loading insert exercise");
+        }
     }
 
     private void renderErrorState(Throwable throwable) {
         // change anything if loading data had an error.
-        Log.d(TAG, throwable.getMessage());
+        if (isAdded()) {
+            Log.d(TAG, throwable.getMessage());
+            Toast.makeText(context,
+                    getResources().getString(R.string.errorAddItem),
+                    //MyApplication.getStringResource(MyApplication.errorAddItem),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

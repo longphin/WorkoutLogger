@@ -62,7 +62,7 @@ public class RoutinesOverviewFragment extends FragmentWithCompositeDisposable {
                         .get(RoutinesOverviewViewModel.class);
 
         //viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response));
-        viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response));
+        addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
     }
 
     @Nullable

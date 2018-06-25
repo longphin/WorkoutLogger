@@ -26,6 +26,7 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
+import com.longlife.workoutlogger.v2.utils.FragmentWithCompositeDisposable;
 import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.StringArrayAdapter;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
@@ -35,7 +36,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class RoutineCreateFragment extends Fragment {
+public class RoutineCreateFragment extends FragmentWithCompositeDisposable {
     public static final String TAG = RoutineCreateFragment.class.getSimpleName();
 
     @Inject
@@ -85,7 +86,7 @@ public class RoutineCreateFragment extends Fragment {
                 ViewModelProviders.of(getActivity(), viewModelFactory)
                         .get(RoutinesOverviewViewModel.class);
 
-        viewModel.getLoadExercisesResponse().subscribe(response -> processLoadExercisesResponse(response));
+        addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadExercisesResponse(response)));
     }
 
     @Nullable
@@ -197,7 +198,7 @@ public class RoutineCreateFragment extends Fragment {
 
         ExercisesOverviewFragment fragment = (ExercisesOverviewFragment) manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
         if (fragment == null) {
-            fragment = ExercisesOverviewFragment.newInstance(R.id.root_routines_overview);
+            fragment = ExercisesOverviewFragment.newInstance();//(R.id.root_routines_overview);
 
             /*
             manager.beginTransaction()
@@ -218,7 +219,8 @@ public class RoutineCreateFragment extends Fragment {
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(frameId, fragment, tag);
-        if (!addToBackStack.isEmpty()) transaction.addToBackStack(addToBackStack);
+        if (!addToBackStack.isEmpty())
+            transaction.addToBackStack(addToBackStack);//(null);//transaction.addToBackStack(addToBackStack);
         transaction.commit();
     }
 }
