@@ -25,7 +25,7 @@ import android.view.ViewGroup;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
-import com.longlife.workoutlogger.v2.utils.FragmentWithCompositeDisposable;
+import com.longlife.workoutlogger.v2.utils.FragmentBase;
 import com.longlife.workoutlogger.v2.utils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.v2.utils.Response;
 
@@ -33,14 +33,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-// Inner Classes
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ExercisesOverviewFragment
-				extends FragmentWithCompositeDisposable
-				implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
+	extends FragmentBase
+	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 {
 	public static final String TAG = ExercisesOverviewFragment.class.getSimpleName();
 	// Private
@@ -108,9 +106,9 @@ public class ExercisesOverviewFragment
 		}
 
 		manager.beginTransaction()
-						.replace(rootId, fragment, ExerciseCreateFragment.TAG)
-						.addToBackStack(ExerciseCreateFragment.TAG)
-						.commit();
+			.replace(rootId, fragment, ExerciseCreateFragment.TAG)
+			.addToBackStack(ExerciseCreateFragment.TAG)
+			.commit();
 	}
 
 	private void initializeRecyclerView()
@@ -135,8 +133,8 @@ public class ExercisesOverviewFragment
 	{
 		if(viewModel == null){
 			viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-							ViewModelProviders.of(getActivity(), viewModelFactory)
-											.get(ExercisesOverviewViewModel.class);
+				ViewModelProviders.of(getActivity(), viewModelFactory)
+					.get(ExercisesOverviewViewModel.class);
 		}
 	}
 
@@ -229,8 +227,8 @@ public class ExercisesOverviewFragment
 		super.onCreate(savedInstanceState);
 
 		((MyApplication)getActivity().getApplication())
-						.getApplicationComponent()
-						.inject(this);
+			.getApplicationComponent()
+			.inject(this);
 
 		initializeViewModel();
 
@@ -284,7 +282,7 @@ public class ExercisesOverviewFragment
 
 			// showing snack bar with Undo option
 			Snackbar snackbar = Snackbar
-							.make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
+				.make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
 			snackbar.setAction("UNDO", view -> adapter.restoreExercise(deletedItem, deletedIndex));
 			snackbar.addCallback(new Snackbar.Callback()
 			{
@@ -306,3 +304,5 @@ public class ExercisesOverviewFragment
 		}
 	}
 }
+
+// Inner Classes

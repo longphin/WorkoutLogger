@@ -7,8 +7,10 @@ import java.lang.annotation.RetentionPolicy;
 import javax.inject.Scope;
 
 
+// Inner Classes
 @Documented
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FragmentScoped {
+public @interface FragmentScoped
+{
 }

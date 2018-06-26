@@ -2,15 +2,21 @@ package com.longlife.workoutlogger.v2.data;
 
 import java.util.Locale;
 
-// [TODO] These will editable from a profile page once implemented.
-public class UserProfile {
-    private static Locale locale = Locale.US;
-
-    public static Locale getLocale() {
-        return locale;
-    }
-
-    public static void setLocale(Locale l) {
-        locale = l;
-    }
+public class UserProfile
+{
+	private static Locale locale = Locale.US;
+	
+	// Getters
+	public static Locale getLocale()
+	{
+		return locale;
+	}
+	
+	// Setters
+	public static void setLocale(Locale l)
+	{
+		locale = l;
+	}
 }
+// [TODO] These will editable from a profile page once implemented.
+// Inner Classes

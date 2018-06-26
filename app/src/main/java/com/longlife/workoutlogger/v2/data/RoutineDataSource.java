@@ -2,13 +2,15 @@ package com.longlife.workoutlogger.v2.data;
 
 import javax.inject.Inject;
 
-public class RoutineDataSource {
-    private ExerciseDao exerciseDao;
-
-    @Inject
-    public RoutineDataSource(ExerciseDao exerciseDao) {
-        this.exerciseDao = exerciseDao;
-    }
+public class RoutineDataSource
+{
+	private ExerciseDao exerciseDao;
+	
+	@Inject
+	public RoutineDataSource(ExerciseDao exerciseDao)
+	{
+		this.exerciseDao = exerciseDao;
+	}
 
     /*
     private RoutineDao routineDao;
@@ -19,3 +21,4 @@ public class RoutineDataSource {
     }
     */
 }
+// Inner Classes

@@ -19,8 +19,9 @@
     <string name="text_cancel">Cancel</string>
 
     <string name="requiredFieldsMissing">Required fields missing.</string>
-    <string name="errorAddItem">Error: Did not add new item.</string>
-    <string name="successAddItem">Successfully added new item.</string>
+    <string name="errorAddExercise">Could not add the exercise.</string>
+    <string name="successAddExercise">Successfully added exercise.</string>
+    <string name="errorDuplicateExercise">Exercise with that name already exists.</string>
 
     <string name="exit_question">Exit without saving?</string>
 

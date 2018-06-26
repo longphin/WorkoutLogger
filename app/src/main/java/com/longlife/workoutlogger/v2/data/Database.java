@@ -13,22 +13,24 @@ import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
  */
 
 @android.arch.persistence.room.Database(
-        entities =
-                {
-                        Exercise.class,
-                        Routine.class,
-                        RoutineSession.class,
-                        SessionExercise.class,
-                        SessionExerciseSet.class
-                },
-        version = DatabaseVersion.CURRENT
+	entities =
+		{
+			Exercise.class,
+			Routine.class,
+			RoutineSession.class,
+			SessionExercise.class,
+			SessionExerciseSet.class
+		},
+	version = DatabaseVersion.CURRENT
 )
-public abstract class Database extends RoomDatabase {
-    public static final int VERSION = DatabaseVersion.CURRENT;
-
-    public abstract ExerciseDao exerciseDao();
-
-    public abstract RoutineDao routineDao();
+public abstract class Database
+	extends RoomDatabase
+{
+	public static final int VERSION = DatabaseVersion.CURRENT;
+	
+	public abstract ExerciseDao exerciseDao();
+	
+	public abstract RoutineDao routineDao();
 
     /*
     private static Database INSTANCE;
@@ -42,3 +44,5 @@ public abstract class Database extends RoomDatabase {
     }
     */
 }
+
+// Inner Classes

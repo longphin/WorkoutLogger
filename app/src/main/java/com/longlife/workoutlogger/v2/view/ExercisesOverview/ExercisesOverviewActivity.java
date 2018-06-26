@@ -9,9 +9,8 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
 import com.longlife.workoutlogger.v2.utils.Response;
 
-// Inner Classes
 public class ExercisesOverviewActivity
-				extends BaseActivity
+	extends BaseActivity
 {
 	// Static
 	private static final String TAG = ExercisesOverviewActivity.class.getSimpleName();
@@ -42,9 +41,9 @@ public class ExercisesOverviewActivity
 		}
 
 		manager.beginTransaction()
-						.replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
-						.addToBackStack(ExerciseCreateFragment.TAG)//(null)
-						.commit();
+			.replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
+			.addToBackStack(ExerciseCreateFragment.TAG)//(null)
+			.commit();
 		//addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG, ExerciseCreateFragment.TAG);
 
 		Log.d(TAG, "start exercise create fragment");
@@ -70,12 +69,12 @@ public class ExercisesOverviewActivity
 		setContentView(R.layout.activity_exercises_overview);
 
 		((MyApplication)getApplication())
-						.getApplicationComponent()
-						.inject(this);
+			.getApplicationComponent()
+			.inject(this);
 
 		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-						ViewModelProviders.of(this, viewModelFactory)
-										.get(ExercisesOverviewViewModel.class);
+			ViewModelProviders.of(this, viewModelFactory)
+				.get(ExercisesOverviewViewModel.class);
 
 		// Add initial fragments.
 		initializeFragments();
@@ -84,3 +83,4 @@ public class ExercisesOverviewActivity
 		//addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response)));
 	}
 }
+// Inner Classes

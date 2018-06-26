@@ -23,115 +23,143 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 @Module
-public class RoomModule {
-    private final Database database;
-    private CompositeDisposable disposables = new CompositeDisposable();
-
-    private final Migration MIGRATION_1_4 = new Migration(1, 4) //[TODO] this migration doesn't populate database either. Delete this.
-    {
-        @Override
-        public void migrate(SupportSQLiteDatabase db) {
-            Observable initialRoutines = Observable.fromCallable(
-                    () -> database.routineDao().insertRoutine(new Routine()))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread());
-
-            Observable initialExercises = Observable.fromCallable(
-                    () -> database.exerciseDao().insertExercise(new Exercise()))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread());
-
-            DisposableObserver oInitialRoutines = new DisposableObserver<Long>() {
-                @Override
-                public void onNext(@NonNull Long l) {
-                }
-
-                @Override
-                public void onError(@NonNull Throwable e) {
-                }
-
-                @Override
-                public void onComplete() {
-                }
-            };
-
-            DisposableObserver oInitialExercises = new DisposableObserver<Long>() {
-                @Override
-                public void onNext(Long aLong) {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-
-                }
-
-                @Override
-                public void onComplete() {
-
-                }
-            };
-
-            initialRoutines.subscribeWith(oInitialRoutines);
-            disposables.add(oInitialRoutines);
-            initialExercises.subscribeWith(oInitialExercises);
-            disposables.add(oInitialExercises);
-        }
-    };
-
-    public RoomModule(MyApplication application) {
-        RoomDatabase.Callback populateData = new RoomDatabase.Callback() {
-            @Override
-            public void onCreate(@android.support.annotation.NonNull SupportSQLiteDatabase db) {
-                super.onCreate(db);
-
-                // [TODO] This is supposed to pre-populate the database with routines and exercises, but it is not working.
-                Observable initialRoutines = Observable.fromCallable(
-                        () -> database.routineDao().insertRoutine(new Routine()))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread());
-
-                Observable initialExercises = Observable.fromCallable(
-                        () -> database.exerciseDao().insertExercise(new Exercise()))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread());
-
-                DisposableObserver oInitialRoutines = new DisposableObserver<Long>() {
-                    @Override
-                    public void onNext(@NonNull Long l) {
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                };
-
-                DisposableObserver oInitialExercises = new DisposableObserver<Long>() {
-                    @Override
-                    public void onNext(Long aLong) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                };
-
-                initialRoutines.subscribeWith(oInitialRoutines);
-                disposables.add(oInitialRoutines);
-                initialExercises.subscribeWith(oInitialExercises);
-                disposables.add(oInitialExercises);
-                // [TODO] need to dispose of these observables.
+public class RoomModule
+{
+	// Private
+	private final Database database;
+	private CompositeDisposable disposables = new CompositeDisposable();
+	
+	private final Migration MIGRATION_1_4 = new Migration(1, 4) //[TODO] this migration doesn't populate database either. Delete this.
+	{
+		// Overrides
+		@Override
+		public void migrate(SupportSQLiteDatabase db)
+		{
+			Observable initialRoutines = Observable.fromCallable(
+				() -> database.routineDao().insertRoutine(new Routine()))
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread());
+			
+			Observable initialExercises = Observable.fromCallable(
+				() -> database.exerciseDao().insertExercise(new Exercise()))
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread());
+			
+			DisposableObserver oInitialRoutines = new DisposableObserver<Long>()
+			{
+				// Overrides
+				@Override
+				public void onNext(@NonNull Long l)
+				{
+				}
+				
+				@Override
+				public void onError(@NonNull Throwable e)
+				{
+				}
+				
+				@Override
+				public void onComplete()
+				{
+				}
+			};
+			
+			DisposableObserver oInitialExercises = new DisposableObserver<Long>()
+			{
+				// Overrides
+				@Override
+				public void onNext(Long aLong)
+				{
+				
+				}
+				
+				@Override
+				public void onError(Throwable e)
+				{
+				
+				}
+				
+				@Override
+				public void onComplete()
+				{
+				
+				}
+			};
+			
+			initialRoutines.subscribeWith(oInitialRoutines);
+			disposables.add(oInitialRoutines);
+			initialExercises.subscribeWith(oInitialExercises);
+			disposables.add(oInitialExercises);
+		}
+	};
+	
+	public RoomModule(MyApplication application)
+	{
+		RoomDatabase.Callback populateData = new RoomDatabase.Callback()
+		{
+			// Overrides
+			@Override
+			public void onCreate(@android.support.annotation.NonNull SupportSQLiteDatabase db)
+			{
+				super.onCreate(db);
+				
+				// [TODO] This is supposed to pre-populate the database with routines and exercises, but it is not working.
+				Observable initialRoutines = Observable.fromCallable(
+					() -> database.routineDao().insertRoutine(new Routine()))
+					.subscribeOn(Schedulers.io())
+					.observeOn(AndroidSchedulers.mainThread());
+				
+				Observable initialExercises = Observable.fromCallable(
+					() -> database.exerciseDao().insertExercise(new Exercise()))
+					.subscribeOn(Schedulers.io())
+					.observeOn(AndroidSchedulers.mainThread());
+				
+				DisposableObserver oInitialRoutines = new DisposableObserver<Long>()
+				{
+					// Overrides
+					@Override
+					public void onNext(@NonNull Long l)
+					{
+					}
+					
+					@Override
+					public void onError(@NonNull Throwable e)
+					{
+					}
+					
+					@Override
+					public void onComplete()
+					{
+					}
+				};
+				
+				DisposableObserver oInitialExercises = new DisposableObserver<Long>()
+				{
+					// Overrides
+					@Override
+					public void onNext(Long aLong)
+					{
+					
+					}
+					
+					@Override
+					public void onError(Throwable e)
+					{
+					
+					}
+					
+					@Override
+					public void onComplete()
+					{
+					
+					}
+				};
+				
+				initialRoutines.subscribeWith(oInitialRoutines);
+				disposables.add(oInitialRoutines);
+				initialExercises.subscribeWith(oInitialExercises);
+				disposables.add(oInitialExercises);
+				// [TODO] need to dispose of these observables.
 
                 /*
                 // Insert routines.
@@ -146,51 +174,59 @@ public class RoomModule {
                 exerciseContent.put("description", "descrip1");
                 db.insert("exercises", OnConflictStrategy.REPLACE, exerciseContent);
                 */
-            }
-
-            @Override
-            public void onOpen(@android.support.annotation.NonNull SupportSQLiteDatabase db) {
-                super.onOpen(db);
-            }
-        };
-
-        database = Room.databaseBuilder(
-                application,
-                Database.class,
-                "Database.db")
-                //.addCallback(populateData)
-                //.addMigrations(MIGRATION_1_4)
-                .fallbackToDestructiveMigration()
-                .build();
-    }
-
-    @Provides
-    @Singleton
-    Database provideDatabase() {
-        return database;
-    }
-
-    @Provides
-    @Singleton
-    ExerciseDao provideExerciseDao(Database db) {
-        return db.exerciseDao();
-    }
-
-    @Provides
-    @Singleton
-    RoutineDao provideRoutineDao(Database db) {
-        return db.routineDao();
-    }
-
-    @Provides
-    @Singleton
-    Repository provideRepository(ExerciseDao exerciseDao, RoutineDao routineDao) {
-        return new Repository(exerciseDao, routineDao);
-    }
-
-    @Provides
-    @Singleton
-    ViewModelProvider.Factory provideViewModelFactory(Repository repository) {
-        return new CustomViewModelFactory(repository);
-    }
+			}
+			
+			@Override
+			public void onOpen(@android.support.annotation.NonNull SupportSQLiteDatabase db)
+			{
+				super.onOpen(db);
+			}
+		};
+		
+		database = Room.databaseBuilder(
+			application,
+			Database.class,
+			"Database.db"
+		)
+			//.addCallback(populateData)
+			//.addMigrations(MIGRATION_1_4)
+			.fallbackToDestructiveMigration()
+			.build();
+	}
+	
+	@Provides
+	@Singleton
+	Database provideDatabase()
+	{
+		return database;
+	}
+	
+	@Provides
+	@Singleton
+	ExerciseDao provideExerciseDao(Database db)
+	{
+		return db.exerciseDao();
+	}
+	
+	@Provides
+	@Singleton
+	RoutineDao provideRoutineDao(Database db)
+	{
+		return db.routineDao();
+	}
+	
+	@Provides
+	@Singleton
+	Repository provideRepository(ExerciseDao exerciseDao, RoutineDao routineDao)
+	{
+		return new Repository(exerciseDao, routineDao);
+	}
+	
+	@Provides
+	@Singleton
+	ViewModelProvider.Factory provideViewModelFactory(Repository repository)
+	{
+		return new CustomViewModelFactory(repository);
+	}
 }
+// Inner Classes

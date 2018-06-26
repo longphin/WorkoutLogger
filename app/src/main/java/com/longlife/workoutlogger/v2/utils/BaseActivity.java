@@ -15,10 +15,8 @@ import javax.inject.Inject;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-// Inner Classes
-// This extends AppCompatActivity and allows us to easily attach an activity to its fragment.
 public abstract class BaseActivity
-				extends AppCompatActivity
+	extends AppCompatActivity
 {
 	// Static
 	private static final String TAG = "BaseActivity";
@@ -49,18 +47,18 @@ public abstract class BaseActivity
 	}
 
 	public void addFragmentToActivity(FragmentManager fragmentManager,
-	                                  Fragment fragment,
-	                                  int frameId,
-	                                  String tag)
+		Fragment fragment,
+		int frameId,
+		String tag)
 	{
 		addFragmentToActivity(fragmentManager, fragment, frameId, tag, "");
 	}
 
 	public void addFragmentToActivity(FragmentManager fragmentManager,
-	                                  Fragment fragment,
-	                                  int frameId,
-	                                  String tag,
-	                                  String addToBackStack)
+		Fragment fragment,
+		int frameId,
+		String tag,
+		String addToBackStack)
 	{
 
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -98,3 +96,5 @@ public abstract class BaseActivity
         */
 	}
 }
+// This extends AppCompatActivity and allows us to easily attach an activity to its fragment.
+// Inner Classes

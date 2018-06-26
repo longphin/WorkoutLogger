@@ -10,49 +10,60 @@ import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
 
-// Inner Classes
-public class ExercisesViewHolder extends RecyclerView.ViewHolder {
-    private TextView name;
-    private TextView descrip;
-    private RelativeLayout viewBackground;
-    private ConstraintLayout viewForeground;
-    private CheckBox selectedCheckBox;
-    public ImageView favoriteIcon;
-
-    public ExercisesViewHolder(View itemView) {
-        super(itemView);
-
-        this.name = itemView.findViewById(R.id.txt_exerciseName);
-        this.descrip = itemView.findViewById(R.id.txt_exerciseDescrip);
-        this.viewBackground = itemView.findViewById(R.id.background_exercise_item);
-        this.viewForeground = itemView.findViewById(R.id.foreground_exercise_item);
-        this.favoriteIcon = itemView.findViewById(R.id.icon_exercise_favorite);
-        this.selectedCheckBox = itemView.findViewById(R.id.ch_selectExercise);
-    }
-
-    public void setFavoriteIcon(int icon) {
-        favoriteIcon.setImageResource(icon);
-    }
-
-    public void setNameText(String s) {
-        this.name.setText(s);
-    }
-
-    public void setDescripText(String s) {
-        this.descrip.setText(s);
-    }
-
-    // Getters
-    public CheckBox getSelectedCheckBox()
-    {
-        return selectedCheckBox;
-    }
-
-    public RelativeLayout getViewBackground() {
-        return viewBackground;
-    }
-
-    public ConstraintLayout getViewForeground() {
-        return viewForeground;
-    }
+public class ExercisesViewHolder
+	extends RecyclerView.ViewHolder
+{
+	private TextView name;
+	private TextView descrip;
+	private RelativeLayout viewBackground;
+	private ConstraintLayout viewForeground;
+	private CheckBox selectedCheckBox;
+	private ImageView favoriteIcon;
+	
+	public ExercisesViewHolder(View itemView)
+	{
+		super(itemView);
+		
+		this.name = itemView.findViewById(R.id.txt_exerciseName);
+		this.descrip = itemView.findViewById(R.id.txt_exerciseDescrip);
+		this.viewBackground = itemView.findViewById(R.id.background_exercise_item);
+		this.viewForeground = itemView.findViewById(R.id.foreground_exercise_item);
+		this.favoriteIcon = itemView.findViewById(R.id.icon_exercise_favorite);
+		this.selectedCheckBox = itemView.findViewById(R.id.ch_selectExercise);
+	}
+	
+	// Getters
+	public ImageView getFavoriteIcon(){ return favoriteIcon;}
+	
+	public CheckBox getSelectedCheckBox()
+	{
+		return selectedCheckBox;
+	}
+	
+	public RelativeLayout getViewBackground()
+	{
+		return viewBackground;
+	}
+	
+	public ConstraintLayout getViewForeground()
+	{
+		return viewForeground;
+	}
+	
+	// Setters
+	public void setFavoriteIcon(int icon)
+	{
+		favoriteIcon.setImageResource(icon);
+	}
+	
+	public void setNameText(String s)
+	{
+		this.name.setText(s);
+	}
+	
+	public void setDescripText(String s)
+	{
+		this.descrip.setText(s);
+	}
 }
+// Inner Classes

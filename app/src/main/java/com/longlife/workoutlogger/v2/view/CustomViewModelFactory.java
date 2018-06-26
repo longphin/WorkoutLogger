@@ -10,24 +10,31 @@ import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewViewMo
 
 import javax.inject.Inject;
 
-public class CustomViewModelFactory implements ViewModelProvider.Factory {
-    private final Repository repo;
-
-    @Inject
-    public CustomViewModelFactory(Repository repo) {
-        this.repo = repo;
-    }
-
-    @NonNull
-    @Override
-    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(RoutinesOverviewViewModel.class)) {
-            return ((T) new RoutinesOverviewViewModel(repo));
-        } else if (modelClass.isAssignableFrom(ExercisesOverviewViewModel.class)) {
-            return ((T) new ExercisesOverviewViewModel(repo));
-        } else {
-            throw new IllegalArgumentException("ViewModel not found");
-        }
-
-    }
+public class CustomViewModelFactory
+	implements ViewModelProvider.Factory
+{
+	// Private
+	private final Repository repo;
+	
+	@Inject
+	public CustomViewModelFactory(Repository repo)
+	{
+		this.repo = repo;
+	}
+	
+	// Overrides
+	@NonNull
+	@Override
+	public <T extends ViewModel> T create(@NonNull Class<T> modelClass)
+	{
+		if(modelClass.isAssignableFrom(RoutinesOverviewViewModel.class)){
+			return ((T)new RoutinesOverviewViewModel(repo));
+		}else if(modelClass.isAssignableFrom(ExercisesOverviewViewModel.class)){
+			return ((T)new ExercisesOverviewViewModel(repo));
+		}else{
+			throw new IllegalArgumentException("ViewModel not found");
+		}
+		
+	}
 }
+// Inner Classes

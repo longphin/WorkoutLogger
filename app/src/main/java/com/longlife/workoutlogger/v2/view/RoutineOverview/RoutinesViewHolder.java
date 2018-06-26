@@ -6,23 +6,30 @@ import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
 
-// [TODO] need to implement
-public class RoutinesViewHolder extends RecyclerView.ViewHolder {
-    private TextView name;
-    private TextView descrip;
-
-    public RoutinesViewHolder(View itemView) {
-        super(itemView);
-
-        this.name = itemView.findViewById(R.id.txt_routineName);
-        this.descrip = itemView.findViewById(R.id.txt_routineDescrip);
-    }
-
-    public void setNameText(String s) {
-        this.name.setText(s);
-    }
-
-    public void setDescripText(String s) {
-        this.descrip.setText(s);
-    }
+public class RoutinesViewHolder
+	extends RecyclerView.ViewHolder
+{
+	private TextView name;
+	private TextView descrip;
+	
+	public RoutinesViewHolder(View itemView)
+	{
+		super(itemView);
+		
+		this.name = itemView.findViewById(R.id.txt_routineName);
+		this.descrip = itemView.findViewById(R.id.txt_routineDescrip);
+	}
+	
+	// Setters
+	public void setNameText(String s)
+	{
+		this.name.setText(s);
+	}
+	
+	public void setDescripText(String s)
+	{
+		this.descrip.setText(s);
+	}
 }
+// [TODO] need to implement
+// Inner Classes
