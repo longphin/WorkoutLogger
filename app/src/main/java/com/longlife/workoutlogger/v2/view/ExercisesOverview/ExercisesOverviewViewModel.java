@@ -34,10 +34,11 @@ public class ExercisesOverviewViewModel
 	// Observable for when requesting list of all exercises.
 	private final Response<List<Exercise>> loadResponse = new Response<>();
 	// Observable for when to start creating a new exercise fragment.
-	//private final Response<Boolean> startCreateFragmentResponse = new Response<>();
 	
 	private Repository repo;
 	private List<Exercise> exercises;
+	
+	//private Set<Integer> selectedIdExercises = new HashSet<>();
 	
 	///
 	/// Constructors
@@ -48,27 +49,10 @@ public class ExercisesOverviewViewModel
 	}
 	
 	// Getters
-	///
-	/// GETTERS
-	///
 	public List<Exercise> getCachedExercises()
 	{
 		return exercises;
 	}
-
-    /*
-    public void startCreateFragment() {
-        //if(startCreateFragmentResponse.getStatus() == Status.LOADING) return;
-
-        disposables.add(Observable.just(true) // this emitted value does not matter
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(__ -> startCreateFragmentResponse.setLoading())
-                .subscribe(b -> startCreateFragmentResponse.setSuccess(b),
-                        throwable -> startCreateFragmentResponse.setError(throwable))
-        );
-    }
-    */
 	
 	public Observable<Response<Integer>> getInsertResponse()
 	{
@@ -160,11 +144,36 @@ public class ExercisesOverviewViewModel
 			});
 	}
 
-    /*
-    public Observable<Response<Boolean>> startCreateFragmentResponse() {
-        return startCreateFragmentResponse.getObservable();
-    }
-    */
+	/*
+  public void clearSelectedExercises()
+	{
+		selectedIdExercises.clear();
+		printSelectedExercises();
+	}
+	public void removeSelectedExercise(int id)
+	{
+		selectedIdExercises.remove(id);
+		printSelectedExercises();
+	}
+	public boolean isIdSelected(int id)
+	{
+		return selectedIdExercises.contains(id);
+	}
+	public void addSelectedExercise(int id)
+	{
+		selectedIdExercises.add(id);
+		printSelectedExercises();
+	}
+	
+	private void printSelectedExercises()
+	{
+		Log.d(TAG, "Current selected ids");
+		for(Integer i : selectedIdExercises)
+		{
+			Log.d(TAG, String.valueOf(i));
+		}
+	}
+	*/
 	
 	///
 	/// UPDATE

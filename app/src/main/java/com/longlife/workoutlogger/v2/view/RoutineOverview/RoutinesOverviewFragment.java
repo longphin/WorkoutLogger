@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -105,7 +106,21 @@ public class RoutinesOverviewFragment
 		Log.d(TAG, throwable.getMessage());
 	}
 	
-	// Overrides
+	private void startCreateFragment()
+	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
+		RoutineCreateFragment fragment = (RoutineCreateFragment)manager.findFragmentByTag(RoutineCreateFragment.TAG);
+		if(fragment == null){
+			fragment = RoutineCreateFragment.newInstance();
+		}
+		
+		manager.beginTransaction()
+			.replace(R.id.root_routines_overview, fragment, RoutineCreateFragment.TAG)
+			.addToBackStack(RoutineCreateFragment.TAG)
+			.commit();
+		
+		Log.d(TAG, "start routine create fragment");
+	}
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -123,6 +138,7 @@ public class RoutinesOverviewFragment
 		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
 	}
 	
+	// Overrides
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -139,7 +155,8 @@ public class RoutinesOverviewFragment
 				@Override
 				public void onClick(View v)
 				{
-					viewModel.startCreateFragment();
+					startCreateFragment();
+					//viewModel.startCreateFragment();
 				}
 			});
 			

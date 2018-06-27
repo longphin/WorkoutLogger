@@ -18,6 +18,7 @@ public class RoutinesOverviewActivity
 	private RoutinesOverviewViewModel viewModel;
 	
 	// Methods
+	// [TODO] remove
 	private void processNewRoutineResponse(Response<Boolean> response)
 	{
 		switch(response.getStatus()){
@@ -33,18 +34,12 @@ public class RoutinesOverviewActivity
 		}
 	}
 	
+	// [TODO] remove
 	private void startCreateRoutineFragment()
 	{
 		RoutineCreateFragment fragment = (RoutineCreateFragment)manager.findFragmentByTag(RoutineCreateFragment.TAG);
 		if(fragment == null){
 			fragment = RoutineCreateFragment.newInstance();
-
-            /*
-            manager.beginTransaction()
-                    .replace(R.id.root_routines_overview, fragment, RoutineCreateFragment.TAG)
-                    .addToBackStack(null)
-                    .commit();
-            */
 		}
 		
 		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutineCreateFragment.TAG, RoutineCreateFragment.TAG);
@@ -81,7 +76,7 @@ public class RoutinesOverviewActivity
 		initializeFragments();
 		
 		// Initialize a subscriber that observes when to start a RoutineCreateFragment.
-		addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewRoutineResponse(response)));
+		//addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewRoutineResponse(response)));
 	}
 }
 // Inner Classes

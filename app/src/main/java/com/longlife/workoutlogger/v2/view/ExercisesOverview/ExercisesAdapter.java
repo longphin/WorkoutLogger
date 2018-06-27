@@ -10,14 +10,17 @@ import android.widget.CheckBox;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ExercisesAdapter
 	extends RecyclerView.Adapter<ExercisesViewHolder>
 {
+	// Static
+	private static final String TAG = "ExercisesAdapter";
 	private List<Exercise> exercises;
-	private List<Boolean> selectedExercises = new ArrayList<>();
+	private Set<Integer> selectedIdExercises = new HashSet<>();
 	private ExercisesOverviewViewModel viewModel;
 	private int itemLayout;
 	
@@ -34,24 +37,24 @@ public class ExercisesAdapter
 			return;
 		
 		this.exercises = exercises;
-		//this.selectedExercises = new ArrayList<>(exercises.size());
-		this.selectedExercises = new ArrayList<>();
-		while(selectedExercises.size() < exercises.size())
-			selectedExercises.add(false); //[TODO] This causes error. Need to set this as the same size as exercises.
+		//viewModel.clearSelectedExercises();
 		notifyDataSetChanged();
 	}
 	
+	// This is a temporary delete (only deletes the exercise from memory). After the "Undo" snackbar
+	// expires, the exercise then is deleted from the database.
 	public void removeExercise(int position)
 	{
+		//viewModel.removeSelectedExercise(exercises.get(position).getIdExercise());
+		selectedIdExercises.remove(exercises.get(position).getIdExercise());
 		exercises.remove(position);
-		selectedExercises.remove(position);
 		notifyItemRemoved(position);
 	}
 	
+	// "Undo" the temporary delete of an exercise.
 	public void restoreExercise(Exercise ex, int position)
 	{
 		exercises.add(position, ex);
-		selectedExercises.add(position, false);
 		notifyItemInserted(position);
 	}
 	
@@ -108,14 +111,31 @@ public class ExercisesAdapter
 		
 		CheckBox selectedCheckBox = holder.getSelectedCheckBox();
 		if(selectedCheckBox != null){
+			int idCurrentlySelected = ex.getIdExercise();
+			boolean isCurrentlySelected = selectedIdExercises.contains(idCurrentlySelected);//viewModel.isIdSelected(idCurrentlySelected);//selectedIdExercises.contains(id);
+			if(isCurrentlySelected){
+				holder.setSelectedCheckBox(true);
+				Log.d(TAG, "Is " + String.valueOf(idCurrentlySelected) + " selected: Yes");
+			}else{
+				holder.setSelectedCheckBox(false);
+				Log.d(TAG, "Is " + String.valueOf(idCurrentlySelected) + " selected: No");
+			}
+			
 			selectedCheckBox.setOnClickListener(
 				view ->
 				{
-					selectedExercises.set(position, holder.getSelectedCheckBox().isChecked());//!selectedExercises.get(position));
-					Log.d("ExercisesAdapter", String.valueOf(position) + " is " + (selectedExercises.get(position) ? " selected" : " unselected"));
+					int id = ex.getIdExercise();
+					boolean isSelected = selectedIdExercises.contains(id);//viewModel.isIdSelected(id);//selectedIdExercises.contains(id);
+					if(isSelected){
+						selectedIdExercises.remove(id);
+						//viewModel.removeSelectedExercise(id);
+					}else{
+						selectedIdExercises.add(id);
+						//viewModel.addSelectedExercise(id);
+					}
+					Log.d(TAG, String.valueOf(id) + " is " + (!isSelected ? "selected" : "unselected"));
 				}
 			);
 		}
 	}
 }
-// Inner Classes

@@ -65,5 +65,10 @@ public class ExercisesViewHolder
 	{
 		this.descrip.setText(s);
 	}
+	
+	public void setSelectedCheckBox(Boolean b)
+	{
+		this.selectedCheckBox.setChecked(b);
+	}
 }
 // Inner Classes

@@ -35,7 +35,8 @@ public class RoutinesOverviewViewModel
 	// Observable for when requesting list of all routines.
 	private final Response<List<Routine>> loadResponse = new Response<>();
 	// Observable for when to start creating a new Routine fragment.
-	private final Response<Boolean> startCreateFragmentResponse = new Response<>();
+	// [TODO] remove
+	//private final Response<Boolean> startCreateFragmentResponse = new Response<>();
 	// Observable for getting list of exercises.
 	private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
 	
@@ -80,6 +81,8 @@ public class RoutinesOverviewViewModel
 		return (repo.getRoutines());
 	}
 	
+	// [TODO] remove
+	/*
 	public void startCreateFragment()
 	{
 		disposables.add(Observable.just(true) // this emitted value does not matter
@@ -91,6 +94,7 @@ public class RoutinesOverviewViewModel
 			)
 		);
 	}
+	*/
 	
 	public void loadRoutines()
 	{
@@ -181,10 +185,12 @@ public class RoutinesOverviewViewModel
 			});
 	}
 	
+	/*
 	public Observable<Response<Boolean>> startCreateFragmentResponse()
 	{
 		return startCreateFragmentResponse.getObservable();
 	}
+	*/
 	
 	///
 	/// UPDATE

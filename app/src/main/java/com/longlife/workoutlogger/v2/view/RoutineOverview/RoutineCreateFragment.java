@@ -145,16 +145,6 @@ public class RoutineCreateFragment
 	// Click search exercise button
 	public void startSearchExercises()
 	{
-        /*
-        //AddExercisesFragment frag = new AddExercisesFragment();
-        ExercisesOverviewFragment frag = new ExercisesOverviewFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.root_routines_overview, frag, AddExercisesFragment.TAG)
-                .addToBackStack(null)
-                .commit();
-        */
-		
-		//
 		FragmentManager manager = getActivity().getSupportFragmentManager();
 		
 		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
