@@ -9,9 +9,10 @@ import com.longlife.workoutlogger.v2.model.Exercise;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.Single;
 
 // Inner Classes
 
@@ -28,14 +29,18 @@ public interface ExerciseDao
 	///
 	@Query("SELECT * FROM Exercise")
 	//" ORDER BY favorited DESC, LOWER(name) ASC")
-	Single<List<Exercise>> getExercises();
+	Flowable<List<Exercise>> getExercises();
 	
 	@Query("SELECT * FROM Exercise WHERE name = :name")
 		// check if the exercise exists in the database already
-	Maybe<Exercise> getExercise(String name);
+	Flowable<Exercise> getExercise(String name);
 	
 	@Query("SELECT EXISTS (SELECT 1 FROM Exercise WHERE idExercise = :idExercise)")
 	Maybe<Integer> exerciseExists(int idExercise);
+	
+	@Query("SELECT * FROM Exercise WHERE idExercise IN (:ids)")
+		//Flowable<List<Exercise>> getExerciseFromId(List<Integer> ids);
+	Flowable<List<Exercise>> getExerciseFromId(Set<Integer> ids);
 	
 	///
 	/// UPDATE

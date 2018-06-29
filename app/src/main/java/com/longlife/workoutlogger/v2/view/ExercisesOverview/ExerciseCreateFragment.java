@@ -51,7 +51,26 @@ public class ExerciseCreateFragment
 		return (new ExerciseCreateFragment());
 	}
 	
+	// Overrides
 	// Methods
+	
+	///
+	/// INSERT EXERCISE RENDERING
+	///
+	private void processInsertResponse(Response<Integer> response)
+	{
+		switch(response.getStatus()){
+			case LOADING:
+				renderLoadingState();
+				break;
+			case SUCCESS:
+				renderSuccessState(response.getValue());
+				break;
+			case ERROR:
+				renderErrorState(response.getError());
+				break;
+		}
+	}
 	private void checkFieldsBeforeInsert()
 	{
 		Exercise newExercise = new Exercise();
@@ -72,7 +91,7 @@ public class ExerciseCreateFragment
 					//MyApplication.getStringResource(MyApplication.requiredFieldsMissing),
 					Toast.LENGTH_SHORT
 				)
-					.show(); // [TODO] when required fields are missing, explain that the fields are missing.
+					.show();
 			}
 			return;
 		}
@@ -80,26 +99,9 @@ public class ExerciseCreateFragment
 		viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
 	}
 	
-	///
-	/// INSERT EXERCISE RENDERING
-	///
-	private void processInsertResponse(Response<Integer> response)
-	{
-		switch(response.getStatus()){
-			case LOADING:
-				renderLoadingState();
-				break;
-			case SUCCESS:
-				renderSuccessState(response.getValue());
-				break;
-			case ERROR:
-				renderErrorState(response.getError());
-				break;
-		}
-	}
-	
 	private void renderSuccessState(Integer id)
 	{
+		saveButton.setClickable(true);
 		if(isAdded()){
 			StringBuilder sb = new StringBuilder();
 			sb.append("inserted exercise ");
@@ -121,6 +123,7 @@ public class ExerciseCreateFragment
 	private void renderLoadingState()
 	{
 		// change anything while data is being loaded
+		saveButton.setClickable(false);
 		if(isAdded()){
 			Log.d(TAG, "attached: loading insert exercise");
 		}else{
@@ -128,8 +131,14 @@ public class ExerciseCreateFragment
 		}
 	}
 	
+	public void clearDisposables()
+	{
+		composite.clear();
+	}
+	
 	private void renderErrorState(Throwable throwable)
 	{
+		saveButton.setClickable(true);
 		// change anything if loading data had an error.
 		if(isAdded()){
 			Log.d(TAG, throwable.getMessage());
@@ -140,13 +149,6 @@ public class ExerciseCreateFragment
 			).show();
 		}
 	}
-	
-	public void clearDisposables()
-	{
-		composite.clear();
-	}
-	
-	// Overrides
 	@Override
 	public void onDestroy()
 	{

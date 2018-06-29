@@ -16,7 +16,6 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -34,9 +33,6 @@ public class RoutinesOverviewViewModel
 	private final Response<Integer> insertResponse = new Response<>();
 	// Observable for when requesting list of all routines.
 	private final Response<List<Routine>> loadResponse = new Response<>();
-	// Observable for when to start creating a new Routine fragment.
-	// [TODO] remove
-	//private final Response<Boolean> startCreateFragmentResponse = new Response<>();
 	// Observable for getting list of exercises.
 	private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
 	
@@ -75,26 +71,6 @@ public class RoutinesOverviewViewModel
 	{
 		return loadResponse.getObservable();
 	}
-	
-	public Single<List<Routine>> getRoutines()
-	{
-		return (repo.getRoutines());
-	}
-	
-	// [TODO] remove
-	/*
-	public void startCreateFragment()
-	{
-		disposables.add(Observable.just(true) // this emitted value does not matter
-			.subscribeOn(Schedulers.io())
-			.observeOn(AndroidSchedulers.mainThread())
-			.doOnSubscribe(__ -> startCreateFragmentResponse.setLoading())
-			.subscribe(b -> startCreateFragmentResponse.setSuccess(b),
-				throwable -> startCreateFragmentResponse.setError(throwable)
-			)
-		);
-	}
-	*/
 	
 	public void loadRoutines()
 	{
@@ -184,13 +160,6 @@ public class RoutinesOverviewViewModel
 				}
 			});
 	}
-	
-	/*
-	public Observable<Response<Boolean>> startCreateFragmentResponse()
-	{
-		return startCreateFragmentResponse.getObservable();
-	}
-	*/
 	
 	///
 	/// UPDATE

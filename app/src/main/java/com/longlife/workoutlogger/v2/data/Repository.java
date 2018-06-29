@@ -4,12 +4,11 @@ import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.Routine;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import io.reactivex.Flowable;
-import io.reactivex.Maybe;
-import io.reactivex.Single;
 
 public class Repository
 {
@@ -30,7 +29,7 @@ public class Repository
 		return exerciseDao;
 	}
 	
-	public Single<List<Exercise>> getExercises()
+	public Flowable<List<Exercise>> getExercises()
 	{
 		return (exerciseDao.getExercises());
 	}
@@ -40,23 +39,23 @@ public class Repository
 		return routineDao;
 	}
 	
-	///
-	/// GET methods
-	///
-	public Single<List<Routine>> getRoutines()
+	public Flowable<List<Routine>> getRoutines()
 	{
 		return (routineDao.getRoutines());
 	}
 	
-	public Single<Routine> getRoutine(int idRoutine)
+	public Flowable<Routine> getRoutine(int idRoutine)
 	{
 		return (routineDao.getRoutine(idRoutine));
 	}
 	
-	public Maybe<Exercise> getExercise(String name)
+	public Flowable<Exercise> getExercise(String name)
 	{
 		return exerciseDao.getExercise(name);
 	}
+	
+	//public Flowable<List<Exercise>> getExerciseFromId(List<Integer> ids){ return exerciseDao.getExerciseFromId(ids);}
+	public Flowable<List<Exercise>> getExerciseFromId(Set<Integer> ids){ return exerciseDao.getExerciseFromId(ids);}
 	
 	// UPDATES
 	public void updateFavorite(int idExercise, boolean favorited)

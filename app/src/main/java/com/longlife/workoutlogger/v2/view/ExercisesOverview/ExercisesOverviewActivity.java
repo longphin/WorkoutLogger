@@ -16,8 +16,8 @@ public class ExercisesOverviewActivity
 	private static final String TAG = ExercisesOverviewActivity.class.getSimpleName();
 	// Private
 	private ExercisesOverviewViewModel viewModel;
-
-	// Methods
+	
+	// Overrides
 	private void processNewExerciseResponse(Response<Boolean> response)
 	{
 		switch(response.getStatus()){
@@ -48,7 +48,8 @@ public class ExercisesOverviewActivity
 
 		Log.d(TAG, "start exercise create fragment");
 	}
-
+	
+	// Methods
 	public void initializeFragments()
 	{
 		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
@@ -56,12 +57,11 @@ public class ExercisesOverviewActivity
 			fragment = ExercisesOverviewFragment.newInstance();//(R.id.root_exercises_overview);
 			fragment.setRootId(R.id.root_exercises_overview);
 			fragment.setItemLayout(R.layout.item_exercises);
+			fragment.setOverviewLayout(R.layout.fragment_exercises_overview);
 		}
 
 		addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
 	}
-
-	// Overrides
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{

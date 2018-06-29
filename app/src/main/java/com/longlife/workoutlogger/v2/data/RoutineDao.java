@@ -14,8 +14,8 @@ import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.Single;
 
 // Inner Classes
 
@@ -31,7 +31,7 @@ public interface RoutineDao
 	/// Gets
 	///
 	@Query("SELECT * FROM Routine")
-	Single<List<Routine>> getRoutines();
+	Flowable<List<Routine>> getRoutines();
 	
 	@Query("SELECT * FROM RoutineSession WHERE idRoutine = :idRoutine AND wasPerformed = 0 ORDER BY sessionDate DESC LIMIT 1")
 	Maybe<RoutineSession> getLatestRoutineSession(int idRoutine);
@@ -46,7 +46,7 @@ public interface RoutineDao
 	Maybe<Exercise> getExerciseFromSession(int idSessionExercise);
 	
 	@Query("SELECT * FROM Routine WHERE idRoutine = :idRoutine")
-	Single<Routine> getRoutine(int idRoutine);
+	Flowable<Routine> getRoutine(int idRoutine);
 	
 	///
 	/// UPDATE

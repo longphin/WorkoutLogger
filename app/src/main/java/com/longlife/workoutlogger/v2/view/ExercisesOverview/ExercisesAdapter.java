@@ -29,52 +29,7 @@ public class ExercisesAdapter
 		this.viewModel = viewModel;
 		this.itemLayout = itemLayout;
 	}
-	
-	// Setters
-	public void setExercises(List<Exercise> exercises)
-	{
-		if(exercises == null)
-			return;
-		
-		this.exercises = exercises;
-		//viewModel.clearSelectedExercises();
-		notifyDataSetChanged();
-	}
-	
-	// This is a temporary delete (only deletes the exercise from memory). After the "Undo" snackbar
-	// expires, the exercise then is deleted from the database.
-	public void removeExercise(int position)
-	{
-		//viewModel.removeSelectedExercise(exercises.get(position).getIdExercise());
-		selectedIdExercises.remove(exercises.get(position).getIdExercise());
-		exercises.remove(position);
-		notifyItemRemoved(position);
-	}
-	
-	// "Undo" the temporary delete of an exercise.
-	public void restoreExercise(Exercise ex, int position)
-	{
-		exercises.add(position, ex);
-		notifyItemInserted(position);
-	}
-	
 	// Overrides
-	@Override
-	public int getItemCount()
-	{
-		if(exercises == null)
-			return 0;
-		return exercises.size();
-	}
-	
-	@Override
-	public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-	{
-		View v = LayoutInflater.from(parent.getContext()).inflate(itemLayout, parent, false);
-		
-		return (new ExercisesViewHolder(v));
-	}
-	
 	@Override
 	public void onBindViewHolder(ExercisesViewHolder holder, int pos)
 	{
@@ -117,7 +72,7 @@ public class ExercisesAdapter
 				holder.setSelectedCheckBox(true);
 				Log.d(TAG, "Is " + String.valueOf(idCurrentlySelected) + " selected: Yes");
 			}else{
-				holder.setSelectedCheckBox(false);
+				holder.setSelectedCheckBox(false); // This can happen if the holder view was restored (such as when item was deleted, then undone).
 				Log.d(TAG, "Is " + String.valueOf(idCurrentlySelected) + " selected: No");
 			}
 			
@@ -137,5 +92,67 @@ public class ExercisesAdapter
 				}
 			);
 		}
+	}
+	
+	public void setExercises(List<Exercise> exercises)
+	{
+		if(exercises == null)
+			return;
+		
+		this.exercises = exercises;
+		notifyDataSetChanged();
+	}
+	
+	// Getters
+	// Convert the Set for selected id exercises to be added to a routine into a List.
+	/*
+	public List<Integer> getSelectedIdExercisesList()
+	{
+		return new ArrayList<>(selectedIdExercises);
+	}
+	*/
+	public Set<Integer> getSelectedIdExercisesList()
+	{
+		return selectedIdExercises;
+	}
+	
+	// Setters
+	
+	// "Undo" the temporary delete of an exercise.
+	public void restoreExercise(Exercise ex, int position)
+	{
+		exercises.add(position, ex);
+		notifyItemInserted(position);
+	}
+	
+	// This is a temporary delete (only deletes the exercise from memory). After the "Undo" snackbar
+	// expires, the exercise then is deleted from the database.
+	public void removeExercise(int position)
+	{
+		//selectedIdExercises.remove(exercises.get(position).getIdExercise());
+		exercises.remove(position);
+		notifyItemRemoved(position);
+	}
+	
+	@Override
+	public int getItemCount()
+	{
+		if(exercises == null)
+			return 0;
+		return exercises.size();
+	}
+	
+	@Override
+	public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+	{
+		View v = LayoutInflater.from(parent.getContext()).inflate(itemLayout, parent, false);
+		
+		return (new ExercisesViewHolder(v));
+	}
+	
+	// This is called when the exercise has been removed from the database.
+	public void permanentlyRemoveExercise(int idExercise)
+	{
+		selectedIdExercises.remove(idExercise);
 	}
 }

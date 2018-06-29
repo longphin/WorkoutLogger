@@ -12,6 +12,7 @@ import com.longlife.workoutlogger.v2.utils.Status;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -33,7 +34,8 @@ public class ExercisesOverviewViewModel
 	private final Response<Integer> insertResponse = new Response<>();
 	// Observable for when requesting list of all exercises.
 	private final Response<List<Exercise>> loadResponse = new Response<>();
-	// Observable for when to start creating a new exercise fragment.
+	// Observable for when adding exercises to a routine.
+	private final Response<List<Exercise>> addExercisesToRoutine = new Response<>();
 	
 	private Repository repo;
 	private List<Exercise> exercises;
@@ -48,7 +50,7 @@ public class ExercisesOverviewViewModel
 		this.repo = repo;
 	}
 	
-	// Getters
+	// Overrides
 	public List<Exercise> getCachedExercises()
 	{
 		return exercises;
@@ -59,10 +61,29 @@ public class ExercisesOverviewViewModel
 		return insertResponse.getObservable();
 	}
 	
-	public Observable<Response<List<Exercise>>> getLoadResponse()
+	// Getters
+	public Observable<Response<List<Exercise>>> getLoadResponse(){return loadResponse.getObservable();}
+	
+	/*
+	public void addExercisesToRoutine(List<Integer> ids)
 	{
-		return loadResponse.getObservable();
+		if(addExercisesToRoutine.getStatus() == Status.LOADING) return;
+		
+		disposables.add(repo.getExerciseFromId(ids)
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.doOnSubscribe(__ -> addExercisesToRoutine.setLoading())
+			.subscribe((List<Exercise> exercises) ->
+				{
+					addExercisesToRoutine.setSuccess(exercises);
+				},
+				throwable -> addExercisesToRoutine.setError(throwable)
+			)
+		);
 	}
+	*/
+	
+	public Observable<Response<List<Exercise>>> getSelectedExercises(){return addExercisesToRoutine.getObservable();}
 	
 	public void loadExercises()
 	{
@@ -205,7 +226,23 @@ public class ExercisesOverviewViewModel
 			});
 	}
 	
-	// Overrides
+	public void addExercisesToRoutine(Set<Integer> ids)
+	{
+		if(addExercisesToRoutine.getStatus() == Status.LOADING)
+			return;
+		
+		disposables.add(repo.getExerciseFromId(ids)
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.doOnSubscribe(__ -> addExercisesToRoutine.setLoading())
+			.subscribe((List<Exercise> exercises) ->
+				{
+					addExercisesToRoutine.setSuccess(exercises);
+				},
+				throwable -> addExercisesToRoutine.setError(throwable)
+			)
+		);
+	}
 	@Override
 	public void onCleared()
 	{

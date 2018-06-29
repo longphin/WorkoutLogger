@@ -30,6 +30,7 @@ import com.longlife.workoutlogger.v2.utils.FragmentBase;
 import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.StringArrayAdapter;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,28 +41,14 @@ public class RoutineCreateFragment
 	extends FragmentBase
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
-	private RoutinesOverviewViewModel viewModel;
+	private RoutinesOverviewViewModel routineViewModel;
+	private ExercisesOverviewViewModel exerciseViewModel;
 	private RecyclerView recyclerView;
 	private RoutineCreateAdapter adapter;
-	private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener()
-	{
-		// Overrides
-		@Override
-		public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-		{
-			//Toast.makeText(context, "Selected " + adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
-			Log.d(TAG, "Selected " + adapterView.getItemAtPosition(i));
-		}
-	};
-	private View.OnClickListener onSearchClickListener = new View.OnClickListener()
-	{
-		// Overrides
-		@Override
-		public void onClick(View view)
-		{
-			startSearchExercises();
-		}
-	};
+	// OnClick listener for when item in recyclerview is clicked.
+	private AdapterView.OnItemClickListener onItemClickListener = (adapterView, view, i, l) -> Log.d(TAG, "Selected " + adapterView.getItemAtPosition(i));
+	// OnClick listener for when "search exercise" image is clicked.
+	private View.OnClickListener onSearchClickListener = view -> startSearchExercises();
 	private AutoCompleteTextView searchBox;
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
@@ -72,6 +59,61 @@ public class RoutineCreateFragment
 	public RoutineCreateFragment()
 	{
 		// Required empty public constructor
+	}
+	
+	// Overrides
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		
+		((MyApplication)getActivity().getApplication())
+			.getApplicationComponent()
+			.inject(this);
+		
+		routineViewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
+			ViewModelProviders.of(getActivity(), viewModelFactory)
+				.get(RoutinesOverviewViewModel.class);
+		
+		exerciseViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesOverviewViewModel.class);
+		
+		// Observer to get a list of all exercises. This list is used for the autocomplete searchbox to add an exercise by typing the name and it giving a hint for autocompleting the name.
+		addDisposable(routineViewModel.getLoadExercisesResponse().subscribe(response -> processLoadExercisesResponse(response)));
+		// Observer to get list of exercises to add to this routine through the ExercisesOverviewFragment.
+		addDisposable(exerciseViewModel.getSelectedExercises().subscribe(response -> processSelectedExercisesResponse(response)));
+	}
+	
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+	{
+		View v = inflater.inflate(R.layout.fragment_routine_create, container, false);
+		
+		TextView name = v.findViewById(R.id.edit_routineCreateName);
+		TextView descrip = v.findViewById(R.id.edit_routineCreateDescrip);
+		Button cancelButton = v.findViewById(R.id.btn_routineCreateCancel);
+		Button saveButton = v.findViewById(R.id.btn_routineCreateSave);
+		Button addExerciseToRoutine = v.findViewById(R.id.btn_addExerciseToRoutine);
+		searchBox = v.findViewById(R.id.txt_routineexercisecreate_searchBox);
+		searchBox.setOnItemClickListener(onItemClickListener);
+		ImageView searchExercises = v.findViewById(R.id.btn_searchExercises);
+		
+		recyclerView = v.findViewById(R.id.rv_routineCreateExercises);
+		initializeRecyclerView();
+		
+		// OnClick cancel button.
+		cancelButton.setOnClickListener(view -> ((BaseActivity)getActivity()).onBackPressedCustom(view));
+		
+		// OnClick add exercise.
+		addExerciseToRoutine.setOnClickListener(newView -> addExerciseToRoutine(newView)); //[TODO] remove this once all functions for adding exercise (autocomplete, search fragment, etc.) have been implemented
+		
+		// Search exercises image.
+		searchExercises.setOnClickListener(onSearchClickListener);
+		
+		// Get exercises list.
+		routineViewModel.loadExercises();
+		
+		return (v);
 	}
 	
 	public static RoutineCreateFragment newInstance()
@@ -90,9 +132,40 @@ public class RoutineCreateFragment
 		recyclerView.setItemAnimator(new DefaultItemAnimator());
 		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 		
-		//viewModel.loadExercises(); // We don't need initial data.
+		//routineViewModel.loadExercises(); // We don't need initial data.
 	}
 	
+	// Process list of exercises that were selected in the searchbox fragment.
+	private void processSelectedExercisesResponse(Response<List<Exercise>> response)
+	{
+		switch(response.getStatus()){
+			case LOADING:
+				renderSelectedExercisesState();
+				break;
+			case SUCCESS:
+				renderSelectedExercisesSuccessState(response.getValue());
+				break;
+			case ERROR:
+				renderSelectedExercisesErrorState(response.getError());
+				break;
+		}
+	}
+	
+	private void renderSelectedExercisesState()
+	{
+	}
+	
+	private void renderSelectedExercisesSuccessState(List<Exercise> value)
+	{
+		Log.d(TAG, "Number of exercises added: " + String.valueOf(value.size()));
+	}
+	
+	private void renderSelectedExercisesErrorState(Throwable error)
+	{
+	}
+	
+	
+	// Process list of all exercises used in autocomplete searchbox.
 	private void processLoadExercisesResponse(Response<List<Exercise>> response)
 	{
 		switch(response.getStatus()){
@@ -152,6 +225,7 @@ public class RoutineCreateFragment
 			fragment = ExercisesOverviewFragment.newInstance();
 			fragment.setRootId(R.id.root_routines_overview);
 			fragment.setItemLayout(R.layout.item_exercises_selectable);
+			fragment.setOverviewLayout(R.layout.fragment_routine_exercises_overview);
 		}
 		
 		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, ExercisesOverviewFragment.TAG, ExercisesOverviewFragment.TAG);
@@ -169,64 +243,6 @@ public class RoutineCreateFragment
 		if(!addToBackStack.isEmpty())
 			transaction.addToBackStack(addToBackStack);//(null);
 		transaction.commit();
-	}
-	
-	// Overrides
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		
-		((MyApplication)getActivity().getApplication())
-			.getApplicationComponent()
-			.inject(this);
-		
-		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(getActivity(), viewModelFactory)
-				.get(RoutinesOverviewViewModel.class);
-		
-		addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadExercisesResponse(response)));
-	}
-	
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-	{
-		View v = inflater.inflate(R.layout.fragment_routine_create, container, false);
-		
-		TextView name = v.findViewById(R.id.edit_routineCreateName);
-		TextView descrip = v.findViewById(R.id.edit_routineCreateDescrip);
-		Button cancelButton = v.findViewById(R.id.btn_routineCreateCancel);
-		Button saveButton = v.findViewById(R.id.btn_routineCreateSave);
-		Button addExerciseToRoutine = v.findViewById(R.id.btn_addExerciseToRoutine);
-		searchBox = v.findViewById(R.id.txt_routineexercisecreate_searchBox);
-		searchBox.setOnItemClickListener(onItemClickListener);
-		ImageView searchExercises = v.findViewById(R.id.btn_searchExercises);
-		
-		recyclerView = v.findViewById(R.id.rv_routineCreateExercises);
-		initializeRecyclerView();
-		
-		// OnClick cancel button.
-		cancelButton.setOnClickListener(new View.OnClickListener()
-		{
-			// Overrides
-			@Override
-			public void onClick(View view)
-			{
-				((BaseActivity)getActivity()).onBackPressedCustom(view);
-			}
-		});
-		
-		// OnClick add exercise.
-		addExerciseToRoutine.setOnClickListener(newView -> addExerciseToRoutine(newView)); //[TODO] remove this once all functions for adding exercise (autocomplete, search fragment, etc.) have been implemented
-		
-		// Search exercises image.
-		searchExercises.setOnClickListener(onSearchClickListener);
-		
-		// Get exercises list.
-		viewModel.loadExercises();
-		
-		return (v);
 	}
 }
 // Inner Classes
