@@ -112,23 +112,26 @@ public class RoutinesActivity extends AppCompatActivity implements RoutinesInter
             View v = layoutInflater.inflate(R.layout.activity_routine_list_item, parent, false);
             return new CustomViewHolder(v);
         }
-
+	
+			// Overrides
         /**
          * This method "Binds" or assigns Data (from listOfData) to each View (ViewHolder).
          *
          * @param holder   The current ViewHolder instance for a given position
-         * @param position The current position of the ViewHolder we are Binding to, based upon
+				 * @param pos The current position of the ViewHolder we are Binding to, based upon
          *                 our (listOfData). So for the second ViewHolder we create, we'll bind data
          *                 from the second Item in listOfData.
          */
         @Override
-        public void onBindViewHolder(CustomAdapter.CustomViewHolder holder, int position) {
-            //11. and now the ViewHolder data
-            Routine currentItem = routines.get(position);
-            currentItem.setDisplayOrder(position);
-
-            holder.name.setText(currentItem.getName());
-            holder.description.setText(currentItem.getDescription());
+				public void onBindViewHolder(CustomAdapter.CustomViewHolder holder, int pos)
+				{
+					int position = holder.getAdapterPosition();
+					//11. and now the ViewHolder data
+					Routine currentItem = routines.get(position);
+					currentItem.setDisplayOrder(position);
+	
+					holder.name.setText(currentItem.getName());
+					holder.description.setText(currentItem.getDescription());
         }
 
         /**

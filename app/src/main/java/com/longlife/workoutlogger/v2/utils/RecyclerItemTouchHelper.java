@@ -5,8 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesViewHolder;
-
+// Swipe listener for recyclerview. The recyclerview must extend RecyclerViewHolderSwipeable.
 public class RecyclerItemTouchHelper
 	extends ItemTouchHelper.SimpleCallback
 {
@@ -26,10 +25,11 @@ public class RecyclerItemTouchHelper
 	}
 	
 	@Override
-	public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState)
+	public void onSelectedChanged(RecyclerView.ViewHolder viewHolder
+		, int actionState)
 	{
 		if(viewHolder != null){
-			final View foregroundView = ((ExercisesViewHolder)viewHolder).getViewForeground();
+			final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
 			
 			getDefaultUIUtil().onSelected(foregroundView);
 		}
@@ -40,7 +40,7 @@ public class RecyclerItemTouchHelper
 		RecyclerView.ViewHolder viewHolder, float dX, float dY,
 		int actionState, boolean isCurrentlyActive)
 	{
-		final View foregroundView = ((ExercisesViewHolder)viewHolder).getViewForeground();
+		final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
 		getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
 			actionState, isCurrentlyActive
 		);
@@ -49,7 +49,7 @@ public class RecyclerItemTouchHelper
 	@Override
 	public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
 	{
-		final View foregroundView = ((ExercisesViewHolder)viewHolder).getViewForeground();
+		final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
 		getDefaultUIUtil().clearView(foregroundView);
 	}
 	
@@ -58,7 +58,7 @@ public class RecyclerItemTouchHelper
 		RecyclerView.ViewHolder viewHolder, float dX, float dY,
 		int actionState, boolean isCurrentlyActive)
 	{
-		final View foregroundView = ((ExercisesViewHolder)viewHolder).getViewForeground();
+		final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
 		
 		getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
 			actionState, isCurrentlyActive

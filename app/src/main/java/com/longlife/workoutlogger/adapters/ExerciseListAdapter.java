@@ -41,18 +41,21 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
         View v = LayoutInflater.from(context).inflate(R.layout.activity_exercise_list_item, parent, false);
         return (new CustomViewHolder(v));
     }
-
-    @Override
-    public void onBindViewHolder(ExerciseListAdapter.CustomViewHolder holder, int position) {
-        SessionExercise currentItem = sessionExercises.get(holder.getAdapterPosition());
-        currentItem.setDisplayOrder(holder.getAdapterPosition());
-
-        Exercise currentExercise = dataSource.getExerciseFromSession(currentItem);
-        setAdapter = new ExerciseSetListAdapter(context, dataSource.getSessionExerciseSets(currentItem), dataSource.getExerciseFromSession(currentItem));
-        holder.name.setText(currentExercise.getName());
-        holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        holder.recyclerView.setAdapter(setAdapter);
-    }
+	
+	// Overrides
+	@Override
+	public void onBindViewHolder(ExerciseListAdapter.CustomViewHolder holder, int pos)
+	{
+		int position = holder.getAdapterPosition();
+		SessionExercise currentItem = sessionExercises.get(position);
+		currentItem.setDisplayOrder(holder.getAdapterPosition());
+		
+		Exercise currentExercise = dataSource.getExerciseFromSession(currentItem);
+		setAdapter = new ExerciseSetListAdapter(context, dataSource.getSessionExerciseSets(currentItem), dataSource.getExerciseFromSession(currentItem));
+		holder.name.setText(currentExercise.getName());
+		holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+		holder.recyclerView.setAdapter(setAdapter);
+	}
 
     @Override
     public int getItemCount() {

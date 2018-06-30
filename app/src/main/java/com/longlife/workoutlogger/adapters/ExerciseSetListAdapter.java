@@ -41,24 +41,27 @@ public class ExerciseSetListAdapter extends RecyclerView.Adapter<ExerciseSetList
 
         return (new ExerciseSetListAdapter.CustomViewHolder(v));
     }
-
-    @Override
-    public void onBindViewHolder(CustomViewHolder holder, int position) {
-        SessionExerciseSet bindingSessionExerciseSet = sessionExerciseSets.get(position);
-
-        // Set the values for the exercises set.
-        Double typeValue = bindingSessionExerciseSet.getWeights();
-        Integer scoreValue = bindingSessionExerciseSet.getReps();
-        if (typeValue != null)
-            holder.typeText.setText(String.valueOf(typeValue));
-
-        if (scoreValue != null)
-            holder.scoreText.setText(String.valueOf(scoreValue));
-
-        // When the "focused" view is out of the screen, it is deleted. So we need to reset the focus
-        // when the view comes back onto the screen.
-        holder.resetFocusOnCreate(position);
-    }
+	
+	// Overrides
+	@Override
+	public void onBindViewHolder(CustomViewHolder holder, int pos)
+	{
+		int position = holder.getAdapterPosition();
+		SessionExerciseSet bindingSessionExerciseSet = sessionExerciseSets.get(position);
+		
+		// Set the values for the exercises set.
+		Double typeValue = bindingSessionExerciseSet.getWeights();
+		Integer scoreValue = bindingSessionExerciseSet.getReps();
+		if (typeValue != null)
+			holder.typeText.setText(String.valueOf(typeValue));
+		
+		if (scoreValue != null)
+			holder.scoreText.setText(String.valueOf(scoreValue));
+		
+		// When the "focused" view is out of the screen, it is deleted. So we need to reset the focus
+		// when the view comes back onto the screen.
+		holder.resetFocusOnCreate(position);
+	}
 
     @Override
     public int getItemCount() {

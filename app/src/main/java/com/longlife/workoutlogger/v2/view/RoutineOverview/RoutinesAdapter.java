@@ -20,7 +20,7 @@ public class RoutinesAdapter
 	{
 	}
 	
-	// Setters
+	// Overrides
 	public void setRoutines(List<Routine> routines)
 	{
 		if(routines == null)
@@ -38,19 +38,10 @@ public class RoutinesAdapter
 		this.routines.add(routine);
 		notifyItemInserted(routines.size() - 1);
 	}
-	
-	// Overrides
 	@Override
-	public RoutinesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+	public void onBindViewHolder(RoutinesViewHolder holder, int pos)
 	{
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_routines, parent, false);
-		
-		return (new RoutinesViewHolder(v));
-	}
-	
-	@Override
-	public void onBindViewHolder(RoutinesViewHolder holder, int position)
-	{
+		int position = holder.getAdapterPosition();
 		Routine routine = routines.get(position);
 		
 		StringBuilder sbName = new StringBuilder(100);
@@ -62,6 +53,16 @@ public class RoutinesAdapter
 		holder.setNameText(sbName.toString());
 		holder.setDescripText(routine.getDescription());
 	}
+	
+	@Override
+	public RoutinesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+	{
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_routines, parent, false);
+		
+		return (new RoutinesViewHolder(v));
+	}
+	
+	// Setters
 	
 	@Override
 	public int getItemCount()

@@ -16,23 +16,12 @@ public class RoutineCreateAdapter
 	extends RecyclerView.Adapter<RoutineCreateViewHolder>
 {
 	private List<Exercise> exercisesToInclude = new ArrayList<>();
-    /*private static final String[] COUNTRIES = new String[] {
-            "Belgium", "France", "Italy", "Germany", "Spain", "Spanish"
-    };*/
 	
 	private Context context;
 	
 	public void addExercise(Exercise ex)
 	{
 		exercisesToInclude.add(ex);
-	}
-	
-	public void deleteAtPosition(int pos)
-	{
-		try{
-			exercisesToInclude.remove(pos);
-		}catch(Exception e){
-		}
 	}
 	
 	// Overrides
@@ -43,12 +32,13 @@ public class RoutineCreateAdapter
 		
 		View v = LayoutInflater.from(this.context).inflate(R.layout.item_routine_create_exercise, parent, false);
 		
-		return (new RoutineCreateViewHolder(v));
+		return new RoutineCreateViewHolder(v);
 	}
 	
 	@Override
-	public void onBindViewHolder(RoutineCreateViewHolder holder, int position)
+	public void onBindViewHolder(RoutineCreateViewHolder holder, int pos)
 	{
+		int position = holder.getAdapterPosition();
 		Exercise exercise = exercisesToInclude.get(position);
 		
 		StringBuilder sbName = new StringBuilder(100);
@@ -58,12 +48,30 @@ public class RoutineCreateAdapter
 			.append(")");
 		
 		holder.setNameText(sbName.toString());
-		holder.setDescripText(exercise.getDescription());
-
-        /*
-        ArrayAdapter<String> exercisesListAdapter = new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, COUNTRIES);
-        holder.newExerciseBox.setAdapter(exercisesListAdapter);
-        */
+		//holder.setDescripText(exercise.getDescription());
+	}
+	
+	// Getters
+	public List<Exercise> getExercises(){return exercisesToInclude;}
+	
+	public void addExercises(List<Exercise> ex)
+	{
+		exercisesToInclude.addAll(ex);
+	}
+	
+	public void removeExerciseAtPosition(int pos)
+	{
+		try{
+			exercisesToInclude.remove(pos);
+		}catch(Exception e){
+		}
+	}
+	
+	// "Undo" the temporary delete of an exercise.
+	public void restoreExercise(Exercise ex, int position)
+	{
+		exercisesToInclude.add(position, ex);
+		notifyItemInserted(position);
 	}
 	
 	@Override

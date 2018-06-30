@@ -1,7 +1,6 @@
 package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -9,9 +8,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.v2.utils.RecyclerViewHolderSwipeable;
 
 public class ExercisesViewHolder
-	extends RecyclerView.ViewHolder
+	extends RecyclerViewHolderSwipeable
 {
 	private TextView name;
 	private TextView descrip;

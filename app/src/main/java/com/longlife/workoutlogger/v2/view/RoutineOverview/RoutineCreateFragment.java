@@ -3,8 +3,11 @@ package com.longlife.workoutlogger.v2.view.RoutineOverview;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +31,12 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
 import com.longlife.workoutlogger.v2.utils.FragmentBase;
+import com.longlife.workoutlogger.v2.utils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.StringArrayAdapter;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +45,7 @@ import javax.inject.Inject;
 
 public class RoutineCreateFragment
 	extends FragmentBase
+	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
 	private RoutinesOverviewViewModel routineViewModel;
@@ -50,17 +57,18 @@ public class RoutineCreateFragment
 	// OnClick listener for when "search exercise" image is clicked.
 	private View.OnClickListener onSearchClickListener = view -> startSearchExercises();
 	private AutoCompleteTextView searchBox;
+	private ConstraintLayout coordinatorLayout; // layout for recycler view
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
-	// Other
+	private View mView;
 	@Inject
 	Context context;
+	// Other
 	
 	public RoutineCreateFragment()
 	{
 		// Required empty public constructor
 	}
-	
 	// Overrides
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -87,33 +95,36 @@ public class RoutineCreateFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
-		View v = inflater.inflate(R.layout.fragment_routine_create, container, false);
+		if(mView == null){
+			mView = inflater.inflate(R.layout.fragment_routine_create, container, false);
+			
+			TextView name = mView.findViewById(R.id.edit_routineCreateName);
+			TextView descrip = mView.findViewById(R.id.edit_routineCreateDescrip);
+			Button cancelButton = mView.findViewById(R.id.btn_routineCreateCancel);
+			Button saveButton = mView.findViewById(R.id.btn_routineCreateSave);
+			Button addExerciseToRoutine = mView.findViewById(R.id.btn_addExerciseToRoutine);
+			searchBox = mView.findViewById(R.id.txt_routineexercisecreate_searchBox);
+			searchBox.setOnItemClickListener(onItemClickListener);
+			ImageView searchExercises = mView.findViewById(R.id.btn_searchExercises);
+			coordinatorLayout = mView.findViewById(R.id.routine_create_layout);
+			
+			recyclerView = mView.findViewById(R.id.rv_routineCreateExercises);
+			initializeRecyclerView();
+			
+			// OnClick cancel button.
+			cancelButton.setOnClickListener(view -> ((BaseActivity)getActivity()).onBackPressedCustom(view));
+			
+			// OnClick add exercise.
+			addExerciseToRoutine.setOnClickListener(newView -> addExerciseToRoutine(newView)); //[TODO] remove this once all functions for adding exercise (autocomplete, search fragment, etc.) have been implemented
+			
+			// Search exercises image.
+			searchExercises.setOnClickListener(onSearchClickListener);
+			
+			// Get exercises list.
+			routineViewModel.loadExercises();
+		}
 		
-		TextView name = v.findViewById(R.id.edit_routineCreateName);
-		TextView descrip = v.findViewById(R.id.edit_routineCreateDescrip);
-		Button cancelButton = v.findViewById(R.id.btn_routineCreateCancel);
-		Button saveButton = v.findViewById(R.id.btn_routineCreateSave);
-		Button addExerciseToRoutine = v.findViewById(R.id.btn_addExerciseToRoutine);
-		searchBox = v.findViewById(R.id.txt_routineexercisecreate_searchBox);
-		searchBox.setOnItemClickListener(onItemClickListener);
-		ImageView searchExercises = v.findViewById(R.id.btn_searchExercises);
-		
-		recyclerView = v.findViewById(R.id.rv_routineCreateExercises);
-		initializeRecyclerView();
-		
-		// OnClick cancel button.
-		cancelButton.setOnClickListener(view -> ((BaseActivity)getActivity()).onBackPressedCustom(view));
-		
-		// OnClick add exercise.
-		addExerciseToRoutine.setOnClickListener(newView -> addExerciseToRoutine(newView)); //[TODO] remove this once all functions for adding exercise (autocomplete, search fragment, etc.) have been implemented
-		
-		// Search exercises image.
-		searchExercises.setOnClickListener(onSearchClickListener);
-		
-		// Get exercises list.
-		routineViewModel.loadExercises();
-		
-		return (v);
+		return (mView);
 	}
 	
 	public static RoutineCreateFragment newInstance()
@@ -121,19 +132,34 @@ public class RoutineCreateFragment
 		return (new RoutineCreateFragment());
 	}
 	
-	// Methods
-	private void initializeRecyclerView()
+	// On Swipe for recycler view item.
+	@Override
+	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
 	{
-		//LimitedLinearLayoutManager layout = new LimitedLinearLayoutManager(context, 100);
-		//recyclerView.setLayoutManager(layout);
-		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-		adapter = new RoutineCreateAdapter();
-		recyclerView.setAdapter(adapter);
-		recyclerView.setItemAnimator(new DefaultItemAnimator());
-		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-		
-		//routineViewModel.loadExercises(); // We don't need initial data.
+		if(viewHolder instanceof ExercisesViewHolder){
+			int position = viewHolder.getAdapterPosition();
+			
+			// get the removed item name to display it in snack bar
+			List<Exercise> exercises = adapter.getExercises();
+			String name = exercises.get(position).getName();
+			
+			// backup of removed item for undo purpose
+			final Exercise deletedItem = exercises.get(position);
+			final int deletedIndex = position;
+			
+			// remove the item from recycler view
+			adapter.removeExerciseAtPosition(position);
+			
+			// showing snack bar with Undo option
+			Snackbar snackbar = Snackbar
+				.make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
+			snackbar.setAction("UNDO", view -> adapter.restoreExercise(deletedItem, deletedIndex));
+			snackbar.setActionTextColor(Color.YELLOW);
+			snackbar.show();
+		}
 	}
+
+	// Methods
 	
 	// Process list of exercises that were selected in the searchbox fragment.
 	private void processSelectedExercisesResponse(Response<List<Exercise>> response)
@@ -155,9 +181,20 @@ public class RoutineCreateFragment
 	{
 	}
 	
-	private void renderSelectedExercisesSuccessState(List<Exercise> value)
+	private void initializeRecyclerView()
 	{
-		Log.d(TAG, "Number of exercises added: " + String.valueOf(value.size()));
+		//LimitedLinearLayoutManager layout = new LimitedLinearLayoutManager(context, 100);
+		//recyclerView.setLayoutManager(layout);
+		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+		adapter = new RoutineCreateAdapter();
+		recyclerView.setAdapter(adapter);
+		recyclerView.setItemAnimator(new DefaultItemAnimator());
+		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+		
+		// Callback to detach swipe to delete motion.
+		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
+		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+		//routineViewModel.loadExercises(); // We don't need initial data.
 	}
 	
 	private void renderSelectedExercisesErrorState(Throwable error)
@@ -243,6 +280,14 @@ public class RoutineCreateFragment
 		if(!addToBackStack.isEmpty())
 			transaction.addToBackStack(addToBackStack);//(null);
 		transaction.commit();
+	}
+	
+	private void renderSelectedExercisesSuccessState(List<Exercise> ex)
+	{
+		Log.d(TAG, "Number of exercises added: " + String.valueOf(ex.size()));
+		int countBefore = adapter.getItemCount();
+		adapter.addExercises(ex);
+		adapter.notifyItemRangeInserted(countBefore + 1, adapter.getItemCount());
 	}
 }
 // Inner Classes
