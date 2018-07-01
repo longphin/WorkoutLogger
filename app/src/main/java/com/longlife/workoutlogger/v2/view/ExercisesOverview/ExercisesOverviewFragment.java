@@ -28,6 +28,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.FragmentBase;
 import com.longlife.workoutlogger.v2.utils.RecyclerItemTouchHelper;
+import com.longlife.workoutlogger.v2.utils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.v2.utils.Response;
 
 import java.util.List;
@@ -52,7 +53,6 @@ public class ExercisesOverviewFragment
 	private int itemLayout;
 	private int overviewLayout;
 	private Button addExercisesToRoutine;
-	// [TODO] add the Button "Save Selection to Routine" that will be disabled when there are no selected exercises.
 	// Public
 	@Inject
 	public Context context;
@@ -128,7 +128,7 @@ public class ExercisesOverviewFragment
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
 	{
-		if(viewHolder instanceof ExercisesViewHolder){
+		if(viewHolder instanceof RecyclerViewHolderSwipeable){
 			int position = viewHolder.getAdapterPosition();
 			
 			// get the removed item name to display it in snack bar
@@ -165,6 +165,24 @@ public class ExercisesOverviewFragment
 			snackbar.setActionTextColor(Color.YELLOW);
 			snackbar.show();
 		}
+	}
+	
+	@Override
+	public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean isLongPressDragEnabled()
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean isItemViewSwipeEnabled()
+	{
+		return true;
 	}
 	
 	// Setters

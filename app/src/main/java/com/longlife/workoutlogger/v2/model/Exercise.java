@@ -53,6 +53,13 @@ public class Exercise
 		this.description = descrip;
 	}
 	
+	// Overrides
+	@Override
+	public String toString()
+	{
+		return getName();
+	}
+	
 	// Getters
 	public String getDescription()
 	{
@@ -134,13 +141,6 @@ public class Exercise
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-	
-	// Overrides
-	@Override
-	public String toString()
-	{
-		return getName();
 	}
 }
 

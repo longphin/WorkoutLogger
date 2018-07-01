@@ -21,29 +21,12 @@ public class RoutinesAdapter
 	}
 	
 	// Overrides
-	public void setRoutines(List<Routine> routines)
-	{
-		if(routines == null)
-			return;
-		
-		this.routines = routines;
-		notifyDataSetChanged();
-	}
-	
-	public void addRoutine(Routine routine)
-	{
-		if(routine == null)
-			return;
-		
-		this.routines.add(routine);
-		notifyItemInserted(routines.size() - 1);
-	}
 	@Override
 	public void onBindViewHolder(RoutinesViewHolder holder, int pos)
 	{
 		int position = holder.getAdapterPosition();
 		Routine routine = routines.get(position);
-		
+
 		StringBuilder sbName = new StringBuilder(100);
 		sbName.append(routine.getName())
 			.append(" (")
@@ -62,14 +45,31 @@ public class RoutinesAdapter
 		return (new RoutinesViewHolder(v));
 	}
 	
-	// Setters
-	
 	@Override
 	public int getItemCount()
 	{
 		if(routines == null)
 			return (0);
 		return (routines.size());
+	}
+	
+	// Setters
+	public void setRoutines(List<Routine> routines)
+	{
+		if(routines == null)
+			return;
+		
+		this.routines = routines;
+		notifyDataSetChanged();
+	}
+	
+	public void addRoutine(Routine routine)
+	{
+		if(routine == null)
+			return;
+		
+		this.routines.add(routine);
+		notifyItemInserted(routines.size() - 1);
 	}
 }
 // Inner Classes

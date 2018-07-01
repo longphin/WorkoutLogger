@@ -38,10 +38,36 @@ public class AddExercisesFragment
 		// Required empty public constructor
 	}
 	
-	// Methods
+	// Overrides
 	///
 	/// GET EXERCISES RENDERING
 	///
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		
+		((MyApplication)getActivity().getApplication())
+			.getApplicationComponent()
+			.inject(this);
+		
+		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
+			ViewModelProviders.of(getActivity(), viewModelFactory)
+				.get(ExercisesOverviewViewModel.class);
+		
+		// Get exercises
+		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+		Bundle savedInstanceState)
+	{
+		// Inflate the layout for this fragment
+		return inflater.inflate(R.layout.fragment_add_exercises, container, false);
+	}
+	
+	// Methods
 	private void processLoadResponse(Response<List<Exercise>> response)
 	{
 		switch(response.getStatus()){
@@ -78,32 +104,6 @@ public class AddExercisesFragment
 	{
 		// change anything if loading data had an error.
 		Log.d(TAG, throwable.getMessage());
-	}
-	
-	// Overrides
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		
-		((MyApplication)getActivity().getApplication())
-			.getApplicationComponent()
-			.inject(this);
-		
-		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(getActivity(), viewModelFactory)
-				.get(ExercisesOverviewViewModel.class);
-		
-		// Get exercises
-		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
-	}
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-		Bundle savedInstanceState)
-	{
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_add_exercises, container, false);
 	}
 }
 

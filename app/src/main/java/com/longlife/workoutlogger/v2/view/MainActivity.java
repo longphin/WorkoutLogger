@@ -19,6 +19,14 @@ public class MainActivity
 	@Inject
 	public Repository repo;
 	
+	// Overrides
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+	}
+	
 	// Called when the user presses the Routines button.
 	public void gotoRoutines(View view)
 	{
@@ -41,14 +49,6 @@ public class MainActivity
 		Intent intent = new Intent(this, ExercisesOverviewActivity.class);
 		
 		startActivity(intent);
-	}
-	
-	// Overrides
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 	}
 }
 // Inner Classes

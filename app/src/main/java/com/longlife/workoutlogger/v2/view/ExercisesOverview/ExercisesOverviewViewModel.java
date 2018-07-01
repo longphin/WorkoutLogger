@@ -51,18 +51,23 @@ public class ExercisesOverviewViewModel
 	}
 	
 	// Overrides
+	@Override
+	public void onCleared()
+	{
+		super.onCleared();
+		disposables.clear();
+	}
+	
+	// Getters
 	public List<Exercise> getCachedExercises()
 	{
 		return exercises;
 	}
-	
+
 	public Observable<Response<Integer>> getInsertResponse()
 	{
 		return insertResponse.getObservable();
 	}
-	
-	// Getters
-	public Observable<Response<List<Exercise>>> getLoadResponse(){return loadResponse.getObservable();}
 	
 	/*
 	public void addExercisesToRoutine(List<Integer> ids)
@@ -82,6 +87,8 @@ public class ExercisesOverviewViewModel
 		);
 	}
 	*/
+	
+	public Observable<Response<List<Exercise>>> getLoadResponse(){return loadResponse.getObservable();}
 	
 	public Observable<Response<List<Exercise>>> getSelectedExercises(){return addExercisesToRoutine.getObservable();}
 	
@@ -136,34 +143,6 @@ public class ExercisesOverviewViewModel
 				)
 		);
 	}
-	
-	// Reference: Ala Hammad - https://medium.com/@alahammad/database-with-room-using-rxjava-764ee6124974
-	public void deleteExercise(Exercise ex)
-	{
-		Completable.fromAction(() -> repo.deleteExercise(ex))
-			.subscribeOn(Schedulers.io())
-			.observeOn(AndroidSchedulers.mainThread())
-			.subscribe(new CompletableObserver()
-			{
-				// Overrides
-				@Override
-				public void onSubscribe(Disposable d)
-				{
-				}
-				
-				@Override
-				public void onComplete()
-				{
-					Log.d(TAG, "Delete successful.");
-				}
-				
-				@Override
-				public void onError(Throwable e)
-				{
-					e.getMessage();
-				}
-			});
-	}
 
 	/*
   public void clearSelectedExercises()
@@ -195,6 +174,34 @@ public class ExercisesOverviewViewModel
 		}
 	}
 	*/
+	
+	// Reference: Ala Hammad - https://medium.com/@alahammad/database-with-room-using-rxjava-764ee6124974
+	public void deleteExercise(Exercise ex)
+	{
+		Completable.fromAction(() -> repo.deleteExercise(ex))
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(new CompletableObserver()
+			{
+				// Overrides
+				@Override
+				public void onSubscribe(Disposable d)
+				{
+				}
+				
+				@Override
+				public void onComplete()
+				{
+					Log.d(TAG, "Delete successful.");
+				}
+				
+				@Override
+				public void onError(Throwable e)
+				{
+					e.getMessage();
+				}
+			});
+	}
 	
 	///
 	/// UPDATE
@@ -242,12 +249,6 @@ public class ExercisesOverviewViewModel
 				throwable -> addExercisesToRoutine.setError(throwable)
 			)
 		);
-	}
-	@Override
-	public void onCleared()
-	{
-		super.onCleared();
-		disposables.clear();
 	}
 }
 // Inner Classes

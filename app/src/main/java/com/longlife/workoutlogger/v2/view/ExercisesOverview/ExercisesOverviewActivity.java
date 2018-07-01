@@ -18,6 +18,28 @@ public class ExercisesOverviewActivity
 	private ExercisesOverviewViewModel viewModel;
 	
 	// Overrides
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_exercises_overview);
+		
+		((MyApplication)getApplication())
+			.getApplicationComponent()
+			.inject(this);
+		
+		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
+			ViewModelProviders.of(this, viewModelFactory)
+				.get(ExercisesOverviewViewModel.class);
+		
+		// Add initial fragments.
+		initializeFragments();
+		
+		// Observer for when 'Add new exercise' button is clicked.
+		//addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response)));
+	}
+	
+	// Methods
 	private void processNewExerciseResponse(Response<Boolean> response)
 	{
 		switch(response.getStatus()){
@@ -39,17 +61,16 @@ public class ExercisesOverviewActivity
 		if(fragment == null){
 			fragment = ExerciseCreateFragment.newInstance();
 		}
-
+		
 		manager.beginTransaction()
 			.replace(R.id.root_exercises_overview, fragment, ExerciseCreateFragment.TAG)
 			.addToBackStack(ExerciseCreateFragment.TAG)//(null)
 			.commit();
 		//addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExerciseCreateFragment.TAG, ExerciseCreateFragment.TAG);
-
+		
 		Log.d(TAG, "start exercise create fragment");
 	}
 	
-	// Methods
 	public void initializeFragments()
 	{
 		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
@@ -59,28 +80,8 @@ public class ExercisesOverviewActivity
 			fragment.setItemLayout(R.layout.item_exercises);
 			fragment.setOverviewLayout(R.layout.fragment_exercises_overview);
 		}
-
+		
 		addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
-	}
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_exercises_overview);
-
-		((MyApplication)getApplication())
-			.getApplicationComponent()
-			.inject(this);
-
-		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(this, viewModelFactory)
-				.get(ExercisesOverviewViewModel.class);
-
-		// Add initial fragments.
-		initializeFragments();
-
-		// Observer for when 'Add new exercise' button is clicked.
-		//addDisposable(viewModel.startCreateFragmentResponse().subscribe(response -> processNewExerciseResponse(response)));
 	}
 }
 // Inner Classes

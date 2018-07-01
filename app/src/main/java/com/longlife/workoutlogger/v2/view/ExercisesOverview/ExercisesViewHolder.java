@@ -32,22 +32,23 @@ public class ExercisesViewHolder
 		this.selectedCheckBox = itemView.findViewById(R.id.ch_selectExercise);
 	}
 	
+	// Overrides
+	public RelativeLayout getViewBackground()
+	{
+		return viewBackground;
+	}
+
+	public ConstraintLayout getViewForeground()
+	{
+		return viewForeground;
+	}
+	
 	// Getters
 	public ImageView getFavoriteIcon(){ return favoriteIcon;}
 	
 	public CheckBox getSelectedCheckBox()
 	{
 		return selectedCheckBox;
-	}
-	
-	public RelativeLayout getViewBackground()
-	{
-		return viewBackground;
-	}
-	
-	public ConstraintLayout getViewForeground()
-	{
-		return viewForeground;
 	}
 	
 	// Setters

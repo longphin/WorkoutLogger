@@ -21,7 +21,20 @@ public class RecyclerItemTouchHelper
 	@Override
 	public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
 	{
-		return true;
+		return listener.onMove(recyclerView, viewHolder, target);
+		//return true;
+	}
+	
+	@Override
+	public boolean isLongPressDragEnabled()
+	{
+		return listener.isLongPressDragEnabled();
+	}
+	
+	@Override
+	public boolean isItemViewSwipeEnabled()
+	{
+		return listener.isItemViewSwipeEnabled();
 	}
 	
 	@Override
@@ -80,7 +93,14 @@ public class RecyclerItemTouchHelper
 	// Inner Classes
 	public interface RecyclerItemTouchHelperListener
 	{
+		// Getters
+		boolean isItemViewSwipeEnabled();
+		
+		boolean isLongPressDragEnabled();
+
 		void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position);
+		
+		boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target);
 	}
 }
 // Inner Classes

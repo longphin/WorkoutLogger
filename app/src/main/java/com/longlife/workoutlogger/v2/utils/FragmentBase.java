@@ -10,6 +10,14 @@ public class FragmentBase
 {
 	private CompositeDisposable composite = new CompositeDisposable();
 	
+	// Overrides
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		clearDisposables();
+	}
+	
 	public void addDisposable(Disposable d)
 	{
 		composite.add(d);
@@ -18,14 +26,6 @@ public class FragmentBase
 	public void clearDisposables()
 	{
 		composite.clear();
-	}
-	
-	// Overrides
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		clearDisposables();
 	}
 }
 // Inner Classes

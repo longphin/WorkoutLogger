@@ -43,7 +43,56 @@ public class RoutinesOverviewFragment
 	
 	public RoutinesOverviewFragment()
 	{
+
+	}
 	
+	// Overrides
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		
+		((MyApplication)getActivity().getApplication())
+			.getApplicationComponent()
+			.inject(this);
+		
+		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
+			ViewModelProviders.of(getActivity(), viewModelFactory)
+				.get(RoutinesOverviewViewModel.class);
+		
+		//viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response));
+		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
+	}
+	
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+	{
+		
+		if(mView == null){
+			View v = inflater.inflate(R.layout.fragment_routines_overview, container, false);
+			
+			// Add listener to "add routine button"
+			FloatingActionButton btn_addRoutine = v.findViewById(R.id.btn_addRoutine);
+			btn_addRoutine.setOnClickListener(new View.OnClickListener()
+			{
+				// Overrides
+				@Override
+				public void onClick(View v)
+				{
+					startCreateFragment();
+					//viewModel.startCreateFragment();
+				}
+			});
+			
+			// Initialize recyclerview.
+			recyclerView = v.findViewById(R.id.rv_routinesOverview);
+			initializeRecyclerView();
+			
+			mView = v;
+		}
+		
+		return (mView);
 	}
 	
 	public static RoutinesOverviewFragment newInstance()
@@ -120,54 +169,6 @@ public class RoutinesOverviewFragment
 			.commit();
 		
 		Log.d(TAG, "start routine create fragment");
-	}
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		
-		((MyApplication)getActivity().getApplication())
-			.getApplicationComponent()
-			.inject(this);
-		
-		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(getActivity(), viewModelFactory)
-				.get(RoutinesOverviewViewModel.class);
-		
-		//viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response));
-		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
-	}
-	
-	// Overrides
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-	{
-		
-		if(mView == null){
-			View v = inflater.inflate(R.layout.fragment_routines_overview, container, false);
-			
-			// Add listener to "add routine button"
-			FloatingActionButton btn_addRoutine = v.findViewById(R.id.btn_addRoutine);
-			btn_addRoutine.setOnClickListener(new View.OnClickListener()
-			{
-				// Overrides
-				@Override
-				public void onClick(View v)
-				{
-					startCreateFragment();
-					//viewModel.startCreateFragment();
-				}
-			});
-			
-			// Initialize recyclerview.
-			recyclerView = v.findViewById(R.id.rv_routinesOverview);
-			initializeRecyclerView();
-			
-			mView = v;
-		}
-		
-		return (mView);
 	}
 }
 // Inner Classes

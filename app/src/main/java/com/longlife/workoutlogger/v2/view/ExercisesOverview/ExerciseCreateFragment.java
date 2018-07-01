@@ -46,14 +46,55 @@ public class ExerciseCreateFragment
 		// Required empty public constructor
 	}
 	
+	// Overrides
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		clearDisposables();
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		
+		((MyApplication)getActivity().getApplication())
+			.getApplicationComponent()
+			.inject(this);
+		
+		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
+			ViewModelProviders.of(getActivity(), viewModelFactory)
+				.get(ExercisesOverviewViewModel.class);
+		
+		//viewModel.insertResponse().observe(this, response -> processInsertResponse(response));
+		composite.add(viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
+	}
+	
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+	{
+		View v = inflater.inflate(R.layout.fragment_exercise_create, container, false);
+		
+		this.name = v.findViewById(R.id.edit_exerciseCreateName);
+		this.descrip = v.findViewById(R.id.edit_exerciseCreateDescrip);
+		this.cancelButton = v.findViewById(R.id.btn_exerciseCreateCancel);
+		this.saveButton = v.findViewById(R.id.btn_exerciseCreateSave);
+		
+		cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
+		
+		saveButton.setOnClickListener(view -> checkFieldsBeforeInsert());
+		
+		return (v);
+	}
+	
 	public static ExerciseCreateFragment newInstance()
 	{
 		return (new ExerciseCreateFragment());
 	}
 	
-	// Overrides
 	// Methods
-	
 	///
 	/// INSERT EXERCISE RENDERING
 	///
@@ -71,6 +112,7 @@ public class ExerciseCreateFragment
 				break;
 		}
 	}
+	
 	private void checkFieldsBeforeInsert()
 	{
 		Exercise newExercise = new Exercise();
@@ -131,11 +173,6 @@ public class ExerciseCreateFragment
 		}
 	}
 	
-	public void clearDisposables()
-	{
-		composite.clear();
-	}
-	
 	private void renderErrorState(Throwable throwable)
 	{
 		saveButton.setClickable(true);
@@ -149,46 +186,10 @@ public class ExerciseCreateFragment
 			).show();
 		}
 	}
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		clearDisposables();
-	}
 	
-	@Override
-	public void onCreate(Bundle savedInstanceState)
+	public void clearDisposables()
 	{
-		super.onCreate(savedInstanceState);
-		
-		((MyApplication)getActivity().getApplication())
-			.getApplicationComponent()
-			.inject(this);
-		
-		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(getActivity(), viewModelFactory)
-				.get(ExercisesOverviewViewModel.class);
-		
-		//viewModel.insertResponse().observe(this, response -> processInsertResponse(response));
-		composite.add(viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
-	}
-	
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-	{
-		View v = inflater.inflate(R.layout.fragment_exercise_create, container, false);
-		
-		this.name = v.findViewById(R.id.edit_exerciseCreateName);
-		this.descrip = v.findViewById(R.id.edit_exerciseCreateDescrip);
-		this.cancelButton = v.findViewById(R.id.btn_exerciseCreateCancel);
-		this.saveButton = v.findViewById(R.id.btn_exerciseCreateSave);
-		
-		cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
-		
-		saveButton.setOnClickListener(view -> checkFieldsBeforeInsert());
-		
-		return (v);
+		composite.clear();
 	}
 }
 // Inner Classes

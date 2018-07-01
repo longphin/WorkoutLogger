@@ -48,10 +48,18 @@ public class RoutinesOverviewViewModel
 		this.repo = repo;
 	}
 	
-	// Getters
+	// Overrides
 	///
 	/// GETTERS
 	///
+	@Override
+	public void onCleared()
+	{
+		super.onCleared();
+		disposables.clear();
+	}
+	
+	// Getters
 	public List<Routine> getCachedRoutines()
 	{
 		return routines;
@@ -189,14 +197,6 @@ public class RoutinesOverviewViewModel
 					e.getMessage();
 				}
 			});
-	}
-	
-	// Overrides
-	@Override
-	public void onCleared()
-	{
-		super.onCleared();
-		disposables.clear();
 	}
 }
 // Inner Classes

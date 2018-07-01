@@ -21,21 +21,49 @@ public abstract class BaseActivity
 	// Static
 	private static final String TAG = "BaseActivity";
 	private CompositeDisposable composite = new CompositeDisposable();
-
+	
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
 	public FragmentManager manager = getSupportFragmentManager();
-
+	
+	// Overrides
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		clearDisposables();
+	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		if(manager.getBackStackEntryCount() > 0){ // if current view is a fragment, then pop it.
+			manager.popBackStack();
+			
+			int count = manager.getBackStackEntryCount();
+			Log.d(TAG, "Number of activites in back stack: " + String.valueOf(count));
+			for(int i = 0; i < count; i++){
+				Log.d(TAG, "Backstack: " + manager.getBackStackEntryAt(i).getName());
+			}
+		}else{ // else, we are are at the activity level, so we call the super onBackPressed();
+			super.onBackPressed();
+		}
+        /*
+        super.onBackPressed();
+        overridePendingTransition(0, 0);
+        */
+	}
+	
 	public void addDisposable(Disposable d)
 	{
 		composite.add(d);
 	}
-
+	
 	public void clearDisposables()
 	{
 		composite.clear();
 	}
-
+	
 	public void onBackPressedCustom(View view)
 	{
 		onBackPressed();
@@ -53,47 +81,19 @@ public abstract class BaseActivity
 	{
 		addFragmentToActivity(fragmentManager, fragment, frameId, tag, "");
 	}
-
+	
 	public void addFragmentToActivity(FragmentManager fragmentManager,
 		Fragment fragment,
 		int frameId,
 		String tag,
 		String addToBackStack)
 	{
-
+		
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.replace(frameId, fragment, tag);
 		if(!addToBackStack.isEmpty())
 			transaction.addToBackStack(addToBackStack);//(null);
 		transaction.commit();
-	}
-
-	// Overrides
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		clearDisposables();
-	}
-
-	@Override
-	public void onBackPressed()
-	{
-		if(manager.getBackStackEntryCount() > 0){ // if current view is a fragment, then pop it.
-			manager.popBackStack();
-
-			int count = manager.getBackStackEntryCount();
-			Log.d(TAG, "Number of activites in back stack: " + String.valueOf(count));
-			for(int i = 0; i < count; i++){
-				Log.d(TAG, "Backstack: " + manager.getBackStackEntryAt(i).getName());
-			}
-		}else{ // else, we are are at the activity level, so we call the super onBackPressed();
-			super.onBackPressed();
-		}
-        /*
-        super.onBackPressed();
-        overridePendingTransition(0, 0);
-        */
 	}
 }
 // This extends AppCompatActivity and allows us to easily attach an activity to its fragment.

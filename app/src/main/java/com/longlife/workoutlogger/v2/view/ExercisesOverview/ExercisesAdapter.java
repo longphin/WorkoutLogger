@@ -18,7 +18,7 @@ public class ExercisesAdapter
 	extends RecyclerView.Adapter<ExercisesViewHolder>
 {
 	// Static
-	private static final String TAG = "ExercisesAdapter";
+	private static final String TAG = ExercisesAdapter.class.getSimpleName();
 	private List<Exercise> exercises;
 	private Set<Integer> selectedIdExercises = new HashSet<>();
 	private ExercisesOverviewViewModel viewModel;
@@ -29,6 +29,7 @@ public class ExercisesAdapter
 		this.viewModel = viewModel;
 		this.itemLayout = itemLayout;
 	}
+	
 	// Overrides
 	@Override
 	public void onBindViewHolder(ExercisesViewHolder holder, int pos)
@@ -94,6 +95,36 @@ public class ExercisesAdapter
 		}
 	}
 	
+	@Override
+	public int getItemCount()
+	{
+		if(exercises == null)
+			return 0;
+		return exercises.size();
+	}
+	
+	@Override
+	public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+	{
+		View v = LayoutInflater.from(parent.getContext()).inflate(itemLayout, parent, false);
+		
+		return (new ExercisesViewHolder(v));
+	}
+	// Convert the Set for selected id exercises to be added to a routine into a List.
+	/*
+	public List<Integer> getSelectedIdExercisesList()
+	{
+		return new ArrayList<>(selectedIdExercises);
+	}
+	*/
+	
+	// Getters
+	public Set<Integer> getSelectedIdExercisesList()
+	{
+		return selectedIdExercises;
+	}
+	
+	// Setters
 	public void setExercises(List<Exercise> exercises)
 	{
 		if(exercises == null)
@@ -102,21 +133,6 @@ public class ExercisesAdapter
 		this.exercises = exercises;
 		notifyDataSetChanged();
 	}
-	
-	// Getters
-	// Convert the Set for selected id exercises to be added to a routine into a List.
-	/*
-	public List<Integer> getSelectedIdExercisesList()
-	{
-		return new ArrayList<>(selectedIdExercises);
-	}
-	*/
-	public Set<Integer> getSelectedIdExercisesList()
-	{
-		return selectedIdExercises;
-	}
-	
-	// Setters
 	
 	// "Undo" the temporary delete of an exercise.
 	public void restoreExercise(Exercise ex, int position)
@@ -132,22 +148,6 @@ public class ExercisesAdapter
 		//selectedIdExercises.remove(exercises.get(position).getIdExercise());
 		exercises.remove(position);
 		notifyItemRemoved(position);
-	}
-	
-	@Override
-	public int getItemCount()
-	{
-		if(exercises == null)
-			return 0;
-		return exercises.size();
-	}
-	
-	@Override
-	public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-	{
-		View v = LayoutInflater.from(parent.getContext()).inflate(itemLayout, parent, false);
-		
-		return (new ExercisesViewHolder(v));
 	}
 	
 	// This is called when the exercise has been removed from the database.

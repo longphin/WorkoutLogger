@@ -8,9 +8,6 @@ import android.widget.RelativeLayout;
 public abstract class RecyclerViewHolderSwipeable
 	extends RecyclerView.ViewHolder
 {
-	private RelativeLayout viewBackground;
-	private ConstraintLayout viewForeground;
-	
 	public RecyclerViewHolderSwipeable(View itemView)
 	{
 		super(itemView);
