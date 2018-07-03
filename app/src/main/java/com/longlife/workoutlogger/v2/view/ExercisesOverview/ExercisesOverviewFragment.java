@@ -78,6 +78,9 @@ public class ExercisesOverviewFragment
 			.getApplicationComponent()
 			.inject(this);
 		
+		rootId = getArguments().getInt(TAG + "rootId");
+		itemLayout = getArguments().getInt(TAG + "itemLayout");
+		overviewLayout = getArguments().getInt(TAG + "overviewLayout");
 		initializeViewModel();
 		
 		// Observe events when the list of exercises is obtained.
@@ -90,12 +93,10 @@ public class ExercisesOverviewFragment
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
 		if(mView == null){
-			View v = inflater.inflate(overviewLayout, container, false);
-			//View viewOverall = getActivity().findViewById(overviewLayout);
-			//View v = viewOverall.findViewById(R.id.layout_exercises_overview_base);
+			mView = inflater.inflate(overviewLayout, container, false);
 			
 			// Add listener to when the "add exercises to routine" button is selected
-			addExercisesToRoutine = v.findViewById(R.id.btn_addExercisesToRoutine);
+			addExercisesToRoutine = mView.findViewById(R.id.btn_addExercisesToRoutine);
 			if(addExercisesToRoutine != null){
 				addExercisesToRoutine.setOnClickListener(
 					view ->
@@ -107,21 +108,15 @@ public class ExercisesOverviewFragment
 			}
 			
 			// Add listener to "add routine button"
-			FloatingActionButton btn_addRoutine = v.findViewById(R.id.btn_addExercise);
+			FloatingActionButton btn_addRoutine = mView.findViewById(R.id.btn_addExercise);
 			btn_addRoutine.setOnClickListener(view -> startCreateFragment());
 			
 			// Initialize recyclerview.
-			recyclerView = v.findViewById(R.id.rv_exercisesOverview);
-			coordinatorLayout = v.findViewById(R.id.exercises_overview_layout);
+			recyclerView = mView.findViewById(R.id.rv_exercisesOverview);
+			coordinatorLayout = mView.findViewById(R.id.exercises_overview_layout);
 			initializeRecyclerView();
-			
-			mView = v;
-			
-			return (v);
-		}else{
-			return (mView);
 		}
-		
+		return mView;
 	}
 	
 	// On Swipe for recycler view item.
@@ -186,33 +181,18 @@ public class ExercisesOverviewFragment
 	}
 	
 	// Setters
-    /*
-    public static ExercisesOverviewFragment newInstance(int rootId) {
-        ExercisesOverviewFragment fragment = new ExercisesOverviewFragment();
-        fragment.setRootId(rootId);
-
-        Bundle bundle = new Bundle(1);
-
-        bundle.putInt(ExercisesOverviewFragment.rootId_TAG, rootId);
-
-        fragment.setArguments(bundle);
-
-        return (fragment);
-    }
-    */
-	public void setRootId(int id)
-	{
-		rootId = id;
-	}
-	
-	public void setItemLayout(int id){ itemLayout = id;}
-	
-	public void setOverviewLayout(int id){overviewLayout = id;}
 	
 	// Static methods
-	public static ExercisesOverviewFragment newInstance()
+	public static ExercisesOverviewFragment newInstance(int i1, int i2, int i3)
 	{
-		return new ExercisesOverviewFragment();
+		ExercisesOverviewFragment fragment = new ExercisesOverviewFragment();
+		Bundle bundle = new Bundle();
+		bundle.putInt(TAG + "rootId", i1);
+		bundle.putInt(TAG + "itemLayout", i2);
+		bundle.putInt(TAG + "overviewLayout", i3);
+		fragment.setArguments(bundle);
+		
+		return fragment;
 	}
 	
 	// Methods

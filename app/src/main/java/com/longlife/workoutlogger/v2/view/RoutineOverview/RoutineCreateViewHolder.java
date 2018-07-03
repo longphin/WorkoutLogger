@@ -2,6 +2,7 @@ package com.longlife.workoutlogger.v2.view.RoutineOverview;
 
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ public class RoutineCreateViewHolder
 	private RelativeLayout viewBackground;
 	private ConstraintLayout viewForeground;
 	private TextView descrip;
+	private ImageView deleteIcon;
 	
 	public RoutineCreateViewHolder(View itemView)
 	{
@@ -24,6 +26,7 @@ public class RoutineCreateViewHolder
 		this.viewForeground = itemView.findViewById(R.id.foreground_routine_create_exercise);
 		this.viewBackground = itemView.findViewById(R.id.background_routine_create_exercise);
 		this.descrip = itemView.findViewById(R.id.txt_routinecreate_exerciseDescrip);
+		this.deleteIcon = itemView.findViewById(R.id.ic_delete_item);
 	}
 	
 	// Overrides
@@ -37,6 +40,12 @@ public class RoutineCreateViewHolder
 	public ConstraintLayout getViewForeground()
 	{
 		return viewForeground;
+	}
+	
+	@Override
+	public ImageView getDeleteIcon()
+	{
+		return deleteIcon;
 	}
 	
 	// Getters

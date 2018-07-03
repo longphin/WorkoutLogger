@@ -2,8 +2,11 @@ package com.longlife.workoutlogger.v2.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import io.reactivex.annotations.NonNull;
 
@@ -14,6 +17,7 @@ import io.reactivex.annotations.NonNull;
 	indices = {@Index(value = {"idSessionExercise"})}
 )
 public class SessionExerciseSet
+	implements Parcelable
 {
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
@@ -31,7 +35,22 @@ public class SessionExerciseSet
 	
 	}
 	
-	// Getters
+	@Ignore
+	public static final Parcelable.Creator<SessionExerciseSet> CREATOR = new Parcelable.Creator<SessionExerciseSet>()
+	{
+		// Overrides
+		@Override
+		public SessionExerciseSet createFromParcel(Parcel parcel)
+		{
+			return new SessionExerciseSet(parcel);
+		}
+		
+		@Override
+		public SessionExerciseSet[] newArray(int i)
+		{
+			return new SessionExerciseSet[i];
+		}
+	};
 	public float getDuration()
 	{
 		return duration;
@@ -67,7 +86,13 @@ public class SessionExerciseSet
 		return weights;
 	}
 	
-	// Setters
+	@Ignore
+	private SessionExerciseSet(Parcel parcel)
+	{
+		idExercise = parcel.readInt();
+		idSessionExerciseSet = parcel.readInt();
+		rest = parcel.readFloat();
+	}
 	public void setIdSessionExerciseSet(int i)
 	{
 		idSessionExerciseSet = i;
@@ -102,6 +127,26 @@ public class SessionExerciseSet
 	{
 		this.rest = rest;
 	}
+	
+	// Overrides
+	@Ignore
+	@Override
+	public int describeContents()
+	{
+		return 0;
+	}
+	
+	@Ignore
+	@Override
+	public void writeToParcel(Parcel parcel, int flags)
+	{
+		parcel.writeInt(idExercise);
+		parcel.writeInt(idSessionExerciseSet);
+		parcel.writeFloat(rest);
+	}
+	
+	// Getters
+	// Setters
 }
 
 // Inner Classes

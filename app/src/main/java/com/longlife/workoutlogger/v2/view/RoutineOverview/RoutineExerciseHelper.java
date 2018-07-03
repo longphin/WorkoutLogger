@@ -11,7 +11,7 @@ import java.util.List;
 public class RoutineExerciseHelper
 {
 	private Exercise exercise;
-	private List<SessionExerciseSet> set = new ArrayList<>();
+	private List<SessionExerciseSet> sets = new ArrayList<>();
 	
 	public RoutineExerciseHelper(Exercise ex)
 	{
@@ -20,4 +20,6 @@ public class RoutineExerciseHelper
 	
 	// Getters
 	public Exercise getExercise(){return exercise;}
+	
+	public List<SessionExerciseSet> getSets(){return sets;}
 }

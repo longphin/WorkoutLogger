@@ -1,9 +1,12 @@
 package com.longlife.workoutlogger.v2.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.longlife.workoutlogger.v2.data.Required;
 import com.longlife.workoutlogger.v2.enums.ExerciseType;
@@ -23,6 +26,7 @@ import io.reactivex.annotations.NonNull;
 }
 )
 public class Exercise
+	implements Parcelable
 {
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
@@ -53,14 +57,35 @@ public class Exercise
 		this.description = descrip;
 	}
 	
-	// Overrides
+	@Ignore
+	public static final Parcelable.Creator<Exercise> CREATOR = new Parcelable.Creator<Exercise>()
+	{
+		
+		// Overrides
+		@Override
+		public Exercise createFromParcel(Parcel parcel)
+		{
+			return new Exercise(parcel);
+		}
+		
+		@Override
+		public Exercise[] newArray(int i)
+		{
+			return new Exercise[i];
+		}
+	};
 	@Override
 	public String toString()
 	{
 		return getName();
 	}
 	
-	// Getters
+	@Ignore
+	private Exercise(Parcel parcel)
+	{
+		idExercise = parcel.readInt();
+		name = parcel.readString();
+	}
 	public String getDescription()
 	{
 		return description;
@@ -102,7 +127,7 @@ public class Exercise
 		return premade;
 	}
 	
-	// Setters
+	// Overrides
 	public void setIdExercise(int val)
 	{
 		idExercise = val;
@@ -142,6 +167,24 @@ public class Exercise
 	{
 		this.name = name;
 	}
+	
+	@Ignore
+	@Override
+	public int describeContents()
+	{
+		return 0;
+	}
+	
+	@Ignore
+	@Override
+	public void writeToParcel(Parcel parcel, int flags)
+	{
+		parcel.writeInt(idExercise);
+		parcel.writeString(name);
+	}
+	
+	// Getters
+	// Setters
 }
 
 // Inner Classes

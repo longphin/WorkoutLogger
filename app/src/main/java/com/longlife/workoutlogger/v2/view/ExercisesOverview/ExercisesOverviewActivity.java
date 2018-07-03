@@ -75,10 +75,12 @@ public class ExercisesOverviewActivity
 	{
 		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
 		if(fragment == null){
-			fragment = ExercisesOverviewFragment.newInstance();//(R.id.root_exercises_overview);
+			fragment = ExercisesOverviewFragment.newInstance(R.id.root_exercises_overview, R.layout.item_exercises, R.layout.fragment_exercises_overview);//(R.id.root_exercises_overview);
+			/*
 			fragment.setRootId(R.id.root_exercises_overview);
 			fragment.setItemLayout(R.layout.item_exercises);
 			fragment.setOverviewLayout(R.layout.fragment_exercises_overview);
+			*/
 		}
 		
 		addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);

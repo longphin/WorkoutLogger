@@ -43,6 +43,12 @@ public class ExercisesViewHolder
 		return viewForeground;
 	}
 	
+	@Override
+	public ImageView getDeleteIcon()
+	{
+		return null;
+	}
+	
 	// Getters
 	public ImageView getFavoriteIcon(){ return favoriteIcon;}
 	

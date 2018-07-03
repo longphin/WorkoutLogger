@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.ImageView;
 
 // Swipe listener for recyclerview. The recyclerview must extend RecyclerViewHolderSwipeable.
 public class RecyclerItemTouchHelper
@@ -22,7 +23,6 @@ public class RecyclerItemTouchHelper
 	public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
 	{
 		return listener.onMove(recyclerView, viewHolder, target);
-		//return true;
 	}
 	
 	@Override
@@ -44,6 +44,17 @@ public class RecyclerItemTouchHelper
 		if(viewHolder != null){
 			final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
 			
+			// If the item is being moved, then hide the background images.
+			if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
+				final View backgroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewBackground();
+				final ImageView backgroundDeleteIcon = ((RecyclerViewHolderSwipeable)viewHolder).getDeleteIcon();
+				
+				if(backgroundView != null)
+					backgroundView.getBackground().setAlpha(0);
+				if(backgroundDeleteIcon != null)
+					backgroundDeleteIcon.setImageAlpha(0);
+			}
+			
 			getDefaultUIUtil().onSelected(foregroundView);
 		}
 	}
@@ -63,6 +74,14 @@ public class RecyclerItemTouchHelper
 	public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
 	{
 		final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
+		final View backgroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewBackground();
+		final ImageView backgroundDeleteIcon = ((RecyclerViewHolderSwipeable)viewHolder).getDeleteIcon();
+		
+		if(backgroundView != null)
+			backgroundView.getBackground().setAlpha(255);
+		if(backgroundDeleteIcon != null)
+			backgroundDeleteIcon.setImageAlpha(255);
+
 		getDefaultUIUtil().clearView(foregroundView);
 	}
 	

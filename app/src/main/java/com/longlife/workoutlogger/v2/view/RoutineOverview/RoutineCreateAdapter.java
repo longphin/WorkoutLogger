@@ -55,8 +55,9 @@ public class RoutineCreateAdapter
 			public void onClick(View view)
 			{
 				if(callback != null){
-					callback.onItemClicked(position);
-					Log.d(TAG, String.valueOf(position) + " Clicked");
+					int pos = holder.getAdapterPosition();
+					callback.onItemClicked(pos);
+					Log.d(TAG, String.valueOf(pos) + " Clicked");
 				}
 			}
 		};

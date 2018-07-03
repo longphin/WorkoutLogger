@@ -38,6 +38,7 @@ import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.StringArrayAdapter;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
+import com.longlife.workoutlogger.v2.view.RoutineOverview.AddSets.RoutineCreateExerciseSetFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -145,7 +146,8 @@ public class RoutineCreateFragment
 			final int deletedIndex = position;
 			
 			// remove the item from recycler view
-			adapter.removeExerciseAtPosition(position);
+			adapter.removeExerciseAtPosition(position); // [TODO] this remove does not update the position?
+			adapter.notifyItemRemoved(position);
 			
 			// showing snack bar with Undo option
 			Snackbar snackbar = Snackbar
@@ -162,16 +164,19 @@ public class RoutineCreateFragment
 	{
 		int fromPosition = viewHolder.getAdapterPosition();
 		int toPosition = target.getAdapterPosition();
-		if(fromPosition < toPosition){
-			for(int i = fromPosition; i < toPosition; i++){
-				adapter.swap(i, i + 1);
+		
+		if(fromPosition < adapter.getItemCount() && toPosition < adapter.getItemCount()){
+			if(fromPosition < toPosition){
+				for(int i = fromPosition; i < toPosition; i++){
+					adapter.swap(i, i + 1);
+				}
+			}else{
+				for(int i = fromPosition; i > toPosition; i--){
+					adapter.swap(i, i - 1);
+				}
 			}
-		}else{
-			for(int i = fromPosition; i > toPosition; i--){
-				adapter.swap(i, i - 1);
-			}
+			adapter.notifyItemMoved(fromPosition, toPosition);
 		}
-		adapter.notifyItemMoved(fromPosition, toPosition);
 		return true;
 	}
 	
@@ -190,8 +195,7 @@ public class RoutineCreateFragment
 	@Override
 	public void onItemClicked(int position)
 	{
-		// [TODO] the position after removing an item is not updated for some reason.
-		Log.d(TAG, "Callbacked " + String.valueOf(position));
+		startExerciseSetFragment(position);
 	}
 	
 	public static RoutineCreateFragment newInstance()
@@ -297,10 +301,12 @@ public class RoutineCreateFragment
 		
 		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
 		if(fragment == null){
-			fragment = ExercisesOverviewFragment.newInstance();
+			fragment = ExercisesOverviewFragment.newInstance(R.id.root_routines_overview, R.layout.item_exercises_selectable, R.layout.fragment_routine_exercises_overview);
+			/*
 			fragment.setRootId(R.id.root_routines_overview);
 			fragment.setItemLayout(R.layout.item_exercises_selectable);
 			fragment.setOverviewLayout(R.layout.fragment_routine_exercises_overview);
+			*/
 		}
 		
 		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, ExercisesOverviewFragment.TAG, ExercisesOverviewFragment.TAG);
@@ -329,8 +335,17 @@ public class RoutineCreateFragment
 	}
 	
 	// Click search exercise button
-	private void startExerciseSetFragment()
+	private void startExerciseSetFragment(int position)
 	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
+		RoutineCreateExerciseSetFragment fragment = (RoutineCreateExerciseSetFragment)manager.findFragmentByTag(RoutineCreateExerciseSetFragment.TAG);
+		
+		if(fragment == null){
+			RoutineExerciseHelper exerciseToAddSetsTo = adapter.getRoutineExercises().get(position);
+			fragment = RoutineCreateExerciseSetFragment.instance(exerciseToAddSetsTo.getExercise(), (ArrayList)exerciseToAddSetsTo.getSets());
+		}
+		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutineCreateExerciseSetFragment.TAG, RoutineCreateExerciseSetFragment.TAG);
+		/*
 		FragmentManager manager = getActivity().getSupportFragmentManager();
 		
 		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
@@ -342,6 +357,7 @@ public class RoutineCreateFragment
 		}
 		
 		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, ExercisesOverviewFragment.TAG, ExercisesOverviewFragment.TAG);
+		*/
 	}
 }
 // Inner Classes

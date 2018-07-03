@@ -3,6 +3,7 @@ package com.longlife.workoutlogger.v2.utils;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 public abstract class RecyclerViewHolderSwipeable
@@ -17,4 +18,6 @@ public abstract class RecyclerViewHolderSwipeable
 	public abstract RelativeLayout getViewBackground();
 	
 	public abstract ConstraintLayout getViewForeground();
+	
+	public abstract ImageView getDeleteIcon();
 }
