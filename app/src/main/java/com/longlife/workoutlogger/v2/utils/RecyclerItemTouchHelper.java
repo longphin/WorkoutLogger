@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.ImageView;
 
 // Swipe listener for recyclerview. The recyclerview must extend RecyclerViewHolderSwipeable.
 public class RecyclerItemTouchHelper
@@ -41,9 +40,10 @@ public class RecyclerItemTouchHelper
 	public void onSelectedChanged(RecyclerView.ViewHolder viewHolder
 		, int actionState)
 	{
+		super.onSelectedChanged(viewHolder, actionState);
+		
+		/*
 		if(viewHolder != null){
-			final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
-			
 			// If the item is being moved, then hide the background images.
 			if(actionState == ItemTouchHelper.ACTION_STATE_DRAG){
 				final View backgroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewBackground();
@@ -55,8 +55,10 @@ public class RecyclerItemTouchHelper
 					backgroundDeleteIcon.setImageAlpha(0);
 			}
 			
-			getDefaultUIUtil().onSelected(foregroundView);
+			//getDefaultUIUtil().onSelected(foregroundView);
+			super.onSelectedChanged(viewHolder, actionState);
 		}
+		*/
 	}
 	
 	@Override
@@ -64,16 +66,23 @@ public class RecyclerItemTouchHelper
 		RecyclerView.ViewHolder viewHolder, float dX, float dY,
 		int actionState, boolean isCurrentlyActive)
 	{
+		/*
 		final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
-		getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+		
+		getDefaultUIUtil().onDrawOver(c, recyclerView,
+			foregroundView,
+			dX, dY,
 			actionState, isCurrentlyActive
 		);
+		*/
+		super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 	}
 	
 	@Override
 	public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
 	{
 		final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
+		/*
 		final View backgroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewBackground();
 		final ImageView backgroundDeleteIcon = ((RecyclerViewHolderSwipeable)viewHolder).getDeleteIcon();
 		
@@ -81,8 +90,10 @@ public class RecyclerItemTouchHelper
 			backgroundView.getBackground().setAlpha(255);
 		if(backgroundDeleteIcon != null)
 			backgroundDeleteIcon.setImageAlpha(255);
-
+		*/
 		getDefaultUIUtil().clearView(foregroundView);
+		
+		super.clearView(recyclerView, viewHolder);
 	}
 	
 	@Override
@@ -90,11 +101,18 @@ public class RecyclerItemTouchHelper
 		RecyclerView.ViewHolder viewHolder, float dX, float dY,
 		int actionState, boolean isCurrentlyActive)
 	{
-		final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
-		
-		getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
-			actionState, isCurrentlyActive
-		);
+		// If swiping, then only move the foreground.
+		if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+			if(viewHolder != null){
+				final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
+				
+				getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
+					actionState, isCurrentlyActive
+				);
+			}
+		}else{
+			super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+		}
 	}
 	
 	@Override
