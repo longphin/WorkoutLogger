@@ -18,6 +18,11 @@ public class RoutineExerciseHelper
 		exercise = ex;
 	}
 	
+	public RoutineExerciseHelper(Exercise ex, List<SessionExerciseSet> sets)
+	{
+		this.exercise = ex;
+		this.sets = sets;
+	}
 	// Getters
 	public Exercise getExercise(){return exercise;}
 	

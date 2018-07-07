@@ -137,6 +137,9 @@ public class RoutineCreateFragment
 		if(viewHolder instanceof RecyclerViewHolderSwipeable){
 			int position = viewHolder.getAdapterPosition();
 			
+			if(adapter.isSwipeable(position))
+				return;
+			
 			// get the removed item name to display it in snack bar
 			List<RoutineExerciseHelper> exercises = adapter.getRoutineExercises();
 			String name = exercises.get(position).getExercise().getName();
@@ -196,6 +199,18 @@ public class RoutineCreateFragment
 	public void onItemClicked(int position)
 	{
 		startExerciseSetFragment(position);
+	}
+	
+	@Override
+	public void onHeaderClick(int position)
+	{
+		adapter.onHeaderClick(position);
+	}
+	
+	@Override
+	public boolean isExpanded(int position)
+	{
+		return adapter.isExpanded(position);
 	}
 	
 	public static RoutineCreateFragment newInstance()
