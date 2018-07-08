@@ -12,19 +12,28 @@ public class RoutineExerciseHelper
 {
 	private Exercise exercise;
 	private List<SessionExerciseSet> sets = new ArrayList<>();
+	private boolean isExpanded = false;
 	
 	public RoutineExerciseHelper(Exercise ex)
 	{
 		exercise = ex;
 	}
 	
-	public RoutineExerciseHelper(Exercise ex, List<SessionExerciseSet> sets)
+	public RoutineExerciseHelper(Exercise ex, List<SessionExerciseSet> sets, boolean isExpanded)
 	{
 		this.exercise = ex;
 		this.sets = sets;
+		this.isExpanded = isExpanded;
 	}
 	// Getters
 	public Exercise getExercise(){return exercise;}
 	
 	public List<SessionExerciseSet> getSets(){return sets;}
+	
+	public boolean IsExpanded(){return isExpanded;}
+	
+	public void IsExpanded(boolean bool)
+	{
+		isExpanded = bool;
+	}
 }

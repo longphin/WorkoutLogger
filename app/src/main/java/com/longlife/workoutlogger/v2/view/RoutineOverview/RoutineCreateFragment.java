@@ -3,11 +3,9 @@ package com.longlife.workoutlogger.v2.view.RoutineOverview;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -29,13 +27,11 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
-import com.longlife.workoutlogger.v2.utils.AdapterCallback;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
 import com.longlife.workoutlogger.v2.utils.FragmentBase;
-import com.longlife.workoutlogger.v2.utils.RecyclerItemTouchHelper;
-import com.longlife.workoutlogger.v2.utils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.StringArrayAdapter;
+import com.longlife.workoutlogger.v2.utils.SwipeAndDragHelper;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.AddSets.RoutineCreateExerciseSetFragment;
@@ -47,7 +43,6 @@ import javax.inject.Inject;
 
 public class RoutineCreateFragment
 	extends FragmentBase
-	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdapterCallback
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
 	private RoutinesOverviewViewModel routineViewModel;
@@ -131,6 +126,7 @@ public class RoutineCreateFragment
 	}
 	
 	// On Swipe for recyclerview item.
+	/*
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
 	{
@@ -160,8 +156,10 @@ public class RoutineCreateFragment
 			snackbar.show();
 		}
 	}
+	*/
 	
 	// On drag up and down for recyclerview item.
+	/*
 	@Override
 	public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
 	{
@@ -182,7 +180,9 @@ public class RoutineCreateFragment
 		}
 		return true;
 	}
+	*/
 	
+	/*
 	@Override
 	public boolean isLongPressDragEnabled()
 	{
@@ -212,6 +212,7 @@ public class RoutineCreateFragment
 	{
 		return adapter.isExpanded(position);
 	}
+	*/
 	
 	public static RoutineCreateFragment newInstance()
 	{
@@ -244,14 +245,18 @@ public class RoutineCreateFragment
 		//LimitedLinearLayoutManager layout = new LimitedLinearLayoutManager(context, 100);
 		//recyclerView.setLayoutManager(layout);
 		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-		adapter = new RoutineCreateAdapter(getContext(), RoutineCreateFragment.this);
+		
+		adapter = new RoutineCreateAdapter(getContext());//, RoutineCreateFragment.this);
+		SwipeAndDragHelper swipeAndDragHelper = new SwipeAndDragHelper(adapter);
+		ItemTouchHelper touchHelper = new ItemTouchHelper(swipeAndDragHelper);
+		adapter.setTouchHelper(touchHelper);
+		adapter.setCoordinatorLayout(coordinatorLayout);
 		recyclerView.setAdapter(adapter);
+		touchHelper.attachToRecyclerView(recyclerView);
+		
 		recyclerView.setItemAnimator(new DefaultItemAnimator());
 		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 		
-		// Callback to detach swipe to delete motion.
-		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT, this);
-		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 		//routineViewModel.loadExercises(); // We don't need initial data.
 	}
 	
