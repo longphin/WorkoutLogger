@@ -5,9 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+// Swipe and Drag for recycler view items.
+// Reference: srijith@therubberduckdev.wordpress.com https://therubberduckdev.wordpress.com/2017/10/24/android-recyclerview-drag-and-drop-and-swipe-to-dismiss/
 public class SwipeAndDragHelper
 	extends ItemTouchHelper.Callback
 {
+	// Interface contract between adapter and touch helper.
 	private ActionCompletionContract contract;
 	
 	public SwipeAndDragHelper(ActionCompletionContract contract)
@@ -53,7 +56,6 @@ public class SwipeAndDragHelper
 	@Override
 	public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
 	{
-		super.clearView(recyclerView, viewHolder);
 		if(viewHolder instanceof RecyclerViewHolderSwipeable){
 			final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
 			getDefaultUIUtil().clearView(foregroundView);
@@ -77,7 +79,6 @@ public class SwipeAndDragHelper
 		int actionState,
 		boolean isCurrentlyActive)
 	{
-		
 		// If swiping, then only move the foreground.
 		if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
 			if(viewHolder != null && viewHolder instanceof RecyclerViewHolderSwipeable){

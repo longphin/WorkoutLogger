@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// Expandable recycler view adapter.
+// Reference: srijith@therubberduckdev.wordpress.com https://therubberduckdev.wordpress.com/2017/10/17/android-recyclerview-expandable-headers/
 public class RoutineCreateAdapter
 	extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 	implements SwipeAndDragHelper.ActionCompletionContract
@@ -31,7 +33,7 @@ public class RoutineCreateAdapter
 	// Static
 	private static final String TAG = RoutineCreateAdapter.class.getSimpleName();
 	private static final int HEADER_TYPE = 1;
-	private static final int SUB_TYPE = 2;
+	private static final int SET_TYPE = 2;
 	private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
 	private List<ViewType> viewTypes = new ArrayList<>();
 	
@@ -43,7 +45,7 @@ public class RoutineCreateAdapter
 	{
 		this.context = context;
 	}
-
+	
 	// Overrides
 	@Override
 	public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int pos)
@@ -58,6 +60,7 @@ public class RoutineCreateAdapter
 			bindSubViewHolder(holder, position, viewType);
 		}
 	}
+	
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -67,7 +70,7 @@ public class RoutineCreateAdapter
 			case HEADER_TYPE:
 				v = LayoutInflater.from(this.context).inflate(R.layout.item_routine_create_exercise, parent, false);
 				return new RoutineCreateViewHolder(v);
-			case SUB_TYPE:
+			case SET_TYPE:
 				v = LayoutInflater.from(this.context).inflate(R.layout.item_routine_create_exercise_set, parent, false);
 				return new RoutineCreateSetViewHolder(v);
 			default:
@@ -75,7 +78,7 @@ public class RoutineCreateAdapter
 				return new RoutineCreateViewHolder(v);
 		}
 	}
-
+	
 	@Override
 	// Get a count of visible items, counting children if the header is expanded.
 	public int getItemCount()
@@ -95,7 +98,7 @@ public class RoutineCreateAdapter
 				if(headerItem.IsExpanded()){
 					// Expanded, count the children and add the children to viewTypes.
 					for(int j = 0; j < childCount; j++){
-						viewTypes.add(count, new ViewType(count - (i + 1) + collapsedCount, SUB_TYPE, i));
+						viewTypes.add(count, new ViewType(count - (i + 1) + collapsedCount, SET_TYPE, i));
 						count += 1;
 					}
 				}else{
@@ -113,7 +116,7 @@ public class RoutineCreateAdapter
 		switch(viewTypes.get(position).getType()){
 			case HEADER_TYPE:
 				return true;
-			case SUB_TYPE:
+			case SET_TYPE:
 				return false;
 			default:
 				return false;
@@ -126,8 +129,8 @@ public class RoutineCreateAdapter
 		switch(viewTypes.get(position).getType()){
 			case HEADER_TYPE:
 				return HEADER_TYPE;
-			case SUB_TYPE:
-				return SUB_TYPE;
+			case SET_TYPE:
+				return SET_TYPE;
 			default:
 				return HEADER_TYPE;
 		}
@@ -139,7 +142,7 @@ public class RoutineCreateAdapter
 		switch(viewTypes.get(position).getType()){
 			case HEADER_TYPE:
 				return true;
-			case SUB_TYPE:
+			case SET_TYPE:
 				return false;
 			default:
 				return false;
@@ -151,10 +154,8 @@ public class RoutineCreateAdapter
 	{
 		// Check if the item being moved to is a sub item. If it is, then don't move the items.
 		ViewType newViewType = viewTypes.get(newPosition);
-		if(newViewType.getType() == SUB_TYPE)
-			return;
+		//if(newViewType.getType() == SET_TYPE)	return;
 		ViewType oldViewType = viewTypes.get(oldPosition);
-		Log.d(TAG, String.valueOf(oldPosition) + " to " + String.valueOf(newPosition));
 		
 		// Get the header index for both views.
 		final int oldHeaderIndex = oldViewType.getHeaderIndex();
@@ -167,10 +168,18 @@ public class RoutineCreateAdapter
 		final int oldRecyclerPosition = getHeaderPosition(oldHeaderIndex);
 		final int newRecyclerPosition = getHeaderPosition(newHeaderIndex);
 		// Swap the header positions.
+		Log.d(TAG, String.valueOf(oldPosition) + " (" + String.valueOf(oldViewType.getType()) + ") to " + String.valueOf(newPosition) + " (" + String.valueOf(newViewType.getType()) + ")");
+		
 		Collections.swap(exercisesToInclude, oldHeaderIndex, newHeaderIndex);
 		
-		notifyItemRangeChanged(oldRecyclerPosition, newRecyclerPosition
-			+ (exercisesToInclude.get(newHeaderIndex).IsExpanded() ? exercisesToInclude.get(newHeaderIndex).getSets().size() : 0));
+		// If moving from top to down, then notify change from (old position, new position + new children)
+		if(oldRecyclerPosition < newRecyclerPosition){
+			notifyItemRangeChanged(oldRecyclerPosition, newRecyclerPosition + 1 - oldRecyclerPosition
+				+ (exercisesToInclude.get(newHeaderIndex).IsExpanded() ? exercisesToInclude.get(newHeaderIndex).getSets().size() : 0));
+		}else{ // else, notify from (new position, old position + old children)
+			notifyItemRangeChanged(newRecyclerPosition, oldRecyclerPosition + 1 - newRecyclerPosition
+				+ (exercisesToInclude.get(oldHeaderIndex).IsExpanded() ? exercisesToInclude.get(oldHeaderIndex).getSets().size() : 0));
+		}
 	}
 	
 	@Override
@@ -202,7 +211,7 @@ public class RoutineCreateAdapter
 				
 				break;
 			
-			case SUB_TYPE:
+			case SET_TYPE:
 				// Get the sub item's header position within the recycler view.
 				final int headerPos = getHeaderPosition(headerIndex);
 				// Get the child's index within the header group.
@@ -285,6 +294,31 @@ public class RoutineCreateAdapter
 			public boolean onTouch(View view, MotionEvent motionEvent)
 			{
 				if(motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN){
+					/* // This was supposed to replace all expanded items with uncollapsed version when dragging.
+					// This caused an error because we startDrag(holder) at the end, but uncollapsing the items
+					// caused the holder to be inconsistent while the items were being updated.
+					Integer minimumIndexToCollapse = null;
+					Integer maximumIndexToCollapse = null;
+					for(int i = 0; i<exercisesToInclude.size(); i++)
+					{
+						if(minimumIndexToCollapse == null && exercisesToInclude.get(i).IsExpanded()){
+							minimumIndexToCollapse = i;
+						}
+						if(exercisesToInclude.get(i).IsExpanded())
+						{
+							maximumIndexToCollapse = i;
+							exercisesToInclude.get(i).IsExpanded(false);
+						}
+					}
+					
+					if(minimumIndexToCollapse != null) // implicitly, maximumIndexToCollapse is not null as well.
+					{
+						int minimumPositionToCollapse = getHeaderPosition(minimumIndexToCollapse);
+						int maximumPositionToCollapse = getHeaderPosition(maximumIndexToCollapse)
+							+ exercisesToInclude.get(maximumIndexToCollapse).getSets().size();
+						notifyItemRangeChanged(minimumPositionToCollapse, maximumPositionToCollapse - minimumPositionToCollapse + 1);
+					}
+					*/
 					touchHelper.startDrag(holder);
 				}
 				return false;
@@ -318,25 +352,21 @@ public class RoutineCreateAdapter
 	private void onHeaderClick(int pos)
 	{
 		ViewType viewType = viewTypes.get(pos);
-		int headerIndex = viewType.getHeaderIndex(); // Get the position of the header clicked.
+		final int headerIndex = viewType.getHeaderIndex(); // Get the position of the header clicked.
+		final int headerPosition = getHeaderPosition(headerIndex);
 		RoutineExerciseHelper headerItem = exercisesToInclude.get(headerIndex);
 		List<SessionExerciseSet> sets = headerItem.getSets();
-		int childCount = sets.size();
+		final int childCount = sets.size();
 		
 		if(!headerItem.IsExpanded()){
 			// Is currently collapsed. Need to expand.
 			headerItem.IsExpanded(true);
-			notifyItemRangeInserted(pos + 1, childCount);
+			notifyItemRangeInserted(headerPosition + 1, childCount);
 		}else{
 			// Is currently expanded. Need to collapse.
 			headerItem.IsExpanded(false);
-			notifyItemRangeRemoved(pos + 1, childCount);
+			notifyItemRangeRemoved(headerPosition + 1, childCount);
 		}
-	}
-	
-	private boolean isExpanded(int position)
-	{
-		return exercisesToInclude.get(position).IsExpanded();
 	}
 	
 	public void addExercise(@NonNull Exercise ex)
@@ -352,7 +382,7 @@ public class RoutineCreateAdapter
 		int currentSize = exercisesToInclude.size();
 		for(Exercise e : ex){
 			List<SessionExerciseSet> sets = new ArrayList<>();
-			sets.add(new SessionExerciseSet());
+			sets.add(new SessionExerciseSet()); // [TODO] this is dummy data. Remove later.
 			sets.add(new SessionExerciseSet());
 			
 			exercisesToInclude.add(new RoutineExerciseHelper(e, sets, false));

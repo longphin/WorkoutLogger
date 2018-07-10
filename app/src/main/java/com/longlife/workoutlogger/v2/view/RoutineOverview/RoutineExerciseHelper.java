@@ -14,11 +14,6 @@ public class RoutineExerciseHelper
 	private List<SessionExerciseSet> sets = new ArrayList<>();
 	private boolean isExpanded = false;
 	
-	public RoutineExerciseHelper(Exercise ex)
-	{
-		exercise = ex;
-	}
-	
 	public RoutineExerciseHelper(Exercise ex, List<SessionExerciseSet> sets, boolean isExpanded)
 	{
 		this.exercise = ex;
