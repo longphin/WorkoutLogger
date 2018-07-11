@@ -42,12 +42,6 @@ public class RoutineCreateViewHolder
 		return viewForeground;
 	}
 	
-	@Override
-	public ImageView getDeleteIcon()
-	{
-		return deleteIcon;
-	}
-	
 	// Getters
 	public TextView getDescripTextView(){return descrip;}
 
