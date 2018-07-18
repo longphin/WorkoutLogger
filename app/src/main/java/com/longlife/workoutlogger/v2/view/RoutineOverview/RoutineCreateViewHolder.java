@@ -16,7 +16,8 @@ public class RoutineCreateViewHolder
 	private RelativeLayout viewBackground;
 	private ConstraintLayout viewForeground;
 	private TextView descrip;
-	private ImageView deleteIcon;
+	private ImageView upButton;
+	private ImageView downButton;
 	
 	public RoutineCreateViewHolder(View itemView)
 	{
@@ -26,7 +27,8 @@ public class RoutineCreateViewHolder
 		this.viewForeground = itemView.findViewById(R.id.foreground_routine_create_exercise);
 		this.viewBackground = itemView.findViewById(R.id.background_routine_create_exercise);
 		this.descrip = itemView.findViewById(R.id.txt_routinecreate_exerciseDescrip);
-		this.deleteIcon = itemView.findViewById(R.id.ic_delete_item);
+		this.upButton = itemView.findViewById(R.id.imv_moveExerciseUp);
+		this.downButton = itemView.findViewById(R.id.imv_moveExerciseDown);
 	}
 	
 	// Overrides
@@ -43,6 +45,10 @@ public class RoutineCreateViewHolder
 	}
 	
 	// Getters
+	public ImageView getDownButton(){return downButton;}
+	
+	public ImageView getUpButton(){return upButton;}
+	
 	public TextView getDescripTextView(){return descrip;}
 
 	// Setters

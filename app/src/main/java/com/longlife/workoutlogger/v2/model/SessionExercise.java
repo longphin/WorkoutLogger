@@ -2,6 +2,7 @@ package com.longlife.workoutlogger.v2.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -37,6 +38,13 @@ public class SessionExercise
 	public SessionExercise()
 	{
 	
+	}
+	
+	@Ignore
+	public SessionExercise(int idExercise, int idRoutineSession)
+	{
+		this.idExercise = idExercise;
+		this.idRoutineSession = idRoutineSession;
 	}
 	
 	// Getters

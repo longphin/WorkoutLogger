@@ -119,27 +119,9 @@ public class RoutineCreateAdapter
 		*/
 	}
 	// Getters
-	// Methods
-	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
-	private int getItemType(int position)
-	{
-		int count = 0;
-		
-		for(RoutineExerciseHelper reh : exercisesToInclude){
-			if(count >= position)
-				return HEADER_TYPE;
-			
-			count += 1;
-			if(reh.IsExpanded()){
-				count += reh.getSets().size();
-				if(count >= position)
-					return SET_TYPE;
-			}
-		}
-		
-		return 0;
-	}
+	public static int getHeaderTypeEnum(){return HEADER_TYPE;}
 	
+	// Methods
 	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
 	private int getHeaderIndex(int position)
 	{
@@ -150,13 +132,13 @@ public class RoutineCreateAdapter
 			if(count >= position)
 				return headerCount;
 			
-			count += 1;
-			
 			if(reh.IsExpanded()){
+				
 				count += reh.getSets().size();
 				if(count >= position)
 					return headerCount;
 			}
+			count += 1;
 			
 			headerCount += 1;
 		}
@@ -172,11 +154,12 @@ public class RoutineCreateAdapter
 		int count = 0;
 		if(exercisesToInclude != null){
 			for(int i = 0; i < headerIndex; i++){
-				count += 1;
 				RoutineExerciseHelper headerItem = exercisesToInclude.get(i);
 				if(headerItem.IsExpanded()){
+					
 					count += headerItem.getSets().size();
 				}
+				count += 1;
 			}
 		}
 		return count;
@@ -207,6 +190,28 @@ public class RoutineCreateAdapter
 		};
 		((RoutineCreateViewHolder)holder).getDescripTextView().setOnClickListener(clickSet);
 		
+		((RoutineCreateViewHolder)holder).getUpButton().setOnClickListener(new View.OnClickListener()
+		{
+			// Overrides
+			@Override
+			public void onClick(View view)
+			{
+				int pos = holder.getAdapterPosition();
+				moveHeaderUp(getHeaderIndex(pos));
+			}
+		});
+		
+		((RoutineCreateViewHolder)holder).getDownButton().setOnClickListener(new View.OnClickListener()
+		{
+			// Overrides
+			@Override
+			public void onClick(View view)
+			{
+				int pos = holder.getAdapterPosition();
+				moveHeaderDown(getHeaderIndex(pos));
+			}
+		});
+		
 		final Exercise exercise = headerItem.getExercise();
 		StringBuilder sbName = new StringBuilder(100);
 		sbName.append(exercise.getName())
@@ -215,6 +220,37 @@ public class RoutineCreateAdapter
 			.append(")");
 		
 		((RoutineCreateViewHolder)holder).setNameText(sbName.toString());
+	}
+	
+	private void moveHeaderUp(int headerIndex)
+	{
+		if(headerIndex == 0)
+			return;
+		Collections.swap(exercisesToInclude, headerIndex, headerIndex - 1);
+		notifyItemMoved(headerIndex, headerIndex - 1);
+	}
+	
+	private void moveHeaderDown(int headerIndex)
+	{
+		if(headerIndex >= exercisesToInclude.size() - 1)
+			return;
+		Collections.swap(exercisesToInclude, headerIndex, headerIndex + 1);
+		notifyItemMoved(headerIndex, headerIndex + 1);
+	}
+	
+	private void printElements()
+	{
+		int count = 0;
+		for(int i = 0; i < exercisesToInclude.size(); i++){
+			Log.d(TAG, String.valueOf(count) + ": " + exercisesToInclude.get(i).getExercise().getName() + ") " + (getItemType(count) == HEADER_TYPE ? "Head" : "   Set"));
+			count += 1;
+			if(exercisesToInclude.get(i).IsExpanded()){
+				for(int j = 0; j < exercisesToInclude.get(i).getSets().size(); j++){
+					Log.d(TAG, "-->" + String.valueOf(count) + ") " + (getItemType(count) == HEADER_TYPE ? "Head" : "   Set"));
+					count += 1;
+				}
+			}
+		}
 	}
 	
 	private void bindSubViewHolder(@NonNull RecyclerView.ViewHolder holder, int position)
@@ -272,12 +308,27 @@ public class RoutineCreateAdapter
 		notifyItemRangeInserted(currentSize + 1, ex.size());
 	}
 	
-	public void removeExerciseAtPosition(int pos)
+	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
+	public int getItemType(int position)
 	{
-		exercisesToInclude.remove(pos);
-		notifyItemRemoved(pos);
+		int count = 0;
 		
-		printElements();
+		for(RoutineExerciseHelper reh : exercisesToInclude){
+			if(count >= position)
+				return HEADER_TYPE;
+			
+			if(reh.IsExpanded()){
+				
+				
+				count += reh.getSets().size();
+				if(count >= position)
+					return SET_TYPE;
+			}
+			count += 1;
+			
+		}
+		
+		return 0;
 	}
 	
 	// "Undo" the temporary delete of an exercise.
@@ -348,19 +399,45 @@ public class RoutineCreateAdapter
 		return true;
 	}
 	
-	public void printElements()
+	public void removeExerciseAtPosition(int pos)
+	{
+		final int childSize = exercisesToInclude.get(pos).getSets().size();
+		exercisesToInclude.remove(pos);
+		//notifyItemRemoved(pos);
+		notifyItemRangeRemoved(pos, childSize + 1);
+		
+		printElements();
+	}
+	
+	public void removeItemAtPosition(int position)
 	{
 		int count = 0;
-		for(int i = 0; i < exercisesToInclude.size(); i++){
-			Log.d(TAG, String.valueOf(count) + ") " + (getItemType(count) == HEADER_TYPE ? "Head" : "   Set"));
-			count += 1;
-			if(exercisesToInclude.get(i).IsExpanded()){
-				for(int j = 0; j < exercisesToInclude.get(i).getSets().size(); j++){
-					Log.d(TAG, "-->" + String.valueOf(count) + ") " + (getItemType(count) == HEADER_TYPE ? "Head" : "   Set"));
+		
+		for(RoutineExerciseHelper reh : exercisesToInclude){
+			if(count == position){
+				removeExerciseAtPosition(position);
+				return;
+			}
+			
+			if(reh.IsExpanded()){
+				for(int j = 0; j < reh.getSets().size(); j++){
 					count += 1;
+					if(count == position){
+						notifyItemRemoved(position);
+						reh.getSets().remove(j);
+						return;
+					}
 				}
 			}
+			count += 1;
 		}
+		
+		printElements();
+	}
+	
+	public RoutineExerciseHelper getHeaderAtPosition(int position)
+	{
+		return exercisesToInclude.get(getHeaderIndex(position));
 	}
 	
 	

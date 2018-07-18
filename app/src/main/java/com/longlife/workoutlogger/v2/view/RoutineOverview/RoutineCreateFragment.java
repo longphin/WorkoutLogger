@@ -137,24 +137,31 @@ public class RoutineCreateFragment
 		if(viewHolder instanceof RecyclerViewHolderSwipeable){
 			int position = viewHolder.getAdapterPosition();
 			
-			// get the removed item name to display it in snack bar
-			List<RoutineExerciseHelper> exercises = adapter.getRoutineExercises();
-			String name = exercises.get(position).getExercise().getName();
+			int swipedItemType = adapter.getItemType(position);
 			
-			// backup of removed item for undo purpose
-			final RoutineExerciseHelper deletedItem = exercises.get(position);
-			final int deletedIndex = position;
-			
-			// remove the item from recycler view
-			adapter.removeExerciseAtPosition(position); // [TODO] this remove does not update the position?
-			adapter.notifyItemRemoved(position);
-			
-			// showing snack bar with Undo option
-			Snackbar snackbar = Snackbar
-				.make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
-			snackbar.setAction("UNDO", view -> adapter.restoreExercise(deletedItem, deletedIndex));
-			snackbar.setActionTextColor(Color.YELLOW);
-			snackbar.show();
+			if(swipedItemType == RoutineCreateAdapter.getHeaderTypeEnum()){
+				// get the removed item name to display it in snack bar
+				/*
+				List<RoutineExerciseHelper> exercises = adapter.getRoutineExercises();
+				String name = exercises.get(position).getExercise().getName();
+				*/
+				// backup of removed item for undo purpose
+				final RoutineExerciseHelper deletedItem = adapter.getHeaderAtPosition(position);
+				final int deletedIndex = position;
+				String name = deletedItem.getExercise().getName();
+				
+				// remove the item from recycler view
+				adapter.removeExerciseAtPosition(position);
+				
+				// showing snack bar with Undo option
+				Snackbar snackbar = Snackbar
+					.make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
+				snackbar.setAction("UNDO", view -> adapter.restoreExercise(deletedItem, deletedIndex));
+				snackbar.setActionTextColor(Color.YELLOW);
+				snackbar.show();
+			}else{
+				adapter.removeItemAtPosition(position);
+			}
 		}
 	}
 	
@@ -166,16 +173,20 @@ public class RoutineCreateFragment
 		int toPosition = target.getAdapterPosition();
 		
 		if(fromPosition < adapter.getItemCount() && toPosition < adapter.getItemCount()){
+			
+			boolean swapWasDone = false;
+			
 			if(fromPosition < toPosition){
 				for(int i = fromPosition; i < toPosition; i++){
-					adapter.swap(i, i + 1);
+					swapWasDone = swapWasDone || adapter.swap(i, i + 1);
 				}
 			}else{
 				for(int i = fromPosition; i > toPosition; i--){
-					adapter.swap(i, i - 1);
+					swapWasDone = swapWasDone || adapter.swap(i, i - 1);
 				}
 			}
-			adapter.notifyItemMoved(fromPosition, toPosition);
+			if(swapWasDone)
+				adapter.notifyItemMoved(fromPosition, toPosition);
 		}
 		return true;
 	}
@@ -183,7 +194,7 @@ public class RoutineCreateFragment
 	@Override
 	public boolean isLongPressDragEnabled()
 	{
-		return true;
+		return false;
 	}
 	
 	@Override

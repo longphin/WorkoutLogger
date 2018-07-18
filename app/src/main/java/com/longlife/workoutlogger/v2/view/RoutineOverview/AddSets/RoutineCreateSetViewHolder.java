@@ -2,6 +2,7 @@ package com.longlife.workoutlogger.v2.view.RoutineOverview.AddSets;
 
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.longlife.workoutlogger.R;
@@ -12,6 +13,8 @@ public class RoutineCreateSetViewHolder
 {
 	private RelativeLayout viewBackground;
 	private ConstraintLayout viewForeground;
+	private ImageView upButton;
+	private ImageView downButton;
 	
 	public RoutineCreateSetViewHolder(View itemView)
 	{

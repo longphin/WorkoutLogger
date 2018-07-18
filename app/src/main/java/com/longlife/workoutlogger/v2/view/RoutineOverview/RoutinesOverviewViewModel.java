@@ -7,7 +7,6 @@ import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.Routine;
 import com.longlife.workoutlogger.v2.model.comparators.RoutineComparators;
-import com.longlife.workoutlogger.v2.utils.Conversions;
 import com.longlife.workoutlogger.v2.utils.Response;
 
 import java.util.Collections;
@@ -114,7 +113,7 @@ public class RoutinesOverviewViewModel
 		);
 	}
 	
-	public void insertRoutine(Routine ro)
+/*	public void insertRoutine(Routine ro)
 	{
 		disposables.add(
 			repo.insertRoutine(ro)
@@ -139,7 +138,7 @@ public class RoutinesOverviewViewModel
 					throwable -> insertResponse.setError(throwable)
 				)
 		);
-	}
+	}*/
 	
 	// Reference: Ala Hammad - https://medium.com/@alahammad/database-with-room-using-rxjava-764ee6124974
 	public void deleteRoutine(Routine ro)

@@ -71,10 +71,50 @@ public class Repository
 	///
 	/// INSERT methods
 	///
-	public Flowable<Long> insertRoutine(Routine routine)
+/*	public Long insertRoutine(Routine routine)
 	{
-		return Flowable.fromCallable(() -> routineDao.insertRoutine(routine));
+		return Flowable.fromCallable(() -> routineDao.insertRoutine(routine))
+			.map(idRoutine -> routineDao.insertRoutineSession(idRoutine));
+		Long idRoutine = routineDao.insertRoutine(routine);
+		RoutineSession routineSession = new RoutineSession(idRoutine);
+		return routineDao.insertRoutineSession(routineSession);
 	}
+	
+	private Flowable<Long> insertRoutineSession(RoutineSession rs)
+	{
+		//return Flowable.fromCallable(() -> routineDao.insertRoutineSession(rs));
+		return Flowable.just(1L); // idRoutineSession = 1
+	}
+	private Flowable<Long> insertSessionExercise(SessionExercise se)
+	{
+		return Flowable.just(2L);
+	}
+	private Flowable<List<SessionExercise>> insertSessionExercises(List<SessionExercise> se, Long idRoutineSession)
+	{
+		return Flowable.fromIterable(se)
+			.map(sessionExercise -> {
+				sessionExercise.setIdRoutineSession(idRoutineSession);
+				return sessionExercise;
+			})
+			.toList()
+			.toFlowable();
+	}
+	private Flowable<List<RoutineExerciseHelper>> insertRoutineExerciseHelpers(List<RoutineExerciseHelper> reh, Long idRoutineSession)
+	{
+		return Flowable.fromIterable(reh)
+			.map(routineExerciseHelper -> routineExerciseHelper.)
+	}
+	// return long
+	private Flowable<Long> insertRoutineSessionHelpers(ArrayList<RoutineExerciseHelper> reh, List<SessionExercise> se)
+	{
+		return
+			// Insert routine -> idRoutine
+			insertRoutine(new Routine())//[TODO]
+			// Insert routineSession.setIdRoutine(idRoutine) -> idRoutineSession
+			.flatMap((Long idRoutine) -> insertRoutineSession(new RoutineSession(idRoutine)))
+			.flatMapIterable((Long idRoutineSession) -> insertRoutineSessionHelpers(reh, idRoutineSession))
+
+	}*/
 	
 	public Flowable<Long> insertExercise(Exercise exercise)
 	{
