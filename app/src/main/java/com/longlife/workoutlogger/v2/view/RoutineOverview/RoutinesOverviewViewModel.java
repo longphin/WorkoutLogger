@@ -7,6 +7,7 @@ import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.Routine;
 import com.longlife.workoutlogger.v2.model.comparators.RoutineComparators;
+import com.longlife.workoutlogger.v2.utils.Conversions;
 import com.longlife.workoutlogger.v2.utils.Response;
 
 import java.util.Collections;
@@ -113,10 +114,10 @@ public class RoutinesOverviewViewModel
 		);
 	}
 	
-/*	public void insertRoutine(Routine ro)
+	public void insertRoutineFull(Routine ro, List<RoutineExerciseHelper> reh)
 	{
 		disposables.add(
-			repo.insertRoutine(ro)
+			repo.insertRoutineFull(ro, reh)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.doOnSubscribe(__ -> insertResponse.setLoading())
@@ -127,7 +128,7 @@ public class RoutinesOverviewViewModel
 						// sort the list of exercises //[TODO] Set the comparator to what the user chooses
 						Collections.sort(this.routines, RoutineComparators.getDefaultComparator());
 						for(int i = 0; i < this.routines.size(); i++){
-							if(routines.get(i).getIdRoutine() == ro.getIdRoutine()){
+							if(routines.get(i).getIdRoutine() == id){
 								insertResponse.setSuccess(i);
 								return;
 							}
@@ -138,7 +139,7 @@ public class RoutinesOverviewViewModel
 					throwable -> insertResponse.setError(throwable)
 				)
 		);
-	}*/
+	}
 	
 	// Reference: Ala Hammad - https://medium.com/@alahammad/database-with-room-using-rxjava-764ee6124974
 	public void deleteRoutine(Routine ro)

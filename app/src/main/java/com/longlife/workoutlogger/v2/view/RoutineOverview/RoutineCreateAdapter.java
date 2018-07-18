@@ -22,14 +22,14 @@ public class RoutineCreateAdapter
 	extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
 	// Static
+	// Other
 	private static final String TAG = RoutineCreateAdapter.class.getSimpleName();
 	private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
 	// OnClick callback to the parent fragment.
 	private AdapterCallback callback;
 	private static final int HEADER_TYPE = 1;
 	private static final int SET_TYPE = 2;
-	
-	// Other
+	// Overrides
 	//private List<ViewType> viewTypes = new ArrayList<>();
 	
 	private Context context;
@@ -40,7 +40,7 @@ public class RoutineCreateAdapter
 		this.callback = callback;
 	}
 	
-	// Overrides
+	// Getters
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -118,7 +118,11 @@ public class RoutineCreateAdapter
 		}
 		*/
 	}
-	// Getters
+	
+	public List<RoutineExerciseHelper> getRoutineExerciseHelpers()
+	{
+		return exercisesToInclude;
+	}
 	public static int getHeaderTypeEnum(){return HEADER_TYPE;}
 	
 	// Methods

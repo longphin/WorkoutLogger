@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
+import com.longlife.workoutlogger.v2.model.Routine;
 import com.longlife.workoutlogger.v2.utils.AdapterCallback;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
 import com.longlife.workoutlogger.v2.utils.FragmentBase;
@@ -61,6 +62,17 @@ public class RoutineCreateFragment
 	private AutoCompleteTextView searchBox;
 	private ConstraintLayout coordinatorLayout; // layout for recycler view
 	private View mView;
+	private TextView name;
+	private TextView descrip;
+	// OnClick listener for when saving routine.
+	private View.OnClickListener onSaveClickListener = view ->
+	{
+		// [TODO] need to check if there is a name given for the routine to add.
+		Routine routineToAdd = new Routine();
+		routineToAdd.setName(name.getText().toString());
+		routineToAdd.setDescription(descrip.getText().toString());
+		routineViewModel.insertRoutineFull(routineToAdd, adapter.getRoutineExerciseHelpers());
+	};
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
 	// Other
@@ -92,6 +104,8 @@ public class RoutineCreateFragment
 		addDisposable(routineViewModel.getLoadExercisesResponse().subscribe(response -> processLoadExercisesResponse(response)));
 		// Observer to get list of exercises to add to this routine through the ExercisesOverviewFragment.
 		addDisposable(exerciseViewModel.getSelectedExercises().subscribe(response -> processSelectedExercisesResponse(response)));
+		// Observer to get when routine is successfully saved.
+		addDisposable(routineViewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
 	}
 	
 	@Nullable
@@ -101,8 +115,8 @@ public class RoutineCreateFragment
 		if(mView == null){
 			mView = inflater.inflate(R.layout.fragment_routine_create, container, false);
 			
-			TextView name = mView.findViewById(R.id.edit_routineCreateName);
-			TextView descrip = mView.findViewById(R.id.edit_routineCreateDescrip);
+			this.name = mView.findViewById(R.id.edit_routineCreateName);
+			this.descrip = mView.findViewById(R.id.edit_routineCreateDescrip);
 			Button cancelButton = mView.findViewById(R.id.btn_routineCreateCancel);
 			Button saveButton = mView.findViewById(R.id.btn_routineCreateSave);
 			Button addExerciseToRoutine = mView.findViewById(R.id.btn_addExerciseToRoutine);
@@ -120,6 +134,9 @@ public class RoutineCreateFragment
 			// OnClick add exercise.
 			addExerciseToRoutine.setOnClickListener(newView -> addExerciseToRoutine(newView)); //[TODO] remove this once all functions for adding exercise (autocomplete, search fragment, etc.) have been implemented
 			
+			// OnClick for saving routine.
+			saveButton.setOnClickListener(onSaveClickListener);
+			
 			// Search exercises image.
 			searchExercises.setOnClickListener(onSearchClickListener);
 			
@@ -128,6 +145,42 @@ public class RoutineCreateFragment
 		}
 		
 		return (mView);
+	}
+	
+	// Methods
+	// Insertion Response
+	private void processInsertResponse(Response<Integer> response)
+	{
+		switch(response.getStatus()){
+			case LOADING:
+				renderInsertLoadingState();
+				break;
+			case SUCCESS:
+				renderInsertSuccessState(response.getValue());
+				break;
+			case ERROR:
+				renderInsertErrorState(response.getError());
+				break;
+		}
+	}
+	
+	private void renderInsertLoadingState()
+	{
+		if(isAdded())
+			Log.d(TAG, "attached: loading exercises");
+		else
+			Log.d(TAG, "detached: loading exercises");
+	}
+	
+	private void renderInsertSuccessState(Integer val)
+	{
+		if(isAdded())
+			Log.d(TAG, "attached: " + val.toString());
+		else
+			Log.d(TAG, "detached: " + val.toString());
+		
+		//adapter.setExercises(viewModel.getCachedExercises());
+		adapter.notifyItemRangeChanged(val, adapter.getItemCount());//viewModel.getCachedExercises().size());
 	}
 	
 	// On Swipe for recyclerview item.
@@ -214,7 +267,11 @@ public class RoutineCreateFragment
 		return (new RoutineCreateFragment());
 	}
 	
-	// Methods
+	private void renderInsertErrorState(Throwable throwable)
+	{
+		// change anything if loading data had an error.
+		Log.d(TAG, throwable.getMessage());
+	}
 	// Process list of exercises that were selected in the searchbox fragment.
 	private void processSelectedExercisesResponse(Response<List<Exercise>> response)
 	{

@@ -2,6 +2,7 @@ package com.longlife.workoutlogger.v2.data;
 
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.Routine;
+import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutineExerciseHelper;
 
 import java.util.List;
 import java.util.Set;
@@ -115,6 +116,10 @@ public class Repository
 			.flatMapIterable((Long idRoutineSession) -> insertRoutineSessionHelpers(reh, idRoutineSession))
 
 	}*/
+	public Flowable<Long> insertRoutineFull(Routine routine, List<RoutineExerciseHelper> reh)
+	{
+		return Flowable.fromCallable(() -> routineDao.insertRoutineFull(routine, reh));
+	}
 	
 	public Flowable<Long> insertExercise(Exercise exercise)
 	{
