@@ -81,7 +81,8 @@ public class RecyclerItemTouchHelper
 	@Override
 	public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
 	{
-		final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
+		if(viewHolder instanceof RecyclerViewHolderSwipeable){
+			final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
 		/*
 		final View backgroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewBackground();
 		final ImageView backgroundDeleteIcon = ((RecyclerViewHolderSwipeable)viewHolder).getDeleteIcon();
@@ -91,9 +92,10 @@ public class RecyclerItemTouchHelper
 		if(backgroundDeleteIcon != null)
 			backgroundDeleteIcon.setImageAlpha(255);
 		*/
-		getDefaultUIUtil().clearView(foregroundView);
-		
-		super.clearView(recyclerView, viewHolder);
+			getDefaultUIUtil().clearView(foregroundView);
+			
+			super.clearView(recyclerView, viewHolder);
+		}
 	}
 	
 	@Override
@@ -103,7 +105,7 @@ public class RecyclerItemTouchHelper
 	{
 		// If swiping, then only move the foreground.
 		if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
-			if(viewHolder != null){
+			if(viewHolder != null && viewHolder instanceof RecyclerViewHolderSwipeable){
 				final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
 				
 				getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,

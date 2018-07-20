@@ -146,8 +146,42 @@ public class RoutineCreateFragment
 		
 		return (mView);
 	}
+	// On Swipe for recyclerview item.
+	@Override
+	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
+	{
+		if(viewHolder instanceof RecyclerViewHolderSwipeable){
+			int position = viewHolder.getAdapterPosition();
+			
+			int swipedItemType = adapter.getItemType(position);
+			
+			if(swipedItemType == RoutineCreateAdapter.getHeaderTypeEnum()){
+				// get the removed item name to display it in snack bar
+				/*
+				List<RoutineExerciseHelper> exercises = adapter.getRoutineExercises();
+				String name = exercises.get(position).getExercise().getName();
+				*/
+				// backup of removed item for undo purpose
+				final int deletedIndex = adapter.getHeaderIndex(position);
+				final RoutineExerciseHelper deletedItem = adapter.getHeaderAtPosition(position);
+				//final int deletedIndex = position;
+				String name = deletedItem.getExercise().getName();
+				
+				// remove the item from recycler view
+				adapter.removeExerciseAtPosition(position);
+				
+				// showing snack bar with Undo option
+				Snackbar snackbar = Snackbar
+					.make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
+				snackbar.setAction("UNDO", view -> adapter.restoreExercise(deletedItem, deletedIndex));
+				snackbar.setActionTextColor(Color.YELLOW);
+				snackbar.show();
+			}else{
+				adapter.removeItemAtPosition(position);
+			}
+		}
+	}
 	
-	// Methods
 	// Insertion Response
 	private void processInsertResponse(Response<Integer> response)
 	{
@@ -172,6 +206,7 @@ public class RoutineCreateFragment
 			Log.d(TAG, "detached: loading exercises");
 	}
 	
+	// Methods
 	private void renderInsertSuccessState(Integer val)
 	{
 		if(isAdded())
@@ -179,43 +214,8 @@ public class RoutineCreateFragment
 		else
 			Log.d(TAG, "detached: " + val.toString());
 		
-		//adapter.setExercises(viewModel.getCachedExercises());
+		//adapter.setRoutines(routineViewModel.getCachedRoutines()); //[TODO] need to set the added exercise helper that was added.
 		adapter.notifyItemRangeChanged(val, adapter.getItemCount());//viewModel.getCachedExercises().size());
-	}
-	
-	// On Swipe for recyclerview item.
-	@Override
-	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
-	{
-		if(viewHolder instanceof RecyclerViewHolderSwipeable){
-			int position = viewHolder.getAdapterPosition();
-			
-			int swipedItemType = adapter.getItemType(position);
-			
-			if(swipedItemType == RoutineCreateAdapter.getHeaderTypeEnum()){
-				// get the removed item name to display it in snack bar
-				/*
-				List<RoutineExerciseHelper> exercises = adapter.getRoutineExercises();
-				String name = exercises.get(position).getExercise().getName();
-				*/
-				// backup of removed item for undo purpose
-				final RoutineExerciseHelper deletedItem = adapter.getHeaderAtPosition(position);
-				final int deletedIndex = position;
-				String name = deletedItem.getExercise().getName();
-				
-				// remove the item from recycler view
-				adapter.removeExerciseAtPosition(position);
-				
-				// showing snack bar with Undo option
-				Snackbar snackbar = Snackbar
-					.make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
-				snackbar.setAction("UNDO", view -> adapter.restoreExercise(deletedItem, deletedIndex));
-				snackbar.setActionTextColor(Color.YELLOW);
-				snackbar.show();
-			}else{
-				adapter.removeItemAtPosition(position);
-			}
-		}
 	}
 	
 	// On drag up and down for recyclerview item.
@@ -399,7 +399,7 @@ public class RoutineCreateFragment
 		Log.d(TAG, "Number of exercises added: " + String.valueOf(ex.size()));
 		int countBefore = adapter.getItemCount();
 		adapter.addExercises(ex);
-		adapter.notifyItemRangeInserted(countBefore + 1, adapter.getItemCount());
+		adapter.notifyItemRangeInserted(countBefore + 1, countBefore + ex.size());
 	}
 	
 	// Click search exercise button

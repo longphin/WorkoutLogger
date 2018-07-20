@@ -12,6 +12,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
 import com.longlife.workoutlogger.v2.utils.AdapterCallback;
+import com.longlife.workoutlogger.v2.view.RoutineOverview.AddSets.RoutineCreateAddSetViewHolder;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.AddSets.RoutineCreateSetViewHolder;
 
 import java.util.ArrayList;
@@ -22,13 +23,14 @@ public class RoutineCreateAdapter
 	extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
 	// Static
-	// Other
+	private static final int ADD_SET_TYPE = 3;
 	private static final String TAG = RoutineCreateAdapter.class.getSimpleName();
 	private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
 	// OnClick callback to the parent fragment.
 	private AdapterCallback callback;
 	private static final int HEADER_TYPE = 1;
 	private static final int SET_TYPE = 2;
+	// Other
 	// Overrides
 	//private List<ViewType> viewTypes = new ArrayList<>();
 	
@@ -39,8 +41,6 @@ public class RoutineCreateAdapter
 		this.context = context;
 		this.callback = callback;
 	}
-	
-	// Getters
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -53,6 +53,9 @@ public class RoutineCreateAdapter
 			case SET_TYPE:
 				v = LayoutInflater.from(this.context).inflate(R.layout.item_routine_create_exercise_set, parent, false);
 				return new RoutineCreateSetViewHolder(v);
+			case ADD_SET_TYPE:
+				v = LayoutInflater.from(this.context).inflate(R.layout.item_routine_create_add_set, parent, false);
+				return new RoutineCreateAddSetViewHolder(v);
 			default:
 				v = LayoutInflater.from(this.context).inflate(R.layout.item_routine_create_exercise, parent, false);
 				return new RoutineCreateViewHolder(v);
@@ -66,20 +69,24 @@ public class RoutineCreateAdapter
 		//ViewType viewType = viewTypes.get(position);
 		
 		if(holder instanceof RoutineCreateViewHolder){
-			bindHeaderViewHolder(holder, position);
+			bindHeaderViewHolder((RoutineCreateViewHolder)holder, position);
+			return;
 		}
 		if(holder instanceof RoutineCreateSetViewHolder){
 			bindSubViewHolder(holder, position);
+			return;
+		}
+		if(holder instanceof RoutineCreateAddSetViewHolder){
+			bindAddSetViewHolder(holder, position);
+			return;
 		}
 	}
-	
+
 	@Override
 	public int getItemCount()
 	{
 		int count = 0; // This is a count of the current item's position in the recyclerview.
 		if(exercisesToInclude != null){
-			//viewTypes.clear();
-			int collapsedCount = 0;
 			for(int i = 0; i < exercisesToInclude.size(); i++){
 				//viewTypes.add(count, new ViewType(i, HEADER_TYPE, i));//put(count, new ViewType(i, HEADER_TYPE));
 				count += 1;
@@ -94,14 +101,14 @@ public class RoutineCreateAdapter
 						//viewTypes.add(count, new ViewType(count - (i + 1) + collapsedCount, SET_TYPE, i));
 						count += 1;
 					}
-				}else{
-					// Collapsed, keep track of children skipped.
-					collapsedCount += childCount;
+					count += 1; // Add 1 more for the "add set" view.
 				}
 			}
 		}
 		return count;
 	}
+	
+	// Getters
 	
 	@Override
 	public int getItemViewType(int position)
@@ -124,32 +131,8 @@ public class RoutineCreateAdapter
 		return exercisesToInclude;
 	}
 	public static int getHeaderTypeEnum(){return HEADER_TYPE;}
-	
 	// Methods
 	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
-	private int getHeaderIndex(int position)
-	{
-		int count = 0; // Keeps track of the iterator count for visible items.
-		int headerCount = 0; // Keeps track of the header position.
-		
-		for(RoutineExerciseHelper reh : exercisesToInclude){
-			if(count >= position)
-				return headerCount;
-			
-			if(reh.IsExpanded()){
-				
-				count += reh.getSets().size();
-				if(count >= position)
-					return headerCount;
-			}
-			count += 1;
-			
-			headerCount += 1;
-		}
-		
-		return -1; // Should be unreachable.
-	}
-	
 	private int getHeaderPosition(int headerIndex)
 	{
 		if(headerIndex == 0)
@@ -162,6 +145,8 @@ public class RoutineCreateAdapter
 				if(headerItem.IsExpanded()){
 					
 					count += headerItem.getSets().size();
+					
+					count += 1; // add 1 for "add" view
 				}
 				count += 1;
 			}
@@ -169,7 +154,12 @@ public class RoutineCreateAdapter
 		return count;
 	}
 	
-	private void bindHeaderViewHolder(@NonNull RecyclerView.ViewHolder holder, int position)
+	private void bindAddSetViewHolder(@NonNull RecyclerView.ViewHolder holder, int position)
+	{
+	
+	}
+	
+	private void bindHeaderViewHolder(@NonNull RoutineCreateViewHolder holder, int position)
 	{
 		final int headerIndex = getHeaderIndex(position);
 		final RoutineExerciseHelper headerItem = exercisesToInclude.get(headerIndex);
@@ -192,29 +182,42 @@ public class RoutineCreateAdapter
 				Log.d(TAG, String.valueOf(pos) + " Clicked");
 			}
 		};
-		((RoutineCreateViewHolder)holder).getDescripTextView().setOnClickListener(clickSet);
+		holder.getNameTextView().setOnClickListener(clickSet);
 		
-		((RoutineCreateViewHolder)holder).getUpButton().setOnClickListener(new View.OnClickListener()
-		{
-			// Overrides
-			@Override
-			public void onClick(View view)
+		// Add on click listener to move a header up.
+		if(headerIndex > 0){ // Only add the click listener when it is not the first item.
+			holder.getUpButton().setOnClickListener(new View.OnClickListener()
 			{
-				int pos = holder.getAdapterPosition();
-				moveHeaderUp(getHeaderIndex(pos));
-			}
-		});
+				// Overrides
+				@Override
+				public void onClick(View view)
+				{
+					int pos = holder.getAdapterPosition();
+					moveHeaderUp(getHeaderIndex(pos));
+				}
+			});
+		}else if(headerIndex == 0){
+			// [TODO] if the item is the first item, hide the up arrow. holder.hideUpArrow()
+		}else{
+			throw new IndexOutOfBoundsException("Header index " + String.valueOf(headerIndex) + " not valid.");
+		}
 		
-		((RoutineCreateViewHolder)holder).getDownButton().setOnClickListener(new View.OnClickListener()
-		{
-			// Overrides
-			@Override
-			public void onClick(View view)
+		if(headerIndex < exercisesToInclude.size() - 1){
+			holder.getDownButton().setOnClickListener(new View.OnClickListener()
 			{
-				int pos = holder.getAdapterPosition();
-				moveHeaderDown(getHeaderIndex(pos));
-			}
-		});
+				// Overrides
+				@Override
+				public void onClick(View view)
+				{
+					int pos = holder.getAdapterPosition();
+					moveHeaderDown(getHeaderIndex(pos));
+				}
+			});
+		}else if(headerIndex == exercisesToInclude.size() - 1){
+			// [TODO] if item is the last item, hide the down arrow. holder.hideDownArrow()
+		}else{
+			throw new ArrayIndexOutOfBoundsException("Header index " + String.valueOf(headerIndex) + " not valid.");
+		}
 		
 		final Exercise exercise = headerItem.getExercise();
 		StringBuilder sbName = new StringBuilder(100);
@@ -223,7 +226,27 @@ public class RoutineCreateAdapter
 			.append(exercise.getIdExercise())
 			.append(")");
 		
-		((RoutineCreateViewHolder)holder).setNameText(sbName.toString());
+		holder.setNameText(sbName.toString());
+	}
+	
+	private void onHeaderClick(int pos)
+	{
+		//ViewType viewType = viewTypes.get(pos);
+		final int headerIndex = getHeaderIndex(pos); // Get the position of the header clicked.
+		final int headerPosition = getHeaderPosition(headerIndex);
+		RoutineExerciseHelper headerItem = exercisesToInclude.get(headerIndex);
+		List<SessionExerciseSet> sets = headerItem.getSets();
+		final int childCount = sets.size();
+		
+		if(!headerItem.IsExpanded()){
+			// Is currently collapsed. Need to expand.
+			headerItem.IsExpanded(true);
+			notifyItemRangeInserted(headerPosition + 1, childCount + 1);
+		}else{
+			// Is currently expanded. Need to collapse.
+			headerItem.IsExpanded(false);
+			notifyItemRangeRemoved(headerPosition + 1, childCount + 1);
+		}
 	}
 	
 	private void moveHeaderUp(int headerIndex)
@@ -242,21 +265,6 @@ public class RoutineCreateAdapter
 		notifyItemMoved(headerIndex, headerIndex + 1);
 	}
 	
-	private void printElements()
-	{
-		int count = 0;
-		for(int i = 0; i < exercisesToInclude.size(); i++){
-			Log.d(TAG, String.valueOf(count) + ": " + exercisesToInclude.get(i).getExercise().getName() + ") " + (getItemType(count) == HEADER_TYPE ? "Head" : "   Set"));
-			count += 1;
-			if(exercisesToInclude.get(i).IsExpanded()){
-				for(int j = 0; j < exercisesToInclude.get(i).getSets().size(); j++){
-					Log.d(TAG, "-->" + String.valueOf(count) + ") " + (getItemType(count) == HEADER_TYPE ? "Head" : "   Set"));
-					count += 1;
-				}
-			}
-		}
-	}
-	
 	private void bindSubViewHolder(@NonNull RecyclerView.ViewHolder holder, int position)
 	{
 	
@@ -267,26 +275,29 @@ public class RoutineCreateAdapter
 		return exercisesToInclude;
 	}
 	
-	private void onHeaderClick(int pos)
+	public int getHeaderIndex(int position)
 	{
-		//ViewType viewType = viewTypes.get(pos);
-		final int headerIndex = getHeaderIndex(pos); // Get the position of the header clicked.
-		final int headerPosition = getHeaderPosition(headerIndex);
-		RoutineExerciseHelper headerItem = exercisesToInclude.get(headerIndex);
-		List<SessionExerciseSet> sets = headerItem.getSets();
-		final int childCount = sets.size();
+		int count = 0; // Keeps track of the iterator count for visible items.
+		int headerCount = 0; // Keeps track of the header position.
 		
-		if(!headerItem.IsExpanded()){
-			// Is currently collapsed. Need to expand.
-			headerItem.IsExpanded(true);
-			notifyItemRangeInserted(headerPosition + 1, childCount);
-		}else{
-			// Is currently expanded. Need to collapse.
-			headerItem.IsExpanded(false);
-			notifyItemRangeRemoved(headerPosition + 1, childCount);
+		for(RoutineExerciseHelper reh : exercisesToInclude){
+			if(count >= position)
+				return headerCount;
+			
+			if(reh.IsExpanded()){
+				
+				count += reh.getSets().size();
+				if(count >= position)
+					return headerCount;
+				
+				count += 1; // add 1 for "add" view
+			}
+			count += 1; // go to next header
+			
+			headerCount += 1;
 		}
 		
-		printElements();
+		return -1; // Should be unreachable.
 	}
 	
 	public void addExercise(@NonNull Exercise ex)
@@ -295,8 +306,6 @@ public class RoutineCreateAdapter
 		sets.add(new SessionExerciseSet());
 		sets.add(new SessionExerciseSet());
 		exercisesToInclude.add(new RoutineExerciseHelper(ex, sets, false));
-		
-		printElements();
 	}
 	
 	public void addExercises(List<Exercise> ex)
@@ -323,13 +332,15 @@ public class RoutineCreateAdapter
 			
 			if(reh.IsExpanded()){
 				
-				
 				count += reh.getSets().size();
 				if(count >= position)
 					return SET_TYPE;
+				
+				count += 1;
+				if(count >= position)
+					return ADD_SET_TYPE;
 			}
-			count += 1;
-			
+			count += 1;// go to next header
 		}
 		
 		return 0;
@@ -341,36 +352,13 @@ public class RoutineCreateAdapter
 		ex.IsExpanded(false);
 		exercisesToInclude.add(headerIndex, ex);
 		notifyItemInserted(getHeaderPosition(headerIndex));
-		
-		printElements();
 	}
-	
-	/*
-	public void swap(int toPosition, int fromPosition)
-	{
-		ViewType newViewType = viewTypes.get(toPosition);
-		if(newViewType.getType() == SET_TYPE)	return;
-		ViewType oldViewType = viewTypes.get(fromPosition);
-		
-		// Get the header index for both views.
-		final int oldHeaderIndex = oldViewType.getHeaderIndex();
-		final int newHeaderIndex = newViewType.getHeaderIndex();
-		// If the headers are the same, then we do not need to move the items.
-		if(oldHeaderIndex == newHeaderIndex)
-			return;
-		
-		Collections.swap(exercisesToInclude, newHeaderIndex, oldHeaderIndex);
-		//notifyItemMoved(toPosition, fromPosition);
-	}
-	*/
-	
-	// [TODO] this is causing the drag move to stop sometimes?
 	
 	public boolean swap(int toPosition, int fromPosition)
 	{
 		// Check if the item being moved to is a sub item. If it is, then don't move the items.
 		int newItemType = getItemType(toPosition);
-		if(newItemType == SET_TYPE)
+		if(newItemType != HEADER_TYPE)
 			return false;
 		int oldItemType = getItemType(fromPosition);
 		//ViewType oldViewType = viewTypes.get(fromPosition);
@@ -386,7 +374,7 @@ public class RoutineCreateAdapter
 		final int oldRecyclerPosition = getHeaderPosition(oldHeaderIndex); //[TODO] can probably just use fromPosition
 		final int newRecyclerPosition = getHeaderPosition(newHeaderIndex); // [TODO] can probably just use toPosition
 		// Swap the header positions.
-		Log.d(TAG, String.valueOf(fromPosition) + " (" + String.valueOf(oldItemType == HEADER_TYPE ? "HEADER" : "SET") + ") to " + String.valueOf(toPosition) + " (" + String.valueOf(newItemType == HEADER_TYPE ? "HEADER" : "SET") + ")");
+		Log.d(TAG, String.valueOf(fromPosition) + " (" + String.valueOf(oldItemType == HEADER_TYPE ? "HEADER" : (oldItemType == SET_TYPE ? "SET" : "add")) + ") to " + String.valueOf(toPosition) + " (" + String.valueOf(newItemType == HEADER_TYPE ? "HEADER" : (newItemType == SET_TYPE ? "SET" : "add")) + ")");
 		
 		Collections.swap(exercisesToInclude, oldHeaderIndex, newHeaderIndex);
 		
@@ -403,20 +391,22 @@ public class RoutineCreateAdapter
 		return true;
 	}
 	
-	public void removeExerciseAtPosition(int pos)
+	public void removeExerciseAtPosition(int position)
 	{
-		final int childSize = exercisesToInclude.get(pos).getSets().size();
-		exercisesToInclude.remove(pos);
-		//notifyItemRemoved(pos);
-		notifyItemRangeRemoved(pos, childSize + 1);
+		final int headerIndex = getHeaderIndex(position);
+		final int childSize = exercisesToInclude.get(headerIndex).getSets().size();
 		
-		printElements();
+		if(exercisesToInclude.get(headerIndex).IsExpanded()){
+			notifyItemRangeRemoved(position, childSize + 1 + 1);
+		}else{
+			notifyItemRemoved(position);
+		}
+		exercisesToInclude.remove(headerIndex);
 	}
 	
 	public void removeItemAtPosition(int position)
 	{
 		int count = 0;
-		
 		for(RoutineExerciseHelper reh : exercisesToInclude){
 			if(count == position){
 				removeExerciseAtPosition(position);
@@ -432,11 +422,10 @@ public class RoutineCreateAdapter
 						return;
 					}
 				}
+				count += 1; // add "add" view
 			}
-			count += 1;
+			count += 1; // go to next header
 		}
-		
-		printElements();
 	}
 	
 	public RoutineExerciseHelper getHeaderAtPosition(int position)
