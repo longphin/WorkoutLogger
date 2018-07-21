@@ -21,8 +21,6 @@ public class RoutineNameDialog
 	public static final String TAG = RoutineNameDialog.class.getSimpleName();
 	private EditText name;
 	private EditText descrip;
-	private Button saveButton;
-	private Button cancelButton;
 	public OnInputListener onInputListener;
 	// Other
 	String nameText;
@@ -37,13 +35,13 @@ public class RoutineNameDialog
 		
 		this.name = mView.findViewById(R.id.et_name);
 		this.descrip = mView.findViewById(R.id.et_descrip);
-		this.cancelButton = mView.findViewById(R.id.btn_cancel);
-		this.saveButton = mView.findViewById(R.id.btn_save);
+		Button cancelButton = mView.findViewById(R.id.btn_cancel);
+		Button saveButton = mView.findViewById(R.id.btn_save);
 		
 		// User does not want to save name.
-		this.cancelButton.setOnClickListener(view -> getDialog().dismiss());
+		cancelButton.setOnClickListener(view -> getDialog().dismiss());
 		
-		this.saveButton.setOnClickListener(view ->
+		saveButton.setOnClickListener(view ->
 		{
 			String inputName = this.name.getText().toString();
 			String inputDescrip = this.descrip.getText().toString();
@@ -62,7 +60,6 @@ public class RoutineNameDialog
 		
 		// Set initial focus.
 		this.name.requestFocus();
-		//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		
 		return mView;
