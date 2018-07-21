@@ -31,5 +31,4 @@ public class RoutinesViewHolder
 		this.descrip.setText(s);
 	}
 }
-// [TODO] need to implement
 // Inner Classes

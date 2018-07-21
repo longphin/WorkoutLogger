@@ -48,7 +48,8 @@ import javax.inject.Inject;
 
 public class RoutineCreateFragment
 	extends FragmentBase
-	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdapterCallback
+	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdapterCallback,
+						 RoutineNameDialog.OnInputListener
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
 	private RoutinesOverviewViewModel routineViewModel;
@@ -63,19 +64,12 @@ public class RoutineCreateFragment
 	private ConstraintLayout coordinatorLayout; // layout for recycler view
 	private View mView;
 	private TextView name;
-	private TextView descrip;
-	// OnClick listener for when saving routine.
-	private View.OnClickListener onSaveClickListener = view ->
-	{
-		// [TODO] need to check if there is a name given for the routine to add.
-		Routine routineToAdd = new Routine();
-		routineToAdd.setName(name.getText().toString());
-		routineToAdd.setDescription(descrip.getText().toString());
-		routineViewModel.insertRoutineFull(routineToAdd, adapter.getRoutineExerciseHelpers());
-	};
+	// Other
+	
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
-	// Other
+	//private TextView descrip;
+	String descrip;
 	@Inject
 	Context context;
 	
@@ -116,10 +110,9 @@ public class RoutineCreateFragment
 			mView = inflater.inflate(R.layout.fragment_routine_create, container, false);
 			
 			this.name = mView.findViewById(R.id.edit_routineCreateName);
-			this.descrip = mView.findViewById(R.id.edit_routineCreateDescrip);
+			//this.descrip = mView.findViewById(R.id.edit_routineCreateDescrip);
 			Button cancelButton = mView.findViewById(R.id.btn_routineCreateCancel);
 			Button saveButton = mView.findViewById(R.id.btn_routineCreateSave);
-			Button addExerciseToRoutine = mView.findViewById(R.id.btn_addExerciseToRoutine);
 			searchBox = mView.findViewById(R.id.txt_routineexercisecreate_searchBox);
 			searchBox.setOnItemClickListener(onItemClickListener);
 			ImageView searchExercises = mView.findViewById(R.id.btn_searchExercises);
@@ -131,11 +124,25 @@ public class RoutineCreateFragment
 			// OnClick cancel button.
 			cancelButton.setOnClickListener(view -> ((BaseActivity)getActivity()).onBackPressedCustom(view));
 			
-			// OnClick add exercise.
-			addExerciseToRoutine.setOnClickListener(newView -> addExerciseToRoutine(newView)); //[TODO] remove this once all functions for adding exercise (autocomplete, search fragment, etc.) have been implemented
+			// OnClick listener to change the routine name and description. Opens up a dialog fragment for user to change the values.
+			name.setOnClickListener(view ->
+			{
+				RoutineNameDialog dialog = RoutineNameDialog.newInstance(this.name.getText().toString(), this.descrip);
+				dialog.show(getChildFragmentManager(), RoutineNameDialog.TAG);
+			});
 			
 			// OnClick for saving routine.
-			saveButton.setOnClickListener(onSaveClickListener);
+			saveButton.setOnClickListener(view ->
+			{
+				if(!this.name.getText().equals("")){
+					Routine routineToAdd = new Routine();
+					routineToAdd.setName(name.getText().toString());
+					routineToAdd.setDescription(descrip);//descrip.getText().toString());
+					routineViewModel.insertRoutineFull(routineToAdd, adapter.getRoutineExerciseHelpers());
+				}else{
+					Log.d(TAG, "Routine needs a name"); // [TODO] pop up a message that says it needs a name.
+				}
+			});
 			
 			// Search exercises image.
 			searchExercises.setOnClickListener(onSearchClickListener);
@@ -146,6 +153,7 @@ public class RoutineCreateFragment
 		
 		return (mView);
 	}
+	
 	// On Swipe for recyclerview item.
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
@@ -206,7 +214,12 @@ public class RoutineCreateFragment
 			Log.d(TAG, "detached: loading exercises");
 	}
 	
-	// Methods
+	@Override
+	public void sendInput(String name, String descrip)
+	{
+		this.name.setText(name);
+		this.descrip = descrip;
+	}
 	private void renderInsertSuccessState(Integer val)
 	{
 		if(isAdded())
@@ -427,5 +440,7 @@ public class RoutineCreateFragment
 		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, ExercisesOverviewFragment.TAG, ExercisesOverviewFragment.TAG);
 		*/
 	}
+	
+	// Methods
 }
 // Inner Classes

@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.CycleInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,12 +43,14 @@ public class ExerciseCreateFragment
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
 	
+	// Overrides
+	
 	public ExerciseCreateFragment()
 	{
 		// Required empty public constructor
 	}
 	
-	// Overrides
+	// Methods
 	@Override
 	public void onDestroy()
 	{
@@ -93,8 +97,35 @@ public class ExerciseCreateFragment
 	{
 		return (new ExerciseCreateFragment());
 	}
+	private void checkFieldsBeforeInsert()
+	{
+		Exercise newExercise = new Exercise();
+		newExercise.setName(name.getText().toString());
+		newExercise.setDescription(descrip.getText().toString());
+		
+		// Check if required fields were set.
+		try{
+			if(Validator.validateForNulls(newExercise)){
+				//Log.d(TAG, "Validations Successful");
+			}
+		}catch(RequiredFieldException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException e){
+			//e.printStackTrace();
+			
+			if(isAdded()){
+				this.name.startAnimation(shakeError());
+				Toast.makeText(context,
+					getResources().getString(R.string.requiredFieldsMissing),
+					//MyApplication.getStringResource(MyApplication.requiredFieldsMissing),
+					Toast.LENGTH_SHORT
+				)
+					.show();
+			}
+			return;
+		}
+		
+		viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
+	}
 	
-	// Methods
 	///
 	/// INSERT EXERCISE RENDERING
 	///
@@ -113,32 +144,14 @@ public class ExerciseCreateFragment
 		}
 	}
 	
-	private void checkFieldsBeforeInsert()
+	// Shake animation when invalid input is given.
+	// Reference vishal-wadhwa @ StackOverflow: https://stackoverflow.com/questions/15401658/vibration-of-edittext-in-android
+	public TranslateAnimation shakeError()
 	{
-		Exercise newExercise = new Exercise();
-		newExercise.setName(name.getText().toString());
-		newExercise.setDescription(descrip.getText().toString());
-		
-		// Check if required fields were set.
-		try{
-			if(Validator.validateForNulls(newExercise)){
-				//Log.d(TAG, "Validations Successful");
-			}
-		}catch(RequiredFieldException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException e){
-			//e.printStackTrace();
-			
-			if(isAdded()){
-				Toast.makeText(context,
-					getResources().getString(R.string.requiredFieldsMissing),
-					//MyApplication.getStringResource(MyApplication.requiredFieldsMissing),
-					Toast.LENGTH_SHORT
-				)
-					.show();
-			}
-			return;
-		}
-		
-		viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
+		TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
+		shake.setDuration(500);
+		shake.setInterpolator(new CycleInterpolator(7));
+		return shake;
 	}
 	
 	private void renderSuccessState(Integer id)

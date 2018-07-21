@@ -72,7 +72,9 @@ public abstract class RoutineDao
 		// Insert routine.
 		Long idRoutine = insertRoutine(r);
 		// Insert routine session using the new routine id.
-		Long idRoutineSession = insertRoutineSession(new RoutineSession(Conversions.safeLongToInt(idRoutine)));
+		RoutineSession routineSessionToAdd = new RoutineSession();
+		routineSessionToAdd.setIdRoutine(Conversions.safeLongToInt(idRoutine));
+		Long idRoutineSession = insertRoutineSession(routineSessionToAdd);
 		// Insert exercises for the session using the new session.
 		for(int i = 0; i < reh.size(); i++){
 			//seArray[i] = new SessionExercise(reh.get(i).getExercise().getIdExercise(), idRoutineSession);

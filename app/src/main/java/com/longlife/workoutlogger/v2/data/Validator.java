@@ -3,6 +3,7 @@ package com.longlife.workoutlogger.v2.data;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
+// This class will validate an object, checking for the @Required annotation for required fields
 public class Validator
 {
 	

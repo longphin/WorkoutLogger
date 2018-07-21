@@ -18,7 +18,6 @@ public class RoutinesOverviewActivity
 	private RoutinesOverviewViewModel viewModel;
 	
 	// Overrides
-	// [TODO] remove
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{

@@ -33,11 +33,6 @@ public class RoutineSession
 	
 	}
 	
-	public RoutineSession(int idRoutine)
-	{
-		this.idRoutine = idRoutine;
-	}
-	
 	// Getters
 	public int getIdRoutine()
 	{
