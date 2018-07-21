@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.SessionExerciseSet;
-import com.longlife.workoutlogger.v2.utils.AdapterCallback;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.AddSets.RoutineCreateAddSetViewHolder;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.AddSets.RoutineCreateSetViewHolder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,21 +26,17 @@ public class RoutineCreateAdapter
 	private static final int ADD_SET_TYPE = 3;
 	private static final String TAG = RoutineCreateAdapter.class.getSimpleName();
 	private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
-	// OnClick callback to the parent fragment.
-	private AdapterCallback callback;
 	private static final int HEADER_TYPE = 1;
 	private static final int SET_TYPE = 2;
 	// Other
-	// Overrides
-	//private List<ViewType> viewTypes = new ArrayList<>();
 	
 	private Context context;
 	
-	public RoutineCreateAdapter(Context context, AdapterCallback callback)
+	public RoutineCreateAdapter(Context context)
 	{
 		this.context = context;
-		this.callback = callback;
 	}
+	
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -81,57 +77,64 @@ public class RoutineCreateAdapter
 			return;
 		}
 	}
-
+	
+	// Overrides
 	@Override
 	public int getItemCount()
 	{
 		int count = 0; // This is a count of the current item's position in the recyclerview.
 		if(exercisesToInclude != null){
-			for(int i = 0; i < exercisesToInclude.size(); i++){
-				//viewTypes.add(count, new ViewType(i, HEADER_TYPE, i));//put(count, new ViewType(i, HEADER_TYPE));
-				count += 1;
-				
-				RoutineExerciseHelper headerItem = exercisesToInclude.get(i);
-				List<SessionExerciseSet> sets = headerItem.getSets();
-				int childCount = sets.size();
-				
-				if(headerItem.IsExpanded()){
-					// Expanded, count the children and add the children to viewTypes.
-					for(int j = 0; j < childCount; j++){
-						//viewTypes.add(count, new ViewType(count - (i + 1) + collapsedCount, SET_TYPE, i));
-						count += 1;
-					}
-					count += 1; // Add 1 more for the "add set" view.
+			count += exercisesToInclude.size(); // Headers count.
+			
+			for(RoutineExerciseHelper reh : exercisesToInclude){
+				if(reh.IsExpanded()){
+					count += reh.getSets().size(); // Sets count for each header.
+					count += 1; // Add 1 more for the "add set" button view.
 				}
 			}
 		}
 		return count;
 	}
 	
-	// Getters
-	
 	@Override
+	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
 	public int getItemViewType(int position)
 	{
-		return getItemType(position);
-		/*
-		switch(viewTypes.get(position).getType()){
-			case HEADER_TYPE:
+		int count = 0;
+		
+		for(RoutineExerciseHelper reh : exercisesToInclude){
+			if(count >= position)
 				return HEADER_TYPE;
-			case SET_TYPE:
-				return SET_TYPE;
-			default:
-				return HEADER_TYPE;
+			
+			if(reh.IsExpanded()){
+				count += reh.getSets().size();
+				if(count >= position)
+					return SET_TYPE;
+				
+				count += 1;
+				if(count >= position)
+					return ADD_SET_TYPE;
+			}
+			count += 1; // Iterate to next header.
 		}
-		*/
+		
+		return 0;
 	}
+	
+	// Getters
 	
 	public List<RoutineExerciseHelper> getRoutineExerciseHelpers()
 	{
 		return exercisesToInclude;
 	}
+	
 	public static int getHeaderTypeEnum(){return HEADER_TYPE;}
-	// Methods
+	
+	// [TODO] remove
+	public List<RoutineExerciseHelper> getRoutineExercises()
+	{
+		return exercisesToInclude;
+	}
 	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
 	private int getHeaderPosition(int headerIndex)
 	{
@@ -159,6 +162,7 @@ public class RoutineCreateAdapter
 	
 	}
 	
+	// Methods
 	private void bindHeaderViewHolder(@NonNull RoutineCreateViewHolder holder, int position)
 	{
 		final int headerIndex = getHeaderIndex(position);
@@ -186,32 +190,20 @@ public class RoutineCreateAdapter
 		
 		// Add on click listener to move a header up.
 		if(headerIndex > 0){ // Only add the click listener when it is not the first item.
-			holder.getUpButton().setOnClickListener(new View.OnClickListener()
-			{
-				// Overrides
-				@Override
-				public void onClick(View view)
-				{
-					int pos = holder.getAdapterPosition();
-					moveHeaderUp(getHeaderIndex(pos));
-				}
+			// Overrides
+			holder.getUpButton().setOnClickListener(view -> {
+				int pos = holder.getAdapterPosition();
+				moveHeaderUp(getHeaderIndex(pos));
 			});
-		}else if(headerIndex == 0){
-			// [TODO] if the item is the first item, hide the up arrow. holder.hideUpArrow()
 		}else{
-			throw new IndexOutOfBoundsException("Header index " + String.valueOf(headerIndex) + " not valid.");
+			// [TODO] if the item is the first item, hide the up arrow. holder.hideUpArrow()
 		}
 		
 		if(headerIndex < exercisesToInclude.size() - 1){
-			holder.getDownButton().setOnClickListener(new View.OnClickListener()
-			{
-				// Overrides
-				@Override
-				public void onClick(View view)
-				{
-					int pos = holder.getAdapterPosition();
-					moveHeaderDown(getHeaderIndex(pos));
-				}
+			// Overrides
+			holder.getDownButton().setOnClickListener(view -> {
+				int pos = holder.getAdapterPosition();
+				moveHeaderDown(getHeaderIndex(pos));
 			});
 		}else if(headerIndex == exercisesToInclude.size() - 1){
 			// [TODO] if item is the last item, hide the down arrow. holder.hideDownArrow()
@@ -229,40 +221,40 @@ public class RoutineCreateAdapter
 		holder.setNameText(sbName.toString());
 	}
 	
-	private void onHeaderClick(int pos)
+	// When header is clicked, expand or collapse header.
+	private void onHeaderClick(int headerPos)
 	{
-		//ViewType viewType = viewTypes.get(pos);
-		final int headerIndex = getHeaderIndex(pos); // Get the position of the header clicked.
-		final int headerPosition = getHeaderPosition(headerIndex);
+		final int headerIndex = getHeaderIndex(headerPos); // Get the index of the header clicked.
 		RoutineExerciseHelper headerItem = exercisesToInclude.get(headerIndex);
-		List<SessionExerciseSet> sets = headerItem.getSets();
-		final int childCount = sets.size();
+		final int childCount = headerItem.getSets().size();
 		
 		if(!headerItem.IsExpanded()){
 			// Is currently collapsed. Need to expand.
 			headerItem.IsExpanded(true);
-			notifyItemRangeInserted(headerPosition + 1, childCount + 1);
+			notifyItemRangeInserted(headerPos + 1, childCount + 1); // childCount+1: The +1 is for the "add set" button view.
 		}else{
 			// Is currently expanded. Need to collapse.
 			headerItem.IsExpanded(false);
-			notifyItemRangeRemoved(headerPosition + 1, childCount + 1);
+			notifyItemRangeRemoved(headerPos + 1, childCount + 1); // childCount+1: The +1 is for the "add set" button view.
 		}
 	}
 	
+	// Move header up.
 	private void moveHeaderUp(int headerIndex)
 	{
 		if(headerIndex == 0)
 			return;
-		Collections.swap(exercisesToInclude, headerIndex, headerIndex - 1);
-		notifyItemMoved(headerIndex, headerIndex - 1);
+		
+		moveHeader(headerIndex - 1, headerIndex);
 	}
 	
+	// Move header down.
 	private void moveHeaderDown(int headerIndex)
 	{
 		if(headerIndex >= exercisesToInclude.size() - 1)
 			return;
-		Collections.swap(exercisesToInclude, headerIndex, headerIndex + 1);
-		notifyItemMoved(headerIndex, headerIndex + 1);
+		
+		moveHeader(headerIndex, headerIndex + 1);
 	}
 	
 	private void bindSubViewHolder(@NonNull RecyclerView.ViewHolder holder, int position)
@@ -270,11 +262,24 @@ public class RoutineCreateAdapter
 	
 	}
 	
-	public List<RoutineExerciseHelper> getRoutineExercises()
+	// Helper for moving header up or down.
+	// topHeaderIndex is the item higher in the recyclerview (lower adapter position),
+	// bottomHeaderIndex is the item lower in the recyclerview (higher adapter position).
+	private void moveHeader(int topHeaderIndex, int bottomHeaderIndex)
 	{
-		return exercisesToInclude;
+		final int topHeaderPos = getHeaderPosition(topHeaderIndex);
+		final int bottomHeaderPos = getHeaderPosition(bottomHeaderIndex);
+		final int bottomChildren = exercisesToInclude.get(bottomHeaderIndex).getSets().size();
+		Collections.swap(exercisesToInclude, topHeaderIndex, bottomHeaderIndex);
+		
+		final int rangeAffected = bottomHeaderPos - topHeaderPos
+			+ (exercisesToInclude.get(bottomHeaderIndex).IsExpanded() ? bottomChildren : 0) // If the bottom is expanded, we need to include the children as the bottom-most item affected.
+			+ 1; // Include the bottom-most "add set" button view.
+		notifyItemRangeChanged(topHeaderPos, rangeAffected);
 	}
 	
+	// Get the header position given the recyclerview position.
+	// Since some sub items take up adapter positions, this needs to iterate to see if headers are expanded.
 	public int getHeaderIndex(int position)
 	{
 		int count = 0; // Keeps track of the iterator count for visible items.
@@ -300,68 +305,42 @@ public class RoutineCreateAdapter
 		return -1; // Should be unreachable.
 	}
 	
-	public void addExercise(@NonNull Exercise ex)
-	{
-		List<SessionExerciseSet> sets = new ArrayList<>();
-		sets.add(new SessionExerciseSet());
-		sets.add(new SessionExerciseSet());
-		exercisesToInclude.add(new RoutineExerciseHelper(ex, sets, false));
-	}
-	
+	// Insert a list of exercises.
 	public void addExercises(List<Exercise> ex)
 	{
-		int currentSize = exercisesToInclude.size();
+		final int currentSize = getItemCount(); // This is the recyclerview position that the items will be inserted after.
+
 		for(Exercise e : ex){
-			List<SessionExerciseSet> sets = new ArrayList<>();
-			sets.add(new SessionExerciseSet()); // [TODO] this is dummy data. Remove later.
-			sets.add(new SessionExerciseSet());
-			
-			exercisesToInclude.add(new RoutineExerciseHelper(e, sets, false));
+			exercisesToInclude.add(
+				new RoutineExerciseHelper(e,
+					//sets,
+					new ArrayList<>(Arrays.asList(new SessionExerciseSet())), // Each added exercise has 1 session exercise set by default.
+					true
+				)
+			); // Each added exercise will be expanded by default with 1 set.
 		}
-		notifyItemRangeInserted(currentSize + 1, ex.size());
-	}
-	
-	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
-	public int getItemType(int position)
-	{
-		int count = 0;
-		
-		for(RoutineExerciseHelper reh : exercisesToInclude){
-			if(count >= position)
-				return HEADER_TYPE;
-			
-			if(reh.IsExpanded()){
-				
-				count += reh.getSets().size();
-				if(count >= position)
-					return SET_TYPE;
-				
-				count += 1;
-				if(count >= position)
-					return ADD_SET_TYPE;
-			}
-			count += 1;// go to next header
-		}
-		
-		return 0;
+		notifyItemRangeInserted(currentSize, 3 * ex.size()); // 3*ex.size() because each exercise gets a header, a set, and a "add set" button.
 	}
 	
 	// "Undo" the temporary delete of an exercise.
 	public void restoreExercise(RoutineExerciseHelper ex, int headerIndex)
 	{
-		ex.IsExpanded(false);
 		exercisesToInclude.add(headerIndex, ex);
-		notifyItemInserted(getHeaderPosition(headerIndex));
+		// Number of items restored.
+		final int itemsRestored = ex.IsExpanded()
+			? ex.getSets().size() + 2 // +2 for the header and for the "add set" button view.
+			: 1; // else, only 1 for the header
+		notifyItemRangeInserted(getHeaderPosition(headerIndex), itemsRestored);
 	}
 	
+	// Attempts to swap two items in the recyclerview. If the items cannot be swapped.
+	// i.e. cannot swap header with a set. If the items cannot be swapped, return false. Else return true.
 	public boolean swap(int toPosition, int fromPosition)
 	{
 		// Check if the item being moved to is a sub item. If it is, then don't move the items.
-		int newItemType = getItemType(toPosition);
+		int newItemType = getItemViewType(toPosition);
 		if(newItemType != HEADER_TYPE)
 			return false;
-		int oldItemType = getItemType(fromPosition);
-		//ViewType oldViewType = viewTypes.get(fromPosition);
 		
 		// Get the header index for both views.
 		final int oldHeaderIndex = getHeaderIndex(fromPosition);
@@ -370,49 +349,40 @@ public class RoutineCreateAdapter
 		if(oldHeaderIndex == newHeaderIndex)
 			return false;
 		
-		// Get the position of the headers for the recycler view.
-		final int oldRecyclerPosition = getHeaderPosition(oldHeaderIndex); //[TODO] can probably just use fromPosition
-		final int newRecyclerPosition = getHeaderPosition(newHeaderIndex); // [TODO] can probably just use toPosition
 		// Swap the header positions.
-		Log.d(TAG, String.valueOf(fromPosition) + " (" + String.valueOf(oldItemType == HEADER_TYPE ? "HEADER" : (oldItemType == SET_TYPE ? "SET" : "add")) + ") to " + String.valueOf(toPosition) + " (" + String.valueOf(newItemType == HEADER_TYPE ? "HEADER" : (newItemType == SET_TYPE ? "SET" : "add")) + ")");
-		
 		Collections.swap(exercisesToInclude, oldHeaderIndex, newHeaderIndex);
 		
-		// If moving from top to down, then notify change from (old position, new position + new children)
-		/*
-		if(oldRecyclerPosition < newRecyclerPosition){
-			notifyItemRangeChanged(oldRecyclerPosition, newRecyclerPosition + 1 - oldRecyclerPosition
-				+ (exercisesToInclude.get(newHeaderIndex).IsExpanded() ? exercisesToInclude.get(newHeaderIndex).getSets().size() : 0));
-		}else{ // else, notify from (new position, old position + old children)
-			notifyItemRangeChanged(newRecyclerPosition, oldRecyclerPosition + 1 - newRecyclerPosition
-				+ (exercisesToInclude.get(oldHeaderIndex).IsExpanded() ? exercisesToInclude.get(oldHeaderIndex).getSets().size() : 0));
-		}
-		*/
 		return true;
 	}
 	
+	// Remove exercise given the recyclerview position.
 	public void removeExerciseAtPosition(int position)
 	{
 		final int headerIndex = getHeaderIndex(position);
-		final int childSize = exercisesToInclude.get(headerIndex).getSets().size();
+		final RoutineExerciseHelper headerItem = exercisesToInclude.get(headerIndex);
+		final int childSize = headerItem.getSets().size();
 		
-		if(exercisesToInclude.get(headerIndex).IsExpanded()){
-			notifyItemRangeRemoved(position, childSize + 1 + 1);
+		if(headerItem.IsExpanded()){
+			notifyItemRangeRemoved(position, childSize + 1 + 1); // +1 for removing the header, +1 for removing the "add set" button view.
 		}else{
-			notifyItemRemoved(position);
+			notifyItemRemoved(position); // Only the header needs to be removed.
 		}
+		// Remove the header item.
 		exercisesToInclude.remove(headerIndex);
 	}
 	
+	// Remove the item from the recyclerview at a position. It can be a header item or set item.
 	public void removeItemAtPosition(int position)
 	{
 		int count = 0;
 		for(RoutineExerciseHelper reh : exercisesToInclude){
+			// Check if the deleted item was a header item, so we need to remove the entire exercise.
 			if(count == position){
 				removeExerciseAtPosition(position);
 				return;
 			}
 			
+			// Check if the deleted item may be a set item, which is only visible while expanded.
 			if(reh.IsExpanded()){
 				for(int j = 0; j < reh.getSets().size(); j++){
 					count += 1;
@@ -422,94 +392,16 @@ public class RoutineCreateAdapter
 						return;
 					}
 				}
-				count += 1; // add "add" view
+				count += 1; // Add 1 for the "add set" button view.
 			}
-			count += 1; // go to next header
+			count += 1; // Iterate to next header.
 		}
 	}
 	
+	// Return the header item at the recyclerview position.
 	public RoutineExerciseHelper getHeaderAtPosition(int position)
 	{
 		return exercisesToInclude.get(getHeaderIndex(position));
 	}
-	
-	
-	/*
-		@Override
-	public void onViewMoved(int oldPosition, int newPosition)
-	{
-		// Check if the item being moved to is a sub item. If it is, then don't move the items.
-		ViewType newViewType = viewTypes.get(newPosition);
-		//if(newViewType.getType() == SET_TYPE)	return;
-		ViewType oldViewType = viewTypes.get(oldPosition);
-		
-		// Get the header index for both views.
-		final int oldHeaderIndex = oldViewType.getHeaderIndex();
-		final int newHeaderIndex = newViewType.getHeaderIndex();
-		// If the headers are the same, then we do not need to move the items.
-		if(oldHeaderIndex == newHeaderIndex)
-			return;
-		
-		// Get the position of the headers for the recycler view.
-		final int oldRecyclerPosition = getHeaderPosition(oldHeaderIndex);
-		final int newRecyclerPosition = getHeaderPosition(newHeaderIndex);
-		// Swap the header positions.
-		Log.d(TAG, String.valueOf(oldPosition) + " (" + String.valueOf(oldViewType.getType()) + ") to " + String.valueOf(newPosition) + " (" + String.valueOf(newViewType.getType()) + ")");
-		
-		Collections.swap(exercisesToInclude, oldHeaderIndex, newHeaderIndex);
-		
-		// If moving from top to down, then notify change from (old position, new position + new children)
-		if(oldRecyclerPosition < newRecyclerPosition){
-			notifyItemRangeChanged(oldRecyclerPosition, newRecyclerPosition + 1 - oldRecyclerPosition
-				+ (exercisesToInclude.get(newHeaderIndex).IsExpanded() ? exercisesToInclude.get(newHeaderIndex).getSets().size() : 0));
-		}else{ // else, notify from (new position, old position + old children)
-			notifyItemRangeChanged(newRecyclerPosition, oldRecyclerPosition + 1 - newRecyclerPosition
-				+ (exercisesToInclude.get(oldHeaderIndex).IsExpanded() ? exercisesToInclude.get(oldHeaderIndex).getSets().size() : 0));
-		}
-	}
-	
-	@Override
-	public void onViewSwiped(int pos)
-	{
-		final int headerIndex = viewTypes.get(pos).getHeaderIndex();
-		// Get the deleted group (header and sub items).
-		final RoutineExerciseHelper item = exercisesToInclude.get(headerIndex);
-		
-		// Delete the item based on if it is a header item or a sub item.
-		switch(viewTypes.get(pos).getType()){
-			case HEADER_TYPE:
-				final String name = item.getExercise().getName();
-				
-				// If the header is expanded, then remove the sub items as well.
-				if(item.IsExpanded()){
-					notifyItemRangeRemoved(pos, 1 + item.getSets().size());
-				}else{ // else, only remove the header.
-					notifyItemRemoved(pos);
-				}
-				exercisesToInclude.remove(headerIndex);
-				
-				// Show snack bar with Undo option.
-				Snackbar snackbar = Snackbar
-					.make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
-				snackbar.setAction("UNDO", view -> restoreExercise(item, headerIndex));
-				snackbar.setActionTextColor(Color.YELLOW);
-				snackbar.show();
-				
-				break;
-			
-			case SET_TYPE:
-				// Get the sub item's header position within the recycler view.
-				final int headerPos = getHeaderPosition(headerIndex);
-				// Get the child's index within the header group.
-				final int childIndex = pos - headerPos - 1;
-				item.getSets().remove(childIndex);
-				notifyItemRemoved(pos);
-				break;
-			
-			default:
-				break;
-		}
-	}
-	 */
 }
 // Inner Classes

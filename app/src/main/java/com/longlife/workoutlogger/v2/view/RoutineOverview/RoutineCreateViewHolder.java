@@ -17,7 +17,6 @@ public class RoutineCreateViewHolder
 	private TextView name;
 	private RelativeLayout viewBackground;
 	private ConstraintLayout viewForeground;
-	private TextView descrip;
 	private ImageView upButton;
 	private ImageView downButton;
 	
@@ -28,7 +27,6 @@ public class RoutineCreateViewHolder
 		this.name = itemView.findViewById(R.id.txt_routinecreate_exerciseName);
 		this.viewForeground = itemView.findViewById(R.id.foreground_routine_create_exercise);
 		this.viewBackground = itemView.findViewById(R.id.background_routine_create_exercise);
-		this.descrip = itemView.findViewById(R.id.txt_routinecreate_exerciseDescrip);
 		this.upButton = itemView.findViewById(R.id.imv_moveExerciseUp);
 		this.downButton = itemView.findViewById(R.id.imv_moveExerciseDown);
 	}
@@ -53,8 +51,6 @@ public class RoutineCreateViewHolder
 	public ImageView getDownButton(){return downButton;}
 	
 	public ImageView getUpButton(){return upButton;}
-	
-	public TextView getDescripTextView(){return descrip;}
 
 	// Setters
 	public void setNameText(String s)

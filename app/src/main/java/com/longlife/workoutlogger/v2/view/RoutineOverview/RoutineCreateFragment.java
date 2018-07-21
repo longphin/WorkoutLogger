@@ -30,7 +30,6 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.model.Routine;
-import com.longlife.workoutlogger.v2.utils.AdapterCallback;
 import com.longlife.workoutlogger.v2.utils.BaseActivity;
 import com.longlife.workoutlogger.v2.utils.FragmentBase;
 import com.longlife.workoutlogger.v2.utils.RecyclerItemTouchHelper;
@@ -39,7 +38,6 @@ import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.StringArrayAdapter;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
-import com.longlife.workoutlogger.v2.view.RoutineOverview.AddSets.RoutineCreateExerciseSetFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +46,7 @@ import javax.inject.Inject;
 
 public class RoutineCreateFragment
 	extends FragmentBase
-	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdapterCallback,
+	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
 						 RoutineNameDialog.OnInputListener
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
@@ -68,7 +66,6 @@ public class RoutineCreateFragment
 	
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
-	//private TextView descrip;
 	String descrip;
 	@Inject
 	Context context;
@@ -161,14 +158,11 @@ public class RoutineCreateFragment
 		if(viewHolder instanceof RecyclerViewHolderSwipeable){
 			int position = viewHolder.getAdapterPosition();
 			
-			int swipedItemType = adapter.getItemType(position);
+			int swipedItemType = adapter.getItemViewType(position);
 			
 			if(swipedItemType == RoutineCreateAdapter.getHeaderTypeEnum()){
 				// get the removed item name to display it in snack bar
-				/*
-				List<RoutineExerciseHelper> exercises = adapter.getRoutineExercises();
-				String name = exercises.get(position).getExercise().getName();
-				*/
+
 				// backup of removed item for undo purpose
 				final int deletedIndex = adapter.getHeaderIndex(position);
 				final RoutineExerciseHelper deletedItem = adapter.getHeaderAtPosition(position);
@@ -269,12 +263,6 @@ public class RoutineCreateFragment
 		return true;
 	}
 	
-	@Override
-	public void onItemClicked(int position)
-	{
-		startExerciseSetFragment(position);
-	}
-	
 	public static RoutineCreateFragment newInstance()
 	{
 		return (new RoutineCreateFragment());
@@ -305,21 +293,7 @@ public class RoutineCreateFragment
 	{
 	}
 	
-	private void initializeRecyclerView()
-	{
-		//LimitedLinearLayoutManager layout = new LimitedLinearLayoutManager(context, 100);
-		//recyclerView.setLayoutManager(layout);
-		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-		adapter = new RoutineCreateAdapter(getContext(), RoutineCreateFragment.this);
-		recyclerView.setAdapter(adapter);
-		recyclerView.setItemAnimator(new DefaultItemAnimator());
-		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-		
-		// Callback to detach swipe to delete motion.
-		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT, this);
-		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-		//routineViewModel.loadExercises(); // We don't need initial data.
-	}
+	// Methods
 	
 	private void renderSelectedExercisesErrorState(Throwable error)
 	{
@@ -368,13 +342,6 @@ public class RoutineCreateFragment
 		Log.d(TAG, throwable.getMessage());
 	}
 	
-	private void addExerciseToRoutine(View v)
-	{
-		adapter.addExercise(new Exercise());
-		adapter.notifyItemInserted(adapter.getItemCount() - 1);
-		Log.d(TAG, String.valueOf(adapter.getItemCount()) + " exercises");
-	}
-	
 	// Click search exercise button
 	private void startSearchExercises()
 	{
@@ -383,11 +350,6 @@ public class RoutineCreateFragment
 		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
 		if(fragment == null){
 			fragment = ExercisesOverviewFragment.newInstance(R.id.root_routines_overview, R.layout.item_exercises_selectable, R.layout.fragment_routine_exercises_overview);
-			/*
-			fragment.setRootId(R.id.root_routines_overview);
-			fragment.setItemLayout(R.layout.item_exercises_selectable);
-			fragment.setOverviewLayout(R.layout.fragment_routine_exercises_overview);
-			*/
 		}
 		
 		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, ExercisesOverviewFragment.TAG, ExercisesOverviewFragment.TAG);
@@ -407,40 +369,26 @@ public class RoutineCreateFragment
 		transaction.commit();
 	}
 	
+	private void initializeRecyclerView()
+	{
+		//LimitedLinearLayoutManager layout = new LimitedLinearLayoutManager(context, 100);
+		//recyclerView.setLayoutManager(layout);
+		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+		adapter = new RoutineCreateAdapter(getContext());
+		recyclerView.setAdapter(adapter);
+		recyclerView.setItemAnimator(new DefaultItemAnimator());
+		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+		
+		// Callback to detach swipe to delete motion.
+		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT, this);
+		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+		//routineViewModel.loadExercises(); // We don't need initial data.
+	}
+
 	private void renderSelectedExercisesSuccessState(List<Exercise> ex)
 	{
-		Log.d(TAG, "Number of exercises added: " + String.valueOf(ex.size()));
-		int countBefore = adapter.getItemCount();
+		Log.d(TAG, "Number of exercises added: " + String.valueOf(ex.size())); // [TODO] there's an error occuring. Start researching here.
 		adapter.addExercises(ex);
-		adapter.notifyItemRangeInserted(countBefore + 1, countBefore + ex.size());
 	}
-	
-	// Click search exercise button
-	private void startExerciseSetFragment(int position)
-	{
-		FragmentManager manager = getActivity().getSupportFragmentManager();
-		RoutineCreateExerciseSetFragment fragment = (RoutineCreateExerciseSetFragment)manager.findFragmentByTag(RoutineCreateExerciseSetFragment.TAG);
-		
-		if(fragment == null){
-			RoutineExerciseHelper exerciseToAddSetsTo = adapter.getRoutineExercises().get(position);
-			fragment = RoutineCreateExerciseSetFragment.instance(exerciseToAddSetsTo.getExercise(), (ArrayList)exerciseToAddSetsTo.getSets());
-		}
-		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, RoutineCreateExerciseSetFragment.TAG, RoutineCreateExerciseSetFragment.TAG);
-		/*
-		FragmentManager manager = getActivity().getSupportFragmentManager();
-		
-		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
-		if(fragment == null){
-			fragment = ExercisesOverviewFragment.newInstance();
-			fragment.setRootId(R.id.root_routines_overview);
-			fragment.setItemLayout(R.layout.item_exercises_selectable);
-			fragment.setOverviewLayout(R.layout.fragment_routine_exercises_overview);
-		}
-		
-		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, ExercisesOverviewFragment.TAG, ExercisesOverviewFragment.TAG);
-		*/
-	}
-	
-	// Methods
 }
 // Inner Classes
