@@ -22,7 +22,7 @@ import io.reactivex.annotations.NonNull;
 
 @Entity(indices = {
 	@Index(value = {"favorited", "name"}),
-	@Index(value = {"premade", "name"}, unique = true)
+	@Index(value = {"hidden", "name"})
 }
 )
 public class Exercise
@@ -40,6 +40,8 @@ public class Exercise
 	private boolean premade;
 	
 	private boolean favorited;
+	@NonNull
+	private boolean hidden = false;
 	
 	@TypeConverters({ExerciseTypeConverter.class})
 	private ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
@@ -127,7 +129,8 @@ public class Exercise
 		return premade;
 	}
 	
-	// Overrides
+	// Overrides;
+	// Getters
 	public void setIdExercise(int val)
 	{
 		idExercise = val;
@@ -168,6 +171,8 @@ public class Exercise
 		this.name = name;
 	}
 	
+	public boolean isHidden(){return hidden;}
+	
 	@Ignore
 	@Override
 	public int describeContents()
@@ -183,8 +188,8 @@ public class Exercise
 		parcel.writeString(name);
 	}
 	
-	// Getters
 	// Setters
+	public void setHidden(boolean b){hidden = b;}
 }
 
 // Inner Classes

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/et_name"
+        android:id="@+id/et_dialog_edit_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/et_descrip"
+        android:id="@+id/et_dialog_edit_descrip"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -30,10 +30,10 @@
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_name" />
+        app:layout_constraintTop_toBottomOf="@+id/et_dialog_edit_name" />
 
     <Button
-        android:id="@+id/btn_save"
+        android:id="@+id/btn_dialog_edit_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -42,10 +42,10 @@
         android:text="@string/text_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_descrip" />
+        app:layout_constraintTop_toBottomOf="@+id/et_dialog_edit_descrip" />
 
     <Button
-        android:id="@+id/btn_cancel"
+        android:id="@+id/btn_dialog_edit_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -54,8 +54,8 @@
         android:layout_marginTop="8dp"
         android:text="@string/text_cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_save"
+        app:layout_constraintEnd_toStartOf="@+id/btn_dialog_edit_save"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_descrip" />
+        app:layout_constraintTop_toBottomOf="@+id/et_dialog_edit_descrip" />
 </android.support.constraint.ConstraintLayout>

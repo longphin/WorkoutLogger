@@ -3,7 +3,6 @@ package com.longlife.workoutlogger.v2.view.RoutineOverview;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +56,8 @@ public class RoutineCreateAdapter
 				return new RoutineCreateViewHolder(v);
 		}
 	}
-
+	
+	// Overrides
 	@Override
 	public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int pos)
 	{
@@ -69,16 +69,14 @@ public class RoutineCreateAdapter
 			return;
 		}
 		if(holder instanceof RoutineCreateSetViewHolder){
-			bindSubViewHolder(holder, position);
+			bindSubViewHolder((RoutineCreateSetViewHolder)holder, position);
 			return;
 		}
 		if(holder instanceof RoutineCreateAddSetViewHolder){
-			bindAddSetViewHolder(holder, position);
+			bindAddSetViewHolder((RoutineCreateAddSetViewHolder)holder, position);
 			return;
 		}
 	}
-	
-	// Overrides
 	@Override
 	public int getItemCount()
 	{
@@ -156,13 +154,24 @@ public class RoutineCreateAdapter
 		}
 		return count;
 	}
-	
-	private void bindAddSetViewHolder(@NonNull RecyclerView.ViewHolder holder, int position)
+	// Methods
+	private void bindAddSetViewHolder(@NonNull RoutineCreateAddSetViewHolder holder, int position)
 	{
-	
+		holder.getView().setOnClickListener(view ->
+		{
+			int pos = holder.getAdapterPosition();
+			addSet(pos);
+		});
 	}
 	
-	// Methods
+	private void addSet(int pos)
+	{
+		final int headerIndex = getHeaderIndex(pos);
+		final int childrenCount = exercisesToInclude.get(headerIndex).getSets().size();
+		exercisesToInclude.get(headerIndex).getSets().add(new SessionExerciseSet());
+		notifyItemInserted(pos + childrenCount + 1);
+	}
+
 	private void bindHeaderViewHolder(@NonNull RoutineCreateViewHolder holder, int position)
 	{
 		final int headerIndex = getHeaderIndex(position);
@@ -175,18 +184,10 @@ public class RoutineCreateAdapter
 		}
 		
 		// Listener for when the "sets" box is clicked.
-		View.OnClickListener clickSet = new View.OnClickListener()
-		{
-			// Overrides
-			@Override
-			public void onClick(View view)
-			{
-				int pos = holder.getAdapterPosition();
-				onHeaderClick(pos);
-				Log.d(TAG, String.valueOf(pos) + " Clicked");
-			}
-		};
-		holder.getNameTextView().setOnClickListener(clickSet);
+		holder.getNameTextView().setOnClickListener(view -> {
+			int pos = holder.getAdapterPosition();
+			onHeaderClick(pos);
+		});
 		
 		// Add on click listener to move a header up.
 		if(headerIndex > 0){ // Only add the click listener when it is not the first item.
@@ -257,7 +258,7 @@ public class RoutineCreateAdapter
 		moveHeader(headerIndex, headerIndex + 1);
 	}
 	
-	private void bindSubViewHolder(@NonNull RecyclerView.ViewHolder holder, int position)
+	private void bindSubViewHolder(@NonNull RoutineCreateSetViewHolder holder, int position)
 	{
 	
 	}
@@ -291,18 +292,16 @@ public class RoutineCreateAdapter
 			
 			if(reh.IsExpanded()){
 				
-				count += reh.getSets().size();
+				count += reh.getSets().size() + 1; // The +1 is for the "add set" button view.
 				if(count >= position)
 					return headerCount;
-				
-				count += 1; // add 1 for "add" view
 			}
 			count += 1; // go to next header
 			
 			headerCount += 1;
 		}
 		
-		return -1; // Should be unreachable.
+		throw new IndexOutOfBoundsException("Header not found for " + String.valueOf(position));
 	}
 	
 	// Insert a list of exercises.

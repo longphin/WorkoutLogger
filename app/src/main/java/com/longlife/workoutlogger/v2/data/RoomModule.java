@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.migration.Migration;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.v2.model.Exercise;
@@ -28,70 +27,6 @@ public class RoomModule
 	// Private
 	private final Database database;
 	private CompositeDisposable disposables = new CompositeDisposable();
-	
-	private final Migration MIGRATION_1_4 = new Migration(1, 4) //[TODO] this migration doesn't populate database either. Delete this.
-	{
-		// Overrides
-		@Override
-		public void migrate(SupportSQLiteDatabase db)
-		{
-			Observable initialRoutines = Observable.fromCallable(
-				() -> database.routineDao().insertRoutine(new Routine()))
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread());
-			
-			Observable initialExercises = Observable.fromCallable(
-				() -> database.exerciseDao().insertExercise(new Exercise()))
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread());
-			
-			DisposableObserver oInitialRoutines = new DisposableObserver<Long>()
-			{
-				// Overrides
-				@Override
-				public void onNext(@NonNull Long l)
-				{
-				}
-				
-				@Override
-				public void onError(@NonNull Throwable e)
-				{
-				}
-				
-				@Override
-				public void onComplete()
-				{
-				}
-			};
-			
-			DisposableObserver oInitialExercises = new DisposableObserver<Long>()
-			{
-				// Overrides
-				@Override
-				public void onNext(Long aLong)
-				{
-				
-				}
-				
-				@Override
-				public void onError(Throwable e)
-				{
-				
-				}
-				
-				@Override
-				public void onComplete()
-				{
-				
-				}
-			};
-			
-			initialRoutines.subscribeWith(oInitialRoutines);
-			disposables.add(oInitialRoutines);
-			initialExercises.subscribeWith(oInitialExercises);
-			disposables.add(oInitialExercises);
-		}
-	};
 	
 	public RoomModule(MyApplication application)
 	{

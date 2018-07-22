@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.v2.view.RoutineOverview;
+package com.longlife.workoutlogger.v2.view.DialogFragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,10 +15,10 @@ import android.widget.EditText;
 
 import com.longlife.workoutlogger.R;
 
-public class RoutineNameDialog
+public class EditNameDialog
 	extends DialogFragment
 {
-	public static final String TAG = RoutineNameDialog.class.getSimpleName();
+	public static final String TAG = EditNameDialog.class.getSimpleName();
 	private EditText name;
 	private EditText descrip;
 	public OnInputListener onInputListener;
@@ -31,12 +31,12 @@ public class RoutineNameDialog
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
-		View mView = inflater.inflate(R.layout.dialog_routine_name, container, false);
+		View mView = inflater.inflate(R.layout.dialog_edit_name, container, false);
 		
-		this.name = mView.findViewById(R.id.et_name);
-		this.descrip = mView.findViewById(R.id.et_descrip);
-		Button cancelButton = mView.findViewById(R.id.btn_cancel);
-		Button saveButton = mView.findViewById(R.id.btn_save);
+		this.name = mView.findViewById(R.id.et_dialog_edit_name);
+		this.descrip = mView.findViewById(R.id.et_dialog_edit_descrip);
+		Button cancelButton = mView.findViewById(R.id.btn_dialog_edit_cancel);
+		Button saveButton = mView.findViewById(R.id.btn_dialog_edit_save);
 		
 		// User does not want to save name.
 		cancelButton.setOnClickListener(view -> getDialog().dismiss());
@@ -45,7 +45,7 @@ public class RoutineNameDialog
 		{
 			String inputName = this.name.getText().toString();
 			String inputDescrip = this.descrip.getText().toString();
-			if(inputName == null || inputName.trim().length() == 0) // input was empty
+			if(inputName.trim().length() == 0) // input was empty
 			{
 				this.name.startAnimation(shakeError());
 			}else{
@@ -87,9 +87,9 @@ public class RoutineNameDialog
 		this.descripText = getArguments().getString("descrip");
 	}
 	
-	public static RoutineNameDialog newInstance(String name, String descrip)
+	public static EditNameDialog newInstance(String name, String descrip)
 	{
-		RoutineNameDialog dialog = new RoutineNameDialog();
+		EditNameDialog dialog = new EditNameDialog();
 		
 		Bundle bundle = new Bundle();
 		bundle.putString("name", name);//(name, "name");
@@ -109,7 +109,7 @@ public class RoutineNameDialog
 		return shake;
 	}
 	
-	// Interface to callback to parent fragment the entered values.
+	// Interface to callback to parent fragment the entered values. Parent must implement this to get back the value.
 	public interface OnInputListener
 	{
 		void sendInput(String name, String descrip);

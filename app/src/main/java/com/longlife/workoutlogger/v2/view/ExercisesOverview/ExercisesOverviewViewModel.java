@@ -12,6 +12,7 @@ import com.longlife.workoutlogger.v2.utils.Status;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import io.reactivex.Completable;
@@ -134,46 +135,12 @@ public class ExercisesOverviewViewModel
 								return;
 							}
 						}
-						Log.d(TAG, "Error: Could not find position of newly inserted exercise.");
-						//insertResponse.setSuccess(-1);
+						insertResponse.setError(new NoSuchElementException("Could not find position of inserted exercise."));
 					},
-					throwable -> {
-						insertResponse.setError(throwable);
-					}
+					throwable -> insertResponse.setError(throwable)
 				)
 		);
 	}
-
-	/*
-  public void clearSelectedExercises()
-	{
-		selectedIdExercises.clear();
-		printSelectedExercises();
-	}
-	public void removeSelectedExercise(int id)
-	{
-		selectedIdExercises.remove(id);
-		printSelectedExercises();
-	}
-	public boolean isIdSelected(int id)
-	{
-		return selectedIdExercises.contains(id);
-	}
-	public void addSelectedExercise(int id)
-	{
-		selectedIdExercises.add(id);
-		printSelectedExercises();
-	}
-	
-	private void printSelectedExercises()
-	{
-		Log.d(TAG, "Current selected ids");
-		for(Integer i : selectedIdExercises)
-		{
-			Log.d(TAG, String.valueOf(i));
-		}
-	}
-	*/
 	
 	// Reference: Ala Hammad - https://medium.com/@alahammad/database-with-room-using-rxjava-764ee6124974
 	public void deleteExercise(Exercise ex)

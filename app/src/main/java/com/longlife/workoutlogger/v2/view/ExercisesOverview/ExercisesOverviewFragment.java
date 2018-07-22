@@ -286,7 +286,6 @@ public class ExercisesOverviewFragment
 		Log.d(TAG, sb.toString());
 		
 		adapter.setExercises(exercises);
-		adapter.notifyDataSetChanged();
 	}
 	
 	private void renderErrorState(Throwable throwable)
@@ -311,7 +310,6 @@ public class ExercisesOverviewFragment
 			Log.d(TAG, "detached: " + val.toString());
 		
 		adapter.setExercises(viewModel.getCachedExercises());
-		adapter.notifyItemRangeChanged(val, viewModel.getCachedExercises().size());
 	}
 	
 	private void renderInsertErrorState(Throwable throwable)

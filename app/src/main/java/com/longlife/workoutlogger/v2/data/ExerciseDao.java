@@ -27,7 +27,7 @@ public interface ExerciseDao
 	///
 	/// Gets
 	///
-	@Query("SELECT * FROM Exercise")
+	@Query("SELECT * FROM Exercise WHERE hidden = 0")
 	//" ORDER BY favorited DESC, LOWER(name) ASC")
 	Flowable<List<Exercise>> getExercises();
 	
@@ -60,6 +60,10 @@ public interface ExerciseDao
 	///
 	/// Deletes
 	///
+	// [TODO] Need to check if the exercise is tied to a session, then we use setExerciseAsHidden() instead. Otherwise, we can delete.
 	@Delete
 	void deleteExercise(Exercise ex);
+	
+	@Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
+	void setExerciseAsHidden(int idExercise, int isHidden); // isHidden = 0 for hidden, 1 for not hidden
 }

@@ -23,6 +23,7 @@ import com.longlife.workoutlogger.v2.data.RequiredFieldException;
 import com.longlife.workoutlogger.v2.data.Validator;
 import com.longlife.workoutlogger.v2.model.Exercise;
 import com.longlife.workoutlogger.v2.utils.Response;
+import com.longlife.workoutlogger.v2.view.DialogFragment.EditNameDialog;
 
 import javax.inject.Inject;
 
@@ -30,11 +31,13 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class ExerciseCreateFragment
 	extends Fragment
+	implements EditNameDialog.OnInputListener
 {
 	public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
 	private ExercisesOverviewViewModel viewModel;
 	private TextView name;
-	private TextView descrip;
+	//private TextView descrip;
+	private String descrip;
 	private Button cancelButton;
 	private Button saveButton;
 	private CompositeDisposable composite = new CompositeDisposable();
@@ -42,6 +45,7 @@ public class ExerciseCreateFragment
 	public Context context; // application context
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
+	private View mView;
 	
 	// Overrides
 	
@@ -50,7 +54,33 @@ public class ExerciseCreateFragment
 		// Required empty public constructor
 	}
 	
-	// Methods
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+	{
+		if(mView == null){
+			mView = inflater.inflate(R.layout.fragment_exercise_create, container, false);
+			
+			this.name = mView.findViewById(R.id.txt_exercise_create_name);
+			this.cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
+			this.saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
+			
+			// On click listener for when canceling the exercise creation.
+			cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
+			
+			// On click listener for when to save the exercise. It first checks for valid fields.
+			saveButton.setOnClickListener(view -> checkFieldsBeforeInsert());
+			
+			// On click listener for changing the exercise name and description. Opens up a dialog fragment for user to change the values.
+			name.setOnClickListener(view ->
+			{
+				EditNameDialog dialog = EditNameDialog.newInstance(this.name.getText().toString(), this.descrip);
+				dialog.show(getChildFragmentManager(), EditNameDialog.TAG);
+			});
+		}
+		
+		return (mView);
+	}
 	@Override
 	public void onDestroy()
 	{
@@ -75,56 +105,19 @@ public class ExerciseCreateFragment
 		composite.add(viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
 	}
 	
-	@Nullable
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+	public void sendInput(String name, String descrip)
 	{
-		View v = inflater.inflate(R.layout.fragment_exercise_create, container, false);
-		
-		this.name = v.findViewById(R.id.edit_exerciseCreateName);
-		this.descrip = v.findViewById(R.id.edit_exerciseCreateDescrip);
-		this.cancelButton = v.findViewById(R.id.btn_exerciseCreateCancel);
-		this.saveButton = v.findViewById(R.id.btn_exerciseCreateSave);
-		
-		cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
-		
-		saveButton.setOnClickListener(view -> checkFieldsBeforeInsert());
-		
-		return (v);
+		this.name.setText(name);
+		this.descrip = descrip;
 	}
 	
 	public static ExerciseCreateFragment newInstance()
 	{
 		return (new ExerciseCreateFragment());
 	}
-	private void checkFieldsBeforeInsert()
-	{
-		Exercise newExercise = new Exercise();
-		newExercise.setName(name.getText().toString());
-		newExercise.setDescription(descrip.getText().toString());
-		
-		// Check if required fields were set.
-		try{
-			if(Validator.validateForNulls(newExercise)){
-				//Log.d(TAG, "Validations Successful");
-			}
-		}catch(RequiredFieldException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException e){
-			//e.printStackTrace();
-			
-			if(isAdded()){
-				this.name.startAnimation(shakeError());
-				Toast.makeText(context,
-					getResources().getString(R.string.requiredFieldsMissing),
-					//MyApplication.getStringResource(MyApplication.requiredFieldsMissing),
-					Toast.LENGTH_SHORT
-				)
-					.show();
-			}
-			return;
-		}
-		
-		viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
-	}
+	
+	// Methods
 	
 	///
 	/// INSERT EXERCISE RENDERING
@@ -203,6 +196,35 @@ public class ExerciseCreateFragment
 	public void clearDisposables()
 	{
 		composite.clear();
+	}
+	
+	private void checkFieldsBeforeInsert()
+	{
+		Exercise newExercise = new Exercise();
+		newExercise.setName(name.getText().toString());
+		newExercise.setDescription(descrip);
+		
+		// Check if required fields were set.
+		try{
+			if(Validator.validateForNulls(newExercise)){
+				//Log.d(TAG, "Validations Successful");
+			}
+		}catch(RequiredFieldException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException e){
+			//e.printStackTrace();
+			
+			if(isAdded()){
+				this.name.startAnimation(shakeError());
+				Toast.makeText(context,
+					getResources().getString(R.string.requiredFieldsMissing),
+					//MyApplication.getStringResource(MyApplication.requiredFieldsMissing),
+					Toast.LENGTH_SHORT
+				)
+					.show();
+			}
+			return;
+		}
+		
+		viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
 	}
 }
 // Inner Classes

@@ -110,13 +110,6 @@ public class ExercisesAdapter
 		
 		return (new ExercisesViewHolder(v));
 	}
-	// Convert the Set for selected id exercises to be added to a routine into a List.
-	/*
-	public List<Integer> getSelectedIdExercisesList()
-	{
-		return new ArrayList<>(selectedIdExercises);
-	}
-	*/
 	
 	// Getters
 	public Set<Integer> getSelectedIdExercisesList()
