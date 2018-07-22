@@ -15,7 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".v2.view.MainActivity">
+        <activity
+            android:name=".v2.view.MainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +28,9 @@
         </activity>
         <activity
             android:name=".view.RoutinesActivity"
-            android:parentActivityName=".v2.view.MainActivity">
+            android:configChanges="orientation"
+            android:parentActivityName=".v2.view.MainActivity"
+            android:screenOrientation="portrait">
 
             <!-- meta-data tag required to support API level 15 and lower -->
             <meta-data
@@ -33,7 +39,9 @@
         </activity>
         <activity
             android:name=".view.HistoryActivity"
-            android:parentActivityName=".v2.view.MainActivity">
+            android:configChanges="orientation"
+            android:parentActivityName=".v2.view.MainActivity"
+            android:screenOrientation="portrait">
 
             <!-- meta-data tag required to support API level 15 and lower -->
             <meta-data
@@ -42,20 +50,43 @@
         </activity>
         <activity
             android:name=".view.GoalsActivity"
-            android:parentActivityName=".v2.view.MainActivity">
+            android:configChanges="orientation"
+            android:parentActivityName=".v2.view.MainActivity"
+            android:screenOrientation="portrait">
 
             <!-- meta-data tag required to support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".v2.view.MainActivity" />
         </activity>
-        <activity android:name=".view.ExerciseActivity" />
-        <activity android:name=".view.z_RoutineActivity" />
-        <activity android:name=".view.z_SetListItemActivity" />
-        <activity android:name=".view.RoutineActivity" />
-        <activity android:name=".v2.view.RoutineOverview.RoutinesOverviewActivity" />
-        <activity android:name=".v2.view.Routine_Insert.RoutineCreateActivity" />
-        <activity android:name=".v2.view.ExercisesOverview.ExercisesOverviewActivity"></activity>
+        <activity
+            android:name=".view.ExerciseActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.z_RoutineActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.z_SetListItemActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.RoutineActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".v2.view.RoutineOverview.RoutinesOverviewActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".v2.view.Routine_Insert.RoutineCreateActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".v2.view.ExercisesOverview.ExercisesOverviewActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
