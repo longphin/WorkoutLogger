@@ -122,7 +122,7 @@ public class ExerciseCreateFragment
 	///
 	/// INSERT EXERCISE RENDERING
 	///
-	private void processInsertResponse(Response<Integer> response)
+	private void processInsertResponse(Response<ExerciseInsertHelper> response)
 	{
 		switch(response.getStatus()){
 			case LOADING:
@@ -147,13 +147,13 @@ public class ExerciseCreateFragment
 		return shake;
 	}
 	
-	private void renderSuccessState(Integer id)
+	private void renderSuccessState(ExerciseInsertHelper eih)
 	{
 		saveButton.setClickable(true);
 		if(isAdded()){
 			StringBuilder sb = new StringBuilder();
 			sb.append("inserted exercise ");
-			sb.append(id.toString());
+			sb.append(eih.getInsertPosition());
 			
 			Log.d(TAG, sb.toString());
 			

@@ -12,7 +12,6 @@ import com.longlife.workoutlogger.v2.utils.Status;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import io.reactivex.Completable;
@@ -32,14 +31,14 @@ public class ExercisesOverviewViewModel
 	private final CompositeDisposable disposables = new CompositeDisposable();
 	
 	// Observable for when inserting a new exercise.
-	private final Response<Integer> insertResponse = new Response<>();
+	private final Response<ExerciseInsertHelper> insertResponse = new Response<>();
 	// Observable for when requesting list of all exercises.
 	private final Response<List<Exercise>> loadResponse = new Response<>();
 	// Observable for when adding exercises to a routine.
 	private final Response<List<Exercise>> addExercisesToRoutine = new Response<>();
 	
 	private Repository repo;
-	private List<Exercise> exercises;
+	//private List<Exercise> exercises;
 	
 	//private Set<Integer> selectedIdExercises = new HashSet<>();
 	
@@ -60,12 +59,8 @@ public class ExercisesOverviewViewModel
 	}
 	
 	// Getters
-	public List<Exercise> getCachedExercises()
-	{
-		return exercises;
-	}
-
-	public Observable<Response<Integer>> getInsertResponse()
+	
+	public Observable<Response<ExerciseInsertHelper>> getInsertResponse()
 	{
 		return insertResponse.getObservable();
 	}
@@ -105,8 +100,8 @@ public class ExercisesOverviewViewModel
 			.subscribe((List<Exercise> ex) -> {
 					// sort the list of exercises //[TODO] Set the comparator to what the user chooses
 					Collections.sort(ex, ExerciseComparators.getDefaultComparator());
-					this.exercises = ex;
-					loadResponse.setSuccess(this.exercises);
+					//this.exercises = ex;
+					loadResponse.setSuccess(ex);
 				},
 				throwable -> loadResponse.setError(throwable)
 			)
@@ -126,16 +121,19 @@ public class ExercisesOverviewViewModel
 				.subscribe(id ->
 					{
 						ex.setIdExercise(Conversions.safeLongToInt(id));
-						this.exercises.add(ex);
+						//this.exercises.add(ex);
 						// sort the list of exercises //[TODO] Set the comparator to what the user chooses
+						/*
 						Collections.sort(this.exercises, ExerciseComparators.getDefaultComparator());
 						for(int i = 0; i < this.exercises.size(); i++){
 							if(exercises.get(i).getIdExercise() == ex.getIdExercise()){
-								insertResponse.setSuccess(i);
+								insertResponse.setSuccess(new ExerciseInsertHelper(ex, i));
 								return;
 							}
 						}
 						insertResponse.setError(new NoSuchElementException("Could not find position of inserted exercise."));
+						*/
+						insertResponse.setSuccess(new ExerciseInsertHelper(ex, 0));
 					},
 					throwable -> insertResponse.setError(throwable)
 				)
