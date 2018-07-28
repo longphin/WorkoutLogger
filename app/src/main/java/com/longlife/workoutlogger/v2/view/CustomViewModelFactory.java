@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesViewModel;
 import com.longlife.workoutlogger.v2.view.RoutineOverview.RoutinesOverviewViewModel;
 
 import javax.inject.Inject;
@@ -31,6 +32,8 @@ public class CustomViewModelFactory
 			return ((T)new RoutinesOverviewViewModel(repo));
 		}else if(modelClass.isAssignableFrom(ExercisesOverviewViewModel.class)){
 			return ((T)new ExercisesOverviewViewModel(repo));
+		}else if(modelClass.isAssignableFrom(ExercisesViewModel.class)){
+			return ((T)new ExercisesViewModel(repo));
 		}else{
 			throw new IllegalArgumentException("ViewModel not found");
 		}

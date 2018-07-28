@@ -5,12 +5,10 @@ import android.util.Log;
 
 import com.longlife.workoutlogger.v2.data.Repository;
 import com.longlife.workoutlogger.v2.model.Exercise;
-import com.longlife.workoutlogger.v2.model.comparators.ExerciseComparators;
 import com.longlife.workoutlogger.v2.utils.Conversions;
 import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.Status;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -62,6 +60,7 @@ public class ExercisesOverviewViewModel
 	
 	public Observable<Response<ExerciseInsertHelper>> getInsertResponse()
 	{
+		Log.d(TAG, "getInsertResponse");
 		return insertResponse.getObservable();
 	}
 	
@@ -84,22 +83,31 @@ public class ExercisesOverviewViewModel
 	}
 	*/
 	
-	public Observable<Response<List<Exercise>>> getLoadResponse(){return loadResponse.getObservable();}
+	public Observable<Response<List<Exercise>>> getLoadResponse()
+	{
+		Log.d(TAG, "getLoadResponse()");
+		return loadResponse.getObservable();
+	}
 	
-	public Observable<Response<List<Exercise>>> getSelectedExercises(){return addExercisesToRoutine.getObservable();}
+	public Observable<Response<List<Exercise>>> getSelectedExercises()
+	{
+		Log.d(TAG, "getSelectedExercises()");
+		return addExercisesToRoutine.getObservable();
+	}
 	
 	public void loadExercises()
 	{
+		Log.d(TAG, "loadExercises()");
 		if(loadResponse.getStatus() == Status.LOADING)
 			return;
-		
+		Log.d(TAG, "loadExercises() continued");
 		disposables.add(repo.getExercises()
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.doOnSubscribe(__ -> loadResponse.setLoading())
 			.subscribe((List<Exercise> ex) -> {
 					// sort the list of exercises //[TODO] Set the comparator to what the user chooses
-					Collections.sort(ex, ExerciseComparators.getDefaultComparator());
+					//Collections.sort(ex, ExerciseComparators.getDefaultComparator());
 					//this.exercises = ex;
 					loadResponse.setSuccess(ex);
 				},
@@ -110,9 +118,10 @@ public class ExercisesOverviewViewModel
 	
 	public void insertExercise(Exercise ex)
 	{
+		Log.d(TAG, "insertExercise()");
 		if(insertResponse.getStatus() == Status.LOADING)
 			return;
-		
+		Log.d(TAG, "insertExercise() continued");
 		disposables.add(
 			repo.insertExercise(ex)
 				.subscribeOn(Schedulers.io())
@@ -143,6 +152,7 @@ public class ExercisesOverviewViewModel
 	// Reference: Ala Hammad - https://medium.com/@alahammad/database-with-room-using-rxjava-764ee6124974
 	public void deleteExercise(Exercise ex)
 	{
+		Log.d(TAG, "deleteExercise()");
 		Completable.fromAction(() -> repo.deleteExercise(ex))
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
@@ -173,6 +183,7 @@ public class ExercisesOverviewViewModel
 	///
 	public void updateFavorite(int idExercise, boolean favorited)
 	{
+		Log.d(TAG, "updateFavorite");
 		Completable.fromAction(() -> repo.updateFavorite(idExercise, favorited))
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
@@ -200,9 +211,10 @@ public class ExercisesOverviewViewModel
 	
 	public void addExercisesToRoutine(Set<Integer> ids)
 	{
+		Log.d(TAG, "addExercisesToRoutine()");
 		if(addExercisesToRoutine.getStatus() == Status.LOADING)
 			return;
-		
+		Log.d(TAG, "addExercisesToRoutine() continued");
 		disposables.add(repo.getExerciseFromId(ids)
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())

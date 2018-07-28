@@ -73,9 +73,9 @@ public class ExercisesOverviewActivity
 	
 	public void initializeFragments()
 	{
-		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
+		ExercisesFragment fragment = (ExercisesFragment)manager.findFragmentByTag(ExercisesFragment.TAG);
 		if(fragment == null){
-			fragment = ExercisesOverviewFragment.newInstance(R.id.root_exercises_overview, R.layout.item_exercises, R.layout.fragment_exercises_overview);//(R.id.root_exercises_overview);
+			fragment = new ExercisesFragment();//ExercisesOverviewFragment.newInstance(R.id.root_exercises_overview, R.layout.item_exercises, R.layout.fragment_exercises_overview);//(R.id.root_exercises_overview);
 			/*
 			fragment.setRootId(R.id.root_exercises_overview);
 			fragment.setItemLayout(R.layout.item_exercises);
@@ -83,7 +83,7 @@ public class ExercisesOverviewActivity
 			*/
 		}
 		
-		addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesOverviewFragment.TAG);
+		addFragmentToActivity(manager, fragment, R.id.root_exercises_overview, ExercisesFragment.TAG);
 	}
 }
 // Inner Classes

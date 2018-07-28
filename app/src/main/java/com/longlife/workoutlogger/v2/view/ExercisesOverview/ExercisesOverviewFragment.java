@@ -4,12 +4,10 @@ package com.longlife.workoutlogger.v2.view.ExercisesOverview;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -47,7 +45,7 @@ public class ExercisesOverviewFragment
 	private ExercisesOverviewViewModel viewModel;
 	private RecyclerView recyclerView;
 	private ConstraintLayout coordinatorLayout; // layout for recycler view
-	private ExercisesAdapter adapter;
+	private ExercisesOverviewAdapter adapter;
 	private View mView;
 	private int rootId;
 	private int itemLayout;
@@ -58,30 +56,13 @@ public class ExercisesOverviewFragment
 	public Context context;
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
-	// Constructors
-	// Overrides
-    /*
-    public static final String rootId_TAG = "rootId";
-    private int rootId;
-    */
-	public ExercisesOverviewFragment()
-	{
-	}
 	
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		adapter.clearDisposables();
-		//clearDisposables();
-	}
-
+	// Overrides
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		
-		Log.d(TAG, "Created");
 		((MyApplication)getActivity().getApplication())
 			.getApplicationComponent()
 			.inject(this);
@@ -96,14 +77,16 @@ public class ExercisesOverviewFragment
 		
 		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
 		//addDisposable(viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
+		
+		viewModel.loadExercises();
 	}
 	
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
-		Log.d(TAG, "onCreateView");
 		if(mView == null){
+			Log.d(TAG, "onCreateView");
 			mView = inflater.inflate(overviewLayout, container, false);
 			
 			// Add listener to when the "add exercises to routine" button is selected
@@ -127,7 +110,7 @@ public class ExercisesOverviewFragment
 			coordinatorLayout = mView.findViewById(R.id.exercises_overview_layout);
 			
 			recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-			adapter = new ExercisesAdapter(viewModel, itemLayout);
+			adapter = new ExercisesOverviewAdapter(viewModel, itemLayout);
 			recyclerView.setAdapter(adapter);
 			recyclerView.setItemAnimator(new DefaultItemAnimator());
 			recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
@@ -135,56 +118,10 @@ public class ExercisesOverviewFragment
 			// Callback to detach swipe to delete motion.
 			ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
 			new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-			
-			//viewModel.loadExercises();
 		}
 		return mView;
 	}
-	
-	// On Swipe for recycler view item.
-	/*
-	@Override
-	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
-	{
-		if(viewHolder instanceof RecyclerViewHolderSwipeable){
-			int position = viewHolder.getAdapterPosition();
-			
-			// get the removed item name to display it in snack bar
-			List<Exercise> exercises = viewModel.getCachedExercises();
-			String name = exercises.get(position).getName();
-			
-			// backup of removed item for undo purpose
-			final Exercise deletedItem = exercises.get(position);
-			final int deletedIndex = position;
-			
-			// remove the item from recycler view
-			adapter.removeExercise(position);
-			
-			// showing snack bar with Undo option
-			Snackbar snackbar = Snackbar
-				.make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
-			snackbar.setAction("UNDO", view -> adapter.restoreExercise(deletedItem, deletedIndex));
-			snackbar.addCallback(new Snackbar.Callback()
-			{
-				// Overrides
-				@Override
-				public void onDismissed(Snackbar snackbar, int event)
-				{
-					// If the snackbar was dismissed via clicking the action (Undo button), then do not permanently delete the exercise.
-					if(event == Snackbar.Callback.DISMISS_EVENT_ACTION)
-						return;
-					
-					// For other dismiss events, permanently delete the exercise.
-					Log.d(TAG, "Exercise deleted permanently. " + String.valueOf(deletedItem.getIdExercise()));
-					adapter.permanentlyRemoveExercise(deletedItem.getIdExercise());
-					viewModel.deleteExercise(deletedItem);
-				}
-			});
-			snackbar.setActionTextColor(Color.YELLOW);
-			snackbar.show();
-		}
-	}
-	*/
+
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
 	{
@@ -195,9 +132,7 @@ public class ExercisesOverviewFragment
 			final Exercise deletedItem = adapter.getExercise(position);
 			final int deletedIndex = position;
 			
-			// remove the item from recycler view
-			adapter.removeExercise(position);
-			
+			/*
 			// showing snack bar with Undo option
 			Snackbar snackbar = Snackbar
 				.make(coordinatorLayout, deletedItem.getName() + " deleted.", Snackbar.LENGTH_LONG);
@@ -220,6 +155,11 @@ public class ExercisesOverviewFragment
 			});
 			snackbar.setActionTextColor(Color.YELLOW);
 			snackbar.show();
+			*/
+			
+			Log.d(TAG, "remove at " + String.valueOf(position));
+			// remove the item from recycler view
+			adapter.removeExercise(position);
 		}
 	}
 	

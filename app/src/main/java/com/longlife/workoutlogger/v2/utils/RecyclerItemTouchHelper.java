@@ -3,7 +3,6 @@ package com.longlife.workoutlogger.v2.utils;
 import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.View;
 
 // Swipe listener for recyclerview. The recyclerview must extend RecyclerViewHolderSwipeable.
 public class RecyclerItemTouchHelper
@@ -81,40 +80,37 @@ public class RecyclerItemTouchHelper
 	@Override
 	public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
 	{
-		if(viewHolder instanceof RecyclerViewHolderSwipeable){
-			final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
-		/*
-		final View backgroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewBackground();
-		final ImageView backgroundDeleteIcon = ((RecyclerViewHolderSwipeable)viewHolder).getDeleteIcon();
+		//final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
 		
-		if(backgroundView != null)
-			backgroundView.getBackground().setAlpha(255);
-		if(backgroundDeleteIcon != null)
-			backgroundDeleteIcon.setImageAlpha(255);
-		*/
-			getDefaultUIUtil().clearView(foregroundView);
+		//getDefaultUIUtil().clearView(foregroundView);
 			
 			super.clearView(recyclerView, viewHolder);
-		}
 	}
 	
+	/*	@Override
+		public void onChildDraw(Canvas c, RecyclerView recyclerView,
+			RecyclerView.ViewHolder viewHolder, float dX, float dY,
+			int actionState, boolean isCurrentlyActive)
+		{
+			// If swiping, then only move the foreground.
+			if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+				if(viewHolder != null && viewHolder instanceof RecyclerViewHolderSwipeable){
+					final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
+					
+					getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
+						actionState, isCurrentlyActive
+					);
+				}
+			}else{
+				super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+			}
+		}*/
 	@Override
 	public void onChildDraw(Canvas c, RecyclerView recyclerView,
 		RecyclerView.ViewHolder viewHolder, float dX, float dY,
 		int actionState, boolean isCurrentlyActive)
 	{
-		// If swiping, then only move the foreground.
-		if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
-			if(viewHolder != null && viewHolder instanceof RecyclerViewHolderSwipeable){
-				final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
-				
-				getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
-					actionState, isCurrentlyActive
-				);
-			}
-		}else{
-			super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-		}
+		super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 	}
 	
 	@Override
