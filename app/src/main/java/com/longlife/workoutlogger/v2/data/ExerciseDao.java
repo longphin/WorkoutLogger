@@ -65,5 +65,5 @@ public interface ExerciseDao
 	void deleteExercise(Exercise ex);
 	
 	@Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
-	void setExerciseAsHidden(int idExercise, int isHidden); // isHidden = 0 for hidden, 1 for not hidden
+	int setExerciseAsHidden(int idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
 }

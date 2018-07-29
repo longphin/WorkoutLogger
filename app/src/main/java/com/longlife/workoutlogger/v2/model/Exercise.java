@@ -13,6 +13,7 @@ import com.longlife.workoutlogger.v2.enums.ExerciseType;
 import com.longlife.workoutlogger.v2.enums.ExerciseTypeConverter;
 import com.longlife.workoutlogger.v2.enums.MeasurementType;
 import com.longlife.workoutlogger.v2.enums.MeasurementTypeConverter;
+import com.longlife.workoutlogger.v2.utils.Conversions;
 
 import io.reactivex.annotations.NonNull;
 
@@ -28,6 +29,8 @@ import io.reactivex.annotations.NonNull;
 public class Exercise
 	implements Parcelable
 {
+	// Getters
+	
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
 	private int idExercise;
@@ -130,7 +133,7 @@ public class Exercise
 	}
 	
 	// Overrides;
-	// Getters
+	// Setters
 	public void setIdExercise(int val)
 	{
 		idExercise = val;
@@ -188,7 +191,11 @@ public class Exercise
 		parcel.writeString(name);
 	}
 	
-	// Setters
+	@Ignore
+	public void setIdExercise(Long idExercise)
+	{
+		this.idExercise = Conversions.safeLongToInt(idExercise);
+	}
 	public void setHidden(boolean b){hidden = b;}
 }
 

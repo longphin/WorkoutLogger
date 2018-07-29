@@ -14,7 +14,13 @@ import java.util.List;
 public class ExercisesAdapter
 	extends RecyclerView.Adapter<ExercisesViewHolder>
 {
-	private List<Exercise> exercises = new ArrayList<>();
+	private ExercisesViewModel viewModel;
+	protected List<Exercise> exercises = new ArrayList<>();
+	
+	public ExercisesAdapter(ExercisesViewModel viewModel)
+	{
+		this.viewModel = viewModel;
+	}
 	
 	// Overrides
 	@Override
@@ -26,8 +32,9 @@ public class ExercisesAdapter
 	}
 	
 	@Override
-	public void onBindViewHolder(ExercisesViewHolder holder, int position)
+	public void onBindViewHolder(ExercisesViewHolder holder, int pos)
 	{
+		final int position = holder.getAdapterPosition();
 		Exercise ex = exercises.get(position);
 		
 		StringBuilder sbName = new StringBuilder(100);
@@ -38,6 +45,25 @@ public class ExercisesAdapter
 		
 		holder.setNameText(sbName.toString());
 		holder.setDescripText(ex.getDescription());
+		
+		if(ex.getFavorited()){
+			holder.setFavoriteIcon(R.drawable.ic_favorite_black_24dp);
+		}else{
+			holder.setFavoriteIcon(R.drawable.ic_favorite_border_black_24dp);
+		}
+		
+		holder.getFavoriteIcon().setOnClickListener(view ->
+			{
+				ex.setFavorited(!ex.getFavorited());
+				if(ex.getFavorited()){
+					holder.setFavoriteIcon(R.drawable.ic_favorite_black_24dp);
+				}else{
+					holder.setFavoriteIcon(R.drawable.ic_favorite_border_black_24dp);
+				}
+				
+				viewModel.updateFavorite(ex.getIdExercise(), ex.getFavorited());
+			}
+		);
 	}
 	
 	@Override
@@ -50,6 +76,7 @@ public class ExercisesAdapter
 	public void setExercises(List<Exercise> exercises)
 	{
 		this.exercises = exercises;
+		notifyDataSetChanged();
 	}
 	
 	public Exercise getExercise(int position)
@@ -59,13 +86,19 @@ public class ExercisesAdapter
 	
 	public void removeExercise(int position)
 	{
-		notifyItemRemoved(position);
 		exercises.remove(position);
+		notifyItemRemoved(position);
 	}
 	
 	public void restoreExercise(Exercise deletedItem, int deletedIndex)
 	{
 		exercises.add(deletedIndex, deletedItem);
 		notifyItemInserted(deletedIndex);
+	}
+	
+	public void addExercise(Exercise ex)
+	{
+		exercises.add(ex);
+		notifyItemInserted(exercises.size() - 1);
 	}
 }

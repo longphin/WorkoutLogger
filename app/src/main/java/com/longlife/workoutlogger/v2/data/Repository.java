@@ -129,6 +129,11 @@ public class Repository
 	///
 	/// DELETE methods
 	///
+	public void setExerciseAsHidden(int idExercise, boolean isHidden)
+	{
+		exerciseDao.setExerciseAsHidden(idExercise, isHidden ? 1 : 0);
+	}
+	
 	public void deleteExercise(Exercise ex)
 	{
 		exerciseDao.deleteExercise(ex);
@@ -138,5 +143,7 @@ public class Repository
 	{
 		routineDao.deleteRoutine(ro);
 	}
+	
+	//public void updateExercise(Exercise ex){exerciseDao.updateExercise(ex);}
 }
 // Inner Classes

@@ -37,8 +37,9 @@ import com.longlife.workoutlogger.v2.utils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.v2.utils.Response;
 import com.longlife.workoutlogger.v2.utils.StringArrayAdapter;
 import com.longlife.workoutlogger.v2.view.DialogFragment.EditNameDialog;
-import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewFragment;
-import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesOverviewViewModel;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesSelectableAdapter;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesSelectableFragment;
+import com.longlife.workoutlogger.v2.view.ExercisesOverview.ExercisesSelectableViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class RoutineCreateFragment
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
 	private RoutinesOverviewViewModel routineViewModel;
-	private ExercisesOverviewViewModel exerciseViewModel;
+	private ExercisesSelectableViewModel exerciseViewModel;
 	private RecyclerView recyclerView;
 	private RoutineCreateAdapter adapter;
 	// OnClick listener for when item in recyclerview is clicked.
@@ -90,12 +91,12 @@ public class RoutineCreateFragment
 			ViewModelProviders.of(getActivity(), viewModelFactory)
 				.get(RoutinesOverviewViewModel.class);
 		
-		exerciseViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesOverviewViewModel.class);
+		exerciseViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesSelectableViewModel.class);
 		
 		// Observer to get a list of all exercises. This list is used for the autocomplete searchbox to add an exercise by typing the name and it giving a hint for autocompleting the name.
 		addDisposable(routineViewModel.getLoadExercisesResponse().subscribe(response -> processLoadExercisesResponse(response)));
 		// Observer to get list of exercises to add to this routine through the ExercisesOverviewFragment.
-		addDisposable(exerciseViewModel.getSelectedExercises().subscribe(response -> processSelectedExercisesResponse(response)));
+		addDisposable(exerciseViewModel.getAddExercisesToRoutineResponse().subscribe(response -> processSelectedExercisesResponse(response)));
 		// Observer to get when routine is successfully saved.
 		addDisposable(routineViewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
 	}
@@ -352,12 +353,17 @@ public class RoutineCreateFragment
 	{
 		FragmentManager manager = getActivity().getSupportFragmentManager();
 		
-		ExercisesOverviewFragment fragment = (ExercisesOverviewFragment)manager.findFragmentByTag(ExercisesOverviewFragment.TAG);
+		ExercisesSelectableFragment fragment = (ExercisesSelectableFragment)manager.findFragmentByTag(ExercisesSelectableFragment.TAG);
 		if(fragment == null){
-			fragment = ExercisesOverviewFragment.newInstance(R.id.root_routines_overview, R.layout.item_exercises_selectable, R.layout.fragment_routine_exercises_overview);
+			//fragment = ExercisesOverviewFragment.newInstance(R.id.root_routines_overview, R.layout.item_exercises_selectable, R.layout.fragment_routine_exercises_overview);
+			fragment = new ExercisesSelectableFragment();
+			fragment.setRootId(R.id.root_routines_overview);
+			fragment.setAdapter(new ExercisesSelectableAdapter(exerciseViewModel));
+			fragment.setLayoutId(R.layout.fragment_routine_exercises_overview);
+			fragment.setViewModel(exerciseViewModel);
 		}
 		
-		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, ExercisesOverviewFragment.TAG, ExercisesOverviewFragment.TAG);
+		addFragmentToActivity(manager, fragment, R.id.root_routines_overview, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);
 	}
 	
 	private void addFragmentToActivity(FragmentManager fragmentManager,

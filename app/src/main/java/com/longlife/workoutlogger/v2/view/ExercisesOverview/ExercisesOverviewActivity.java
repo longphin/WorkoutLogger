@@ -15,7 +15,7 @@ public class ExercisesOverviewActivity
 	// Static
 	private static final String TAG = ExercisesOverviewActivity.class.getSimpleName();
 	// Private
-	private ExercisesOverviewViewModel viewModel;
+	private ExercisesViewModel viewModel;
 	
 	// Overrides
 	@Override
@@ -30,7 +30,7 @@ public class ExercisesOverviewActivity
 		
 		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
 			ViewModelProviders.of(this, viewModelFactory)
-				.get(ExercisesOverviewViewModel.class);
+				.get(ExercisesViewModel.class);
 		
 		// Add initial fragments.
 		initializeFragments();
@@ -76,8 +76,10 @@ public class ExercisesOverviewActivity
 		ExercisesFragment fragment = (ExercisesFragment)manager.findFragmentByTag(ExercisesFragment.TAG);
 		if(fragment == null){
 			fragment = new ExercisesFragment();//ExercisesOverviewFragment.newInstance(R.id.root_exercises_overview, R.layout.item_exercises, R.layout.fragment_exercises_overview);//(R.id.root_exercises_overview);
-			/*
+			fragment.setAdapter(new ExercisesAdapter(viewModel));
 			fragment.setRootId(R.id.root_exercises_overview);
+			fragment.setLayoutId(R.layout.fragment_exercises_overview);
+			/*
 			fragment.setItemLayout(R.layout.item_exercises);
 			fragment.setOverviewLayout(R.layout.fragment_exercises_overview);
 			*/
