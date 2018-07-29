@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/routine_create_layout"
-    tools:context=".v2.view.RoutineOverview.RoutineCreateFragment">
+    tools:context=".view.Routines.CreateRoutine.RoutineCreateFragment">
 
     <Button
         android:id="@+id/btn_routineCreateSave"

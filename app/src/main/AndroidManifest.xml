@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".v2.view.MainActivity"
+            android:name=".view.MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
 
@@ -27,66 +27,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.RoutinesActivity"
+            android:name=".view.Routines.RoutinesActivity"
             android:configChanges="orientation"
-            android:parentActivityName=".v2.view.MainActivity"
+            android:parentActivityName=".view.MainActivity"
             android:screenOrientation="portrait">
 
             <!-- meta-data tag required to support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".v2.view.MainActivity" />
+                android:value=".view.MainActivity" />
         </activity>
         <activity
-            android:name=".view.HistoryActivity"
+            android:name=".view.Exercises.ExercisesActivity"
             android:configChanges="orientation"
-            android:parentActivityName=".v2.view.MainActivity"
+            android:parentActivityName=".view.MainActivity"
             android:screenOrientation="portrait">
 
             <!-- meta-data tag required to support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".v2.view.MainActivity" />
+                android:value=".view.MainActivity" />
         </activity>
-        <activity
-            android:name=".view.GoalsActivity"
-            android:configChanges="orientation"
-            android:parentActivityName=".v2.view.MainActivity"
-            android:screenOrientation="portrait">
-
-            <!-- meta-data tag required to support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".v2.view.MainActivity" />
-        </activity>
-        <activity
-            android:name=".view.ExerciseActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.z_RoutineActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.z_SetListItemActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.RoutineActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".v2.view.RoutineOverview.RoutinesOverviewActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".v2.view.Routine_Insert.RoutineCreateActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".v2.view.ExercisesOverview.ExercisesOverviewActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

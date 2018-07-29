@@ -6,29 +6,20 @@
     <string name="Exercises_button">Exercises</string>
 
     <!-- strings on RoutinesActivity -->
-    <string name="Header_MyRoutines">My Routines</string>
-    <string name="Header_PremadeRoutines">Pre-made Routines</string>
 
     <!-- strings on HistoryActivity -->
-    <string name="Header_MyHistory">My History</string>
 
     <!-- strings on GoalsActivity -->
-    <string name="Header_MyGoals">My Goals</string>
-    <string name="EditRoutine">Edit Routine</string>
     <string name="text_save">Save</string>
     <string name="text_cancel">Cancel</string>
 
     <string name="requiredFieldsMissing">Required fields missing.</string>
-    <string name="successAddExercise">Successfully added exercise.</string>
-    <string name="errorDuplicateExercise">Exercise with that name already exists.</string>
 
     <string name="Name">Name</string>
     <string name="Description">Description</string>
-    <string name="AddExercise">Add Exercise</string>
     <string name="ConfirmAdd">Add Selection to Routine</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="AddSet">Add Set</string>
     <string name="ClearSelection">Clear Selection</string>
 

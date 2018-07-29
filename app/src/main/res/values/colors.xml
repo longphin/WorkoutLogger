@@ -5,12 +5,5 @@
     <color name="colorAccent">#80D8FF</color>
     <color name="colorWindowBackground">#FAFAFA</color>
 
-    <color name="BLUE">#000ead</color>
-
-    <color name="headerText">#811400</color>
-    <color name="subheaderText">#000000</color>
-    <color name="verticalScrollbar">#3293BEBD</color>
-    <color name="Black">#000000</color>
-
     <color name="item_background">#fa315b</color>
 </resources>

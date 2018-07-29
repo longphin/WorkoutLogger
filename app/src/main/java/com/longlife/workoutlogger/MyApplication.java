@@ -2,7 +2,7 @@ package com.longlife.workoutlogger;
 
 import android.app.Application;
 
-import com.longlife.workoutlogger.v2.data.RoomModule;
+import com.longlife.workoutlogger.data.RoomModule;
 
 public class MyApplication extends Application {
     private MyApplicationComponent component;

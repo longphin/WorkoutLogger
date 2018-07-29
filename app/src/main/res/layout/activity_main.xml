@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.longlife.workoutlogger.v2.view.MainActivity">
+    tools:context="com.longlife.workoutlogger.view.MainActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_main_gotoRoutines"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -15,30 +15,30 @@
         android:onClick="gotoRoutines"
         android:text="@string/Routines_button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintEnd_toStartOf="@+id/btn_main_gotoHistory"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btn_main_gotoHistory"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:onClick="gotoHistory"
         android:text="@string/History_Button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button"
-        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_main_gotoRoutines"
+        app:layout_constraintEnd_toStartOf="@+id/btn_main_gotoExercises"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button" />
+        app:layout_constraintStart_toEndOf="@+id/btn_main_gotoRoutines" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btn_main_gotoExercises"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:onClick="gotoExercises"
         android:text="@string/Exercises_button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/button2"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_main_gotoHistory"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button2" />
+        app:layout_constraintStart_toEndOf="@+id/btn_main_gotoHistory" />
 </android.support.constraint.ConstraintLayout>
