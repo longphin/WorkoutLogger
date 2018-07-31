@@ -1,5 +1,8 @@
 package com.longlife.workoutlogger.data;
 
+import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
+import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.RequiredFieldException;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 

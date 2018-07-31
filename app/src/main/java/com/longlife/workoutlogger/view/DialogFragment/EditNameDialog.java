@@ -92,7 +92,7 @@ public class EditNameDialog
 		EditNameDialog dialog = new EditNameDialog();
 		
 		Bundle bundle = new Bundle();
-		bundle.putString("name", name);//(name, "name");
+		bundle.putString("name", name);
 		bundle.putString("descrip", descrip);
 		dialog.setArguments(bundle);
 		

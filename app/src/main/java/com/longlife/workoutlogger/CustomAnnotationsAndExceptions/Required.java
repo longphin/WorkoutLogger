@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.data;
+package com.longlife.workoutlogger.CustomAnnotationsAndExceptions;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

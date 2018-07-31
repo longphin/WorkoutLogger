@@ -1,14 +1,18 @@
 package com.longlife.workoutlogger.view.Exercises;
 
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.enums.Status;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.utils.Response;
+import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -28,17 +32,23 @@ public class ExercisesViewModel
 	
 	// Observable for when requesting list of all exercises.
 	private final Response<List<Exercise>> loadResponse = new Response<>();
-	// Protected
+	private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
 	protected final CompositeDisposable disposables = new CompositeDisposable();
 	
-	public ExercisesViewModel(Repository repo)
-	{
-		this.repo = repo;
-	}
+	// Protected
 	
 	protected Repository repo;
 	
+	public ExercisesViewModel(@NonNull Repository repo)
+	{
+		this.repo = repo;
+	}
 	// Overrides
+	// Getters
+	public DeletedExercise getFirstDeletedExercise()
+	{
+		return exercisesToDelete.poll();
+	}
 	@Override
 	public void onCleared()
 	{
@@ -46,7 +56,10 @@ public class ExercisesViewModel
 		disposables.clear();
 	}
 	
-	// Getters
+	public void addDeletedExercise(Exercise ex, int pos)
+	{
+		exercisesToDelete.add(new DeletedExercise(ex, pos));
+	}
 	public Observable<Response<List<Exercise>>> getLoadResponse()
 	{
 		Log.d(TAG, "getLoadResponse()");
@@ -129,7 +142,6 @@ public class ExercisesViewModel
 	
 	public void setExerciseHiddenStatus(int idExercise, boolean isHidden)
 	{
-		Log.d(TAG, "Hiding");
 		Completable.fromAction(() -> repo.setExerciseAsHidden(idExercise, isHidden))
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
@@ -142,7 +154,6 @@ public class ExercisesViewModel
 				@Override
 				public void onComplete()
 				{
-					Log.d(TAG, "Update successful.");
 				}
 				
 				@Override
@@ -152,10 +163,4 @@ public class ExercisesViewModel
 				}
 			});
 	}
-	/*
-	public void updateExercise(Exercise deletedItem)
-	{
-		repo.updateExercise(deletedItem);
-	}
-	*/
 }

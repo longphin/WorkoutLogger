@@ -81,11 +81,11 @@ public class RecyclerItemTouchHelper
 	@Override
 	public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
 	{
-		//final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
+		final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
 		
-		//getDefaultUIUtil().clearView(foregroundView);
-			
-			super.clearView(recyclerView, viewHolder);
+		getDefaultUIUtil().clearView(foregroundView);
+		
+		super.clearView(recyclerView, viewHolder);
 	}
 	
 	@Override
@@ -106,15 +106,6 @@ public class RecyclerItemTouchHelper
 				super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 			}
 		}
-	/*
-	@Override
-	public void onChildDraw(Canvas c, RecyclerView recyclerView,
-		RecyclerView.ViewHolder viewHolder, float dX, float dY,
-		int actionState, boolean isCurrentlyActive)
-	{
-		super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-	}
-	*/
 	
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction)

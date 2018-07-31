@@ -37,11 +37,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="bottom"
-        android:text="@string/Name"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/Name" />
 
 </android.support.constraint.ConstraintLayout>

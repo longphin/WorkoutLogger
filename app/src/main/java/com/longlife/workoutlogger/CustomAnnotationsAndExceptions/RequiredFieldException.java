@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.data;
+package com.longlife.workoutlogger.CustomAnnotationsAndExceptions;
 
 public class RequiredFieldException
 	extends ShowableException

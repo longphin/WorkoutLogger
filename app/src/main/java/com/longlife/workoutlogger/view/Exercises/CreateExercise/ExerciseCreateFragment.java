@@ -16,9 +16,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.RequiredFieldException;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.data.RequiredFieldException;
 import com.longlife.workoutlogger.data.Validator;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.view.DialogFragment.EditNameDialog;

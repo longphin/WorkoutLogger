@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.data;
+package com.longlife.workoutlogger.CustomAnnotationsAndExceptions;
 
 import android.content.Context;
 import android.widget.Toast;

@@ -2,7 +2,6 @@ package com.longlife.workoutlogger.utils;
 
 import android.arch.persistence.room.TypeConverter;
 
-import com.longlife.workoutlogger.Constants.Constants;
 import com.longlife.workoutlogger.data.UserProfile;
 
 import java.text.DateFormat;

@@ -8,7 +8,7 @@ import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.longlife.workoutlogger.data.Required;
+import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
 import com.longlife.workoutlogger.enums.ExerciseType;
 import com.longlife.workoutlogger.enums.ExerciseTypeConverter;
 import com.longlife.workoutlogger.enums.MeasurementType;

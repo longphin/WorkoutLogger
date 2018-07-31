@@ -26,12 +26,13 @@ import android.view.ViewGroup;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
+import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.data.Required;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
+import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
 
 import java.util.List;
 
@@ -86,39 +87,41 @@ public class ExercisesFragment
 	{
 		if(viewHolder instanceof RecyclerViewHolderSwipeable){
 			int position = viewHolder.getAdapterPosition();
-			
-			// backup of removed item for undo purpose
 			final Exercise deletedItem = adapter.getExercise(position);
-			final int deletedIndex = position;
+			
+			// Start the deleting process. It is only removed in the adapter, but it saved in the viewModel.
+			// While the snackbar to undo the delete is available, the viewModel will keep the reference.
+			// Upon the snackbar being dismissed, it will permanently remove the exercise.
+			viewModel.addDeletedExercise(deletedItem, position);
+			adapter.removeExercise(position);
 			
 			Snackbar snackbar = Snackbar
 				.make(coordinatorLayout, deletedItem.getName() + " deleted.", Snackbar.LENGTH_LONG);
-			snackbar.setAction("UNDO", view -> adapter.restoreExercise(deletedItem, deletedIndex));
+			snackbar.setAction("UNDO", view -> {});
 			snackbar.addCallback(new Snackbar.Callback()
 			{
 				// Overrides
 				@Override
 				public void onDismissed(Snackbar snackbar, int event)
 				{
-					// If the snackbar was dismissed via clicking the action (Undo button), then do not permanently delete the exercise.
-					if(event == Snackbar.Callback.DISMISS_EVENT_ACTION)
+					final DeletedExercise firstDeletedExercise = viewModel.getFirstDeletedExercise();
+					if(firstDeletedExercise == null)
 						return;
 					
+					// If the snackbar was dismissed via clicking the action (Undo button), then restore the exercise.
+					if(event == Snackbar.Callback.DISMISS_EVENT_ACTION){
+						//adapter.restoreExercise(deletedItem, deletedIndex);
+						adapter.restoreExercise(firstDeletedExercise.getExercise(), firstDeletedExercise.getPosition());
+						return;
+					}
+					
 					// For other dismiss events, permanently delete the exercise.
-					Log.d(TAG, "Exercise deleted permanently. " + String.valueOf(deletedItem.getIdExercise()));
-					//adapter.permanentlyRemoveExercise(deletedItem.getIdExercise());
-					//viewModel.deleteExercise(deletedItem);
-					viewModel.setExerciseHiddenStatus(deletedItem.getIdExercise(), true);
-					/*
-					deletedItem.setHidden(true);
-					viewModel.updateExercise(deletedItem);
-					*/
+					Log.d(TAG, "Exercise deleted permanently. " + String.valueOf(firstDeletedExercise.getExercise().getIdExercise()));
+					viewModel.setExerciseHiddenStatus(firstDeletedExercise.getExercise().getIdExercise(), true);
 				}
 			});
 			snackbar.setActionTextColor(Color.YELLOW);
 			snackbar.show();
-			
-			adapter.removeExercise(position);
 		}
 	}
 
