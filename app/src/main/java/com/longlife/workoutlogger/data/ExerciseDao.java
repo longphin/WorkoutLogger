@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import io.reactivex.Flowable;
-import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 // Inner Classes
 
@@ -29,18 +28,18 @@ public interface ExerciseDao
 	///
 	@Query("SELECT * FROM Exercise WHERE hidden = 0")
 	//" ORDER BY favorited DESC, LOWER(name) ASC")
-	Flowable<List<Exercise>> getExercises();
+	Single<List<Exercise>> getExercises();
 	
 	@Query("SELECT * FROM Exercise WHERE name = :name")
 		// check if the exercise exists in the database already
-	Flowable<Exercise> getExercise(String name);
+	Single<Exercise> getExercise(String name);
 	
 	@Query("SELECT EXISTS (SELECT 1 FROM Exercise WHERE idExercise = :idExercise)")
-	Maybe<Integer> exerciseExists(int idExercise);
+	Single<Integer> exerciseExists(int idExercise);
 	
 	@Query("SELECT * FROM Exercise WHERE idExercise IN (:ids)")
 		//Flowable<List<Exercise>> getExerciseFromId(List<Integer> ids);
-	Flowable<List<Exercise>> getExerciseFromId(Set<Integer> ids);
+	Single<List<Exercise>> getExerciseFromId(Set<Integer> ids);
 	
 	///
 	/// UPDATE

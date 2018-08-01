@@ -9,7 +9,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 public class Repository
 {
@@ -30,7 +30,7 @@ public class Repository
 		return exerciseDao;
 	}
 	
-	public Flowable<List<Exercise>> getExercises()
+	public Single<List<Exercise>> getExercises()
 	{
 		return (exerciseDao.getExercises());
 	}
@@ -40,23 +40,22 @@ public class Repository
 		return routineDao;
 	}
 	
-	public Flowable<List<Routine>> getRoutines()
+	public Single<List<Routine>> getRoutines()
 	{
 		return (routineDao.getRoutines());
 	}
 	
-	public Flowable<Routine> getRoutine(int idRoutine)
+	public Single<Routine> getRoutine(int idRoutine)
 	{
 		return (routineDao.getRoutine(idRoutine));
 	}
 	
-	public Flowable<Exercise> getExercise(String name)
+	public Single<Exercise> getExercise(String name)
 	{
 		return exerciseDao.getExercise(name);
 	}
 	
-	//public Flowable<List<Exercise>> getExerciseFromId(List<Integer> ids){ return exerciseDao.getExerciseFromId(ids);}
-	public Flowable<List<Exercise>> getExerciseFromId(Set<Integer> ids){ return exerciseDao.getExerciseFromId(ids);}
+	public Single<List<Exercise>> getExerciseFromId(Set<Integer> ids){ return exerciseDao.getExerciseFromId(ids);}
 	
 	// UPDATES
 	public void updateFavorite(int idExercise, boolean favorited)
@@ -116,14 +115,14 @@ public class Repository
 			.flatMapIterable((Long idRoutineSession) -> insertRoutineSessionHelpers(reh, idRoutineSession))
 
 	}*/
-	public Flowable<Long> insertRoutineFull(Routine routine, List<RoutineExerciseHelper> reh)
+	public Single<Long> insertRoutineFull(Routine routine, List<RoutineExerciseHelper> reh)
 	{
-		return Flowable.fromCallable(() -> routineDao.insertRoutineFull(routine, reh));
+		return Single.fromCallable(() -> routineDao.insertRoutineFull(routine, reh));
 	}
 	
-	public Flowable<Long> insertExercise(Exercise exercise)
+	public Single<Long> insertExercise(Exercise exercise)
 	{
-		return Flowable.fromCallable(() -> exerciseDao.insertExercise(exercise));//(Single.fromCallable(() -> exerciseDao.insertExercise(exercise)));
+		return Single.fromCallable(() -> exerciseDao.insertExercise(exercise));//(Single.fromCallable(() -> exerciseDao.insertExercise(exercise)));
 	}
 	
 	///

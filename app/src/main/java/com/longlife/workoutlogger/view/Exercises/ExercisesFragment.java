@@ -79,6 +79,7 @@ public class ExercisesFragment
 		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
 		
+		Log.d(TAG, "OnCreate: loadExercises()");
 		viewModel.loadExercises();
 	}
 	
@@ -88,6 +89,8 @@ public class ExercisesFragment
 		if(viewHolder instanceof RecyclerViewHolderSwipeable){
 			int position = viewHolder.getAdapterPosition();
 			final Exercise deletedItem = adapter.getExercise(position);
+			
+			Log.d(TAG, "Deleting... " + deletedItem.getName() + " at position " + String.valueOf(position));
 			
 			// Start the deleting process. It is only removed in the adapter, but it saved in the viewModel.
 			// While the snackbar to undo the delete is available, the viewModel will keep the reference.
@@ -116,7 +119,7 @@ public class ExercisesFragment
 					}
 					
 					// For other dismiss events, permanently delete the exercise.
-					Log.d(TAG, "Exercise deleted permanently. " + String.valueOf(firstDeletedExercise.getExercise().getIdExercise()));
+					Log.d(TAG, "Exercise deleted permanently: " + firstDeletedExercise.getExercise().getName() + " " + String.valueOf(firstDeletedExercise.getExercise().getIdExercise()));
 					viewModel.setExerciseHiddenStatus(firstDeletedExercise.getExercise().getIdExercise(), true);
 				}
 			});

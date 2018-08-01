@@ -17,8 +17,7 @@ import com.longlife.workoutlogger.view.Routines.Helpers.RoutineExerciseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Flowable;
-import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 // Inner Classes
 
@@ -34,22 +33,22 @@ public abstract class RoutineDao
 	/// Gets
 	///
 	@Query("SELECT * FROM Routine")
-	public abstract Flowable<List<Routine>> getRoutines();
+	public abstract Single<List<Routine>> getRoutines();
 	
 	@Query("SELECT * FROM RoutineSession WHERE idRoutine = :idRoutine AND wasPerformed = 0 ORDER BY sessionDate DESC LIMIT 1")
-	public abstract Maybe<RoutineSession> getLatestRoutineSession(int idRoutine);
+	public abstract Single<RoutineSession> getLatestRoutineSession(int idRoutine);
 	
 	@Query("SELECT * FROM SessionExercise WHERE idRoutineSession = :idRoutineSession")
-	public abstract Maybe<List<SessionExercise>> getSessionExercises(int idRoutineSession);
+	public abstract Single<List<SessionExercise>> getSessionExercises(int idRoutineSession);
 	
 	@Query("SELECT e.*" +
 		" FROM SessionExercise as se" +
 		" INNER JOIN Exercise as e on se.idExercise=e.idExercise" +
 		" WHERE se.idSessionExercise = :idSessionExercise")
-	public abstract Maybe<Exercise> getExerciseFromSession(int idSessionExercise);
+	public abstract Single<Exercise> getExerciseFromSession(int idSessionExercise);
 	
 	@Query("SELECT * FROM Routine WHERE idRoutine = :idRoutine")
-	public abstract Flowable<Routine> getRoutine(int idRoutine);
+	public abstract Single<Routine> getRoutine(int idRoutine);
 	
 	///
 	/// UPDATE

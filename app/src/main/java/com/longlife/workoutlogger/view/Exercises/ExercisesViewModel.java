@@ -77,18 +77,25 @@ public class ExercisesViewModel
 		if(loadResponse.getStatus() == Status.LOADING)
 			return;
 		
-		Log.d(TAG, "loadExercises() continued");
 		disposables.add(repo.getExercises()
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
-			.doOnSubscribe(__ -> loadResponse.setLoading())
+			.doOnSubscribe(__ -> {
+				Log.d(TAG, "loading exercises: loading... ");
+				loadResponse.setLoading();
+			})
 			.subscribe((List<Exercise> ex) -> {
 					// sort the list of exercises //[TODO] Set the comparator to what the user chooses
 					//Collections.sort(ex, ExerciseComparators.getDefaultComparator());
 					//this.exercises = ex;
+					Log.d(TAG, "loading exercises: success... ");
 					loadResponse.setSuccess(ex);
 				},
-				throwable -> loadResponse.setError(throwable)
+				throwable ->
+				{
+					Log.d(TAG, "loading exercises: error... ");
+					loadResponse.setError(throwable);
+				}
 			)
 		);
 	}
@@ -99,7 +106,6 @@ public class ExercisesViewModel
 		if(exerciseInsertedResponse.getStatus() == Status.LOADING)
 			return;
 		
-		Log.d(TAG, "insertExercise() continued");
 		disposables.add(repo.insertExercise(newExercise)
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
