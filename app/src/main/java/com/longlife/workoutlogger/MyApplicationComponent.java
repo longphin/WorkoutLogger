@@ -19,27 +19,29 @@ import dagger.android.AndroidInjectionModule;
 
 @Singleton
 @Component(
-        modules = {
-                AndroidInjectionModule.class,
-                MyApplicationModule.class,
-                RoomModule.class
-        }
+	modules = {
+		AndroidInjectionModule.class,
+		MyApplicationModule.class,
+		RoomModule.class
+	}
 )
-public interface MyApplicationComponent {
-    void inject(MainActivity mainActivity);
+public interface MyApplicationComponent
+{
+	void inject(MainActivity mainActivity);
 	
 	void inject(RoutinesActivity roa);
 	
 	void inject(RoutinesFragment rof);
-
-    void inject(RoutineCreateFragment rcf);
+	
+	void inject(RoutineCreateFragment rcf);
 	
 	void inject(ExercisesActivity eoa);
-    void inject(ExerciseCreateFragment ecf);
+	
+	void inject(ExerciseCreateFragment ecf);
 	
 	void inject(ExercisesFragment ef);
-
-    Repository repository();
-
-    Application application();
+	
+	Repository repository();
+	
+	Application application();
 }

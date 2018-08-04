@@ -12,8 +12,6 @@ import com.longlife.workoutlogger.R;
 public class RoutineCreateViewHolder
 	extends RecyclerViewHolderSwipeable//RecyclerView.ViewHolder
 {
-	// Overrides
-	
 	private TextView name;
 	private RelativeLayout viewBackground;
 	private ConstraintLayout viewForeground;
@@ -31,7 +29,7 @@ public class RoutineCreateViewHolder
 		this.downButton = itemView.findViewById(R.id.imv_moveExerciseDown);
 	}
 	
-	// Getters
+	// Overrides
 	@Override
 	public RelativeLayout getViewBackground()
 	{
@@ -44,14 +42,16 @@ public class RoutineCreateViewHolder
 		return viewForeground;
 	}
 	
+	// Getters
+	public ImageView getDownButton(){return downButton;}
+	
 	public TextView getNameTextView()
 	{
 		return name;
 	}
-	public ImageView getDownButton(){return downButton;}
 	
 	public ImageView getUpButton(){return upButton;}
-
+	
 	// Setters
 	public void setNameText(String s)
 	{

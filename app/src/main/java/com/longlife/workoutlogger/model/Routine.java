@@ -16,7 +16,9 @@ public class Routine
 	// Incremented value to ensure each Routine gets a unique Id.
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
-	private int idRoutine;
+	private Long idRoutine;
+	// This is the current idRoutineHistory that this routine corresponds to.
+	private Long currentIdRoutineHistory;
 	@Required
 	private String name;
 	// Note for routine.
@@ -29,24 +31,19 @@ public class Routine
 	{
 	
 	}
-
+	
 	// Getters
-	public boolean isHidden()
+	public Long getCurrentIdRoutineHistory()
 	{
-		return hidden;
+		return currentIdRoutineHistory;
 	}
 	
-	// Setters
-	public void setHidden(boolean hidden)
-	{
-		this.hidden = hidden;
-	}
 	public String getDescription()
 	{
 		return description;
 	}
 	
-	public int getIdRoutine()
+	public Long getIdRoutine()
 	{
 		return idRoutine;
 	}
@@ -56,14 +53,30 @@ public class Routine
 		return name;
 	}
 	
+	public boolean isHidden()
+	{
+		return hidden;
+	}
+	
+	// Setters
+	public void setCurrentIdRoutineHistory(Long currentIdRoutineHistory)
+	{
+		this.currentIdRoutineHistory = currentIdRoutineHistory;
+	}
+	
+	public void setHidden(boolean hidden)
+	{
+		this.hidden = hidden;
+	}
+	
 	public void setName(String name)
 	{
 		this.name = name;
 	}
 	
-	public void setIdRoutine(int i)
+	public void setIdRoutine(Long idRoutine)
 	{
-		idRoutine = i;
+		this.idRoutine = idRoutine;
 	}
 	
 	public void setDescription(String description)

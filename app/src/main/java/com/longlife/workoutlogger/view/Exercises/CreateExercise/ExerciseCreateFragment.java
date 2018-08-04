@@ -41,12 +41,12 @@ public class ExerciseCreateFragment
 	private Button cancelButton;
 	private Button saveButton;
 	private CompositeDisposable composite = new CompositeDisposable();
+	private View mView;
+	private ImageView addNoteImage;
 	@Inject
 	public Context context; // application context
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
-	private View mView;
-	private ImageView addNoteImage;
 	
 	// Overrides
 	@Nullable
@@ -84,6 +84,7 @@ public class ExerciseCreateFragment
 		
 		return (mView);
 	}
+	
 	@Override
 	public void onDestroy()
 	{
@@ -124,22 +125,6 @@ public class ExerciseCreateFragment
 	///
 	/// INSERT EXERCISE RENDERING
 	///
-	
-	// Shake animation when invalid input is given.
-	// Reference vishal-wadhwa @ StackOverflow: https://stackoverflow.com/questions/15401658/vibration-of-edittext-in-android
-	public TranslateAnimation shakeError()
-	{
-		TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
-		shake.setDuration(500);
-		shake.setInterpolator(new CycleInterpolator(7));
-		return shake;
-	}
-	
-	public void clearDisposables()
-	{
-		composite.clear();
-	}
-	
 	private void checkFieldsBeforeInsert()
 	{
 		Exercise newExercise = new Exercise();
@@ -169,6 +154,21 @@ public class ExerciseCreateFragment
 		viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
 		
 		getActivity().onBackPressed();
+	}
+	
+	// Shake animation when invalid input is given.
+	// Reference vishal-wadhwa @ StackOverflow: https://stackoverflow.com/questions/15401658/vibration-of-edittext-in-android
+	public TranslateAnimation shakeError()
+	{
+		TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
+		shake.setDuration(500);
+		shake.setInterpolator(new CycleInterpolator(7));
+		return shake;
+	}
+	
+	public void clearDisposables()
+	{
+		composite.clear();
 	}
 	
 	/*public static void hideKeyboardFrom(Context context, View view) {

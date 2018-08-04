@@ -23,7 +23,7 @@ public class ExercisesSelectableViewModel
 	private final static String TAG = ExercisesSelectableViewModel.class.getSimpleName();
 	// Private
 	private final Response<List<Exercise>> addExercisesToRoutine = new Response<>();
-	private Set<Integer> selectedIdExercises = new HashSet<>();
+	private Set<Long> selectedIdExercises = new HashSet<>();
 	
 	public ExercisesSelectableViewModel(Repository repo)
 	{
@@ -38,17 +38,17 @@ public class ExercisesSelectableViewModel
 	
 	public void clearIdSelectedExercises(){selectedIdExercises.clear();}
 	
-	public boolean isIdSelected(int idExercise)
+	public boolean isIdSelected(Long idExercise)
 	{
 		return selectedIdExercises.contains(idExercise);
 	}
 	
-	public void removeSelectedExercise(int idExercise)
+	public void removeSelectedExercise(Long idExercise)
 	{
 		selectedIdExercises.remove(idExercise);
 	}
 	
-	public void addSelectedExercise(int idExercise)
+	public void addSelectedExercise(Long idExercise)
 	{
 		selectedIdExercises.add(idExercise);
 	}

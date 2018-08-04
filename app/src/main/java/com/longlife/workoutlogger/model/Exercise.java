@@ -13,7 +13,6 @@ import com.longlife.workoutlogger.enums.ExerciseType;
 import com.longlife.workoutlogger.enums.ExerciseTypeConverter;
 import com.longlife.workoutlogger.enums.MeasurementType;
 import com.longlife.workoutlogger.enums.MeasurementTypeConverter;
-import com.longlife.workoutlogger.utils.Conversions;
 
 import io.reactivex.annotations.NonNull;
 
@@ -29,37 +28,6 @@ import io.reactivex.annotations.NonNull;
 public class Exercise
 	implements Parcelable
 {
-	// Name for exercise.
-	@Required
-	private String name;
-	@PrimaryKey(autoGenerate = true)
-	@NonNull
-	private int idExercise;
-	// Note for the exercise.
-	private String description;
-	// Flag to indicate whether exercise is favorited.
-	private boolean favorited;
-	// Flag to indicate whether exercise is hidden.
-	@NonNull
-	private boolean hidden = false;
-	// Type of exercise, used to determine how the exercise should be recorded.
-	@TypeConverters({ExerciseTypeConverter.class})
-	private ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
-	// Getters
-	@TypeConverters({MeasurementTypeConverter.class})
-	private MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
-	
-	public Exercise()
-	{
-	
-	}
-	
-	public Exercise(String name, String descrip)
-	{
-		this.name = name;
-		this.description = descrip;
-	}
-	
 	@Ignore
 	public static final Parcelable.Creator<Exercise> CREATOR = new Parcelable.Creator<Exercise>()
 	{
@@ -77,6 +45,46 @@ public class Exercise
 			return new Exercise[i];
 		}
 	};
+	// Name for exercise.
+	@Required
+	private String name;
+	@PrimaryKey(autoGenerate = true)
+	@NonNull
+	private Long idExercise;
+	// This is the idExerciseHistory that this current exercise corresponds to.
+	private Long currentIdExerciseHistory;
+	// Note for the exercise.
+	private String description;
+	// Flag to indicate whether exercise is favorited.
+	private boolean favorited;
+	// Flag to indicate whether exercise is hidden.
+	@NonNull
+	private boolean hidden = false;
+	// Type of exercise, used to determine how the exercise should be recorded.
+	@TypeConverters({ExerciseTypeConverter.class})
+	private ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
+	@TypeConverters({MeasurementTypeConverter.class})
+	private MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
+	
+	public Exercise()
+	{
+	
+	}
+	
+	public Exercise(String name, String descrip)
+	{
+		this.name = name;
+		this.description = descrip;
+	}
+	
+	@Ignore
+	private Exercise(Parcel parcel)
+	{
+		idExercise = parcel.readLong();
+		name = parcel.readString();
+	}
+	
+	// Overrides
 	@Override
 	public String toString()
 	{
@@ -84,11 +92,26 @@ public class Exercise
 	}
 	
 	@Ignore
-	private Exercise(Parcel parcel)
+	@Override
+	public int describeContents()
 	{
-		idExercise = parcel.readInt();
-		name = parcel.readString();
+		return 0;
 	}
+	
+	@Ignore
+	@Override
+	public void writeToParcel(Parcel parcel, int flags)
+	{
+		parcel.writeLong(idExercise);
+		parcel.writeString(name);
+	}
+	
+	// Getters
+	public Long getCurrentIdExerciseHistory()
+	{
+		return currentIdExerciseHistory;
+	}
+	
 	public String getDescription()
 	{
 		return description;
@@ -104,7 +127,7 @@ public class Exercise
 		return favorited;
 	}
 	
-	public int getIdExercise()
+	public Long getIdExercise()
 	{
 		
 		return idExercise;
@@ -115,14 +138,22 @@ public class Exercise
 		return measurementType;
 	}
 	
+	// Overrides;
+	
 	public String getName()
 	{
 		return name;
 	}
 	
-	// Overrides;
+	public boolean isHidden(){return hidden;}
+	
 	// Setters
-	public void setIdExercise(int val)
+	public void setCurrentIdExerciseHistory(Long currentIdExerciseHistory)
+	{
+		this.currentIdExerciseHistory = currentIdExerciseHistory;
+	}
+	
+	public void setIdExercise(Long val)
 	{
 		idExercise = val;
 	}
@@ -152,28 +183,6 @@ public class Exercise
 		this.name = name;
 	}
 	
-	public boolean isHidden(){return hidden;}
-	
-	@Ignore
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
-	
-	@Ignore
-	@Override
-	public void writeToParcel(Parcel parcel, int flags)
-	{
-		parcel.writeInt(idExercise);
-		parcel.writeString(name);
-	}
-	
-	@Ignore
-	public void setIdExercise(Long idExercise)
-	{
-		this.idExercise = Conversions.safeLongToInt(idExercise);
-	}
 	public void setHidden(boolean b){hidden = b;}
 }
 

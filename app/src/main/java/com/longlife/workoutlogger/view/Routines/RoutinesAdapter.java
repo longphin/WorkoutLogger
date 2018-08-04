@@ -31,7 +31,7 @@ public class RoutinesAdapter
 	{
 		int position = holder.getAdapterPosition();
 		Routine routine = routines.get(position);
-
+		
 		StringBuilder sbName = new StringBuilder(100);
 		sbName.append(routine.getName())
 			.append(" (")

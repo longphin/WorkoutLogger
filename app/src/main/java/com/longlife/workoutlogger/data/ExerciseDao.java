@@ -35,17 +35,17 @@ public interface ExerciseDao
 	Single<Exercise> getExercise(String name);
 	
 	@Query("SELECT EXISTS (SELECT 1 FROM Exercise WHERE idExercise = :idExercise)")
-	Single<Integer> exerciseExists(int idExercise);
+	Single<Integer> exerciseExists(Long idExercise);
 	
 	@Query("SELECT * FROM Exercise WHERE idExercise IN (:ids)")
 		//Flowable<List<Exercise>> getExerciseFromId(List<Integer> ids);
-	Single<List<Exercise>> getExerciseFromId(Set<Integer> ids);
+	Single<List<Exercise>> getExerciseFromId(Set<Long> ids);
 	
 	///
 	/// UPDATE
 	///
 	@Query("UPDATE Exercise SET favorited = :favorited WHERE idExercise = :idExercise")
-	void updateFavorite(int idExercise, boolean favorited);
+	void updateFavorite(Long idExercise, boolean favorited);
 	
 	///
 	/// Inserts
@@ -64,5 +64,5 @@ public interface ExerciseDao
 	void deleteExercise(Exercise ex);
 	
 	@Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
-	int setExerciseAsHidden(int idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
+	int setExerciseAsHidden(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
 }

@@ -26,6 +26,7 @@ public abstract class ActivityBase
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
 	public FragmentManager manager = getSupportFragmentManager();
+	
 	// Overrides
 	@Override
 	public void onBackPressed()
@@ -86,7 +87,7 @@ public abstract class ActivityBase
 			view.clearFocus();
 		}
 	}
-
+	
 	public void addFragmentToActivity(FragmentManager fragmentManager,
 		Fragment fragment,
 		int frameId,

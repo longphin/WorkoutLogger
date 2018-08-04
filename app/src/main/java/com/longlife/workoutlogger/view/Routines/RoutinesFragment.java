@@ -45,15 +45,15 @@ public class RoutinesFragment
 	private RecyclerView recyclerView;
 	private RoutinesAdapter adapter;
 	private View mView;
+	private ConstraintLayout viewRootLayout; // layout for recycler view
 	@Inject
 	public Context context;
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
-	private ConstraintLayout viewRootLayout; // layout for recycler view
 	
 	public RoutinesFragment()
 	{
-
+	
 	}
 	
 	// Overrides
@@ -163,6 +163,11 @@ public class RoutinesFragment
 		return false;
 	}
 	
+	public static RoutinesFragment newInstance()
+	{
+		return (new RoutinesFragment());
+	}
+	
 	// Methods
 	private void processInsertRoutineResponse(Response<Routine> response)
 	{
@@ -177,16 +182,11 @@ public class RoutinesFragment
 		}
 	}
 	
-	public static RoutinesFragment newInstance()
-	{
-		return (new RoutinesFragment());
-	}
-	
 	private void renderInsertSuccessState(Routine routine)
 	{
 		adapter.addRoutine(routine);
 	}
-
+	
 	private void initializeRecyclerView()
 	{
 		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));

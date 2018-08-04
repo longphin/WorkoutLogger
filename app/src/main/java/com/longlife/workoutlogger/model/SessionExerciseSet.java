@@ -19,22 +19,6 @@ import io.reactivex.annotations.NonNull;
 public class SessionExerciseSet
 	implements Parcelable
 {
-	@PrimaryKey(autoGenerate = true)
-	@NonNull
-	private int idSessionExerciseSet;
-	private int idSessionExercise;
-	private int idExercise; // This makes it easier to get the exercises types.
-	
-	private Integer reps;
-	private Double weights;
-	private float rest;
-	private float duration;
-	
-	public SessionExerciseSet()
-	{
-	
-	}
-	
 	@Ignore
 	public static final Parcelable.Creator<SessionExerciseSet> CREATOR = new Parcelable.Creator<SessionExerciseSet>()
 	{
@@ -51,22 +35,55 @@ public class SessionExerciseSet
 			return new SessionExerciseSet[i];
 		}
 	};
+	@PrimaryKey(autoGenerate = true)
+	@NonNull
+	private Long idSessionExerciseSet;
+	private Long idSessionExercise;
+	private Integer reps;
+	private Double weights;
+	private float rest;
+	private float duration;
+	
+	public SessionExerciseSet()
+	{
+	
+	}
+	
+	@Ignore
+	private SessionExerciseSet(Parcel parcel)
+	{
+		idSessionExerciseSet = parcel.readLong();
+		rest = parcel.readFloat();
+	}
+	
+	// Overrides
+	@Ignore
+	@Override
+	public int describeContents()
+	{
+		return 0;
+	}
+	
+	@Ignore
+	@Override
+	public void writeToParcel(Parcel parcel, int flags)
+	{
+		parcel.writeLong(idSessionExerciseSet);
+		parcel.writeFloat(rest);
+	}
+	
+	// Getters
 	public float getDuration()
 	{
 		return duration;
 	}
 	
-	public int getIdExercise()
-	{
-		return (this.idExercise);
-	}
-	
-	public int getIdSessionExercise()
+	public Long getIdSessionExercise()
 	{
 		return idSessionExercise;
 	}
 	
-	public int getIdSessionExerciseSet()
+	public Long getIdSessionExerciseSet()
 	{
 		return idSessionExerciseSet;
 	}
@@ -86,24 +103,13 @@ public class SessionExerciseSet
 		return weights;
 	}
 	
-	@Ignore
-	private SessionExerciseSet(Parcel parcel)
-	{
-		idExercise = parcel.readInt();
-		idSessionExerciseSet = parcel.readInt();
-		rest = parcel.readFloat();
-	}
-	public void setIdSessionExerciseSet(int i)
+	// Setters
+	public void setIdSessionExerciseSet(Long i)
 	{
 		idSessionExerciseSet = i;
 	}
 	
-	public void setIdExercise(int i)
-	{
-		idExercise = i;
-	}
-	
-	public void setIdSessionExercise(int i)
+	public void setIdSessionExercise(Long i)
 	{
 		idSessionExercise = i;
 	}
@@ -127,26 +133,6 @@ public class SessionExerciseSet
 	{
 		this.rest = rest;
 	}
-	
-	// Overrides
-	@Ignore
-	@Override
-	public int describeContents()
-	{
-		return 0;
-	}
-	
-	@Ignore
-	@Override
-	public void writeToParcel(Parcel parcel, int flags)
-	{
-		parcel.writeInt(idExercise);
-		parcel.writeInt(idSessionExerciseSet);
-		parcel.writeFloat(rest);
-	}
-	
-	// Getters
-	// Setters
 }
 
 // Inner Classes

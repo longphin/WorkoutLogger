@@ -55,7 +55,7 @@ public class ExercisesActivity
 				break;
 		}
 	}
-
+	
 	private void startCreateExerciseFragment()
 	{
 		ExerciseCreateFragment fragment = (ExerciseCreateFragment)manager.findFragmentByTag(ExerciseCreateFragment.TAG);

@@ -33,22 +33,16 @@ public class ExercisesViewModel
 	// Observable for when requesting list of all exercises.
 	private final Response<List<Exercise>> loadResponse = new Response<>();
 	private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
-	protected final CompositeDisposable disposables = new CompositeDisposable();
-	
 	// Protected
-	
+	protected final CompositeDisposable disposables = new CompositeDisposable();
 	protected Repository repo;
 	
 	public ExercisesViewModel(@NonNull Repository repo)
 	{
 		this.repo = repo;
 	}
+	
 	// Overrides
-	// Getters
-	public DeletedExercise getFirstDeletedExercise()
-	{
-		return exercisesToDelete.poll();
-	}
 	@Override
 	public void onCleared()
 	{
@@ -56,19 +50,26 @@ public class ExercisesViewModel
 		disposables.clear();
 	}
 	
-	public void addDeletedExercise(Exercise ex, int pos)
+	// Getters
+	public Observable<Response<Exercise>> getExerciseInsertedResponse()
 	{
-		exercisesToDelete.add(new DeletedExercise(ex, pos));
+		return exerciseInsertedResponse.getObservable();
 	}
+	
+	public DeletedExercise getFirstDeletedExercise()
+	{
+		return exercisesToDelete.poll();
+	}
+	
 	public Observable<Response<List<Exercise>>> getLoadResponse()
 	{
 		Log.d(TAG, "getLoadResponse()");
 		return loadResponse.getObservable();
 	}
 	
-	public Observable<Response<Exercise>> getExerciseInsertedResponse()
+	public void addDeletedExercise(Exercise ex, int pos)
 	{
-		return exerciseInsertedResponse.getObservable();
+		exercisesToDelete.add(new DeletedExercise(ex, pos));
 	}
 	
 	public void loadExercises()
@@ -120,7 +121,7 @@ public class ExercisesViewModel
 		);
 	}
 	
-	public void updateFavorite(int idExercise, boolean favorited)
+	public void updateFavorite(Long idExercise, boolean favorited)
 	{
 		Log.d(TAG, "updateFavorite");
 		Completable.fromAction(() -> repo.updateFavorite(idExercise, favorited))
@@ -146,7 +147,7 @@ public class ExercisesViewModel
 			});
 	}
 	
-	public void setExerciseHiddenStatus(int idExercise, boolean isHidden)
+	public void setExerciseHiddenStatus(Long idExercise, boolean isHidden)
 	{
 		Completable.fromAction(() -> repo.setExerciseAsHidden(idExercise, isHidden))
 			.subscribeOn(Schedulers.io())

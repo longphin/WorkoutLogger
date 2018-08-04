@@ -43,7 +43,7 @@ public class AddNoteDialog
 			String inputDescrip = this.descrip.getText().toString();
 			
 			onInputListener.sendInput(inputDescrip);
-				getDialog().dismiss();
+			getDialog().dismiss();
 		});
 		
 		// Set default values.

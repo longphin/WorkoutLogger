@@ -15,22 +15,21 @@ import io.reactivex.annotations.NonNull;
 @Entity(
 	foreignKeys = {
 		@ForeignKey(entity = RoutineSession.class, parentColumns = "idRoutineSession", childColumns = "idRoutineSession", onDelete = ForeignKey.CASCADE),
-		// [TODO] This cascade is not preferred. Rather than deleting exercises, we should maybe hide them. Only delete exercises when they have no references.
-		@ForeignKey(entity = Exercise.class, parentColumns = "idExercise", childColumns = "idExercise", onDelete = ForeignKey.CASCADE)
+		@ForeignKey(entity = ExerciseHistory.class, parentColumns = "idExerciseHistory", childColumns = "idExerciseHistory", onDelete = ForeignKey.CASCADE)
 	},
 	indices = {
-		@Index(value = {"idRoutineSession", "idExercise"}),
+		@Index(value = {"idRoutineSession", "idExerciseHistory"}),
 		@Index(value = {"idRoutineSession"}),
-		@Index(value = {"idExercise"})
+		@Index(value = {"idExerciseHistory"})
 	}
 )
 public class SessionExercise
 {
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
-	private int idSessionExercise;
-	private int idRoutineSession;
-	private int idExercise;
+	private Long idSessionExercise;
+	private Long idRoutineSession;
+	private Long idExerciseHistory;
 	
 	public SessionExercise()
 	{
@@ -38,43 +37,43 @@ public class SessionExercise
 	}
 	
 	@Ignore
-	public SessionExercise(int idExercise, int idRoutineSession)
+	public SessionExercise(Long idExerciseHistory, Long idRoutineSession)
 	{
-		this.idExercise = idExercise;
+		this.idExerciseHistory = idExerciseHistory;
 		this.idRoutineSession = idRoutineSession;
 	}
 	
 	// Getters
 	
-	public int getIdExercise()
+	public Long getIdExerciseHistory()
 	{
-		return idExercise;
+		return idExerciseHistory;
 	}
 	
-	public int getIdRoutineSession()
+	public Long getIdRoutineSession()
 	{
 		return idRoutineSession;
 	}
 	
-	public int getIdSessionExercise()
+	public Long getIdSessionExercise()
 	{
 		return idSessionExercise;
 	}
 	
 	// Setters
-	public void setIdRoutineSession(int i)
+	public void setIdRoutineSession(Long i)
 	{
 		idRoutineSession = i;
 	}
 	
-	public void setIdSessionExercise(int i)
+	public void setIdSessionExercise(Long i)
 	{
 		idSessionExercise = i;
 	}
 	
-	public void setIdExercise(int i)
+	public void setIdExerciseHistory(Long i)
 	{
-		idExercise = i;
+		idExerciseHistory = i;
 	}
 }
 

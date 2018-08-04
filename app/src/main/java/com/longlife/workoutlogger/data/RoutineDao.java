@@ -8,10 +8,10 @@ import android.arch.persistence.room.Transaction;
 
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.RoutineHistory;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
-import com.longlife.workoutlogger.utils.Conversions;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.ArrayList;
@@ -35,20 +35,20 @@ public abstract class RoutineDao
 	@Query("SELECT * FROM Routine WHERE hidden = 0")
 	public abstract Single<List<Routine>> getRoutines();
 	
-	@Query("SELECT * FROM RoutineSession WHERE idRoutine = :idRoutine AND wasPerformed = 0 ORDER BY sessionDate DESC LIMIT 1")
-	public abstract Single<RoutineSession> getLatestRoutineSession(int idRoutine);
+	@Query("SELECT * FROM RoutineSession WHERE idRoutineHistory = :idRoutine AND wasPerformed = 0 ORDER BY sessionDate DESC LIMIT 1")
+	public abstract Single<RoutineSession> getLatestRoutineSession(Long idRoutine);
 	
 	@Query("SELECT * FROM SessionExercise WHERE idRoutineSession = :idRoutineSession")
-	public abstract Single<List<SessionExercise>> getSessionExercises(int idRoutineSession);
+	public abstract Single<List<SessionExercise>> getSessionExercises(Long idRoutineSession);
 	
 	@Query("SELECT e.*" +
 		" FROM SessionExercise as se" +
-		" INNER JOIN Exercise as e on se.idExercise=e.idExercise" +
+		" INNER JOIN Exercise as e on se.idExerciseHistory=e.idExercise" +
 		" WHERE se.idSessionExercise = :idSessionExercise")
-	public abstract Single<Exercise> getExerciseFromSession(int idSessionExercise);
+	public abstract Single<Exercise> getExerciseFromSession(Long idSessionExercise);
 	
 	@Query("SELECT * FROM Routine WHERE idRoutine = :idRoutine")
-	public abstract Single<Routine> getRoutine(int idRoutine);
+	public abstract Single<Routine> getRoutine(Long idRoutine);
 	
 	///
 	/// UPDATE
@@ -62,22 +62,28 @@ public abstract class RoutineDao
 	@Insert(onConflict = OnConflictStrategy.ROLLBACK)
 	public abstract Long insertRoutine(Routine r);
 	
+	@Insert(onConflict = OnConflictStrategy.ROLLBACK)
+	public abstract Long insertRoutineHistory(RoutineHistory rh);
+	
 	@Transaction
 	public Long insertRoutineFull(Routine r, List<RoutineExerciseHelper> reh)
 	{
 		// Insert routine.
 		Long idRoutine = insertRoutine(r);
+		r.setIdRoutine(idRoutine);
+		// Insert this newly created routine to history.
+		Long idRoutineHistory = insertRoutineHistory(new RoutineHistory(r));
 		// Insert routine session using the new routine id.
 		RoutineSession routineSessionToAdd = new RoutineSession();
-		routineSessionToAdd.setIdRoutine(Conversions.safeLongToInt(idRoutine));
+		routineSessionToAdd.setIdRoutineHistory(idRoutineHistory);
 		Long idRoutineSession = insertRoutineSession(routineSessionToAdd);
 		// Insert exercises for the session using the new session.
 		for(int i = 0; i < reh.size(); i++){
-			//seArray[i] = new SessionExercise(reh.get(i).getExercise().getIdExercise(), idRoutineSession);
-			Long idSessionExercise = insertSessionExercise(new SessionExercise(reh.get(i).getExercise().getIdExercise(), Conversions.safeLongToInt(idRoutineSession)));
+			//seArray[i] = new SessionExercise(reh.get(i).getExercise().getIdRoutineHistory(), idRoutineSession);
+			Long idSessionExercise = insertSessionExercise(new SessionExercise(reh.get(i).getExercise().getIdExercise(), idRoutineSession));
 			List<SessionExerciseSet> setsToAdd = reh.get(i).getSets();
 			for(int j = 0; j < setsToAdd.size(); j++){
-				setsToAdd.get(j).setIdSessionExercise(Conversions.safeLongToInt(idSessionExercise));
+				setsToAdd.get(j).setIdSessionExercise(idSessionExercise);
 			}
 			insertSessionExerciseSets(setsToAdd);
 		}
@@ -112,5 +118,5 @@ public abstract class RoutineDao
 	public abstract void deleteSessionExerciseSet(SessionExerciseSet ses);
 	
 	@Query("UPDATE Routine SET hidden = :isHidden WHERE idRoutine=:idRoutine")
-	public abstract void setRoutineAsHidden(int idRoutine, int isHidden);
+	public abstract void setRoutineAsHidden(Long idRoutine, int isHidden);
 }

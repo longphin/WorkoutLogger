@@ -45,7 +45,7 @@ public class Repository
 		return (routineDao.getRoutines());
 	}
 	
-	public Single<Routine> getRoutine(int idRoutine)
+	public Single<Routine> getRoutine(Long idRoutine)
 	{
 		return (routineDao.getRoutine(idRoutine));
 	}
@@ -55,10 +55,10 @@ public class Repository
 		return exerciseDao.getExercise(name);
 	}
 	
-	public Single<List<Exercise>> getExerciseFromId(Set<Integer> ids){ return exerciseDao.getExerciseFromId(ids);}
+	public Single<List<Exercise>> getExerciseFromId(Set<Long> ids){ return exerciseDao.getExerciseFromId(ids);}
 	
 	// UPDATES
-	public void updateFavorite(int idExercise, boolean favorited)
+	public void updateFavorite(Long idExercise, boolean favorited)
 	{
 		exerciseDao.updateFavorite(idExercise, favorited);
 	}
@@ -105,7 +105,7 @@ public class Repository
 		return
 			// Insert routine -> idRoutine
 			insertRoutine(new Routine())//[TODO]
-			// Insert routineSession.setIdRoutine(idRoutine) -> idRoutineSession
+			// Insert routineSession.setIdRoutineHistory(idRoutine) -> idRoutineSession
 			.flatMap((Long idRoutine) -> insertRoutineSession(new RoutineSession(idRoutine)))
 			.flatMapIterable((Long idRoutineSession) -> insertRoutineSessionHelpers(reh, idRoutineSession))
 
@@ -123,7 +123,7 @@ public class Repository
 	///
 	/// DELETE methods
 	///
-	public void setExerciseAsHidden(int idExercise, boolean isHidden)
+	public void setExerciseAsHidden(Long idExercise, boolean isHidden)
 	{
 		exerciseDao.setExerciseAsHidden(idExercise, isHidden ? 1 : 0);
 	}
@@ -138,7 +138,7 @@ public class Repository
 		routineDao.deleteRoutine(ro);
 	}
 	
-	public void setRoutineAsHidden(int idRoutine, boolean b)
+	public void setRoutineAsHidden(Long idRoutine, boolean b)
 	{
 		routineDao.setRoutineAsHidden(idRoutine, b ? 1 : 0);
 	}

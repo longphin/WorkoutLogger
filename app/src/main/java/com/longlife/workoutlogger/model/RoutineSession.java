@@ -16,14 +16,14 @@ import io.reactivex.annotations.NonNull;
 /**
  * Created by Longphi on 1/7/2018.
  */
-@Entity(foreignKeys = @ForeignKey(entity = Routine.class, parentColumns = "idRoutine", childColumns = "idRoutine", onDelete = ForeignKey.CASCADE),
-	indices = {@Index(value = {"idRoutine"})})
+@Entity(foreignKeys = @ForeignKey(entity = RoutineHistory.class, parentColumns = "idRoutineHistory", childColumns = "idRoutineHistory", onDelete = ForeignKey.CASCADE),
+	indices = {@Index(value = {"idRoutineHistory"})})
 public class RoutineSession
 {
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
-	private int idRoutineSession;
-	private int idRoutine;
+	private Long idRoutineSession;
+	private Long idRoutineHistory;
 	@NonNull
 	@TypeConverters({DateConverter.class})
 	private Date sessionDate = (new GregorianCalendar()).getTime();
@@ -38,12 +38,12 @@ public class RoutineSession
 	}
 	
 	// Getters
-	public int getIdRoutine()
+	public Long getIdRoutineHistory()
 	{
-		return idRoutine;
+		return idRoutineHistory;
 	}
 	
-	public int getIdRoutineSession()
+	public Long getIdRoutineSession()
 	{
 		return idRoutineSession;
 	}
@@ -64,14 +64,14 @@ public class RoutineSession
 		this.wasPerformed = wasPerformed;
 	}
 	
-	public void setIdRoutineSession(int i)
+	public void setIdRoutineSession(Long i)
 	{
 		idRoutineSession = i;
 	}
 	
-	public void setIdRoutine(int i)
+	public void setIdRoutineHistory(Long i)
 	{
-		idRoutine = i;
+		idRoutineHistory = i;
 	}
 	
 	public void setSessionDate(Date sessionDate)

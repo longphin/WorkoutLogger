@@ -54,13 +54,12 @@ public class ExercisesFragment
 	
 	private RecyclerView recyclerView;
 	private ConstraintLayout viewRootLayout; // layout for recycler view
-	
+	protected View mView;
+	protected ExercisesAdapter adapter;
 	@Inject
 	public Context context;
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
-	protected View mView;
-	protected ExercisesAdapter adapter;
 	
 	// Overrides
 	@Override
@@ -127,7 +126,7 @@ public class ExercisesFragment
 			snackbar.show();
 		}
 	}
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		Bundle savedInstanceState)
@@ -147,20 +146,12 @@ public class ExercisesFragment
 		return mView;
 	}
 	
-	// Setters
-	// @Required - This is the id of the parent activity/fragment's layout root.
-	public void setRootId(int rootId)
-	{
-		this.rootId = rootId;
-	}
-	
-	public void setLayoutId(int layoutId){this.layoutId = layoutId;}
-	
 	@Override
 	public boolean isItemViewSwipeEnabled()
 	{
 		return true;
 	}
+	// @Required - This is the id of the parent activity/fragment's layout root.
 	
 	@Override
 	public boolean isLongPressDragEnabled()
@@ -168,15 +159,23 @@ public class ExercisesFragment
 		return false;
 	}
 	
-	public void setAdapter(ExercisesAdapter adapter)
-	{
-		this.adapter = adapter;
-	}
-	
 	@Override
 	public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target)
 	{
 		return false;
+	}
+	
+	// Setters
+	public void setRootId(int rootId)
+	{
+		this.rootId = rootId;
+	}
+	
+	public void setLayoutId(int layoutId){this.layoutId = layoutId;}
+	
+	public void setAdapter(ExercisesAdapter adapter)
+	{
+		this.adapter = adapter;
 	}
 	
 	// Methods
@@ -220,18 +219,6 @@ public class ExercisesFragment
 		Log.d(TAG, throwable.getMessage());
 	}
 	
-	public void initializeRecyclerView()
-	{
-		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-		//adapter = new ExercisesAdapter();
-		recyclerView.setAdapter(adapter);
-		recyclerView.setItemAnimator(new DefaultItemAnimator());
-		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-		
-		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
-		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-	}
-	
 	private void renderLoadingState()
 	{
 		Log.d(TAG, "loading exercises");
@@ -253,6 +240,18 @@ public class ExercisesFragment
 			return;
 		
 		adapter.setExercises(exercises);
+	}
+	
+	public void initializeRecyclerView()
+	{
+		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+		//adapter = new ExercisesAdapter();
+		recyclerView.setAdapter(adapter);
+		recyclerView.setItemAnimator(new DefaultItemAnimator());
+		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+		
+		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
+		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 	}
 	
 	protected void startCreateFragment()

@@ -37,7 +37,7 @@ public class ExercisesViewHolder
 	{
 		return viewBackground;
 	}
-
+	
 	public ConstraintLayout getViewForeground()
 	{
 		return viewForeground;

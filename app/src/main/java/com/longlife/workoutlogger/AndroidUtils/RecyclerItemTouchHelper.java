@@ -89,23 +89,23 @@ public class RecyclerItemTouchHelper
 	}
 	
 	@Override
-		public void onChildDraw(Canvas c, RecyclerView recyclerView,
-			RecyclerView.ViewHolder viewHolder, float dX, float dY,
-			int actionState, boolean isCurrentlyActive)
-		{
-			// If swiping, then only move the foreground.
-			if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
-				if(viewHolder != null && viewHolder instanceof RecyclerViewHolderSwipeable){
-					final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
-					
-					getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
-						actionState, isCurrentlyActive
-					);
-				}
-			}else{
-				super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+	public void onChildDraw(Canvas c, RecyclerView recyclerView,
+		RecyclerView.ViewHolder viewHolder, float dX, float dY,
+		int actionState, boolean isCurrentlyActive)
+	{
+		// If swiping, then only move the foreground.
+		if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
+			if(viewHolder != null && viewHolder instanceof RecyclerViewHolderSwipeable){
+				final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
+				
+				getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
+					actionState, isCurrentlyActive
+				);
 			}
+		}else{
+			super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 		}
+	}
 	
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction)
@@ -126,7 +126,7 @@ public class RecyclerItemTouchHelper
 		boolean isItemViewSwipeEnabled();
 		
 		boolean isLongPressDragEnabled();
-
+		
 		void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position);
 		
 		boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target);

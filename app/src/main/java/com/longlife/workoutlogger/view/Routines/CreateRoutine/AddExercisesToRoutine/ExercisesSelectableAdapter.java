@@ -45,7 +45,7 @@ public class ExercisesSelectableAdapter
 		
 		CheckBox selectedCheckBox = holder.getSelectedCheckBox();
 		if(selectedCheckBox != null){
-			int idCurrentlySelected = ex.getIdExercise();
+			Long idCurrentlySelected = ex.getIdExercise();
 			boolean isCurrentlySelected = viewModel.isIdSelected(idCurrentlySelected);
 			if(isCurrentlySelected){
 				holder.setSelectedCheckBox(true);
@@ -58,7 +58,7 @@ public class ExercisesSelectableAdapter
 			selectedCheckBox.setOnClickListener(
 				view ->
 				{
-					int id = ex.getIdExercise();
+					Long id = ex.getIdExercise();
 					boolean isSelected = viewModel.isIdSelected(id);
 					if(isSelected){
 						//selectedIdExercises.remove(id);
@@ -76,7 +76,7 @@ public class ExercisesSelectableAdapter
 		exerciseSelectedBox.setOnClickListener(view -> {
 			final int thisPos = holder.getAdapterPosition();
 			viewModel.addSelectedExercise(exercises.get(thisPos).getIdExercise());
-			//selectedIdExercises.add(exercises.get(thisPos).getIdExercise());
+			//selectedIdExercises.add(exercises.get(thisPos).getIdRoutineHistory());
 		});
 	}
 	

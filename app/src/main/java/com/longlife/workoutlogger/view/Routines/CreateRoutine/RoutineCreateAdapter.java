@@ -25,13 +25,12 @@ public class RoutineCreateAdapter
 	// Static
 	private static final int ADD_SET_TYPE = 3;
 	private static final String TAG = RoutineCreateAdapter.class.getSimpleName();
-	private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
 	private static final int HEADER_TYPE = 1;
 	private static final int SET_TYPE = 2;
-	// Other
-	
+	private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
 	private Context context;
 	
+	// Other
 	public RoutineCreateAdapter(Context context)
 	{
 		this.context = context;
@@ -58,6 +57,7 @@ public class RoutineCreateAdapter
 				return new RoutineCreateViewHolder(v);
 		}
 	}
+	
 	@Override
 	public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int pos)
 	{
@@ -77,6 +77,7 @@ public class RoutineCreateAdapter
 			return;
 		}
 	}
+	
 	@Override
 	public int getItemCount()
 	{
@@ -120,19 +121,20 @@ public class RoutineCreateAdapter
 	}
 	
 	// Getters
+	public static int getHeaderTypeEnum(){return HEADER_TYPE;}
 	
 	public List<RoutineExerciseHelper> getRoutineExerciseHelpers()
 	{
 		return exercisesToInclude;
 	}
 	
-	public static int getHeaderTypeEnum(){return HEADER_TYPE;}
-	
 	// [TODO] remove
 	public List<RoutineExerciseHelper> getRoutineExercises()
 	{
 		return exercisesToInclude;
 	}
+	
+	// Methods
 	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
 	private int getHeaderPosition(int headerIndex)
 	{
@@ -154,7 +156,7 @@ public class RoutineCreateAdapter
 		}
 		return count;
 	}
-	// Methods
+	
 	private void bindAddSetViewHolder(@NonNull RoutineCreateAddSetViewHolder holder, int position)
 	{
 		holder.getView().setOnClickListener(view ->
@@ -171,7 +173,7 @@ public class RoutineCreateAdapter
 		exercisesToInclude.get(headerIndex).getSets().add(new SessionExerciseSet());
 		notifyItemInserted(pos + childrenCount + 1);
 	}
-
+	
 	private void bindHeaderViewHolder(@NonNull RoutineCreateViewHolder holder, int position)
 	{
 		final int headerIndex = getHeaderIndex(position);
@@ -308,7 +310,7 @@ public class RoutineCreateAdapter
 	public void addExercises(List<Exercise> ex)
 	{
 		final int currentSize = getItemCount(); // This is the recyclerview position that the items will be inserted after.
-
+		
 		for(Exercise e : ex){
 			exercisesToInclude.add(
 				new RoutineExerciseHelper(e,

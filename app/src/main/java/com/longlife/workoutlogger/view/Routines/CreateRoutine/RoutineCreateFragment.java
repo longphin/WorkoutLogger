@@ -67,10 +67,9 @@ public class RoutineCreateFragment
 	private View mView;
 	private EditText name;
 	private ImageView addNoteImage;
-	// Other
-	
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
+	// Other
 	String descrip;
 	@Inject
 	Context context;
@@ -170,7 +169,7 @@ public class RoutineCreateFragment
 			
 			if(swipedItemType == RoutineCreateAdapter.getHeaderTypeEnum()){
 				// get the removed item name to display it in snack bar
-
+				
 				// backup of removed item for undo purpose
 				final int deletedIndex = adapter.getHeaderIndex(position);
 				final RoutineExerciseHelper deletedItem = adapter.getHeaderAtPosition(position);
@@ -196,31 +195,6 @@ public class RoutineCreateFragment
 	public void sendInput(String descrip)
 	{
 		this.descrip = descrip;
-	}
-	
-	// Methods
-	private void renderInsertLoadingState()
-	{
-		if(isAdded())
-			Log.d(TAG, "attached: loading exercises");
-		else
-			Log.d(TAG, "detached: loading exercises");
-	}
-	// Insertion Response
-	
-	private void processInsertResponse(Response<Routine> response)
-	{
-		switch(response.getStatus()){
-			case LOADING:
-				renderInsertLoadingState();
-				break;
-			case SUCCESS:
-				renderInsertSuccessState(response.getValue());
-				break;
-			case ERROR:
-				renderInsertErrorState(response.getError());
-				break;
-		}
 	}
 	
 	// On drag up and down for recyclerview item.
@@ -254,6 +228,7 @@ public class RoutineCreateFragment
 	{
 		return false;
 	}
+	// Insertion Response
 	
 	@Override
 	public boolean isItemViewSwipeEnabled()
@@ -266,11 +241,36 @@ public class RoutineCreateFragment
 		return (new RoutineCreateFragment());
 	}
 	
+	// Methods
+	private void renderInsertLoadingState()
+	{
+		if(isAdded())
+			Log.d(TAG, "attached: loading exercises");
+		else
+			Log.d(TAG, "detached: loading exercises");
+	}
+	
+	private void processInsertResponse(Response<Routine> response)
+	{
+		switch(response.getStatus()){
+			case LOADING:
+				renderInsertLoadingState();
+				break;
+			case SUCCESS:
+				renderInsertSuccessState(response.getValue());
+				break;
+			case ERROR:
+				renderInsertErrorState(response.getError());
+				break;
+		}
+	}
+	
 	private void renderInsertErrorState(Throwable throwable)
 	{
 		// change anything if loading data had an error.
 		Log.d(TAG, throwable.getMessage());
 	}
+	
 	// Process list of exercises that were selected in the searchbox fragment.
 	private void processSelectedExercisesResponse(Response<List<Exercise>> response)
 	{
@@ -401,7 +401,7 @@ public class RoutineCreateFragment
 		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 		//routineViewModel.loadExercises(); // We don't need initial data.
 	}
-
+	
 	private void renderSelectedExercisesSuccessState(List<Exercise> ex)
 	{
 		adapter.addExercises(ex);

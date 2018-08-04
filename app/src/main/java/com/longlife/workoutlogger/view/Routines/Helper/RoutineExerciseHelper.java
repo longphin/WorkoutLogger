@@ -19,6 +19,7 @@ public class RoutineExerciseHelper
 		this.sets = sets;
 		this.isExpanded = isExpanded;
 	}
+	
 	// Getters
 	public Exercise getExercise(){return exercise;}
 	

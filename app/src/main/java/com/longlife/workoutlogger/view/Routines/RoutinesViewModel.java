@@ -7,7 +7,6 @@ import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.comparators.RoutineComparators;
-import com.longlife.workoutlogger.utils.Conversions;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
@@ -41,6 +40,10 @@ public class RoutinesViewModel
 	private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
 	
 	private Repository repo;
+	///
+	/// UPDATE
+	///
+	private Queue<DeletedRoutine> routinesToDelete = new LinkedList<>();
 	
 	///
 	/// Constructors
@@ -50,10 +53,7 @@ public class RoutinesViewModel
 		this.repo = repo;
 	}
 	
-	///
-	/// UPDATE
-	///
-	private Queue<DeletedRoutine> routinesToDelete = new LinkedList<>();
+	// Overrides
 	///
 	/// GETTERS
 	///
@@ -64,8 +64,16 @@ public class RoutinesViewModel
 		disposables.clear();
 	}
 	
-	// Overrides
 	// Getters
+	public DeletedRoutine getFirstDeletedRoutine()
+	{
+		return routinesToDelete.poll();
+	}
+	
+	public Observable<Response<Routine>> getInsertResponse()
+	{
+		return insertResponse.getObservable();
+	}
 	
 	public Observable<Response<List<Exercise>>> getLoadExercisesResponse()
 	{
@@ -75,16 +83,6 @@ public class RoutinesViewModel
 	public Observable<Response<List<Routine>>> getLoadResponse()
 	{
 		return loadResponse.getObservable();
-	}
-	
-	public DeletedRoutine getFirstDeletedRoutine()
-	{
-		return routinesToDelete.poll();
-	}
-	
-	public Observable<Response<Routine>> getInsertResponse()
-	{
-		return insertResponse.getObservable();
 	}
 	
 	public void loadRoutines()
@@ -148,7 +146,7 @@ public class RoutinesViewModel
 				)
 		);
 	}
-
+	
 	public void insertRoutineFull(Routine ro, List<RoutineExerciseHelper> reh)
 	{
 		disposables.add(
@@ -158,13 +156,13 @@ public class RoutinesViewModel
 				.doOnSubscribe(__ -> insertResponse.setLoading())
 				.subscribe(idRoutine ->
 					{
-						ro.setIdRoutine(Conversions.safeLongToInt(idRoutine));
+						ro.setIdRoutine(idRoutine);
 						//this.routines.add(ro);
 						// sort the list of exercises //[TODO] Set the comparator to what the user chooses
 						
 						/*Collections.sort(this.routines, RoutineComparators.getDefaultComparator());
 						for(int i = 0; i < this.routines.size(); i++){
-							if(routines.get(i).getIdRoutine() == id){
+							if(routines.get(i).getIdRoutineHistory() == id){
 								insertResponse.setSuccess(i);
 								return;
 							}
@@ -183,7 +181,7 @@ public class RoutinesViewModel
 		routinesToDelete.add(new DeletedRoutine(deletedItem, position));
 	}
 	
-	public void setRoutineHiddenStatus(int idRoutine, boolean isHidden)
+	public void setRoutineHiddenStatus(Long idRoutine, boolean isHidden)
 	{
 		Completable.fromAction(() -> repo.setRoutineAsHidden(idRoutine, isHidden))
 			.subscribeOn(Schedulers.io())
