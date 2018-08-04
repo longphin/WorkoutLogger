@@ -17,7 +17,8 @@ public class DatabaseVersion
 	private static final int V2_4 = 10; // Added hidden flag for routine, so instead of deleting a routine, it will be set as hidden.
 	private static final int V3_0 = 11; // Remove unused model fields for now.
 	private static final int V3_1 = 12; // Changed id columns from int type to Long.
+	private static final int V3_2 = 13; // Added exercise history insert when exercise is inserted.
 	
-	public static final int CURRENT = V3_1;
+	public static final int CURRENT = V3_2;
 }
 // Inner Classes

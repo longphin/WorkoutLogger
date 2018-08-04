@@ -10,4 +10,15 @@
         <item name="android:windowAnimationStyle">@null</item> <!-- remove animation -->
     </style>
 
+    <style name="DialogFragmentStyle" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:windowTitleStyle">@style/dialog_title</item>
+    </style>
+
+    <style name="dialog_title" parent="android:Widget.TextView">
+        <item name="android:background">#1021b7</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textAlignment">center</item>
+    </style>
 </resources>

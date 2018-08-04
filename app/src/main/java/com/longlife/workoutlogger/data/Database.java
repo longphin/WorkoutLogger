@@ -18,12 +18,12 @@ import com.longlife.workoutlogger.model.SessionExerciseSet;
 	entities =
 		{
 			Exercise.class,
+			ExerciseHistory.class,
 			Routine.class,
+			RoutineHistory.class,
 			RoutineSession.class,
 			SessionExercise.class,
-			SessionExerciseSet.class,
-			RoutineHistory.class,
-			ExerciseHistory.class
+			SessionExerciseSet.class
 		},
 	version = DatabaseVersion.CURRENT
 )
@@ -35,6 +35,7 @@ public abstract class Database
 	public abstract ExerciseDao exerciseDao();
 	
 	public abstract RoutineDao routineDao();
+	
 
     /*
     private static Database INSTANCE;

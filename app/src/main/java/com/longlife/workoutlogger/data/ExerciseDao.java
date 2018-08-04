@@ -4,8 +4,10 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Transaction;
 
 import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseHistory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ import io.reactivex.Single;
  */
 
 @android.arch.persistence.room.Dao
-public interface ExerciseDao
+public abstract class ExerciseDao
 {
 	// Getters
 	///
@@ -28,41 +30,62 @@ public interface ExerciseDao
 	///
 	@Query("SELECT * FROM Exercise WHERE hidden = 0")
 	//" ORDER BY favorited DESC, LOWER(name) ASC")
-	Single<List<Exercise>> getExercises();
+	public abstract Single<List<Exercise>> getExercises();
 	
 	@Query("SELECT * FROM Exercise WHERE name = :name")
 		// check if the exercise exists in the database already
-	Single<Exercise> getExercise(String name);
+	public abstract Single<Exercise> getExercise(String name);
 	
 	@Query("SELECT EXISTS (SELECT 1 FROM Exercise WHERE idExercise = :idExercise)")
-	Single<Integer> exerciseExists(Long idExercise);
+	public abstract Single<Integer> exerciseExists(Long idExercise);
 	
 	@Query("SELECT * FROM Exercise WHERE idExercise IN (:ids)")
-		//Flowable<List<Exercise>> getExerciseFromId(List<Integer> ids);
-	Single<List<Exercise>> getExerciseFromId(Set<Long> ids);
+	public abstract Single<List<Exercise>> getExerciseFromId(Set<Long> ids);
 	
 	///
 	/// UPDATE
 	///
 	@Query("UPDATE Exercise SET favorited = :favorited WHERE idExercise = :idExercise")
-	void updateFavorite(Long idExercise, boolean favorited);
+	public abstract void updateFavorite(Long idExercise, boolean favorited);
+	
+	@Query("UPDATE Exercise SET currentIdExerciseHistory = :idExerciseHistory WHERE idExercise = :idExercise")
+	public abstract void updateIdHistory(Long idExercise, Long idExerciseHistory);
 	
 	///
 	/// Inserts
 	///
 	@Insert(onConflict = OnConflictStrategy.ROLLBACK)
-	void insertExercises(ArrayList<Exercise> ex);
+	public abstract void insertExercises(ArrayList<Exercise> ex);
 	
 	@Insert(onConflict = OnConflictStrategy.ROLLBACK)
-	Long insertExercise(Exercise ex);
+	public abstract Long insertExercise(Exercise ex);
 	
+	@Insert(onConflict = OnConflictStrategy.ROLLBACK)
+	public abstract Long insertExerciseHistory(ExerciseHistory eh);
+	
+	// Insert Exercise and ExerciseHistory. Returns idExercise for the inserted exercise.
+	@Transaction
+	public Long insertExerciseFull(Exercise ex)
+	{
+		// Insert exercise.
+		Long idExercise = insertExercise(ex);
+		ex.setIdExercise(idExercise);
+		
+		// Insert history.
+		Long idExerciseHistory = insertExerciseHistory(new ExerciseHistory(ex));
+		// Update the inserted exercise to look at this inserted history.
+		// ex.setCurrentIdExerciseHistory(idExerciseHistory);
+		updateIdHistory(idExercise, idExerciseHistory);
+		
+		return idExercise;
+	}
 	///
 	/// Deletes
 	///
 	// [TODO] Need to check if the exercise is tied to a session, then we use setExerciseAsHidden() instead. Otherwise, we can delete.
 	@Delete
-	void deleteExercise(Exercise ex);
+	public abstract void deleteExercise(Exercise ex);
 	
 	@Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
-	int setExerciseAsHidden(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
+	public abstract void setExerciseAsHidden(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
 }

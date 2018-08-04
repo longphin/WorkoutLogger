@@ -117,7 +117,7 @@ public class Repository
 	
 	public Single<Long> insertExercise(Exercise exercise)
 	{
-		return Single.fromCallable(() -> exerciseDao.insertExercise(exercise));//(Single.fromCallable(() -> exerciseDao.insertExercise(exercise)));
+		return Single.fromCallable(() -> exerciseDao.insertExerciseFull(exercise));
 	}
 	
 	///
@@ -143,6 +143,5 @@ public class Repository
 		routineDao.setRoutineAsHidden(idRoutine, b ? 1 : 0);
 	}
 	
-	//public void updateExercise(Exercise ex){exerciseDao.updateExercise(ex);}
 }
 // Inner Classes

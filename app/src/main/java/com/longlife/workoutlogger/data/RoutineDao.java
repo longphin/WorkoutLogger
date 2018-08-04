@@ -65,22 +65,29 @@ public abstract class RoutineDao
 	@Insert(onConflict = OnConflictStrategy.ROLLBACK)
 	public abstract Long insertRoutineHistory(RoutineHistory rh);
 	
+	// Inserts routine, routine history, routine session, session exercises, session exercise sets. Returns idRoutine for the added routine.
 	@Transaction
 	public Long insertRoutineFull(Routine r, List<RoutineExerciseHelper> reh)
 	{
 		// Insert routine.
 		Long idRoutine = insertRoutine(r);
 		r.setIdRoutine(idRoutine);
+		
 		// Insert this newly created routine to history.
 		Long idRoutineHistory = insertRoutineHistory(new RoutineHistory(r));
-		// Insert routine session using the new routine id.
+		r.setCurrentIdRoutineHistory(idRoutineHistory);
+		updateIdHistory(idRoutine, idRoutineHistory);
+		
+		// Insert routine session using the new routine history id.
 		RoutineSession routineSessionToAdd = new RoutineSession();
 		routineSessionToAdd.setIdRoutineHistory(idRoutineHistory);
 		Long idRoutineSession = insertRoutineSession(routineSessionToAdd);
+		
 		// Insert exercises for the session using the new session.
 		for(int i = 0; i < reh.size(); i++){
-			//seArray[i] = new SessionExercise(reh.get(i).getExercise().getIdRoutineHistory(), idRoutineSession);
-			Long idSessionExercise = insertSessionExercise(new SessionExercise(reh.get(i).getExercise().getIdExercise(), idRoutineSession));
+			Long idSessionExercise = insertSessionExercise(new SessionExercise(reh.get(i).getExercise().getCurrentIdExerciseHistory(), idRoutineSession));
+			
+			// Insert sets for each exercise added.
 			List<SessionExerciseSet> setsToAdd = reh.get(i).getSets();
 			for(int j = 0; j < setsToAdd.size(); j++){
 				setsToAdd.get(j).setIdSessionExercise(idSessionExercise);
@@ -89,6 +96,9 @@ public abstract class RoutineDao
 		}
 		return idRoutine;
 	}
+	
+	@Query("UPDATE Routine SET currentIdRoutineHistory = :idRoutineHistory WHERE idRoutine = :idRoutine")
+	public abstract void updateIdHistory(Long idRoutine, Long idRoutineHistory);
 	
 	@Insert
 	public abstract Long insertSessionExercise(SessionExercise se);

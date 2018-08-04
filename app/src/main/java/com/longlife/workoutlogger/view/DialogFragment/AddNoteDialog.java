@@ -1,7 +1,9 @@
 package com.longlife.workoutlogger.view.DialogFragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -73,18 +75,19 @@ public class AddNoteDialog
 	{
 		super.onCreate(savedInstanceState);
 		
+		setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogFragmentStyle);
+		
 		// Unbundle arguments.
 		this.descripText = getArguments().getString("descrip");
 	}
 	
-	public static AddNoteDialog newInstance(String descrip)
+	@NonNull
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
-		AddNoteDialog dialog = new AddNoteDialog();
-		
-		Bundle bundle = new Bundle();
-		bundle.putString("descrip", descrip);
-		dialog.setArguments(bundle);
-		
+		Dialog dialog = super.onCreateDialog(savedInstanceState);
+		//dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setTitle("Note");
 		return dialog;
 	}
 	
@@ -102,5 +105,17 @@ public class AddNoteDialog
 	public interface OnInputListener
 	{
 		void sendInput(String descrip);
+	}
+	
+	public static AddNoteDialog newInstance(String descrip)
+	{
+		AddNoteDialog dialog = new AddNoteDialog();
+		
+		Bundle bundle = new Bundle();
+		bundle.putString("descrip", descrip);
+		dialog.setArguments(bundle);
+		
+		
+		return dialog;
 	}
 }
