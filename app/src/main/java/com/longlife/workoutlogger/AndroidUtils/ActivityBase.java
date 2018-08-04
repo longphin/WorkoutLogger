@@ -1,5 +1,6 @@
 package com.longlife.workoutlogger.AndroidUtils;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -25,20 +26,13 @@ public abstract class ActivityBase
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
 	public FragmentManager manager = getSupportFragmentManager();
-	
 	// Overrides
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		clearDisposables();
-	}
-	
 	@Override
 	public void onBackPressed()
 	{
 		if(manager.getBackStackEntryCount() > 0){ // if current view is a fragment, then pop it.
 			manager.popBackStack();
+			hideKeyboard(this);
 			
 			int count = manager.getBackStackEntryCount();
 			Log.d(TAG, "Number of activites in back stack: " + String.valueOf(count));
@@ -52,6 +46,25 @@ public abstract class ActivityBase
         super.onBackPressed();
         overridePendingTransition(0, 0);
         */
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		clearDisposables();
+	}
+	
+	public static void hideKeyboard(Activity activity)
+	{
+		InputMethodManager imm = (InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		//Find the currently focused view, so we can grab the correct window token from it.
+		View view = activity.getCurrentFocus();
+		//If no view currently has focus, create a new one, just so we can grab a window token from it
+		if(view == null){
+			view = new View(activity);
+		}
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 	
 	public void addDisposable(Disposable d)

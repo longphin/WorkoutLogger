@@ -12,7 +12,7 @@ import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.utils.Conversions;
-import com.longlife.workoutlogger.view.Routines.Helpers.RoutineExerciseHelper;
+import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public abstract class RoutineDao
 	///
 	/// Gets
 	///
-	@Query("SELECT * FROM Routine")
+	@Query("SELECT * FROM Routine WHERE hidden = 0")
 	public abstract Single<List<Routine>> getRoutines();
 	
 	@Query("SELECT * FROM RoutineSession WHERE idRoutine = :idRoutine AND wasPerformed = 0 ORDER BY sessionDate DESC LIMIT 1")
@@ -53,9 +53,6 @@ public abstract class RoutineDao
 	///
 	/// UPDATE
 	///
-	@Query("UPDATE Routine SET displayOrder = :order WHERE idRoutine = :idRoutine")
-	public abstract void updateDisplayOrder(int idRoutine, int order);
-	
 	///
 	/// Inserts
 	///
@@ -113,5 +110,7 @@ public abstract class RoutineDao
 	
 	@Delete
 	public abstract void deleteSessionExerciseSet(SessionExerciseSet ses);
-
+	
+	@Query("UPDATE Routine SET hidden = :isHidden WHERE idRoutine=:idRoutine")
+	public abstract void setRoutineAsHidden(int idRoutine, int isHidden);
 }

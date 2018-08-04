@@ -2,7 +2,7 @@ package com.longlife.workoutlogger.data;
 
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
-import com.longlife.workoutlogger.view.Routines.Helpers.RoutineExerciseHelper;
+import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.List;
 import java.util.Set;
@@ -61,11 +61,6 @@ public class Repository
 	public void updateFavorite(int idExercise, boolean favorited)
 	{
 		exerciseDao.updateFavorite(idExercise, favorited);
-	}
-	
-	public void updateDisplayOrder(int idRoutine, int order)
-	{
-		routineDao.updateDisplayOrder(idRoutine, order);
 	}
 	
 	///
@@ -141,6 +136,11 @@ public class Repository
 	public void deleteRoutine(Routine ro)
 	{
 		routineDao.deleteRoutine(ro);
+	}
+	
+	public void setRoutineAsHidden(int idRoutine, boolean b)
+	{
+		routineDao.setRoutineAsHidden(idRoutine, b ? 1 : 0);
 	}
 	
 	//public void updateExercise(Exercise ex){exerciseDao.updateExercise(ex);}

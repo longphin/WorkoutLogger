@@ -15,12 +15,6 @@ public class RoutineComparator
 	@Override
 	public int compare(Routine r1, Routine r2)
 	{
-		// Order by display order
-		if(r1.getDisplayOrder() > r2.getDisplayOrder())
-			return (1);
-		else if(r1.getDisplayOrder() < r2.getDisplayOrder())
-			return (-1);
-		
 		// Order by name.
 		int res = r1.getName().compareTo(r2.getName());
 		

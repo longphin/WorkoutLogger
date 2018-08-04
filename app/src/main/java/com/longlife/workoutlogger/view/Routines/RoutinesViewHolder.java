@@ -1,16 +1,20 @@
 package com.longlife.workoutlogger.view.Routines;
 
-import android.support.v7.widget.RecyclerView;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.R;
 
 public class RoutinesViewHolder
-	extends RecyclerView.ViewHolder
+	extends RecyclerViewHolderSwipeable
 {
 	private TextView name;
 	private TextView descrip;
+	private RelativeLayout background;
+	private ConstraintLayout foreground;
 	
 	public RoutinesViewHolder(View itemView)
 	{
@@ -18,6 +22,21 @@ public class RoutinesViewHolder
 		
 		this.name = itemView.findViewById(R.id.txt_routineName);
 		this.descrip = itemView.findViewById(R.id.txt_routineDescrip);
+		this.background = itemView.findViewById(R.id.background_routine_item);
+		this.foreground = itemView.findViewById(R.id.foreground_routine_item);
+	}
+	
+	// Overrides
+	@Override
+	public RelativeLayout getViewBackground()
+	{
+		return background;
+	}
+	
+	@Override
+	public ConstraintLayout getViewForeground()
+	{
+		return foreground;
 	}
 	
 	// Setters

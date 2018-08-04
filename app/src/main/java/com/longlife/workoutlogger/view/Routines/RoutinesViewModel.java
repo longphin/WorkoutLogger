@@ -9,10 +9,13 @@ import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.comparators.RoutineComparators;
 import com.longlife.workoutlogger.utils.Conversions;
 import com.longlife.workoutlogger.utils.Response;
-import com.longlife.workoutlogger.view.Routines.Helpers.RoutineExerciseHelper;
+import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
+import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -31,15 +34,13 @@ public class RoutinesViewModel
 	private final CompositeDisposable disposables = new CompositeDisposable();
 	
 	// Observable for when inserting a new routine.
-	private final Response<Integer> insertResponse = new Response<>();
+	private final Response<Routine> insertResponse = new Response<>();
 	// Observable for when requesting list of all routines.
 	private final Response<List<Routine>> loadResponse = new Response<>();
 	// Observable for getting list of exercises.
 	private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
 	
 	private Repository repo;
-	private List<Routine> routines;
-	private List<Exercise> exercises;
 	
 	///
 	/// Constructors
@@ -49,7 +50,10 @@ public class RoutinesViewModel
 		this.repo = repo;
 	}
 	
-	// Overrides
+	///
+	/// UPDATE
+	///
+	private Queue<DeletedRoutine> routinesToDelete = new LinkedList<>();
 	///
 	/// GETTERS
 	///
@@ -60,16 +64,8 @@ public class RoutinesViewModel
 		disposables.clear();
 	}
 	
+	// Overrides
 	// Getters
-	public List<Routine> getCachedRoutines()
-	{
-		return routines;
-	}
-	
-	public Observable<Response<Integer>> getInsertResponse()
-	{
-		return insertResponse.getObservable();
-	}
 	
 	public Observable<Response<List<Exercise>>> getLoadExercisesResponse()
 	{
@@ -81,6 +77,16 @@ public class RoutinesViewModel
 		return loadResponse.getObservable();
 	}
 	
+	public DeletedRoutine getFirstDeletedRoutine()
+	{
+		return routinesToDelete.poll();
+	}
+	
+	public Observable<Response<Routine>> getInsertResponse()
+	{
+		return insertResponse.getObservable();
+	}
+	
 	public void loadRoutines()
 	{
 		disposables.add(repo.getRoutines()
@@ -90,55 +96,11 @@ public class RoutinesViewModel
 			.subscribe((List<Routine> ro) -> {
 					// sort the list of exercises //[TODO] Set the comparator to what the user chooses
 					Collections.sort(ro, RoutineComparators.getDefaultComparator());
-					this.routines = ro;
+					//this.routines = ro;
 					loadResponse.setSuccess(ro);
 				},
 				throwable -> loadResponse.setError(throwable)
 			)
-		);
-	}
-	
-	public void loadExercises()
-	{
-		disposables.add(
-			repo.getExercises()
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.doOnSubscribe(__ -> loadExercisesResponse.setLoading())
-				.subscribe((List<Exercise> ex) ->
-					{
-						this.exercises = ex;
-						loadExercisesResponse.setSuccess(ex);
-					},
-					throwable -> loadExercisesResponse.setError(throwable)
-				)
-		);
-	}
-	
-	public void insertRoutineFull(Routine ro, List<RoutineExerciseHelper> reh)
-	{
-		disposables.add(
-			repo.insertRoutineFull(ro, reh)
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.doOnSubscribe(__ -> insertResponse.setLoading())
-				.subscribe(id ->
-					{
-						ro.setIdRoutine(Conversions.safeLongToInt(id));
-						this.routines.add(ro);
-						// sort the list of exercises //[TODO] Set the comparator to what the user chooses
-						Collections.sort(this.routines, RoutineComparators.getDefaultComparator());
-						for(int i = 0; i < this.routines.size(); i++){
-							if(routines.get(i).getIdRoutine() == id){
-								insertResponse.setSuccess(i);
-								return;
-							}
-						}
-						Log.d(TAG, "Error: Could not find position of newly inserted exercise.");
-						//insertResponse.setSuccess(-1);
-					},
-					throwable -> insertResponse.setError(throwable)
-				)
 		);
 	}
 	
@@ -170,34 +132,83 @@ public class RoutinesViewModel
 			});
 	}
 	
-	///
-	/// UPDATE
-	///
-	public void updateDisplayOrder(int idRoutine, int order)
+	public void loadExercises()
 	{
-		Completable.fromAction(() -> repo.updateDisplayOrder(idRoutine, order))
+		disposables.add(
+			repo.getExercises()
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.doOnSubscribe(__ -> loadExercisesResponse.setLoading())
+				.subscribe((List<Exercise> ex) ->
+					{
+						//this.exercises = ex;
+						loadExercisesResponse.setSuccess(ex);
+					},
+					throwable -> loadExercisesResponse.setError(throwable)
+				)
+		);
+	}
+
+	public void insertRoutineFull(Routine ro, List<RoutineExerciseHelper> reh)
+	{
+		disposables.add(
+			repo.insertRoutineFull(ro, reh)
+				.subscribeOn(Schedulers.io())
+				.observeOn(AndroidSchedulers.mainThread())
+				.doOnSubscribe(__ -> insertResponse.setLoading())
+				.subscribe(idRoutine ->
+					{
+						ro.setIdRoutine(Conversions.safeLongToInt(idRoutine));
+						//this.routines.add(ro);
+						// sort the list of exercises //[TODO] Set the comparator to what the user chooses
+						
+						/*Collections.sort(this.routines, RoutineComparators.getDefaultComparator());
+						for(int i = 0; i < this.routines.size(); i++){
+							if(routines.get(i).getIdRoutine() == id){
+								insertResponse.setSuccess(i);
+								return;
+							}
+						}*/
+						//Log.d(TAG, "Error: Could not find position of newly inserted exercise.");
+						//insertResponse.setSuccess(-1);
+						insertResponse.setSuccess(ro);
+					},
+					throwable -> insertResponse.setError(throwable)
+				)
+		);
+	}
+	
+	public void addDeletedRoutine(Routine deletedItem, int position)
+	{
+		routinesToDelete.add(new DeletedRoutine(deletedItem, position));
+	}
+	
+	public void setRoutineHiddenStatus(int idRoutine, boolean isHidden)
+	{
+		Completable.fromAction(() -> repo.setRoutineAsHidden(idRoutine, isHidden))
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(new CompletableObserver()
-			{
-				// Overrides
-				@Override
-				public void onSubscribe(Disposable d)
-				{
-				}
+								 {
+									 // Overrides
+									 @Override
+									 public void onSubscribe(Disposable d)
+									 {
+					
+									 }
 				
-				@Override
-				public void onComplete()
-				{
-					Log.d(TAG, "Update successful.");
-				}
+									 @Override
+									 public void onComplete()
+									 {
+					
+									 }
 				
-				@Override
-				public void onError(Throwable e)
-				{
-					e.getMessage();
-				}
-			});
+									 @Override
+									 public void onError(Throwable e)
+									 {
+									 }
+								 }
+			);
 	}
 }
 // Inner Classes

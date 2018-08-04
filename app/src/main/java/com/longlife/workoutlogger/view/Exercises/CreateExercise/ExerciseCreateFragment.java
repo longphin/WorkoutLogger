@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.RequiredFieldException;
@@ -21,7 +22,7 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Validator;
 import com.longlife.workoutlogger.model.Exercise;
-import com.longlife.workoutlogger.view.DialogFragment.EditNameDialog;
+import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 
 import javax.inject.Inject;
@@ -30,11 +31,11 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class ExerciseCreateFragment
 	extends Fragment
-	implements EditNameDialog.OnInputListener
+	implements AddNoteDialog.OnInputListener
 {
 	public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
 	private ExercisesViewModel viewModel;
-	private TextView name;
+	private EditText name;
 	//private TextView descrip;
 	private String descrip;
 	private Button cancelButton;
@@ -45,6 +46,7 @@ public class ExerciseCreateFragment
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
 	private View mView;
+	private ImageView addNoteImage;
 	
 	// Overrides
 	@Nullable
@@ -55,6 +57,7 @@ public class ExerciseCreateFragment
 			mView = inflater.inflate(R.layout.fragment_exercise_create, container, false);
 			
 			this.name = mView.findViewById(R.id.txt_exercise_create_name);
+			this.addNoteImage = mView.findViewById(R.id.imv_exercise_create_add_note);
 			this.cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
 			this.saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
 			
@@ -65,10 +68,17 @@ public class ExerciseCreateFragment
 			saveButton.setOnClickListener(view -> checkFieldsBeforeInsert());
 			
 			// On click listener for changing the exercise name and description. Opens up a dialog fragment for user to change the values.
+			/*
 			name.setOnClickListener(view ->
 			{
-				EditNameDialog dialog = EditNameDialog.newInstance(this.name.getText().toString(), this.descrip);
-				dialog.show(getChildFragmentManager(), EditNameDialog.TAG);
+				AddNoteDialog dialog = AddNoteDialog.newInstance(this.name.getText().toString(), this.descrip);
+				dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
+			});
+			*/
+			this.addNoteImage.setOnClickListener(view ->
+			{
+				AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);
+				dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
 			});
 		}
 		
@@ -99,9 +109,8 @@ public class ExerciseCreateFragment
 	}
 	
 	@Override
-	public void sendInput(String name, String descrip)
+	public void sendInput(String descrip)
 	{
-		this.name.setText(name);
 		this.descrip = descrip;
 	}
 	
@@ -158,7 +167,13 @@ public class ExerciseCreateFragment
 		}
 		
 		viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
+		
 		getActivity().onBackPressed();
 	}
+	
+	/*public static void hideKeyboardFrom(Context context, View view) {
+		InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}*/
 }
 // Inner Classes

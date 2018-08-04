@@ -23,8 +23,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
@@ -36,11 +36,11 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.utils.Response;
-import com.longlife.workoutlogger.view.DialogFragment.EditNameDialog;
+import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableAdapter;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableFragment;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableViewModel;
-import com.longlife.workoutlogger.view.Routines.Helpers.RoutineExerciseHelper;
+import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ import javax.inject.Inject;
 public class RoutineCreateFragment
 	extends FragmentBase
 	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
-						 EditNameDialog.OnInputListener
+						 AddNoteDialog.OnInputListener
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
 	private RoutinesViewModel routineViewModel;
@@ -65,7 +65,8 @@ public class RoutineCreateFragment
 	private AutoCompleteTextView searchBox;
 	private ConstraintLayout coordinatorLayout; // layout for recycler view
 	private View mView;
-	private TextView name;
+	private EditText name;
+	private ImageView addNoteImage;
 	// Other
 	
 	@Inject
@@ -111,6 +112,7 @@ public class RoutineCreateFragment
 			mView = inflater.inflate(R.layout.fragment_routine_create, container, false);
 			
 			this.name = mView.findViewById(R.id.edit_routineCreateName);
+			this.addNoteImage = mView.findViewById(R.id.imv_routine_create_addNote);
 			//this.descrip = mView.findViewById(R.id.edit_routineCreateDescrip);
 			Button cancelButton = mView.findViewById(R.id.btn_routineCreateCancel);
 			Button saveButton = mView.findViewById(R.id.btn_routineCreateSave);
@@ -126,10 +128,10 @@ public class RoutineCreateFragment
 			cancelButton.setOnClickListener(view -> ((ActivityBase)getActivity()).onBackPressedCustom(view));
 			
 			// OnClick listener to change the routine name and description. Opens up a dialog fragment for user to change the values.
-			name.setOnClickListener(view ->
+			this.addNoteImage.setOnClickListener(view ->
 			{
-				EditNameDialog dialog = EditNameDialog.newInstance(this.name.getText().toString(), this.descrip);
-				dialog.show(getChildFragmentManager(), EditNameDialog.TAG);
+				AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);
+				dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
 			});
 			
 			// OnClick for saving routine.
@@ -140,6 +142,8 @@ public class RoutineCreateFragment
 					routineToAdd.setName(name.getText().toString());
 					routineToAdd.setDescription(descrip);//descrip.getText().toString());
 					routineViewModel.insertRoutineFull(routineToAdd, adapter.getRoutineExerciseHelpers());
+					
+					getActivity().onBackPressed();
 				}else{
 					Log.d(TAG, "Routine needs a name"); // [TODO] pop up a message that says it needs a name.
 				}
@@ -188,8 +192,23 @@ public class RoutineCreateFragment
 		}
 	}
 	
+	@Override
+	public void sendInput(String descrip)
+	{
+		this.descrip = descrip;
+	}
+	
+	// Methods
+	private void renderInsertLoadingState()
+	{
+		if(isAdded())
+			Log.d(TAG, "attached: loading exercises");
+		else
+			Log.d(TAG, "detached: loading exercises");
+	}
 	// Insertion Response
-	private void processInsertResponse(Response<Integer> response)
+	
+	private void processInsertResponse(Response<Routine> response)
 	{
 		switch(response.getStatus()){
 			case LOADING:
@@ -203,23 +222,6 @@ public class RoutineCreateFragment
 				break;
 		}
 	}
-	
-	private void renderInsertLoadingState()
-	{
-		if(isAdded())
-			Log.d(TAG, "attached: loading exercises");
-		else
-			Log.d(TAG, "detached: loading exercises");
-	}
-	
-	@Override
-	public void sendInput(String name, String descrip)
-	{
-		this.name.setText(name);
-		this.descrip = descrip;
-	}
-	
-	// Methods
 	
 	// On drag up and down for recyclerview item.
 	@Override
@@ -289,18 +291,20 @@ public class RoutineCreateFragment
 	{
 	}
 	
-	private void renderInsertSuccessState(Integer val)
+	private void renderInsertSuccessState(Routine routine)
 	{
-		if(isAdded())
-			Log.d(TAG, "attached: " + val.toString());
-		else
-			Log.d(TAG, "detached: " + val.toString());
+		if(isAdded()){
+			Log.d(TAG, "attached: " + routine.getName());
+			
+			getActivity().onBackPressed();
+		}else{
+			Log.d(TAG, "detached: " + routine.getName());
+		}
 		
 		//adapter.setRoutines(routineViewModel.getCachedRoutines()); //[TODO] need to set the added exercise helper that was added.
 		//adapter.notifyItemRangeChanged(val, adapter.getItemCount());//viewModel.getCachedExercises().size());
 		
 		clearDisposables();
-		getActivity().onBackPressed();
 	}
 	
 	private void renderSelectedExercisesErrorState(Throwable error)

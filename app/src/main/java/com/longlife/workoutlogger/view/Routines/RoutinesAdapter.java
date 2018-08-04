@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.view.Routines;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,11 @@ import java.util.List;
 public class RoutinesAdapter
 	extends RecyclerView.Adapter<RoutinesViewHolder>
 {
+	// Static
+	private static final String TAG = RoutinesAdapter.class.getSimpleName();
 	private List<Routine> routines = new ArrayList<>();
+	
+	// [TODO] need to observe when a routine is added, and then notify about the insert. Would need to pass the viewModel to this adapter.
 	
 	public RoutinesAdapter()
 	{
@@ -65,11 +70,29 @@ public class RoutinesAdapter
 	
 	public void addRoutine(Routine routine)
 	{
+		Log.d(TAG, "inserted routine " + routine.getName() + " " + String.valueOf(routine.getIdRoutine()));
 		if(routine == null)
 			return;
 		
 		this.routines.add(routine);
 		notifyItemInserted(routines.size() - 1);
+	}
+	
+	public Routine getRoutine(int position)
+	{
+		return routines.get(position);
+	}
+	
+	public void removeRoutine(int position)
+	{
+		routines.remove(position);
+		notifyItemRemoved(position);
+	}
+	
+	public void restoreRoutine(Routine restoredItem, int restoredPosition)
+	{
+		routines.add(restoredPosition, restoredItem);
+		notifyItemInserted(restoredPosition);
 	}
 }
 // Inner Classes

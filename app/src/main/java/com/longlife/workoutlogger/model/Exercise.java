@@ -29,25 +29,23 @@ import io.reactivex.annotations.NonNull;
 public class Exercise
 	implements Parcelable
 {
-	// Getters
-	
+	// Name for exercise.
+	@Required
+	private String name;
 	@PrimaryKey(autoGenerate = true)
 	@NonNull
 	private int idExercise;
-	// For Exercises that are copies of the shared database, this will be the idExercise from the shared database.
-	private int idExerciseShared;
-	@Required
-	private String name;
+	// Note for the exercise.
 	private String description;
-	// Official Exercises will have this flag as true.
-	private boolean premade;
-	
+	// Flag to indicate whether exercise is favorited.
 	private boolean favorited;
+	// Flag to indicate whether exercise is hidden.
 	@NonNull
 	private boolean hidden = false;
-	
+	// Type of exercise, used to determine how the exercise should be recorded.
 	@TypeConverters({ExerciseTypeConverter.class})
 	private ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
+	// Getters
 	@TypeConverters({MeasurementTypeConverter.class})
 	private MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
 	
@@ -112,11 +110,6 @@ public class Exercise
 		return idExercise;
 	}
 	
-	public int getIdExerciseShared()
-	{
-		return idExerciseShared;
-	}
-	
 	public MeasurementType getMeasurementType()
 	{
 		return measurementType;
@@ -127,26 +120,11 @@ public class Exercise
 		return name;
 	}
 	
-	public boolean getPremade()
-	{
-		return premade;
-	}
-	
 	// Overrides;
 	// Setters
 	public void setIdExercise(int val)
 	{
 		idExercise = val;
-	}
-	
-	public void setIdExerciseShared(int idExerciseShared)
-	{
-		this.idExerciseShared = idExerciseShared;
-	}
-	
-	public void setPremade(boolean premade)
-	{
-		this.premade = premade;
 	}
 	
 	public void setFavorited(boolean favorited)

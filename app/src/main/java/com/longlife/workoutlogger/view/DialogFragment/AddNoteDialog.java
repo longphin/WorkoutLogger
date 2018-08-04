@@ -15,15 +15,13 @@ import android.widget.EditText;
 
 import com.longlife.workoutlogger.R;
 
-public class EditNameDialog
+public class AddNoteDialog
 	extends DialogFragment
 {
-	public static final String TAG = EditNameDialog.class.getSimpleName();
-	private EditText name;
+	public static final String TAG = AddNoteDialog.class.getSimpleName();
 	private EditText descrip;
 	public OnInputListener onInputListener;
 	// Other
-	String nameText;
 	String descripText;
 	
 	// Overrides
@@ -31,35 +29,28 @@ public class EditNameDialog
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
-		View mView = inflater.inflate(R.layout.dialog_edit_name, container, false);
+		View mView = inflater.inflate(R.layout.dialog_add_note, container, false);
 		
-		this.name = mView.findViewById(R.id.et_dialog_edit_name);
 		this.descrip = mView.findViewById(R.id.et_dialog_edit_descrip);
 		Button cancelButton = mView.findViewById(R.id.btn_dialog_edit_cancel);
 		Button saveButton = mView.findViewById(R.id.btn_dialog_edit_save);
 		
-		// User does not want to save name.
+		// User does not want to save.
 		cancelButton.setOnClickListener(view -> getDialog().dismiss());
 		
 		saveButton.setOnClickListener(view ->
 		{
-			String inputName = this.name.getText().toString();
 			String inputDescrip = this.descrip.getText().toString();
-			if(inputName.trim().length() == 0) // input was empty
-			{
-				this.name.startAnimation(shakeError());
-			}else{
-				onInputListener.sendInput(inputName, inputDescrip);
+			
+			onInputListener.sendInput(inputDescrip);
 				getDialog().dismiss();
-			}
 		});
 		
 		// Set default values.
-		this.name.setText(this.nameText);
 		this.descrip.setText(this.descripText);
 		
 		// Set initial focus.
-		this.name.requestFocus();
+		this.descrip.requestFocus();
 		getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		
 		return mView;
@@ -82,17 +73,15 @@ public class EditNameDialog
 	{
 		super.onCreate(savedInstanceState);
 		
-		// Unbundle arguments, such as existing name and description.
-		this.nameText = getArguments().getString("name");
+		// Unbundle arguments.
 		this.descripText = getArguments().getString("descrip");
 	}
 	
-	public static EditNameDialog newInstance(String name, String descrip)
+	public static AddNoteDialog newInstance(String descrip)
 	{
-		EditNameDialog dialog = new EditNameDialog();
+		AddNoteDialog dialog = new AddNoteDialog();
 		
 		Bundle bundle = new Bundle();
-		bundle.putString("name", name);
 		bundle.putString("descrip", descrip);
 		dialog.setArguments(bundle);
 		
@@ -112,6 +101,6 @@ public class EditNameDialog
 	// Interface to callback to parent fragment the entered values. Parent must implement this to get back the value.
 	public interface OnInputListener
 	{
-		void sendInput(String name, String descrip);
+		void sendInput(String descrip);
 	}
 }

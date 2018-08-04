@@ -15,12 +15,6 @@ public class SessionExerciseComparator
 	@Override
 	public int compare(SessionExercise se1, SessionExercise se2)
 	{
-		// Order by display order
-		if(se1.getDisplayOrder() > se2.getDisplayOrder())
-			return (1);
-		else if(se1.getDisplayOrder() < se2.getDisplayOrder())
-			return (-1);
-		
 		// Order by id.
 		return (se1.getIdSessionExercise() >= se2.getIdSessionExercise() ? 1 : -1);
 	}

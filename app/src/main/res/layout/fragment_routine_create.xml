@@ -78,17 +78,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_error_outline_black_24dp" />
 
-    <TextView
+    <ImageView
+        android:id="@+id/imv_routine_create_addNote"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_routineCreateName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_note_add_black_24dp" />
+
+    <EditText
         android:id="@+id/edit_routineCreateName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:ems="10"
+        android:hint="@string/Name"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toStartOf="@+id/imv_routine_create_addNote"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/Name" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!--
     <FrameLayout

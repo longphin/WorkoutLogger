@@ -24,8 +24,12 @@ public class RoutineSession
 	@NonNull
 	private int idRoutineSession;
 	private int idRoutine;
+	@NonNull
 	@TypeConverters({DateConverter.class})
 	private Date sessionDate = (new GregorianCalendar()).getTime();
+	// Flag for determining if the session was performed. If the last session for a routine was performed,
+	// then we need to create a new session.
+	@NonNull
 	private boolean wasPerformed = false;
 	
 	public RoutineSession()

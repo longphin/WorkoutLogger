@@ -14,7 +14,9 @@ public class DatabaseVersion
 	private static final int V2_1 = 7; // Added full routine insert (routine, session, session exercise, session exercise set) whenever routine is inserted.
 	private static final int V2_2 = 8; // Add exercise IsHidden flag. Instead of deleting the exercise, we set it as hidden.
 	private static final int V2_3 = 9; // nothing special
+	private static final int V2_4 = 10; // Added hidden flag for routine, so instead of deleting a routine, it will be set as hidden.
+	private static final int V3_0 = 11; // Remove unused model fields for now.
 	
-	public static final int CURRENT = V2_3;
+	public static final int CURRENT = V3_0;
 }
 // Inner Classes

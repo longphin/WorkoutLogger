@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.view.Routines.Helpers;
+package com.longlife.workoutlogger.view.Routines.Helper;
 
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;

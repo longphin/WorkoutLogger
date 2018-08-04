@@ -50,7 +50,7 @@ public class RoutineCreateExerciseSetFragment
 		return mView;
 	}
 	
-	public static RoutineCreateExerciseSetFragment instance(Exercise exercise, ArrayList<SessionExerciseSet> sets)
+	public static RoutineCreateExerciseSetFragment newInstance(Exercise exercise, ArrayList<SessionExerciseSet> sets)
 	{
 		RoutineCreateExerciseSetFragment fragment = new RoutineCreateExerciseSetFragment();
 		Bundle bundle = new Bundle();

@@ -90,10 +90,10 @@ public class ExercisesAdapter
 		notifyItemRemoved(position);
 	}
 	
-	public void restoreExercise(Exercise deletedItem, int deletedIndex)
+	public void restoreExercise(Exercise restoredItem, int restoredPosition)
 	{
-		exercises.add(deletedIndex, deletedItem);
-		notifyItemInserted(deletedIndex);
+		exercises.add(restoredPosition, restoredItem);
+		notifyItemInserted(restoredPosition);
 	}
 	
 	public void addExercise(Exercise ex)

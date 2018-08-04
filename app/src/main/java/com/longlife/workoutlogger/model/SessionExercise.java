@@ -31,9 +31,6 @@ public class SessionExercise
 	private int idSessionExercise;
 	private int idRoutineSession;
 	private int idExercise;
-	private int displayOrder;
-	private int defaultNumberOfSets; // [TODO] this will be updated to be the number of sets in the previous session
-	private long defaultRestTime; // [TODO] this will be used to give a default rest time
 	
 	public SessionExercise()
 	{
@@ -48,20 +45,6 @@ public class SessionExercise
 	}
 	
 	// Getters
-	public int getDefaultNumberOfSets()
-	{
-		return defaultNumberOfSets;
-	}
-	
-	public long getDefaultRestTime()
-	{
-		return defaultRestTime;
-	}
-	
-	public int getDisplayOrder()
-	{
-		return displayOrder;
-	}
 	
 	public int getIdExercise()
 	{
@@ -79,21 +62,6 @@ public class SessionExercise
 	}
 	
 	// Setters
-	public void setDisplayOrder(int displayOrder)
-	{
-		this.displayOrder = displayOrder;
-	}
-	
-	public void setDefaultNumberOfSets(int defaultNumberOfSets)
-	{
-		this.defaultNumberOfSets = defaultNumberOfSets;
-	}
-	
-	public void setDefaultRestTime(long defaultRestTime)
-	{
-		this.defaultRestTime = defaultRestTime;
-	}
-	
 	public void setIdRoutineSession(int i)
 	{
 		idRoutineSession = i;

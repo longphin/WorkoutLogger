@@ -12,7 +12,7 @@ import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateAddSetViewHolder;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateSetViewHolder;
-import com.longlife.workoutlogger.view.Routines.Helpers.RoutineExerciseHelper;
+import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

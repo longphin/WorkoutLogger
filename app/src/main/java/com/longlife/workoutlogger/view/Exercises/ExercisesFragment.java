@@ -53,7 +53,7 @@ public class ExercisesFragment
 	private int layoutId;
 	
 	private RecyclerView recyclerView;
-	private ConstraintLayout coordinatorLayout; // layout for recycler view
+	private ConstraintLayout viewRootLayout; // layout for recycler view
 	
 	@Inject
 	public Context context;
@@ -99,7 +99,7 @@ public class ExercisesFragment
 			adapter.removeExercise(position);
 			
 			Snackbar snackbar = Snackbar
-				.make(coordinatorLayout, deletedItem.getName() + " deleted.", Snackbar.LENGTH_LONG);
+				.make(viewRootLayout, deletedItem.getName() + " deleted.", Snackbar.LENGTH_LONG);
 			snackbar.setAction("UNDO", view -> {});
 			snackbar.addCallback(new Snackbar.Callback()
 			{
@@ -136,7 +136,7 @@ public class ExercisesFragment
 			mView = inflater.inflate(layoutId, container, false);
 			
 			recyclerView = mView.findViewById(R.id.rv_exercises);
-			coordinatorLayout = mView.findViewById(R.id.exercises_overview_layout);
+			viewRootLayout = mView.findViewById(R.id.exercises_overview_layout);
 			
 			FloatingActionButton btn_addRoutine = mView.findViewById(R.id.btn_addExercise);
 			btn_addRoutine.setOnClickListener(view -> startCreateFragment());
