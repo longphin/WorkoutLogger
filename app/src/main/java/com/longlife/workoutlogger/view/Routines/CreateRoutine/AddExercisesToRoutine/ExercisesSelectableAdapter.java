@@ -16,13 +16,12 @@ public class ExercisesSelectableAdapter
 {
 	// Static
 	private final static String TAG = ExercisesSelectableAdapter.class.getSimpleName();
-	//private List<Integer> selectedIdExercises = new ArrayList<>();
 	
 	private ExercisesSelectableViewModel viewModel;
 	
-	public ExercisesSelectableAdapter(ExercisesSelectableViewModel viewModel)
+	public ExercisesSelectableAdapter(ExercisesSelectableViewModel viewModel, IClickExercise clickExerciseCallback)
 	{
-		super(viewModel);
+		super(viewModel, clickExerciseCallback);
 		this.viewModel = viewModel;
 	}
 	

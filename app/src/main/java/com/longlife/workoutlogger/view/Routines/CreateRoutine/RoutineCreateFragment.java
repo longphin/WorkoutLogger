@@ -37,6 +37,7 @@ import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
+import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableAdapter;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableFragment;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableViewModel;
@@ -51,7 +52,8 @@ import javax.inject.Inject;
 public class RoutineCreateFragment
 	extends FragmentBase
 	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
-						 AddNoteDialog.OnInputListener
+						 AddNoteDialog.OnInputListener,
+						 ExercisesSelectableAdapter.IClickExercise
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
 	private RoutinesViewModel routineViewModel;
@@ -241,7 +243,20 @@ public class RoutineCreateFragment
 		return (new RoutineCreateFragment());
 	}
 	
-	// Methods
+	// When exercise is clicked, open up edit fragment
+	@Override
+	public void exerciseClicked(Long idExercise)
+	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
+		
+		ExerciseEditFragment fragment = (ExerciseEditFragment)manager.findFragmentByTag(ExerciseEditFragment.TAG);
+		if(fragment == null){
+			fragment = ExerciseEditFragment.newInstance(idExercise);
+		}
+		
+		Log.d(TAG, "Editing exercise " + String.valueOf(idExercise));
+		addFragmentToActivity(manager, fragment, R.id.root_routines, ExerciseEditFragment.TAG, ExerciseEditFragment.TAG);
+	}
 	private void renderInsertLoadingState()
 	{
 		if(isAdded())
@@ -354,23 +369,7 @@ public class RoutineCreateFragment
 		Log.d(TAG, throwable.getMessage());
 	}
 	
-	// Click search exercise button
-	private void startSearchExercises()
-	{
-		FragmentManager manager = getActivity().getSupportFragmentManager();
-		
-		ExercisesSelectableFragment fragment = (ExercisesSelectableFragment)manager.findFragmentByTag(ExercisesSelectableFragment.TAG);
-		if(fragment == null){
-			//fragment = ExercisesOverviewFragment.newInstance(R.id.root_routines_overview, R.layout.item_exercise_selectable, R.layout.fragment_routine_exercises);
-			fragment = new ExercisesSelectableFragment();
-			fragment.setRootId(R.id.root_routines);
-			fragment.setAdapter(new ExercisesSelectableAdapter(exerciseViewModel));
-			fragment.setLayoutId(R.layout.fragment_routine_exercises);
-			fragment.setViewModel(exerciseViewModel);
-		}
-		
-		addFragmentToActivity(manager, fragment, R.id.root_routines, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);
-	}
+	// Methods
 	
 	private void addFragmentToActivity(FragmentManager fragmentManager,
 		Fragment fragment,
@@ -378,7 +377,6 @@ public class RoutineCreateFragment
 		String tag,
 		String addToBackStack)
 	{
-		
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.replace(frameId, fragment, tag);
 		if(!addToBackStack.isEmpty())
@@ -405,6 +403,24 @@ public class RoutineCreateFragment
 	private void renderSelectedExercisesSuccessState(List<Exercise> ex)
 	{
 		adapter.addExercises(ex);
+	}
+	
+	// Click search exercise button
+	private void startSearchExercises()
+	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
+		
+		ExercisesSelectableFragment fragment = (ExercisesSelectableFragment)manager.findFragmentByTag(ExercisesSelectableFragment.TAG);
+		if(fragment == null){
+			//fragment = ExercisesOverviewFragment.newInstance(R.id.root_routines_overview, R.layout.item_exercise_selectable, R.layout.fragment_routine_exercises);
+			fragment = new ExercisesSelectableFragment();
+			fragment.setRootId(R.id.root_routines);
+			fragment.setAdapter(new ExercisesSelectableAdapter(exerciseViewModel, this));
+			fragment.setLayoutId(R.layout.fragment_routine_exercises);
+			fragment.setViewModel(exerciseViewModel);
+		}
+		
+		addFragmentToActivity(manager, fragment, R.id.root_routines, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);
 	}
 }
 // Inner Classes

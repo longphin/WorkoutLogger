@@ -77,7 +77,7 @@ public class ExercisesActivity
 		ExercisesFragment fragment = (ExercisesFragment)manager.findFragmentByTag(ExercisesFragment.TAG);
 		if(fragment == null){
 			fragment = new ExercisesFragment();//ExercisesOverviewFragment.newInstance(R.id.root_exercises_overview, R.layout.item_exercises, R.layout.fragment_exercises);//(R.id.root_exercises_overview);
-			fragment.setAdapter(new ExercisesAdapter(viewModel));
+			fragment.setAdapter(new ExercisesAdapter(viewModel, fragment));
 			fragment.setRootId(R.id.root_exercises);
 			fragment.setLayoutId(R.layout.fragment_exercises);
 			/*

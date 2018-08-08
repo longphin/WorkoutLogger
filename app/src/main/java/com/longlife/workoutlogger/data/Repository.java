@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.data;
 
 import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseHistory;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
@@ -56,6 +57,8 @@ public class Repository
 	}
 	
 	public Single<List<Exercise>> getExerciseFromId(Set<Long> ids){ return exerciseDao.getExerciseFromId(ids);}
+	
+	public Single<Exercise> getExerciseFromId(Long id){return exerciseDao.getExerciseFromId(id);}
 	
 	// UPDATES
 	public void updateFavorite(Long idExercise, boolean favorited)
@@ -143,5 +146,19 @@ public class Repository
 		routineDao.setRoutineAsHidden(idRoutine, b ? 1 : 0);
 	}
 	
+	public void updateExercise(Exercise exercise)
+	{
+		exerciseDao.updateExercise(exercise);
+	}
+	
+	public Single<Long> insertExerciseHistoryFull(ExerciseHistory exerciseHistory, Exercise exercise)
+	{
+		// [TODO] I don't think this works. The transaction depends on an insert in the transaction, which does not occur yet.
+		// Instead, I think a map needs to be done. insertHistory -> (idExerciseHistory -> updateIdHistoryForExercise(ex.getIdExercise(), idExerciseHistory))
+		//return exerciseDao.insertExerciseHistory(exerciseHistory);
+		return Single.fromCallable(() -> exerciseDao.insertExerciseHistoryFull(exerciseHistory, exercise));
+/*			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread());*/
+	}
 }
 // Inner Classes

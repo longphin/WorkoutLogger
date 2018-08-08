@@ -13,6 +13,8 @@ import com.longlife.workoutlogger.R;
 public class ExercisesViewHolder
 	extends RecyclerViewHolderSwipeable
 {
+	// Overrides
+	
 	private TextView name;
 	private TextView descrip;
 	private RelativeLayout viewBackground;
@@ -32,7 +34,7 @@ public class ExercisesViewHolder
 		this.selectedCheckBox = itemView.findViewById(R.id.ch_selectExercise);
 	}
 	
-	// Overrides
+	// Getters
 	public RelativeLayout getViewBackground()
 	{
 		return viewBackground;
@@ -43,7 +45,10 @@ public class ExercisesViewHolder
 		return viewForeground;
 	}
 	
-	// Getters
+	public TextView getNameTextView()
+	{
+		return name;
+	}
 	public ImageView getFavoriteIcon(){ return favoriteIcon;}
 	
 	public CheckBox getSelectedCheckBox()

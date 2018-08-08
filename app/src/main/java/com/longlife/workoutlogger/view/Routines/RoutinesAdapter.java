@@ -36,6 +36,8 @@ public class RoutinesAdapter
 		sbName.append(routine.getName())
 			.append(" (")
 			.append(routine.getIdRoutine())
+			.append(" -> ")
+			.append(routine.getCurrentIdRoutineHistory())
 			.append(")");
 		
 		holder.setNameText(sbName.toString());

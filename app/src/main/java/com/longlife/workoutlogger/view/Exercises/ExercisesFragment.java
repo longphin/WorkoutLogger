@@ -32,6 +32,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
+import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
 
 import java.util.List;
@@ -43,7 +44,8 @@ import javax.inject.Inject;
  */
 public class ExercisesFragment
 	extends FragmentBase
-	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
+	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
+						 ExercisesAdapter.IClickExercise
 {
 	public static final String TAG = ExercisesFragment.class.getSimpleName();
 	@Required
@@ -77,6 +79,7 @@ public class ExercisesFragment
 		
 		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
+		addDisposable(viewModel.getExerciseEditedResponse().subscribe(response -> adapter.exerciseUpdated(response.getValue()))); // [TODO] why is the adapter not notifying the change?
 		
 		Log.d(TAG, "OnCreate: loadExercises()");
 		viewModel.loadExercises();
@@ -165,7 +168,22 @@ public class ExercisesFragment
 		return false;
 	}
 	
-	// Setters
+	@Override
+	public void exerciseClicked(Long idExercise)
+	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
+		
+		ExerciseEditFragment fragment = (ExerciseEditFragment)manager.findFragmentByTag(ExerciseEditFragment.TAG);
+		if(fragment == null){
+			fragment = ExerciseEditFragment.newInstance(idExercise);
+		}
+		
+		Log.d(TAG, "Editing exercise " + String.valueOf(idExercise));
+		manager.beginTransaction()
+			.replace(rootId, fragment, ExerciseEditFragment.TAG)
+			.addToBackStack(ExerciseEditFragment.TAG)
+			.commit();
+	}
 	public void setRootId(int rootId)
 	{
 		this.rootId = rootId;
@@ -178,7 +196,7 @@ public class ExercisesFragment
 		this.adapter = adapter;
 	}
 	
-	// Methods
+	// Setters
 	private void processInsertExerciseResponse(Response<Exercise> response)
 	{
 		switch(response.getStatus()){
@@ -253,6 +271,7 @@ public class ExercisesFragment
 		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
 		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 	}
+	// Methods
 	
 	protected void startCreateFragment()
 	{

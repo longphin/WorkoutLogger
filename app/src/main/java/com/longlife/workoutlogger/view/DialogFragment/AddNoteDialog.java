@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -25,6 +26,8 @@ public class AddNoteDialog
 	public OnInputListener onInputListener;
 	// Other
 	String descripText;
+	Button saveButton;
+	Button cancelButton;
 	
 	// Overrides
 	@Nullable
@@ -34,8 +37,8 @@ public class AddNoteDialog
 		View mView = inflater.inflate(R.layout.dialog_add_note, container, false);
 		
 		this.descrip = mView.findViewById(R.id.et_dialog_edit_descrip);
-		Button cancelButton = mView.findViewById(R.id.btn_dialog_edit_cancel);
-		Button saveButton = mView.findViewById(R.id.btn_dialog_edit_save);
+		this.cancelButton = mView.findViewById(R.id.btn_dialog_edit_cancel);
+		this.saveButton = mView.findViewById(R.id.btn_dialog_edit_save);
 		
 		// User does not want to save.
 		cancelButton.setOnClickListener(view -> getDialog().dismiss());
@@ -59,6 +62,27 @@ public class AddNoteDialog
 	}
 	
 	@Override
+	public void onResume()
+	{
+		super.onResume();
+		
+		// Open keyboard if box is in focus.
+		descrip.post(new Runnable()
+		{
+			// Overrides
+			@Override
+			public void run()
+			{
+				descrip.requestFocus();
+				
+				InputMethodManager imm = (InputMethodManager)descrip.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+				if(imm != null)
+					imm.showSoftInput(descrip, InputMethodManager.SHOW_IMPLICIT);
+			}
+		});
+	}
+	
+	@Override
 	public void onAttach(Context context)
 	{
 		super.onAttach(context);
@@ -69,6 +93,18 @@ public class AddNoteDialog
 			throw new ClassCastException("onAttach failed OnInputListener");
 		}
 	}
+	
+	/*
+	@Override
+	public void onDismiss(DialogInterface dialog)
+	{
+		// Close keyboard
+		InputMethodManager imm = (InputMethodManager)descrip.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (imm.isActive()) imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+		
+		super.onDismiss(dialog);
+	}
+	*/
 	
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState)

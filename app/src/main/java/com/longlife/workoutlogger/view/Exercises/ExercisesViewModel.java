@@ -7,8 +7,10 @@ import android.util.Log;
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.enums.Status;
 import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseHistory;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
+import com.longlife.workoutlogger.view.Exercises.Helper.EditedExerciseIdHolder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Queue;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -33,6 +36,10 @@ public class ExercisesViewModel
 	// Observable for when requesting list of all exercises.
 	private final Response<List<Exercise>> loadResponse = new Response<>();
 	private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
+	
+	// Observable for when an exercise is inserted.
+	private final Response<EditedExerciseIdHolder> exerciseEditedResponse = new Response<>();
+	
 	// Protected
 	protected final CompositeDisposable disposables = new CompositeDisposable();
 	protected Repository repo;
@@ -49,8 +56,17 @@ public class ExercisesViewModel
 		super.onCleared();
 		disposables.clear();
 	}
-	
 	// Getters
+	public Observable<Response<EditedExerciseIdHolder>> getExerciseEditedResponse()
+	{
+		return exerciseEditedResponse.getObservable();
+	}
+	
+	public Single<Exercise> getExerciseFromId(Long idExercise)
+	{
+		return repo.getExerciseFromId(idExercise);
+	}
+	
 	public Observable<Response<Exercise>> getExerciseInsertedResponse()
 	{
 		return exerciseInsertedResponse.getObservable();
@@ -169,5 +185,67 @@ public class ExercisesViewModel
 					e.getMessage();
 				}
 			});
+	}
+	
+	public void updateExercise(Exercise exercise)
+	{
+		Completable.fromAction(() -> repo.updateExercise(exercise))
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(new CompletableObserver()
+			{
+				// Overrides
+				@Override
+				public void onSubscribe(Disposable d)
+				{
+				
+				}
+				
+				@Override
+				public void onComplete()
+				{
+				
+				}
+				
+				@Override
+				public void onError(Throwable e)
+				{
+				
+				}
+			});
+	}
+	
+	public void insertExerciseHistoryFull(ExerciseHistory exerciseHistory, Exercise exercise)
+	{
+		//return repo.insertExerciseHistory(exerciseHistory);
+		//return repo.insertExerciseHistoryFull(exerciseHistory, exercise);
+		disposables.add(repo.insertExerciseHistoryFull(exerciseHistory, exercise)
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.subscribe(
+				idExerciseHistory -> exerciseEditedResponse.setSuccess(new EditedExerciseIdHolder(exercise.getIdExercise(), idExerciseHistory)),
+				throwable -> {}
+			));
+		
+/*		disposables.add(repo.insertExerciseHistoryFull(exerciseHistory, exercise)
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread())
+			.doOnSubscribe(__ -> {
+				Log.d(TAG, "loading exercises: loading... ");
+				exerciseEditedResponse.setLoading();
+			})
+			.subscribe(idExerciseHistory ->
+					// sort the list of exercises //[TODO] Set the comparator to what the user chooses
+					//Collections.sort(ex, ExerciseComparators.getDefaultComparator());
+					//this.exercises = ex;
+					exerciseEditedResponse.setSuccess(idExerciseHistory)
+				,
+				throwable ->
+				{
+					Log.d(TAG, "loading exercises: error... ");
+					exerciseEditedResponse.setError(throwable);
+				}
+			)
+		);*/
 	}
 }

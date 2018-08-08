@@ -2,6 +2,7 @@ package com.longlife.workoutlogger.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
@@ -24,9 +25,8 @@ public class RoutineSession
 	@NonNull
 	private Long idRoutineSession;
 	private Long idRoutineHistory;
-	@NonNull
 	@TypeConverters({DateConverter.class})
-	private Date sessionDate = (new GregorianCalendar()).getTime();
+	private Date sessionDate;
 	// Flag for determining if the session was performed. If the last session for a routine was performed,
 	// then we need to create a new session.
 	@NonNull
@@ -77,6 +77,13 @@ public class RoutineSession
 	public void setSessionDate(Date sessionDate)
 	{
 		this.sessionDate = sessionDate;
+	}
+	
+	// Set the session date as the time as of now.
+	@Ignore
+	public void setSessionDateNow()
+	{
+		this.sessionDate = (new GregorianCalendar()).getTime();
 	}
 }
 

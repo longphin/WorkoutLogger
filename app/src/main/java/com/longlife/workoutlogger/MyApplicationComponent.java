@@ -5,6 +5,7 @@ import android.app.Application;
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.data.RoomModule;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
+import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.ExercisesActivity;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
 import com.longlife.workoutlogger.view.MainActivity;
@@ -40,6 +41,8 @@ public interface MyApplicationComponent
 	void inject(ExerciseCreateFragment ecf);
 	
 	void inject(ExercisesFragment ef);
+	
+	void inject(ExerciseEditFragment eef);
 	
 	Repository repository();
 	

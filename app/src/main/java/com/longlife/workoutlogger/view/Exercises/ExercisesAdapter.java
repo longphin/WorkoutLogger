@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.view.Exercises.Helper.EditedExerciseIdHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,35 +18,32 @@ public class ExercisesAdapter
 	private ExercisesViewModel viewModel;
 	protected List<Exercise> exercises = new ArrayList<>();
 	
-	public ExercisesAdapter(ExercisesViewModel viewModel)
+	private IClickExercise exerciseClickCallback;
+	
+	public ExercisesAdapter(ExercisesViewModel viewModel, IClickExercise exerciseClickCallback)
 	{
 		this.viewModel = viewModel;
+		this.exerciseClickCallback = exerciseClickCallback;
 	}
 	
 	// Overrides
-	@Override
-	public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-	{
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_exercise, parent, false);
-		
-		return (new ExercisesViewHolder(v));
-	}
-	
 	@Override
 	public void onBindViewHolder(ExercisesViewHolder holder, int pos)
 	{
 		final int position = holder.getAdapterPosition();
 		Exercise ex = exercises.get(position);
-		
+		// Name
 		StringBuilder sbName = new StringBuilder(100);
 		sbName.append(ex.getName())
 			.append(" (")
 			.append(ex.getIdExercise())
+			.append(" -> ")
+			.append(ex.getCurrentIdExerciseHistory())
 			.append(")");
-		
 		holder.setNameText(sbName.toString());
+		// Description
 		holder.setDescripText(ex.getDescription());
-		
+		// Favorite icon
 		if(ex.getFavorited()){
 			holder.setFavoriteIcon(R.drawable.ic_favorite_black_24dp);
 		}else{
@@ -64,6 +62,33 @@ public class ExercisesAdapter
 				viewModel.updateFavorite(ex.getIdExercise(), ex.getFavorited());
 			}
 		);
+		
+		// Edit exercise
+		holder.getNameTextView().setOnClickListener(view ->
+		{
+			exerciseClickCallback.exerciseClicked(ex.getIdExercise());
+		});
+	}
+	
+	// Setters
+	@Override
+	public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+	{
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_exercise, parent, false);
+		
+		return (new ExercisesViewHolder(v));
+	}
+	
+	public void exerciseUpdated(EditedExerciseIdHolder editedExerciseDetails)
+	{
+		final Long idExerciseEdited = editedExerciseDetails.getIdExercise();
+		// Find where in the adapter this exercise is and notify the change.
+		for(int i = 0; i < exercises.size(); i++){
+			if(exercises.get(i).getIdExercise().equals(idExerciseEdited)){
+				notifyItemChanged(i);
+				return;
+			}
+		}
 	}
 	
 	@Override
@@ -72,7 +97,12 @@ public class ExercisesAdapter
 		return exercises.size();
 	}
 	
-	// Setters
+	// Interface for when an item is clicked. Should be implemented by the Activity to start an edit fragment.
+	public interface IClickExercise
+	{
+		// When an exercise is clicked, send the clicked exercise.
+		void exerciseClicked(Long idExercise);
+	}
 	public void setExercises(List<Exercise> exercises)
 	{
 		this.exercises = exercises;

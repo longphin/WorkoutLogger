@@ -5,6 +5,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
+import android.arch.persistence.room.Update;
 
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseHistory;
@@ -41,6 +42,9 @@ public abstract class ExerciseDao
 	
 	@Query("SELECT * FROM Exercise WHERE idExercise IN (:ids)")
 	public abstract Single<List<Exercise>> getExerciseFromId(Set<Long> ids);
+	
+	@Query("SELECT * FROM Exercise WHERE idExercise=:id")
+	public abstract Single<Exercise> getExerciseFromId(Long id);
 	
 	///
 	/// UPDATE
@@ -79,6 +83,26 @@ public abstract class ExerciseDao
 		
 		return idExercise;
 	}
+	
+	// When updating an exercise, save it into history and update it in the Exercise table. Returns the idExerciseHistory for the inserted history.
+	@Transaction
+	public Long insertExerciseHistoryFull(ExerciseHistory eh, Exercise ex)
+	{
+		// Insert history
+		Long idExerciseHistory = insertExerciseHistory(eh);
+		
+		ex.setCurrentIdExerciseHistory(idExerciseHistory);
+		// Update exercise
+		updateExercise(ex);
+		//updateExerciseIdHistory(ex.getIdExercise(), idExerciseHistory);
+		
+		return idExerciseHistory;
+	}
+	
+	/*
+	@Query("UPDATE Exercise SET currentIdExerciseHistory = :idExerciseHistory WHERE idExercise = :idExercise")
+	public abstract void updateExerciseIdHistory(Long idExercise, Long idExerciseHistory);*/
+	
 	///
 	/// Deletes
 	///
@@ -88,4 +112,7 @@ public abstract class ExerciseDao
 	
 	@Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
 	public abstract void setExerciseAsHidden(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
+	
+	@Update
+	public abstract void updateExercise(Exercise ex);
 }
