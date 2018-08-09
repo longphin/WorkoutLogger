@@ -86,19 +86,38 @@ public abstract class ExerciseDao
 	
 	// When updating an exercise, save it into history and update it in the Exercise table. Returns the idExerciseHistory for the inserted history.
 	@Transaction
-	public Long insertExerciseHistoryFull(ExerciseHistory eh, Exercise ex)
+	public Exercise updateExerciseHistoryFull(ExerciseHistory eh, Exercise ex)
 	{
 		// Insert history
 		Long idExerciseHistory = insertExerciseHistory(eh);
-		
 		ex.setCurrentIdExerciseHistory(idExerciseHistory);
+		
 		// Update exercise
 		updateExercise(ex);
-		//updateExerciseIdHistory(ex.getIdExercise(), idExerciseHistory);
 		
-		return idExerciseHistory;
+		return ex;
 	}
 	
+	// When inserting an exercise, save it into history and update it in the Exercise table. Returns the idExerciseHistory for the inserted history.
+	@Transaction
+	public Exercise insertExerciseHistoryFull(Exercise ex)
+	{
+		// Insert exercise
+		Long idExercise = insertExercise(ex);
+		ex.setIdExercise(idExercise);
+		
+		// Insert history
+		ExerciseHistory exerciseHistory = new ExerciseHistory(ex);
+		Long idExerciseHistory = insertExerciseHistory(exerciseHistory);
+		ex.setCurrentIdExerciseHistory(idExerciseHistory);
+		
+		// Update the exercise with the obtained history id.
+		updateIdHistory(idExercise, idExerciseHistory);
+		
+		return ex;
+		
+		//return idExerciseHistory;
+	}
 	/*
 	@Query("UPDATE Exercise SET currentIdExerciseHistory = :idExerciseHistory WHERE idExercise = :idExercise")
 	public abstract void updateExerciseIdHistory(Long idExercise, Long idExerciseHistory);*/

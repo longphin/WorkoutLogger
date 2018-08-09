@@ -14,7 +14,7 @@ import io.reactivex.annotations.NonNull;
 public class Routine
 {
 	// Incremented value to ensure each Routine gets a unique Id.
-	@PrimaryKey(autoGenerate = true)
+	@PrimaryKey
 	@NonNull
 	private Long idRoutine;
 	// This is the current idRoutineHistory that this routine corresponds to.

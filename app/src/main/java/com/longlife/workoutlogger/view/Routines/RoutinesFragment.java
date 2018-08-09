@@ -70,7 +70,7 @@ public class RoutinesFragment
 			ViewModelProviders.of(getActivity(), viewModelFactory)
 				.get(RoutinesViewModel.class);
 		
-		//viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response));
+		//viewModel.getLoadRoutinesResponse().subscribe(response -> processLoadResponse(response));
 		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
 		addDisposable(viewModel.getInsertResponse().subscribe(response -> processInsertRoutineResponse(response)));
 	}

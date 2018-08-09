@@ -151,7 +151,9 @@ public class ExerciseCreateFragment
 			return;
 		}
 		
-		viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
+		//viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
+		// Insert the new exercise into Exercise and ExerciseHistory tables.
+		viewModel.insertExerciseHistoryFull(newExercise);
 		
 		getActivity().onBackPressed();
 	}

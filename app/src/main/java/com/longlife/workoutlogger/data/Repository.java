@@ -151,14 +151,14 @@ public class Repository
 		exerciseDao.updateExercise(exercise);
 	}
 	
-	public Single<Long> insertExerciseHistoryFull(ExerciseHistory exerciseHistory, Exercise exercise)
+	public Single<Exercise> updateExerciseHistoryFull(ExerciseHistory exerciseHistory, Exercise exercise)
 	{
-		// [TODO] I don't think this works. The transaction depends on an insert in the transaction, which does not occur yet.
-		// Instead, I think a map needs to be done. insertHistory -> (idExerciseHistory -> updateIdHistoryForExercise(ex.getIdExercise(), idExerciseHistory))
-		//return exerciseDao.insertExerciseHistory(exerciseHistory);
-		return Single.fromCallable(() -> exerciseDao.insertExerciseHistoryFull(exerciseHistory, exercise));
-/*			.subscribeOn(Schedulers.io())
-			.observeOn(AndroidSchedulers.mainThread());*/
+		return Single.fromCallable(() -> exerciseDao.updateExerciseHistoryFull(exerciseHistory, exercise));
+	}
+	
+	public Single<Exercise> insertExerciseHistoryFull(Exercise exercise)
+	{
+		return Single.fromCallable(() -> exerciseDao.insertExerciseHistoryFull(exercise));
 	}
 }
 // Inner Classes

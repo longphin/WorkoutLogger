@@ -33,7 +33,7 @@ public class ExercisesViewModel
 	private final Response<Exercise> exerciseInsertedResponse = new Response<>();
 	
 	// Observable for when requesting list of all exercises.
-	private final Response<List<Exercise>> loadResponse = new Response<>();
+	private final Response<List<Exercise>> loadRoutinesResponse = new Response<>();
 	private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
 	
 	// Observable for when an exercise is inserted.
@@ -76,10 +76,9 @@ public class ExercisesViewModel
 		return exercisesToDelete.poll();
 	}
 	
-	public Observable<Response<List<Exercise>>> getLoadResponse()
+	public Observable<Response<List<Exercise>>> getLoadRoutinesResponse()
 	{
-		Log.d(TAG, "getLoadResponse()");
-		return loadResponse.getObservable();
+		return loadRoutinesResponse.getObservable();
 	}
 	
 	public void addDeletedExercise(Exercise ex, int pos)
@@ -90,7 +89,7 @@ public class ExercisesViewModel
 	public void loadExercises()
 	{
 		Log.d(TAG, "loadExercises()");
-		if(loadResponse.getStatus() == Status.LOADING)
+		if(loadRoutinesResponse.getStatus() == Status.LOADING)
 			return;
 		
 		disposables.add(repo.getExercises()
@@ -98,19 +97,19 @@ public class ExercisesViewModel
 			.observeOn(AndroidSchedulers.mainThread())
 			.doOnSubscribe(__ -> {
 				Log.d(TAG, "loading exercises: loading... ");
-				loadResponse.setLoading();
+				loadRoutinesResponse.setLoading();
 			})
 			.subscribe((List<Exercise> ex) -> {
 					// sort the list of exercises //[TODO] Set the comparator to what the user chooses
 					//Collections.sort(ex, ExerciseComparators.getDefaultComparator());
 					//this.exercises = ex;
 					Log.d(TAG, "loading exercises: success... ");
-					loadResponse.setSuccess(ex);
+					loadRoutinesResponse.setSuccess(ex);
 				},
 				throwable ->
 				{
 					Log.d(TAG, "loading exercises: error... ");
-					loadResponse.setError(throwable);
+					loadRoutinesResponse.setError(throwable);
 				}
 			)
 		);
@@ -118,7 +117,6 @@ public class ExercisesViewModel
 	
 	public void insertExercise(Exercise newExercise)
 	{
-		Log.d(TAG, "insertExercise()");
 		if(exerciseInsertedResponse.getStatus() == Status.LOADING)
 			return;
 		
@@ -138,7 +136,6 @@ public class ExercisesViewModel
 	
 	public void updateFavorite(Long idExercise, boolean favorited)
 	{
-		Log.d(TAG, "updateFavorite");
 		Completable.fromAction(() -> repo.updateFavorite(idExercise, favorited))
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
@@ -186,68 +183,29 @@ public class ExercisesViewModel
 			});
 	}
 	
-	public void updateExercise(Exercise exercise)
+	public void updateExerciseHistoryFull(ExerciseHistory exerciseHistory, Exercise exercise)
 	{
-		Completable.fromAction(() -> repo.updateExercise(exercise))
-			.subscribeOn(Schedulers.io())
-			.observeOn(AndroidSchedulers.mainThread())
-			.subscribe(new CompletableObserver()
-			{
-				// Overrides
-				@Override
-				public void onSubscribe(Disposable d)
-				{
-				
-				}
-				
-				@Override
-				public void onComplete()
-				{
-				
-				}
-				
-				@Override
-				public void onError(Throwable e)
-				{
-				
-				}
-			});
-	}
-	
-	public void insertExerciseHistoryFull(ExerciseHistory exerciseHistory, Exercise exercise)
-	{
-		//return repo.insertExerciseHistory(exerciseHistory);
-		//return repo.insertExerciseHistoryFull(exerciseHistory, exercise);
-		disposables.add(repo.insertExerciseHistoryFull(exerciseHistory, exercise)
+		disposables.add(repo.updateExerciseHistoryFull(exerciseHistory, exercise)
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(
 				idExerciseHistory -> {
-					exercise.setCurrentIdExerciseHistory(idExerciseHistory);
 					exerciseEditedResponse.setSuccess(exercise);
 				},
 				throwable -> {}
 			));
-		
-/*		disposables.add(repo.insertExerciseHistoryFull(exerciseHistory, exercise)
+	}
+	
+	public void insertExerciseHistoryFull(Exercise exercise)
+	{
+		disposables.add(repo.insertExerciseHistoryFull(exercise)
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
-			.doOnSubscribe(__ -> {
-				Log.d(TAG, "loading exercises: loading... ");
-				exerciseEditedResponse.setLoading();
-			})
-			.subscribe(idExerciseHistory ->
-					// sort the list of exercises //[TODO] Set the comparator to what the user chooses
-					//Collections.sort(ex, ExerciseComparators.getDefaultComparator());
-					//this.exercises = ex;
-					exerciseEditedResponse.setSuccess(idExerciseHistory)
-				,
-				throwable ->
-				{
-					Log.d(TAG, "loading exercises: error... ");
-					exerciseEditedResponse.setError(throwable);
-				}
-			)
-		);*/
+			.subscribe(
+				insertedExercise -> {
+					exerciseInsertedResponse.setSuccess(insertedExercise);
+				},
+				throwable -> {}
+			));
 	}
 }

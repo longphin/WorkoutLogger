@@ -7,6 +7,8 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
+import com.longlife.workoutlogger.enums.PerformanceStatus;
+import com.longlife.workoutlogger.enums.PerformanceStatusConverter;
 import com.longlife.workoutlogger.utils.DateConverter;
 
 import java.util.Date;
@@ -21,7 +23,7 @@ import io.reactivex.annotations.NonNull;
 	indices = {@Index(value = {"idRoutineHistory"})})
 public class RoutineSession
 {
-	@PrimaryKey(autoGenerate = true)
+	@PrimaryKey
 	@NonNull
 	private Long idRoutineSession;
 	private Long idRoutineHistory;
@@ -30,14 +32,21 @@ public class RoutineSession
 	// Flag for determining if the session was performed. If the last session for a routine was performed,
 	// then we need to create a new session.
 	@NonNull
-	private boolean wasPerformed = false;
+	@TypeConverters({PerformanceStatusConverter.class})
+	private PerformanceStatus performanceStatus = PerformanceStatus.NEW;
+	
+	// Getters
+	public PerformanceStatus getPerformanceStatus()
+	{
+		return performanceStatus;
+	}
 	
 	public RoutineSession()
 	{
 	
 	}
 	
-	// Getters
+	// Setters
 	public Long getIdRoutineHistory()
 	{
 		return idRoutineHistory;
@@ -53,15 +62,9 @@ public class RoutineSession
 		return sessionDate;
 	}
 	
-	public boolean getWasPerformed()
+	public void setPerformanceStatus(PerformanceStatus performanceStatus)
 	{
-		return wasPerformed;
-	}
-	
-	// Setters
-	public void setWasPerformed(boolean wasPerformed)
-	{
-		this.wasPerformed = wasPerformed;
+		this.performanceStatus = performanceStatus;
 	}
 	
 	public void setIdRoutineSession(Long i)

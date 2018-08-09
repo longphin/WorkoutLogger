@@ -35,7 +35,7 @@ public class SessionExerciseSet
 			return new SessionExerciseSet[i];
 		}
 	};
-	@PrimaryKey(autoGenerate = true)
+	@PrimaryKey
 	@NonNull
 	private Long idSessionExerciseSet;
 	private Long idSessionExercise;

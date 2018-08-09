@@ -48,7 +48,7 @@ public class Exercise
 	// Name for exercise.
 	@Required
 	private String name;
-	@PrimaryKey(autoGenerate = true)
+	@PrimaryKey
 	@NonNull
 	private Long idExercise;
 	// This is the idExerciseHistory that this current exercise corresponds to.

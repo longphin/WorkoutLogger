@@ -12,7 +12,7 @@ import io.reactivex.annotations.NonNull;
 	indices = {@Index(value = {"idExercise"})})
 public class ExerciseHistory
 {
-	@PrimaryKey(autoGenerate = true)
+	@PrimaryKey
 	@NonNull
 	private Long idExerciseHistory;
 	@NonNull

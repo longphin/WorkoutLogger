@@ -35,7 +35,8 @@ public abstract class RoutineDao
 	@Query("SELECT * FROM Routine WHERE hidden = 0")
 	public abstract Single<List<Routine>> getRoutines();
 	
-	@Query("SELECT * FROM RoutineSession WHERE idRoutineHistory = :idRoutine AND wasPerformed = 0 ORDER BY sessionDate DESC LIMIT 1")
+	@Query("SELECT * FROM RoutineSession WHERE idRoutineHistory = :idRoutine AND performanceStatus <> 2" + // 2 for PerformanceStatus.COMPLETE
+		" ORDER BY sessionDate DESC LIMIT 1")
 	public abstract Single<RoutineSession> getLatestRoutineSession(Long idRoutine);
 	
 	@Query("SELECT * FROM SessionExercise WHERE idRoutineSession = :idRoutineSession")

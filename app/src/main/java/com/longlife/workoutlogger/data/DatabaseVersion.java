@@ -18,7 +18,9 @@ public class DatabaseVersion
 	private static final int V3_0 = 11; // Remove unused model fields for now.
 	private static final int V3_1 = 12; // Changed id columns from int type to Long.
 	private static final int V3_2 = 13; // Added exercise history insert when exercise is inserted.
+	private static final int V3_3 = 14; // Made performance status for a routine session an enum, so that it can mark in-progress performances as well.
+	private static final int V3_4 = 15; // Removed auto-generate from primary keys.
 	
-	public static final int CURRENT = V3_2;
+	public static final int CURRENT = V3_4;
 }
 // Inner Classes

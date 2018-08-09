@@ -77,7 +77,7 @@ public class ExercisesFragment
 			ViewModelProviders.of(getActivity(), viewModelFactory)
 				.get(ExercisesViewModel.class);
 		
-		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
+		addDisposable(viewModel.getLoadRoutinesResponse().subscribe(response -> processLoadRoutineResponse(response)));
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
 		addDisposable(viewModel.getExerciseEditedResponse().subscribe(response -> processExerciseEditedResponse(response)));//adapter.exerciseUpdated(response.getValue()))); // [TODO] why is the adapter not notifying the change?
 		
@@ -217,34 +217,34 @@ public class ExercisesFragment
 		adapter.addExercise(ex);
 	}
 	
-	private void processLoadResponse(Response<List<Exercise>> response)
+	private void processLoadRoutineResponse(Response<List<Exercise>> response)
 	{
 		switch(response.getStatus()){
 			case LOADING:
-				renderLoadingState();
+				renderLoadRoutineLoadState();
 				break;
 			case SUCCESS:
-				renderSuccessState(response.getValue());
+				renderLoadRoutineSuccessState(response.getValue());
 				break;
 			case ERROR:
 				if(response.getError() != null)
-					renderErrorState(response.getError());
+					renderLoadRoutineErrorState(response.getError());
 				break;
 		}
 	}
 	
-	private void renderErrorState(@NonNull Throwable throwable)
+	private void renderLoadRoutineErrorState(@NonNull Throwable throwable)
 	{
 		// change anything if loading data had an error.
 		Log.d(TAG, throwable.getMessage());
 	}
 	
-	private void renderLoadingState()
+	private void renderLoadRoutineLoadState()
 	{
 		Log.d(TAG, "loading exercises");
 	}
 	
-	private void renderSuccessState(List<Exercise> exercises)
+	private void renderLoadRoutineSuccessState(List<Exercise> exercises)
 	{
 		StringBuilder sb = new StringBuilder();
 		if(isAdded())

@@ -81,9 +81,9 @@ public class ExerciseEditFragment
 				final ExerciseHistory exerciseHistoryToInsert = new ExerciseHistory(this.exercise);
 				// Update current exercise to the desired values.
 				this.exercise.setName(this.name.getText().toString());
-				viewModel.insertExerciseHistoryFull(exerciseHistoryToInsert, this.exercise);
+				viewModel.updateExerciseHistoryFull(exerciseHistoryToInsert, this.exercise);
 				
-/*				addDisposable(viewModel.insertExerciseHistoryFull(exerciseHistoryToInsert, this.exercise)
+/*				addDisposable(viewModel.updateExerciseHistoryFull(exerciseHistoryToInsert, this.exercise)
 					.subscribeOn(Schedulers.io())
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(
