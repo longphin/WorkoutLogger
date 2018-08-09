@@ -79,11 +79,13 @@ public class ExercisesFragment
 		
 		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
-		addDisposable(viewModel.getExerciseEditedResponse().subscribe(response -> adapter.exerciseUpdated(response.getValue()))); // [TODO] why is the adapter not notifying the change?
+		addDisposable(viewModel.getExerciseEditedResponse().subscribe(response -> processExerciseEditedResponse(response)));//adapter.exerciseUpdated(response.getValue()))); // [TODO] why is the adapter not notifying the change?
 		
 		Log.d(TAG, "OnCreate: loadExercises()");
 		viewModel.loadExercises();
 	}
+	
+	// Setters
 	
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
@@ -196,7 +198,7 @@ public class ExercisesFragment
 		this.adapter = adapter;
 	}
 	
-	// Setters
+	// Methods
 	private void processInsertExerciseResponse(Response<Exercise> response)
 	{
 		switch(response.getStatus()){
@@ -271,7 +273,19 @@ public class ExercisesFragment
 		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
 		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 	}
-	// Methods
+	
+	private void processExerciseEditedResponse(Response<Exercise> response)
+	{
+		switch(response.getStatus()){
+			case LOADING:
+				break;
+			case SUCCESS:
+				adapter.exerciseUpdated(response.getValue());
+				break;
+			case ERROR:
+				break;
+		}
+	}
 	
 	protected void startCreateFragment()
 	{

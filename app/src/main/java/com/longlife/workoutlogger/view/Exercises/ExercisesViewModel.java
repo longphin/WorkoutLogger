@@ -10,7 +10,6 @@ import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseHistory;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
-import com.longlife.workoutlogger.view.Exercises.Helper.EditedExerciseIdHolder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +37,7 @@ public class ExercisesViewModel
 	private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
 	
 	// Observable for when an exercise is inserted.
-	private final Response<EditedExerciseIdHolder> exerciseEditedResponse = new Response<>();
+	private final Response<Exercise> exerciseEditedResponse = new Response<>();
 	
 	// Protected
 	protected final CompositeDisposable disposables = new CompositeDisposable();
@@ -57,7 +56,7 @@ public class ExercisesViewModel
 		disposables.clear();
 	}
 	// Getters
-	public Observable<Response<EditedExerciseIdHolder>> getExerciseEditedResponse()
+	public Observable<Response<Exercise>> getExerciseEditedResponse()
 	{
 		return exerciseEditedResponse.getObservable();
 	}
@@ -223,7 +222,10 @@ public class ExercisesViewModel
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(
-				idExerciseHistory -> exerciseEditedResponse.setSuccess(new EditedExerciseIdHolder(exercise.getIdExercise(), idExerciseHistory)),
+				idExerciseHistory -> {
+					exercise.setCurrentIdExerciseHistory(idExerciseHistory);
+					exerciseEditedResponse.setSuccess(exercise);
+				},
 				throwable -> {}
 			));
 		

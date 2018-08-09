@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
-import com.longlife.workoutlogger.view.Exercises.Helper.EditedExerciseIdHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,12 +78,13 @@ public class ExercisesAdapter
 		return (new ExercisesViewHolder(v));
 	}
 	
-	public void exerciseUpdated(EditedExerciseIdHolder editedExerciseDetails)
+	public void exerciseUpdated(Exercise updatedExercise)
 	{
-		final Long idExerciseEdited = editedExerciseDetails.getIdExercise();
+		final Long idExerciseEdited = updatedExercise.getIdExercise();
 		// Find where in the adapter this exercise is and notify the change.
 		for(int i = 0; i < exercises.size(); i++){
 			if(exercises.get(i).getIdExercise().equals(idExerciseEdited)){
+				exercises.set(i, updatedExercise);
 				notifyItemChanged(i);
 				return;
 			}
