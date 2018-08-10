@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.AndroidUtils;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +18,12 @@ import java.util.List;
 public class StringArrayAdapter
 	extends ArrayAdapter
 {
+	// This class will filter through the strings as the user types.
 	private class ListFilter
 		extends Filter
 	{
-		private Object lock = new Object();
+		// Private
+		private final Object lock = new Object();
 		
 		// Overrides
 		@Override
@@ -29,7 +32,7 @@ public class StringArrayAdapter
 			FilterResults results = new FilterResults();
 			if(dataListAllItems == null){
 				synchronized(lock){
-					dataListAllItems = new ArrayList<String>(dataList);
+					dataListAllItems = new ArrayList<>(dataList);
 				}
 			}
 			
@@ -121,6 +124,23 @@ public class StringArrayAdapter
 			listFilter = new ListFilter();
 		}
 		return listFilter;
+	}
+	
+	// Check if the string is within the possible options.
+	public boolean contains(String s)
+	{
+		// If Build is of high enough level, can do the search efficiently.
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+			return dataList.stream().anyMatch(s::equalsIgnoreCase);
+		}
+		
+		// Else, loop through entire list.
+		for(String exerciseName : dataList){
+			if(exerciseName.equalsIgnoreCase(s)){
+				return true;
+			}
+		}
+		return false;
 	}
 	// Inner Classes
 }

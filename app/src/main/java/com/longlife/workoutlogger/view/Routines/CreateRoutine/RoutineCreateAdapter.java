@@ -128,12 +128,6 @@ public class RoutineCreateAdapter
 		return exercisesToInclude;
 	}
 	
-	// [TODO] remove
-	public List<RoutineExerciseHelper> getRoutineExercises()
-	{
-		return exercisesToInclude;
-	}
-	
 	// Methods
 	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
 	private int getHeaderPosition(int headerIndex)

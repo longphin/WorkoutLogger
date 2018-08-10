@@ -38,6 +38,7 @@
         android:ems="10"
         android:hint="@string/Name"
         android:inputType="textMultiLine"
+        android:maxLength="@integer/Exercise_MaxNameLength"
         app:layout_constraintEnd_toStartOf="@+id/imv_exercise_create_add_note"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

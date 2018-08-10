@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="Exercise_MaxNameLength">60</integer>
+    <integer name="Routine_MaxNameLength">60</integer>
+    <integer name="Note_MaxLength">100</integer>
+</resources>

@@ -4,7 +4,10 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
@@ -16,6 +19,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,9 +74,30 @@ public class RoutineCreateFragment
 	private View mView;
 	private EditText name;
 	private ImageView addNoteImage;
+	
+	// This class is used to validate the inputs.
+	private class FreeFormSearchExercisesValidator
+		implements AutoCompleteTextView.Validator
+	{
+		// Overrides
+		@Override
+		public boolean isValid(CharSequence charSequence)
+		{
+			return searchAdapter.contains(charSequence.toString());
+		}
+		
+		@Override
+		public CharSequence fixText(CharSequence charSequence)
+		{
+			return null;
+		}
+	}
+	
+	private ImageView searchBoxStatusImage;
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
-	// Other
+	// Adapter for free form exercise search.
+	private StringArrayAdapter searchAdapter;
 	String descrip;
 	@Inject
 	Context context;
@@ -81,7 +107,7 @@ public class RoutineCreateFragment
 		// Required empty public constructor
 	}
 	
-	// Overrides
+	// Other
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -104,61 +130,7 @@ public class RoutineCreateFragment
 		// Observer to get when routine is successfully saved.
 		addDisposable(routineViewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
 	}
-	
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-	{
-		if(mView == null){
-			mView = inflater.inflate(R.layout.fragment_routine_create, container, false);
-			
-			this.name = mView.findViewById(R.id.edit_routineCreateName);
-			this.addNoteImage = mView.findViewById(R.id.imv_routine_create_addNote);
-			//this.descrip = mView.findViewById(R.id.edit_routineCreateDescrip);
-			Button cancelButton = mView.findViewById(R.id.btn_routineCreateCancel);
-			Button saveButton = mView.findViewById(R.id.btn_routineCreateSave);
-			searchBox = mView.findViewById(R.id.txt_routineexercisecreate_searchBox);
-			searchBox.setOnItemClickListener(onItemClickListener);
-			ImageView searchExercises = mView.findViewById(R.id.btn_searchExercises);
-			coordinatorLayout = mView.findViewById(R.id.routine_create_layout);
-			
-			recyclerView = mView.findViewById(R.id.rv_routineCreateExercises);
-			initializeRecyclerView();
-			
-			// OnClick cancel button.
-			cancelButton.setOnClickListener(view -> ((ActivityBase)getActivity()).onBackPressedCustom(view));
-			
-			// OnClick listener to change the routine name and description. Opens up a dialog fragment for user to change the values.
-			this.addNoteImage.setOnClickListener(view ->
-			{
-				AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);
-				dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
-			});
-			
-			// OnClick for saving routine.
-			saveButton.setOnClickListener(view ->
-			{
-				if(!this.name.getText().equals("")){
-					Routine routineToAdd = new Routine();
-					routineToAdd.setName(name.getText().toString());
-					routineToAdd.setDescription(descrip);//descrip.getText().toString());
-					routineViewModel.insertRoutineFull(routineToAdd, adapter.getRoutineExerciseHelpers());
-					
-					getActivity().onBackPressed();
-				}else{
-					Log.d(TAG, "Routine needs a name"); // [TODO] pop up a message that says it needs a name.
-				}
-			});
-			
-			// Search exercises image.
-			searchExercises.setOnClickListener(onSearchClickListener);
-			
-			// Get exercises list.
-			routineViewModel.loadExercises();
-		}
-		
-		return (mView);
-	}
+	// Overrides
 	
 	// On Swipe for recyclerview item.
 	@Override
@@ -347,29 +319,141 @@ public class RoutineCreateFragment
 		Log.d(TAG, "loading exercises");
 	}
 	
-	private void renderExercisesSuccessState(List<Exercise> exercises)
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(exercises == null ? 0 : exercises.size());
-		sb.append(" exercises obtained");
-		
-		Log.d(TAG, sb.toString());
-		
-		List<String> tempStr = new ArrayList<>();
-		for(Exercise e : exercises){
-			tempStr.add(e.getName());
+		if(mView == null){
+			mView = inflater.inflate(R.layout.fragment_routine_create, container, false);
+			
+			this.name = mView.findViewById(R.id.edit_routineCreateName);
+			this.addNoteImage = mView.findViewById(R.id.imv_routine_create_addNote);
+			Button cancelButton = mView.findViewById(R.id.btn_routineCreateCancel);
+			Button saveButton = mView.findViewById(R.id.btn_routineCreateSave);
+			searchBox = mView.findViewById(R.id.txt_routineexercisecreate_searchBox);
+			searchBoxStatusImage = mView.findViewById(R.id.imv_routine_create_searchBoxStatus);
+			ImageView searchExercises = mView.findViewById(R.id.btn_searchExercises);
+			coordinatorLayout = mView.findViewById(R.id.routine_create_layout);
+			
+			recyclerView = mView.findViewById(R.id.rv_routineCreateExercises);
+			// Initialize recycler view
+			initializeRecyclerView();
+			
+			// OnClick cancel button.
+			cancelButton.setOnClickListener(view -> ((ActivityBase)getActivity()).onBackPressedCustom(view));
+			
+			// OnClick listener to change the routine name and description. Opens up a dialog fragment for user to change the values.
+			this.addNoteImage.setOnClickListener(view ->
+			{
+				AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);
+				dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
+			});
+			
+			// OnClick for saving routine.
+			saveButton.setOnClickListener(view ->
+			{
+				if(!this.name.getText().equals("")){
+					Routine routineToAdd = new Routine();
+					routineToAdd.setName(name.getText().toString());
+					routineToAdd.setDescription(descrip);//descrip.getText().toString());
+					routineViewModel.insertRoutineFull(routineToAdd, adapter.getRoutineExerciseHelpers());
+					
+					getActivity().onBackPressed();
+				}else{
+					Log.d(TAG, "Routine needs a name"); // [TODO] pop up a message that says it needs a name.
+				}
+			});
+			
+			// Search exercises image.
+			searchExercises.setOnClickListener(onSearchClickListener);
+			// Search icon: When selected, search through entire exercise list.
+			searchBox.setOnItemClickListener(onItemClickListener);
+			
+			// Get exercises list.
+			routineViewModel.loadExercises();
 		}
-		StringArrayAdapter searchAdapter = new StringArrayAdapter(context, R.layout.autocompletetextview, tempStr);
-		searchBox.setAdapter(searchAdapter);
+		
+		return (mView);
 	}
+	
+	// [TODO] add ability to set rest time for sets.
+	
+	// Methods
 	
 	private void renderExercisesErrorState(Throwable throwable)
 	{
 		// change anything if loading data had an error.
 		Log.d(TAG, throwable.getMessage());
 	}
-	
-	// Methods
+	private void renderExercisesSuccessState(List<Exercise> exercises)
+	{
+		Log.d(TAG, String.valueOf(exercises == null ? 0 : exercises.size()) + " exercises obtained");
+		
+		if(exercises == null)
+			return;
+		
+		List<String> tempStr = new ArrayList<>();
+		for(Exercise e : exercises){
+			tempStr.add(e.getName());
+		}
+		searchAdapter = new StringArrayAdapter(context, R.layout.autocompletetextview, tempStr);
+		searchBox.setAdapter(searchAdapter);
+		// Add a TextWatcher to the search box to determine if the search has a match.
+		searchBox.addTextChangedListener(new TextWatcher()
+		{
+			// Other
+			// Add handler and runnable to give a delay on the text check.
+			Handler handler = new Handler(Looper.getMainLooper() /*UI thread*/);
+			Runnable workRunnable;
+			
+			// Overrides
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+			{
+			
+			}
+			
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+			{
+				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+					searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_ethernet_black_24dp, context.getTheme()));
+				}else{
+					searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_ethernet_black_24dp));
+				}
+				
+				handler.removeCallbacks(workRunnable);
+				workRunnable = () -> {
+					if(searchAdapter.contains(charSequence.toString())){
+						Log.d(TAG, charSequence.toString() + " is in list");
+						if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp, context.getTheme()));
+						}else{
+							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
+						}
+					}else{
+						Log.d(TAG, charSequence.toString() + " not in list");
+						if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp, context.getTheme()));
+						}else{
+							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp));
+						}
+					}
+				};
+				
+				handler.postDelayed(workRunnable, 500);
+			}
+			
+			@Override
+			public void afterTextChanged(Editable editable)
+			{
+			
+			}
+		});
+		// [TODO] listen to the inputs and call (AutoCompleteTextView)searchBox.performValidation().
+		// See https://proandroiddev.com/building-an-autocompleting-edittext-using-rxjava-f69c5c3f5a40
+		// and https://stackoverflow.com/questions/5033246/android-autocomplettextview-force-text-to-be-from-the-entry-list
+	}
 	
 	private void addFragmentToActivity(FragmentManager fragmentManager,
 		Fragment fragment,
