@@ -81,9 +81,11 @@ public class RecyclerItemTouchHelper
 	@Override
 	public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
 	{
-		final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
-		
-		getDefaultUIUtil().clearView(foregroundView);
+		if(viewHolder instanceof RecyclerViewHolderSwipeable){
+			final View foregroundView = ((RecyclerViewHolderSwipeable)viewHolder).getViewForeground();
+			
+			getDefaultUIUtil().clearView(foregroundView);
+		}
 		
 		super.clearView(recyclerView, viewHolder);
 	}

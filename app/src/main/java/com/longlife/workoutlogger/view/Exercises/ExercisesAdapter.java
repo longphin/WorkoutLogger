@@ -32,14 +32,7 @@ public class ExercisesAdapter
 		final int position = holder.getAdapterPosition();
 		Exercise ex = exercises.get(position);
 		// Name
-		StringBuilder sbName = new StringBuilder(100);
-		sbName.append(ex.getName())
-			.append(" (")
-			.append(ex.getIdExercise())
-			.append(" -> ")
-			.append(ex.getCurrentIdExerciseHistory())
-			.append(")");
-		holder.setNameText(sbName.toString());
+		holder.setNameText(ex.getName() + " (" + String.valueOf(ex.getIdExercise()) + " -> " + String.valueOf(ex.getCurrentIdExerciseHistory()) + ")");
 		// Description
 		holder.setDescripText(ex.getDescription());
 		// Favorite icon

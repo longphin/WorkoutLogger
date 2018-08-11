@@ -10,8 +10,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,6 +20,7 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Validator;
 import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 
@@ -140,7 +139,7 @@ public class ExerciseCreateFragment
 			//e.printStackTrace();
 			
 			if(isAdded()){
-				this.name.startAnimation(shakeError());
+				this.name.startAnimation(Animation.shakeError());
 				Toast.makeText(context,
 					getResources().getString(R.string.requiredFieldsMissing),
 					//MyApplication.getStringResource(MyApplication.requiredFieldsMissing),
@@ -156,16 +155,6 @@ public class ExerciseCreateFragment
 		viewModel.insertExerciseHistoryFull(newExercise);
 		
 		getActivity().onBackPressed();
-	}
-	
-	// Shake animation when invalid input is given.
-	// Reference vishal-wadhwa @ StackOverflow: https://stackoverflow.com/questions/15401658/vibration-of-edittext-in-android
-	public TranslateAnimation shakeError()
-	{
-		TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);
-		shake.setDuration(500);
-		shake.setInterpolator(new CycleInterpolator(7));
-		return shake;
 	}
 	
 	public void clearDisposables()

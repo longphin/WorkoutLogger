@@ -163,9 +163,8 @@ public class RoutineCreateAdapter
 	private void addSet(int pos)
 	{
 		final int headerIndex = getHeaderIndex(pos);
-		final int childrenCount = exercisesToInclude.get(headerIndex).getSets().size();
 		exercisesToInclude.get(headerIndex).getSets().add(new SessionExerciseSet());
-		notifyItemInserted(pos + childrenCount + 1);
+		notifyItemInserted(pos);
 	}
 	
 	private void bindHeaderViewHolder(@NonNull RoutineCreateViewHolder holder, int position)
@@ -215,7 +214,7 @@ public class RoutineCreateAdapter
 			.append(exercise.getIdExercise())
 			.append(")");
 		
-		holder.setNameText(sbName.toString());
+		holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + " -> " + String.valueOf(exercise.getCurrentIdExerciseHistory()) + ")");
 	}
 	
 	// When header is clicked, expand or collapse header.

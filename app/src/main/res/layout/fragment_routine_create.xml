@@ -2,109 +2,123 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/routine_create_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/routine_create_layout"
     tools:context=".view.Routines.CreateRoutine.RoutineCreateFragment">
 
-    <Button
-        android:id="@+id/btn_routineCreateSave"
-        android:layout_width="wrap_content"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/routine_create_buttonLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_routineCreateExercises"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <Button
-        android:id="@+id/btn_routineCreateCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_routineCreateSave"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/btn_routineCreateSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_routineCreateExercises"
-        android:layout_width="350dp"
+        <Button
+            android:id="@+id/btn_routineCreateCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="Cancel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_routineCreateSave"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_routineCreateCancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_routineexercisecreate_searchBox" />
+        app:layout_constraintBottom_toTopOf="@+id/routine_create_buttonLayout"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <AutoCompleteTextView
-        android:id="@+id/txt_routineexercisecreate_searchBox"
-        android:layout_width="232dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:completionThreshold="1"
-        android:inputType="textNoSuggestions"
-        android:maxLength="@integer/Exercise_MaxNameLength"
-        app:layout_constraintEnd_toStartOf="@+id/btn_searchExercises"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_routineCreateName" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_routineCreateExercises"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_routineexercisecreate_searchBox" />
 
-    <ImageView
-        android:id="@+id/btn_searchExercises"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/rv_routineCreateExercises"
-        app:layout_constraintEnd_toStartOf="@+id/imv_routine_create_searchBoxStatus"
-        app:srcCompat="@drawable/ic_search_black_24dp" />
+        <AutoCompleteTextView
+            android:id="@+id/txt_routineexercisecreate_searchBox"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:completionThreshold="1"
+            android:inputType="textNoSuggestions"
+            android:maxLength="@integer/Exercise_MaxNameLength"
+            app:layout_constraintEnd_toStartOf="@+id/imv_routine_create_searchBoxStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_routineCreateName" />
 
-    <ImageView
-        android:id="@+id/imv_routine_create_searchBoxStatus"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/rv_routineCreateExercises"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_error_outline_black_24dp" />
+        <ImageView
+            android:id="@+id/btn_searchExercises"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_routineexercisecreate_searchBox"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txt_routineexercisecreate_searchBox"
+            app:srcCompat="@drawable/ic_search_black_24dp" />
 
-    <ImageView
-        android:id="@+id/imv_routine_create_addNote"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_routineCreateName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_note_add_black_24dp" />
+        <ImageView
+            android:id="@+id/imv_routine_create_addNote"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_routineCreateName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_note_add_black_24dp" />
 
-    <EditText
-        android:id="@+id/edit_routineCreateName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="@string/Name"
-        android:inputType="textMultiLine"
-        android:maxLength="@integer/Routine_MaxNameLength"
-        app:layout_constraintEnd_toStartOf="@+id/imv_routine_create_addNote"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/edit_routineCreateName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/Name"
+            android:inputType="textMultiLine"
+            android:maxLength="@integer/Routine_MaxNameLength"
+            app:layout_constraintEnd_toStartOf="@+id/imv_routine_create_addNote"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imv_routine_create_searchBoxStatus"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_routineexercisecreate_searchBox"
+            app:layout_constraintEnd_toStartOf="@+id/btn_searchExercises"
+            app:layout_constraintTop_toTopOf="@+id/txt_routineexercisecreate_searchBox"
+            app:srcCompat="@drawable/ic_error_outline_black_24dp" />
+    </android.support.constraint.ConstraintLayout>
 
     <!--
     <FrameLayout

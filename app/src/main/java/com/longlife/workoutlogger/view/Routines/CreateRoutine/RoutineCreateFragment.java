@@ -30,6 +30,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
@@ -40,6 +41,7 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
@@ -74,24 +76,6 @@ public class RoutineCreateFragment
 	private View mView;
 	private EditText name;
 	private ImageView addNoteImage;
-	
-	// This class is used to validate the inputs.
-	private class FreeFormSearchExercisesValidator
-		implements AutoCompleteTextView.Validator
-	{
-		// Overrides
-		@Override
-		public boolean isValid(CharSequence charSequence)
-		{
-			return searchAdapter.contains(charSequence.toString());
-		}
-		
-		@Override
-		public CharSequence fixText(CharSequence charSequence)
-		{
-			return null;
-		}
-	}
 	
 	private ImageView searchBoxStatusImage;
 	@Inject
@@ -352,7 +336,7 @@ public class RoutineCreateFragment
 			// OnClick for saving routine.
 			saveButton.setOnClickListener(view ->
 			{
-				if(!this.name.getText().equals("")){
+				if(!this.name.getText().toString().trim().equals("")){
 					Routine routineToAdd = new Routine();
 					routineToAdd.setName(name.getText().toString());
 					routineToAdd.setDescription(descrip);//descrip.getText().toString());
@@ -360,7 +344,14 @@ public class RoutineCreateFragment
 					
 					getActivity().onBackPressed();
 				}else{
-					Log.d(TAG, "Routine needs a name"); // [TODO] pop up a message that says it needs a name.
+					if(isAdded()){
+						this.name.startAnimation(Animation.shakeError());
+						Toast.makeText(context,
+							getResources().getString(R.string.requiredFieldsMissing),
+							Toast.LENGTH_SHORT
+						)
+							.show();
+					}
 				}
 			});
 			
@@ -416,13 +407,28 @@ public class RoutineCreateFragment
 			@Override
 			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
 			{
+				// Remove runnables that check the search box input.
+				handler.removeCallbacks(workRunnable);
+				
+				// Check if input is empty or only contains whitespace. If empty, then we don't need to check for validity.
+				if(charSequence.toString().trim().length() == 0) // empty
+				{
+					if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+						searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp, context.getTheme()));
+					}else{
+						searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp));
+					}
+					return;
+				}
+				
+				// Need to check validity. Show a "loading" icon until user finishes entering input.
 				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 					searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_ethernet_black_24dp, context.getTheme()));
 				}else{
 					searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_ethernet_black_24dp));
 				}
 				
-				handler.removeCallbacks(workRunnable);
+				// Create runnable to check the input after a delay.
 				workRunnable = () -> {
 					if(searchAdapter.contains(charSequence.toString())){
 						Log.d(TAG, charSequence.toString() + " is in list");
@@ -440,7 +446,7 @@ public class RoutineCreateFragment
 						}
 					}
 				};
-				
+				// Set the runnable's delay.
 				handler.postDelayed(workRunnable, 500);
 			}
 			

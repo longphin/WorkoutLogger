@@ -50,7 +50,7 @@ public class Validator
 					 *  {@link RequiredFieldException}
 					 */
 					if(field.get(objectToValidate) == null
-						|| (field.getType().isInstance("string") && field.get(objectToValidate).toString().isEmpty()) // If the field is a String, then check if it is empty.
+						|| (field.getType().isInstance("string") && field.get(objectToValidate).toString().trim().isEmpty()) // If the field is a String, then check if it is empty.
 						)
 					{
 						throw new RequiredFieldException(objectToValidate.getClass().getName() + "." + field.getName());
