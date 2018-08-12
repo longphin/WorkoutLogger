@@ -10,6 +10,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.view.Exercises.ExercisesAdapter;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewHolder;
+import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 
 public class ExercisesSelectableAdapter
 	extends ExercisesAdapter
@@ -19,9 +20,9 @@ public class ExercisesSelectableAdapter
 	
 	private ExercisesSelectableViewModel viewModel;
 	
-	public ExercisesSelectableAdapter(ExercisesSelectableViewModel viewModel, IClickExercise clickExerciseCallback)
+	public ExercisesSelectableAdapter(ExercisesViewModel exercisesViewModel, ExercisesSelectableViewModel viewModel, IClickExercise clickExerciseCallback)
 	{
-		super(viewModel, clickExerciseCallback);
+		super(exercisesViewModel, clickExerciseCallback);
 		this.viewModel = viewModel;
 	}
 	

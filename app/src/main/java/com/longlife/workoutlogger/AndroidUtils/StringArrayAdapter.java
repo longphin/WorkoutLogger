@@ -82,6 +82,8 @@ public class StringArrayAdapter
 	private ListFilter listFilter = new ListFilter();
 	private List<String> dataListAllItems;
 	
+	// Overrides
+	
 	public StringArrayAdapter(@NonNull Context context, int resource, @NonNull List<String> objects)
 	{
 		super(context, resource, objects);
@@ -91,7 +93,11 @@ public class StringArrayAdapter
 		itemLayout = resource;
 	}
 	
-	// Overrides
+	// Setters
+	public void setList(List<String> items)
+	{
+		dataListAllItems = items;
+	}
 	@Override
 	public int getCount()
 	{

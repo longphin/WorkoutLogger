@@ -1,12 +1,12 @@
 package com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine;
 
+import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.enums.Status;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.utils.Response;
-import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 
 import java.util.HashSet;
 import java.util.List;
@@ -14,10 +14,11 @@ import java.util.Set;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class ExercisesSelectableViewModel
-	extends ExercisesViewModel
+	extends ViewModel
 {
 	// Static
 	private final static String TAG = ExercisesSelectableViewModel.class.getSimpleName();
@@ -25,9 +26,12 @@ public class ExercisesSelectableViewModel
 	private final Response<List<Exercise>> addExercisesToRoutine = new Response<>();
 	private Set<Long> selectedIdExercises = new HashSet<>();
 	
+	private final CompositeDisposable disposables = new CompositeDisposable();
+	private Repository repo;
+	
 	public ExercisesSelectableViewModel(Repository repo)
 	{
-		super(repo);
+		this.repo = repo;
 	}
 	
 	// Getters

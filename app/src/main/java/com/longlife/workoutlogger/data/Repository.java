@@ -36,6 +36,11 @@ public class Repository
 		return (exerciseDao.getExercises());
 	}
 	
+	public Single<List<String>> getExercisesNames()
+	{
+		return exerciseDao.getExercisesNames();
+	}
+	
 	public RoutineDao getRoutineDao()
 	{
 		return routineDao;

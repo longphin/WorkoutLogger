@@ -90,7 +90,7 @@ public class ExercisesAdapter
 		return exercises.size();
 	}
 	
-	// Interface for when an item is clicked. Should be implemented by the Activity to start an edit fragment.
+	// Interface for when an item is clicked. Should be implemented by the Activity/Fragment to start an edit fragment.
 	public interface IClickExercise
 	{
 		// When an exercise is clicked, send the clicked exercise.

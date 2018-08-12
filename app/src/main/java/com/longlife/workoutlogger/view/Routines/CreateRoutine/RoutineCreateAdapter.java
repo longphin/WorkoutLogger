@@ -69,7 +69,7 @@ public class RoutineCreateAdapter
 			return;
 		}
 		if(holder instanceof RoutineCreateSetViewHolder){
-			bindSubViewHolder((RoutineCreateSetViewHolder)holder, position);
+			bindSetViewHolder((RoutineCreateSetViewHolder)holder, position);
 			return;
 		}
 		if(holder instanceof RoutineCreateAddSetViewHolder){
@@ -253,7 +253,7 @@ public class RoutineCreateAdapter
 		moveHeader(headerIndex, headerIndex + 1);
 	}
 	
-	private void bindSubViewHolder(@NonNull RoutineCreateSetViewHolder holder, int position)
+	private void bindSetViewHolder(@NonNull RoutineCreateSetViewHolder holder, int position)
 	{
 	
 	}
@@ -396,6 +396,19 @@ public class RoutineCreateAdapter
 	public RoutineExerciseHelper getHeaderAtPosition(int position)
 	{
 		return exercisesToInclude.get(getHeaderIndex(position));
+	}
+	
+	// An exercise was updated, so go through the exercises and update them.
+	public void exerciseUpdated(Exercise exercise)
+	{
+		final Long idExercise = exercise.getIdExercise();
+		
+		for(int i = 0; i < exercisesToInclude.size(); i++){
+			if(exercisesToInclude.get(i).getExercise().getIdExercise().equals(idExercise)){
+				exercisesToInclude.get(i).setExercise(exercise);
+				notifyItemChanged(getHeaderPosition(i));
+			}
+		}
 	}
 }
 // Inner Classes

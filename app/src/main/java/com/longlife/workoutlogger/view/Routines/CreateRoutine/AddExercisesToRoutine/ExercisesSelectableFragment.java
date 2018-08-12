@@ -1,7 +1,9 @@
 package com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,15 @@ public class ExercisesSelectableFragment
 	private ExercisesSelectableViewModel viewModel;
 	
 	// Overrides
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		
+		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
+			ViewModelProviders.of(getActivity(), viewModelFactory)
+				.get(ExercisesSelectableViewModel.class);
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -46,11 +57,5 @@ public class ExercisesSelectableFragment
 		);
 		
 		return mView;
-	}
-	
-	// Setters
-	public void setViewModel(ExercisesSelectableViewModel viewModel)
-	{
-		this.viewModel = viewModel;
 	}
 }

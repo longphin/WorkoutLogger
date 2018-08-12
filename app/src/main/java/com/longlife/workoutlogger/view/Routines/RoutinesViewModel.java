@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 import com.longlife.workoutlogger.data.Repository;
-import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.comparators.RoutineComparators;
 import com.longlife.workoutlogger.utils.Response;
@@ -36,8 +35,6 @@ public class RoutinesViewModel
 	private final Response<Routine> insertResponse = new Response<>();
 	// Observable for when requesting list of all routines.
 	private final Response<List<Routine>> loadResponse = new Response<>();
-	// Observable for getting list of exercises.
-	private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
 	
 	private Repository repo;
 	///
@@ -73,11 +70,6 @@ public class RoutinesViewModel
 	public Observable<Response<Routine>> getInsertResponse()
 	{
 		return insertResponse.getObservable();
-	}
-	
-	public Observable<Response<List<Exercise>>> getLoadExercisesResponse()
-	{
-		return loadExercisesResponse.getObservable();
 	}
 	
 	public Observable<Response<List<Routine>>> getLoadResponse()
@@ -128,23 +120,6 @@ public class RoutinesViewModel
 					e.getMessage();
 				}
 			});
-	}
-	
-	public void loadExercises()
-	{
-		disposables.add(
-			repo.getExercises()
-				.subscribeOn(Schedulers.io())
-				.observeOn(AndroidSchedulers.mainThread())
-				.doOnSubscribe(__ -> loadExercisesResponse.setLoading())
-				.subscribe((List<Exercise> ex) ->
-					{
-						//this.exercises = ex;
-						loadExercisesResponse.setSuccess(ex);
-					},
-					throwable -> loadExercisesResponse.setError(throwable)
-				)
-		);
 	}
 	
 	public void insertRoutineFull(Routine ro, List<RoutineExerciseHelper> reh)

@@ -23,7 +23,6 @@ public class RoutineCreateExerciseSetFragment
 	private Exercise exercise;
 	private List<SessionExerciseSet> sets;
 	private View mView;
-	private TextView exerciseName;
 	
 	// Overrides
 	@Override
@@ -31,8 +30,8 @@ public class RoutineCreateExerciseSetFragment
 	{
 		super.onCreate(savedInstanceState);
 		
-		exercise = getArguments().getParcelable(TAG + "exercise");
-		sets = getArguments().getParcelableArrayList(TAG + "exerciseSets");
+		exercise = getArguments().getParcelable("exercise");
+		sets = getArguments().getParcelableArrayList("exerciseSets");
 	}
 	
 	@Override
@@ -42,7 +41,7 @@ public class RoutineCreateExerciseSetFragment
 		// Inflate the layout for this fragment
 		if(mView == null){
 			mView = inflater.inflate(R.layout.fragment_routine_create_exercise_set, container, false);
-			exerciseName = mView.findViewById(R.id.txt_routine_create_exercise_set_name);
+			TextView exerciseName = mView.findViewById(R.id.txt_routine_create_exercise_set_name);
 			
 			if(exercise != null)
 				exerciseName.setText(exercise.getName());
@@ -54,8 +53,8 @@ public class RoutineCreateExerciseSetFragment
 	{
 		RoutineCreateExerciseSetFragment fragment = new RoutineCreateExerciseSetFragment();
 		Bundle bundle = new Bundle();
-		bundle.putParcelable(TAG + "exercise", exercise);
-		bundle.putParcelableArrayList(TAG + "exerciseSets", sets);
+		bundle.putParcelable("exercise", exercise);
+		bundle.putParcelableArrayList("exerciseSets", sets);
 		fragment.setArguments(bundle);
 		
 		return fragment;

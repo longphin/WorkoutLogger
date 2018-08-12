@@ -25,7 +25,10 @@ import io.reactivex.Single;
 @android.arch.persistence.room.Dao
 public abstract class ExerciseDao
 {
+	
 	// Getters
+	@Query("SELECT Name FROM Exercise WHERE hidden = 0")
+	public abstract Single<List<String>> getExercisesNames();
 	///
 	/// Gets
 	///

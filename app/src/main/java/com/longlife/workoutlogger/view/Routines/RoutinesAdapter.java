@@ -32,15 +32,7 @@ public class RoutinesAdapter
 		int position = holder.getAdapterPosition();
 		Routine routine = routines.get(position);
 		
-		StringBuilder sbName = new StringBuilder(100);
-		sbName.append(routine.getName())
-			.append(" (")
-			.append(routine.getIdRoutine())
-			.append(" -> ")
-			.append(routine.getCurrentIdRoutineHistory())
-			.append(")");
-		
-		holder.setNameText(sbName.toString());
+		holder.setNameText(routine.getName() + " (" + String.valueOf(routine.getIdRoutine()) + " -> " + String.valueOf(routine.getCurrentIdRoutineHistory()) + ")");
 		holder.setDescripText(routine.getDescription());
 	}
 	

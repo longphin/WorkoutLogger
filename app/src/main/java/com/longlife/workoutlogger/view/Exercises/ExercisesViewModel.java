@@ -23,6 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class ExercisesViewModel
 	extends ViewModel
@@ -33,21 +34,20 @@ public class ExercisesViewModel
 	private final Response<Exercise> exerciseInsertedResponse = new Response<>();
 	
 	// Observable for when requesting list of all exercises.
-	private final Response<List<Exercise>> loadRoutinesResponse = new Response<>();
+	private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
 	private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
 	
 	// Observable for when an exercise is inserted.
-	private final Response<Exercise> exerciseEditedResponse = new Response<>();
-	
+	//private final Response<Exercise> exerciseEditedResponse = new Response<>();
+	private final PublishSubject<Exercise> exerciseEditedObservable = PublishSubject.create();
+	private final CompositeDisposable disposables = new CompositeDisposable();
+	private Repository repo;
 	// Protected
-	protected final CompositeDisposable disposables = new CompositeDisposable();
-	protected Repository repo;
 	
 	public ExercisesViewModel(@NonNull Repository repo)
 	{
 		this.repo = repo;
 	}
-	
 	// Overrides
 	@Override
 	public void onCleared()
@@ -56,9 +56,13 @@ public class ExercisesViewModel
 		disposables.clear();
 	}
 	// Getters
-	public Observable<Response<Exercise>> getExerciseEditedResponse()
+/*	public Observable<Response<Exercise>> getExerciseEditedResponse()
 	{
 		return exerciseEditedResponse.getObservable();
+	}*/
+	public PublishSubject<Exercise> getExerciseEditedObservable()
+	{
+		return exerciseEditedObservable;
 	}
 	
 	public Single<Exercise> getExerciseFromId(Long idExercise)
@@ -76,9 +80,9 @@ public class ExercisesViewModel
 		return exercisesToDelete.poll();
 	}
 	
-	public Observable<Response<List<Exercise>>> getLoadRoutinesResponse()
+	public Observable<Response<List<Exercise>>> getLoadExercisesResponse()
 	{
-		return loadRoutinesResponse.getObservable();
+		return loadExercisesResponse.getObservable();
 	}
 	
 	public void addDeletedExercise(Exercise ex, int pos)
@@ -86,10 +90,18 @@ public class ExercisesViewModel
 		exercisesToDelete.add(new DeletedExercise(ex, pos));
 	}
 	
+	// Get observable for all exercise names.
+	public Single<List<String>> loadExerciseNames()
+	{
+		return repo.getExercisesNames()
+			.subscribeOn(Schedulers.io())
+			.observeOn(AndroidSchedulers.mainThread());
+	}
+	
 	public void loadExercises()
 	{
 		Log.d(TAG, "loadExercises()");
-		if(loadRoutinesResponse.getStatus() == Status.LOADING)
+		if(loadExercisesResponse.getStatus() == Status.LOADING)
 			return;
 		
 		disposables.add(repo.getExercises()
@@ -97,19 +109,19 @@ public class ExercisesViewModel
 			.observeOn(AndroidSchedulers.mainThread())
 			.doOnSubscribe(__ -> {
 				Log.d(TAG, "loading exercises: loading... ");
-				loadRoutinesResponse.setLoading();
+				loadExercisesResponse.setLoading();
 			})
 			.subscribe((List<Exercise> ex) -> {
 					// sort the list of exercises //[TODO] Set the comparator to what the user chooses
 					//Collections.sort(ex, ExerciseComparators.getDefaultComparator());
 					//this.exercises = ex;
 					Log.d(TAG, "loading exercises: success... ");
-					loadRoutinesResponse.setSuccess(ex);
+					loadExercisesResponse.setSuccess(ex);
 				},
 				throwable ->
 				{
 					Log.d(TAG, "loading exercises: error... ");
-					loadRoutinesResponse.setError(throwable);
+					loadExercisesResponse.setError(throwable);
 				}
 			)
 		);
@@ -189,8 +201,9 @@ public class ExercisesViewModel
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(
-				idExerciseHistory -> {
-					exerciseEditedResponse.setSuccess(exercise);
+				(Exercise updatedExercise) -> {
+					//exerciseEditedResponse.setSuccess(exercise);
+					exerciseEditedObservable.onNext(updatedExercise);
 				},
 				throwable -> {}
 			));

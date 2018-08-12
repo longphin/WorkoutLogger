@@ -67,6 +67,7 @@ public abstract class RoutineDao
 	public abstract Long insertRoutineHistory(RoutineHistory rh);
 	
 	// Inserts routine, routine history, routine session, session exercises, session exercise sets. Returns idRoutine for the added routine.
+	// [TODO] change this to like how insertExerciseFull is done, where we return the Routine with the updated id's, instead of doing that at the view model.
 	@Transaction
 	public Long insertRoutineFull(Routine r, List<RoutineExerciseHelper> reh)
 	{

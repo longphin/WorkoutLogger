@@ -45,13 +45,13 @@ import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
+import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableAdapter;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableFragment;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableViewModel;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,8 +63,7 @@ public class RoutineCreateFragment
 						 ExercisesSelectableAdapter.IClickExercise
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
-	private RoutinesViewModel routineViewModel;
-	private ExercisesSelectableViewModel exerciseViewModel;
+	//private ExercisesViewModel exercisesViewModel;
 	private RecyclerView recyclerView;
 	private RoutineCreateAdapter adapter;
 	// OnClick listener for when item in recyclerview is clicked.
@@ -75,9 +74,12 @@ public class RoutineCreateFragment
 	private ConstraintLayout coordinatorLayout; // layout for recycler view
 	private View mView;
 	private EditText name;
-	private ImageView addNoteImage;
 	
 	private ImageView searchBoxStatusImage;
+	private RoutinesViewModel routinesViewModel;
+	private ExercisesSelectableViewModel exercisesSelectedViewModel;
+	private ExercisesViewModel exercisesViewModel;
+	// View models
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
 	// Adapter for free form exercise search.
@@ -92,6 +94,7 @@ public class RoutineCreateFragment
 	}
 	
 	// Other
+	// Overrides
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -101,20 +104,25 @@ public class RoutineCreateFragment
 			.getApplicationComponent()
 			.inject(this);
 		
-		routineViewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
+		routinesViewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
 			ViewModelProviders.of(getActivity(), viewModelFactory)
 				.get(RoutinesViewModel.class);
 		
-		exerciseViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesSelectableViewModel.class);
+		exercisesSelectedViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesSelectableViewModel.class);
 		
-		// Observer to get a list of all exercises. This list is used for the autocomplete searchbox to add an exercise by typing the name and it giving a hint for autocompleting the name.
-		addDisposable(routineViewModel.getLoadExercisesResponse().subscribe(response -> processLoadExercisesResponse(response)));
+		exercisesViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
+		
 		// Observer to get list of exercises to add to this routine through the ExercisesOverviewFragment.
-		addDisposable(exerciseViewModel.getAddExercisesToRoutineResponse().subscribe(response -> processSelectedExercisesResponse(response)));
+		addDisposable(exercisesSelectedViewModel.getAddExercisesToRoutineResponse().subscribe(response -> processSelectedExercisesResponse(response)));
 		// Observer to get when routine is successfully saved.
-		addDisposable(routineViewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
+		addDisposable(routinesViewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
+		// Observer to get when an exercise is updated.
+		addDisposable(exercisesViewModel.getExerciseEditedObservable().subscribe(exercise -> {
+			adapter.exerciseUpdated(exercise);
+			// [TODO] Need to update the search box by calling loadExercises(). It might be better to update the search box when an exercise is added, deleted, or edited, but unless we store the exercises, this is difficult to do because the search box adapter only keeps the names. However, this is extremely expensive to do if there are many exercises (which there may well be).
+			addDisposable(exercisesViewModel.loadExerciseNames().subscribe(exerciseNames -> searchAdapter.setList(exerciseNames)));
+		}));
 	}
-	// Overrides
 	
 	// On Swipe for recyclerview item.
 	@Override
@@ -271,36 +279,11 @@ public class RoutineCreateFragment
 		}else{
 			Log.d(TAG, "detached: " + routine.getName());
 		}
-		
-		//adapter.setRoutines(routineViewModel.getCachedRoutines()); //[TODO] need to set the added exercise helper that was added.
-		//adapter.notifyItemRangeChanged(val, adapter.getItemCount());//viewModel.getCachedExercises().size());
-		
 		clearDisposables();
 	}
 	
 	private void renderSelectedExercisesErrorState(Throwable error)
 	{
-	}
-	
-	// Process list of all exercises used in autocomplete searchbox.
-	private void processLoadExercisesResponse(Response<List<Exercise>> response)
-	{
-		switch(response.getStatus()){
-			case LOADING:
-				renderExercisesLoadingState();
-				break;
-			case SUCCESS:
-				renderExercisesSuccessState(response.getValue());
-				break;
-			case ERROR:
-				renderExercisesErrorState(response.getError());
-				break;
-		}
-	}
-	
-	private void renderExercisesLoadingState()
-	{
-		Log.d(TAG, "loading exercises");
 	}
 	
 	@Nullable
@@ -311,7 +294,7 @@ public class RoutineCreateFragment
 			mView = inflater.inflate(R.layout.fragment_routine_create, container, false);
 			
 			this.name = mView.findViewById(R.id.edit_routineCreateName);
-			this.addNoteImage = mView.findViewById(R.id.imv_routine_create_addNote);
+			ImageView addNoteImage = mView.findViewById(R.id.imv_routine_create_addNote);
 			Button cancelButton = mView.findViewById(R.id.btn_routineCreateCancel);
 			Button saveButton = mView.findViewById(R.id.btn_routineCreateSave);
 			searchBox = mView.findViewById(R.id.txt_routineexercisecreate_searchBox);
@@ -327,7 +310,7 @@ public class RoutineCreateFragment
 			cancelButton.setOnClickListener(view -> ((ActivityBase)getActivity()).onBackPressedCustom(view));
 			
 			// OnClick listener to change the routine name and description. Opens up a dialog fragment for user to change the values.
-			this.addNoteImage.setOnClickListener(view ->
+			addNoteImage.setOnClickListener(view ->
 			{
 				AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);
 				dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
@@ -340,7 +323,7 @@ public class RoutineCreateFragment
 					Routine routineToAdd = new Routine();
 					routineToAdd.setName(name.getText().toString());
 					routineToAdd.setDescription(descrip);//descrip.getText().toString());
-					routineViewModel.insertRoutineFull(routineToAdd, adapter.getRoutineExerciseHelpers());
+					routinesViewModel.insertRoutineFull(routineToAdd, adapter.getRoutineExerciseHelpers());
 					
 					getActivity().onBackPressed();
 				}else{
@@ -359,9 +342,79 @@ public class RoutineCreateFragment
 			searchExercises.setOnClickListener(onSearchClickListener);
 			// Search icon: When selected, search through entire exercise list.
 			searchBox.setOnItemClickListener(onItemClickListener);
-			
-			// Get exercises list.
-			routineViewModel.loadExercises();
+			// Add a TextWatcher to the search box to determine if the search has a match.
+			searchBox.addTextChangedListener(new TextWatcher()
+			{
+				// Other
+				// Add handler and runnable to give a delay on the text check.
+				Handler handler = new Handler(Looper.getMainLooper() /*UI thread*/);
+				Runnable workRunnable;
+				
+				// Overrides
+				@Override
+				public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+				{
+				
+				}
+				
+				@Override
+				public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+				{
+					// Remove runnables that check the search box input.
+					handler.removeCallbacks(workRunnable);
+					
+					// Check if input is empty or only contains whitespace. If empty, then we don't need to check for validity.
+					if(charSequence.toString().trim().length() == 0) // empty
+					{
+						if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp, context.getTheme()));
+						}else{
+							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp));
+						}
+						return;
+					}
+					
+					// Need to check validity. Show a "loading" icon until user finishes entering input.
+					if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+						searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_ethernet_black_24dp, context.getTheme()));
+					}else{
+						searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_ethernet_black_24dp));
+					}
+					
+					// Create runnable to check the input after a delay.
+					workRunnable = () -> {
+						if(searchAdapter.contains(charSequence.toString())){
+							Log.d(TAG, charSequence.toString() + " is in list");
+							if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+								searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp, context.getTheme()));
+							}else{
+								searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
+							}
+						}else{
+							Log.d(TAG, charSequence.toString() + " not in list");
+							if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+								searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp, context.getTheme()));
+							}else{
+								searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp));
+							}
+						}
+					};
+					// Set the runnable's delay.
+					handler.postDelayed(workRunnable, 500);
+				}
+				
+				@Override
+				public void afterTextChanged(Editable editable)
+				{
+				
+				}
+			});
+			// Get a list of exercise names for the search box.
+			addDisposable(exercisesViewModel.loadExerciseNames().subscribe(exerciseNames ->
+			{
+				searchAdapter = new StringArrayAdapter(context, R.layout.autocompletetextview, exerciseNames); // Initializes adapter
+				searchBox.setAdapter(searchAdapter);
+			}));
 		}
 		
 		return (mView);
@@ -370,96 +423,6 @@ public class RoutineCreateFragment
 	// [TODO] add ability to set rest time for sets.
 	
 	// Methods
-	
-	private void renderExercisesErrorState(Throwable throwable)
-	{
-		// change anything if loading data had an error.
-		Log.d(TAG, throwable.getMessage());
-	}
-	private void renderExercisesSuccessState(List<Exercise> exercises)
-	{
-		Log.d(TAG, String.valueOf(exercises == null ? 0 : exercises.size()) + " exercises obtained");
-		
-		if(exercises == null)
-			return;
-		
-		List<String> tempStr = new ArrayList<>();
-		for(Exercise e : exercises){
-			tempStr.add(e.getName());
-		}
-		searchAdapter = new StringArrayAdapter(context, R.layout.autocompletetextview, tempStr);
-		searchBox.setAdapter(searchAdapter);
-		// Add a TextWatcher to the search box to determine if the search has a match.
-		searchBox.addTextChangedListener(new TextWatcher()
-		{
-			// Other
-			// Add handler and runnable to give a delay on the text check.
-			Handler handler = new Handler(Looper.getMainLooper() /*UI thread*/);
-			Runnable workRunnable;
-			
-			// Overrides
-			@Override
-			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
-			{
-			
-			}
-			
-			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
-			{
-				// Remove runnables that check the search box input.
-				handler.removeCallbacks(workRunnable);
-				
-				// Check if input is empty or only contains whitespace. If empty, then we don't need to check for validity.
-				if(charSequence.toString().trim().length() == 0) // empty
-				{
-					if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-						searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp, context.getTheme()));
-					}else{
-						searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp));
-					}
-					return;
-				}
-				
-				// Need to check validity. Show a "loading" icon until user finishes entering input.
-				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-					searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_ethernet_black_24dp, context.getTheme()));
-				}else{
-					searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_ethernet_black_24dp));
-				}
-				
-				// Create runnable to check the input after a delay.
-				workRunnable = () -> {
-					if(searchAdapter.contains(charSequence.toString())){
-						Log.d(TAG, charSequence.toString() + " is in list");
-						if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp, context.getTheme()));
-						}else{
-							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
-						}
-					}else{
-						Log.d(TAG, charSequence.toString() + " not in list");
-						if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp, context.getTheme()));
-						}else{
-							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp));
-						}
-					}
-				};
-				// Set the runnable's delay.
-				handler.postDelayed(workRunnable, 500);
-			}
-			
-			@Override
-			public void afterTextChanged(Editable editable)
-			{
-			
-			}
-		});
-		// [TODO] listen to the inputs and call (AutoCompleteTextView)searchBox.performValidation().
-		// See https://proandroiddev.com/building-an-autocompleting-edittext-using-rxjava-f69c5c3f5a40
-		// and https://stackoverflow.com/questions/5033246/android-autocomplettextview-force-text-to-be-from-the-entry-list
-	}
 	
 	private void addFragmentToActivity(FragmentManager fragmentManager,
 		Fragment fragment,
@@ -470,14 +433,12 @@ public class RoutineCreateFragment
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.replace(frameId, fragment, tag);
 		if(!addToBackStack.isEmpty())
-			transaction.addToBackStack(addToBackStack);//(null);
+			transaction.addToBackStack(addToBackStack);
 		transaction.commit();
 	}
 	
 	private void initializeRecyclerView()
 	{
-		//LimitedLinearLayoutManager layout = new LimitedLinearLayoutManager(context, 100);
-		//recyclerView.setLayoutManager(layout);
 		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 		adapter = new RoutineCreateAdapter(getContext());
 		recyclerView.setAdapter(adapter);
@@ -487,7 +448,6 @@ public class RoutineCreateFragment
 		// Callback to detach swipe to delete motion.
 		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT, this);
 		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-		//routineViewModel.loadExercises(); // We don't need initial data.
 	}
 	
 	private void renderSelectedExercisesSuccessState(List<Exercise> ex)
@@ -502,12 +462,10 @@ public class RoutineCreateFragment
 		
 		ExercisesSelectableFragment fragment = (ExercisesSelectableFragment)manager.findFragmentByTag(ExercisesSelectableFragment.TAG);
 		if(fragment == null){
-			//fragment = ExercisesOverviewFragment.newInstance(R.id.root_routines_overview, R.layout.item_exercise_selectable, R.layout.fragment_routine_exercises);
 			fragment = new ExercisesSelectableFragment();
 			fragment.setRootId(R.id.root_routines);
-			fragment.setAdapter(new ExercisesSelectableAdapter(exerciseViewModel, this));
+			fragment.setAdapter(new ExercisesSelectableAdapter(exercisesViewModel, exercisesSelectedViewModel, this));
 			fragment.setLayoutId(R.layout.fragment_routine_exercises);
-			fragment.setViewModel(exerciseViewModel);
 		}
 		
 		addFragmentToActivity(manager, fragment, R.id.root_routines, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);

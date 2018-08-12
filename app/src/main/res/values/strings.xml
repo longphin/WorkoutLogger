@@ -22,10 +22,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="AddSet">Add Set</string>
     <string name="ClearSelection">Clear Selection</string>
-    <string name="NoteHeader">Note</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

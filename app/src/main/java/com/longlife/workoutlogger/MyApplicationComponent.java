@@ -9,6 +9,7 @@ import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragme
 import com.longlife.workoutlogger.view.Exercises.ExercisesActivity;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
 import com.longlife.workoutlogger.view.MainActivity;
+import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableFragment;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragment;
 import com.longlife.workoutlogger.view.Routines.RoutinesActivity;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
@@ -41,6 +42,8 @@ public interface MyApplicationComponent
 	void inject(ExerciseCreateFragment ecf);
 	
 	void inject(ExercisesFragment ef);
+	
+	void inject(ExercisesSelectableFragment esf);
 	
 	void inject(ExerciseEditFragment eef);
 	

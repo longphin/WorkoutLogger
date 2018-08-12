@@ -50,6 +50,10 @@ public class ExercisesFragment
 	public static final String TAG = ExercisesFragment.class.getSimpleName();
 	@Required
 	private int rootId; //This is the root of the layout from the parent activity. This is needed to determine how to attach the child ExercisesCreateFragment when opened to create a new exercise.
+	
+	@Inject
+	public ViewModelProvider.Factory viewModelFactory;
+	
 	private ExercisesViewModel viewModel;
 	@Required
 	private int layoutId;
@@ -60,8 +64,6 @@ public class ExercisesFragment
 	protected ExercisesAdapter adapter;
 	@Inject
 	public Context context;
-	@Inject
-	public ViewModelProvider.Factory viewModelFactory;
 	
 	// Overrides
 	@Override
@@ -77,15 +79,17 @@ public class ExercisesFragment
 			ViewModelProviders.of(getActivity(), viewModelFactory)
 				.get(ExercisesViewModel.class);
 		
-		addDisposable(viewModel.getLoadRoutinesResponse().subscribe(response -> processLoadRoutineResponse(response)));
+		addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadRoutineResponse(response)));
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
-		addDisposable(viewModel.getExerciseEditedResponse().subscribe(response -> processExerciseEditedResponse(response)));//adapter.exerciseUpdated(response.getValue()))); // [TODO] why is the adapter not notifying the change?
+		//addDisposable(viewModel.getExerciseEditedResponse().subscribe(response -> processExerciseEditedResponse(response)));
+		addDisposable(viewModel.getExerciseEditedObservable().subscribe(exercise -> processExerciseEdited(exercise)));
 		
 		Log.d(TAG, "OnCreate: loadExercises()");
 		viewModel.loadExercises();
 	}
 	
 	// Setters
+	// Methods
 	
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
@@ -198,7 +202,10 @@ public class ExercisesFragment
 		this.adapter = adapter;
 	}
 	
-	// Methods
+	private void processExerciseEdited(Exercise exercise)
+	{
+		adapter.exerciseUpdated(exercise);
+	}
 	private void processInsertExerciseResponse(Response<Exercise> response)
 	{
 		switch(response.getStatus()){

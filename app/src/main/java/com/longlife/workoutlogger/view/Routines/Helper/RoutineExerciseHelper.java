@@ -9,6 +9,8 @@ import java.util.List;
 // This is used when creating a routine.
 public class RoutineExerciseHelper
 {
+	// Getters
+	
 	private Exercise exercise;
 	private List<SessionExerciseSet> sets;
 	private boolean isExpanded;
@@ -20,7 +22,11 @@ public class RoutineExerciseHelper
 		this.isExpanded = isExpanded;
 	}
 	
-	// Getters
+	// Setters
+	public void setExercise(Exercise exercise)
+	{
+		this.exercise = exercise;
+	}
 	public Exercise getExercise(){return exercise;}
 	
 	public List<SessionExerciseSet> getSets(){return sets;}
