@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="4dp"
+    tools:context=".view.DialogFragment.EditSetDialog">
+
+    <TextView
+        android:id="@+id/txt_dialog_edit_set_restTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="number"
+        android:text="@string/Time_defaultString"
+        android:textAlignment="textEnd" />
+
+    <include
+        android:id="@+id/layout_dialog_edit_set"
+        layout="@layout/fragment_keyboard_numbers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_dialog_edit_set_restTime" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_dialog_edit_set"
+        android:paddingBottom="4dp">
+
+        <Button
+            android:id="@+id/btn_dialog_edit_set_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/text_cancel" />
+
+        <Button
+            android:id="@+id/btn_dialog_edit_set_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/text_save" />
+    </LinearLayout>
+</RelativeLayout>

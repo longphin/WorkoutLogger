@@ -36,4 +36,10 @@ public class RoutineCreateSetViewHolder
 	{
 		return viewForeground;
 	}
+	
+	// Getters
+	public View getView()
+	{
+		return viewForeground;
+	}
 }

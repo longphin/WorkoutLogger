@@ -8,6 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/colorWindowBackground</item>
         <item name="android:windowAnimationStyle">@null</item> <!-- remove animation -->
+        <item name="android:textViewStyle">@style/DefaultTextViewStyle</item>
+        <item name="android:editTextStyle">@style/DefaultEditTextStyle</item>
+        <item name="editTextStyle">@style/DefaultEditTextStyle</item>
+        <item name="android:buttonStyle">@style/DefaultButtonStyle</item>
+        <item name="buttonStyle">@style/DefaultButtonStyle</item>
     </style>
 
     <style name="DialogFragmentStyle" parent="@android:style/Theme.Holo.Light.Dialog">
@@ -20,5 +25,21 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textAlignment">center</item>
+    </style>
+
+    <!-- Global font settings. For testing, "asset" is used. Should use "andada" or other.-->
+    <style name="DefaultTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">andada</item>
+        <item name="fontFamily">andada</item>
+    </style>
+
+    <style name="DefaultButtonStyle" parent="android:Widget.Button">
+        <item name="android:fontFamily">andada</item>
+        <item name="fontFamily">andada</item>
+    </style>
+
+    <style name="DefaultEditTextStyle" parent="android:Widget.EditText">
+        <item name="android:fontFamily">andada</item>
+        <item name="fontFamily">andada</item>
     </style>
 </resources>

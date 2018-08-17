@@ -44,6 +44,7 @@ import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
+import com.longlife.workoutlogger.view.DialogFragment.EditSetDialog;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableAdapter;
@@ -60,7 +61,9 @@ public class RoutineCreateFragment
 	extends FragmentBase
 	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
 						 AddNoteDialog.OnInputListener,
-						 ExercisesSelectableAdapter.IClickExercise
+						 ExercisesSelectableAdapter.IClickExercise,
+						 RoutineCreateAdapter.IOnSetClick,
+						 EditSetDialog.IOnSave
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
 	//private ExercisesViewModel exercisesViewModel;
@@ -420,9 +423,16 @@ public class RoutineCreateFragment
 		return (mView);
 	}
 	
-	// [TODO] add ability to set rest time for sets.
-	
-	// Methods
+	@Override
+	public void onSetClick(@Nullable RoutineCreateAdapter.RoutineExerciseSetPositions positionHelper)
+	{
+		if(positionHelper == null)
+			return;
+		
+		Log.d(TAG, "starting idSessionExerciseSet " + String.valueOf(positionHelper.getExerciseIndex()) + " " + String.valueOf(positionHelper.getSetIndexWithinExerciseIndex()));
+		EditSetDialog dialog = EditSetDialog.newInstance(positionHelper.getExerciseIndex(), positionHelper.getSetIndexWithinExerciseIndex(), positionHelper.getRestMinutes(), positionHelper.getRestSeconds());
+		dialog.show(getChildFragmentManager(), EditSetDialog.TAG);
+	}
 	
 	private void addFragmentToActivity(FragmentManager fragmentManager,
 		Fragment fragment,
@@ -437,17 +447,11 @@ public class RoutineCreateFragment
 		transaction.commit();
 	}
 	
-	private void initializeRecyclerView()
+	@Override
+	public void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds)
 	{
-		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-		adapter = new RoutineCreateAdapter(getContext());
-		recyclerView.setAdapter(adapter);
-		recyclerView.setItemAnimator(new DefaultItemAnimator());
-		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-		
-		// Callback to detach swipe to delete motion.
-		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT, this);
-		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+		// [TODO] Need to set the rest time for the selected set.
+		adapter.setRestTimeForSet(exerciseIndex, exerciseSetIndex, restMinutes, restSeconds);
 	}
 	
 	private void renderSelectedExercisesSuccessState(List<Exercise> ex)
@@ -469,6 +473,20 @@ public class RoutineCreateFragment
 		}
 		
 		addFragmentToActivity(manager, fragment, R.id.root_routines, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);
+	}
+	
+	// Methods
+	private void initializeRecyclerView()
+	{
+		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+		adapter = new RoutineCreateAdapter(getContext(), this);
+		recyclerView.setAdapter(adapter);
+		recyclerView.setItemAnimator(new DefaultItemAnimator());
+		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+		
+		// Callback to detach swipe to delete motion.
+		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT, this);
+		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 	}
 }
 // Inner Classes

@@ -19,8 +19,10 @@ public class DatabaseVersion
 	private static final int V3_1 = 12; // Changed id columns from int type to Long.
 	private static final int V3_2 = 13; // Added exercise history insert when exercise is inserted.
 	private static final int V3_3 = 14; // Made performance status for a routine session an enum, so that it can mark in-progress performances as well.
-	private static final int V3_4 = 15; // Removed auto-generate from primary keys.
+	private static final int V3_4 = 15; // Removed auto-generate from primary keys, so that keys can be reused if they are deleted.
+	private static final int V3_5 = 16; // Split set rest time from only seconds to minutes and seconds.
+	private static final int V3_5b = 17; // Gave set rest time a default of 0's.
 	
-	public static final int CURRENT = V3_4;
+	public static final int CURRENT = V3_5b;
 }
 // Inner Classes

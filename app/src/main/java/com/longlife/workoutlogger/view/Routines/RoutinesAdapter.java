@@ -19,8 +19,6 @@ public class RoutinesAdapter
 	private static final String TAG = RoutinesAdapter.class.getSimpleName();
 	private List<Routine> routines = new ArrayList<>();
 	
-	// [TODO] need to observe when a routine is added, and then notify about the insert. Would need to pass the viewModel to this adapter.
-	
 	public RoutinesAdapter()
 	{
 	}

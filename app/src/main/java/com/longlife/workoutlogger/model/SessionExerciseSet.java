@@ -41,22 +41,36 @@ public class SessionExerciseSet
 	private Long idSessionExercise;
 	private Integer reps;
 	private Double weights;
-	private float rest;
+	
+	@NonNull
+	private int restMinutes = 0;
+	@NonNull
+	private int restSeconds = 0;
 	private float duration;
-	
-	public SessionExerciseSet()
-	{
-	
-	}
 	
 	@Ignore
 	private SessionExerciseSet(Parcel parcel)
 	{
 		idSessionExerciseSet = parcel.readLong();
-		rest = parcel.readFloat();
+		restMinutes = parcel.readInt();
+		restSeconds = parcel.readInt();
 	}
 	
+	public SessionExerciseSet()
+	{
+	
+	}
+
 	// Overrides
+	@Ignore
+	@Override
+	public void writeToParcel(Parcel parcel, int flags)
+	{
+		parcel.writeLong(idSessionExerciseSet);
+		parcel.writeInt(restMinutes);
+		parcel.writeInt(restSeconds);
+	}
+	
 	@Ignore
 	@Override
 	public int describeContents()
@@ -64,15 +78,22 @@ public class SessionExerciseSet
 		return 0;
 	}
 	
-	@Ignore
-	@Override
-	public void writeToParcel(Parcel parcel, int flags)
+	// Getters
+	public int getRestMinutes()
 	{
-		parcel.writeLong(idSessionExerciseSet);
-		parcel.writeFloat(rest);
+		return restMinutes;
 	}
 	
-	// Getters
+	public int getRestSeconds()
+	{
+		return restSeconds;
+	}
+	
+	// Setters
+	public void setRestMinutes(int restMinutes)
+	{
+		this.restMinutes = restMinutes;
+	}
 	public float getDuration()
 	{
 		return duration;
@@ -93,17 +114,15 @@ public class SessionExerciseSet
 		return reps;
 	}
 	
-	public float getRest()
-	{
-		return rest;
-	}
-	
 	public Double getWeights()
 	{
 		return weights;
 	}
 	
-	// Setters
+	public void setRestSeconds(int restSeconds)
+	{
+		this.restSeconds = restSeconds;
+	}
 	public void setIdSessionExerciseSet(Long i)
 	{
 		idSessionExerciseSet = i;
@@ -129,9 +148,11 @@ public class SessionExerciseSet
 		this.weights = weights;
 	}
 	
-	public void setRest(float rest)
+	@Ignore
+	public void setRest(int restMinutes, int restSeconds)
 	{
-		this.rest = rest;
+		this.restMinutes = restMinutes;
+		this.restSeconds = restSeconds;
 	}
 }
 

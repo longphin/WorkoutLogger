@@ -2,13 +2,10 @@ package com.longlife.workoutlogger.view.Routines;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.utils.Response;
-import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragment;
 
 public class RoutinesActivity
 	extends ActivityBase
@@ -41,34 +38,6 @@ public class RoutinesActivity
 	}
 	
 	// Methods
-	private void processNewRoutineResponse(Response<Boolean> response)
-	{
-		switch(response.getStatus()){
-			case LOADING:
-				//renderLoadingState();
-				break;
-			case SUCCESS:
-				startCreateRoutineFragment();
-				break;
-			case ERROR:
-				//renderErrorState(response.error);
-				break;
-		}
-	}
-	
-	// [TODO] remove
-	private void startCreateRoutineFragment()
-	{
-		RoutineCreateFragment fragment = (RoutineCreateFragment)manager.findFragmentByTag(RoutineCreateFragment.TAG);
-		if(fragment == null){
-			fragment = RoutineCreateFragment.newInstance();
-		}
-		
-		addFragmentToActivity(manager, fragment, R.id.root_routines, RoutineCreateFragment.TAG, RoutineCreateFragment.TAG);
-		
-		Log.d(TAG, "start routine create fragment");
-	}
-	
 	public void initializeFragments()
 	{
 		RoutinesFragment fragment = (RoutinesFragment)manager.findFragmentByTag(RoutinesFragment.TAG);

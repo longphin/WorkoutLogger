@@ -129,22 +129,9 @@ public class RoutinesViewModel
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.doOnSubscribe(__ -> insertResponse.setLoading())
-				.subscribe(idRoutine ->
+				.subscribe(insertedRoutine ->
 					{
-						ro.setIdRoutine(idRoutine);
-						//this.routines.add(ro);
-						// sort the list of exercises //[TODO] Set the comparator to what the user chooses
-						
-						/*Collections.sort(this.routines, RoutineComparators.getDefaultComparator());
-						for(int i = 0; i < this.routines.size(); i++){
-							if(routines.get(i).getIdRoutineHistory() == id){
-								insertResponse.setSuccess(i);
-								return;
-							}
-						}*/
-						//Log.d(TAG, "Error: Could not find position of newly inserted exercise.");
-						//insertResponse.setSuccess(-1);
-						insertResponse.setSuccess(ro);
+						insertResponse.setSuccess(insertedRoutine);
 					},
 					throwable -> insertResponse.setError(throwable)
 				)
