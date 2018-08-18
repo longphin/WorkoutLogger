@@ -66,7 +66,6 @@ public class RoutineCreateFragment
 						 EditSetDialog.IOnSave
 {
 	public static final String TAG = RoutineCreateFragment.class.getSimpleName();
-	//private ExercisesViewModel exercisesViewModel;
 	private RecyclerView recyclerView;
 	private RoutineCreateAdapter adapter;
 	// OnClick listener for when item in recyclerview is clicked.
@@ -430,7 +429,7 @@ public class RoutineCreateFragment
 			return;
 		
 		Log.d(TAG, "starting idSessionExerciseSet " + String.valueOf(positionHelper.getExerciseIndex()) + " " + String.valueOf(positionHelper.getSetIndexWithinExerciseIndex()));
-		EditSetDialog dialog = EditSetDialog.newInstance(positionHelper.getExerciseIndex(), positionHelper.getSetIndexWithinExerciseIndex(), positionHelper.getRestMinutes(), positionHelper.getRestSeconds());
+		EditSetDialog dialog = EditSetDialog.newInstance(positionHelper);
 		dialog.show(getChildFragmentManager(), EditSetDialog.TAG);
 	}
 	

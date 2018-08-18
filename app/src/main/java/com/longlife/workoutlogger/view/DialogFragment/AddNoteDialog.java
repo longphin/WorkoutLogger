@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
 
 public class AddNoteDialog
-	extends DialogFragment
+	extends DialogBase
 {
 	public static final String TAG = AddNoteDialog.class.getSimpleName();
 	private EditText descrip;
@@ -92,24 +92,10 @@ public class AddNoteDialog
 		}
 	}
 	
-	/*
-	@Override
-	public void onDismiss(DialogInterface dialog)
-	{
-		// Close keyboard
-		InputMethodManager imm = (InputMethodManager)descrip.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (imm.isActive()) imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-		
-		super.onDismiss(dialog);
-	}
-	*/
-	
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
-		setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogFragmentStyle);
 		
 		// Unbundle arguments.
 		this.descripText = getArguments().getString("descrip");
@@ -120,7 +106,6 @@ public class AddNoteDialog
 	public Dialog onCreateDialog(Bundle savedInstanceState)
 	{
 		Dialog dialog = super.onCreateDialog(savedInstanceState);
-		//dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setTitle("Note");
 		return dialog;
 	}
@@ -138,7 +123,6 @@ public class AddNoteDialog
 		Bundle bundle = new Bundle();
 		bundle.putString("descrip", descrip);
 		dialog.setArguments(bundle);
-		
 		
 		return dialog;
 	}

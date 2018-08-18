@@ -67,13 +67,6 @@ public class ExerciseCreateFragment
 			saveButton.setOnClickListener(view -> checkFieldsBeforeInsert());
 			
 			// On click listener for changing the exercise name and description. Opens up a dialog fragment for user to change the values.
-			/*
-			name.setOnClickListener(view ->
-			{
-				AddNoteDialog dialog = AddNoteDialog.newInstance(this.name.getText().toString(), this.descrip);
-				dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
-			});
-			*/
 			this.addNoteImage.setOnClickListener(view ->
 			{
 				AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);

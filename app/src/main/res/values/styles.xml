@@ -19,7 +19,7 @@
         <item name="android:windowTitleStyle">@style/dialog_title</item>
     </style>
 
-    <style name="dialog_title" parent="android:Widget.TextView">
+    <style name="dialog_title" parent="@android:style/TextAppearance.Holo.DialogWindowTitle">
         <item name="android:background">#1021b7</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">#ffffff</item>

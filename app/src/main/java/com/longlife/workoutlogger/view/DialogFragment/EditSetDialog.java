@@ -1,21 +1,24 @@
 package com.longlife.workoutlogger.view.DialogFragment;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.Format;
+import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateAdapter;
 
 // [TODO] need to implement. This dialog fragment will be opened when a set in the RoutineCreate fragment is selected. It will allow user to set the rest time and set type (warm-up, regular, drop-set).
 public class EditSetDialog
-	extends DialogFragment
+	extends DialogBase
 {
 	public static final String TAG = EditSetDialog.class.getSimpleName();
 	private int exerciseIndex;
@@ -41,6 +44,11 @@ public class EditSetDialog
 			// Initialize view.
 			timerBox = mView.findViewById(R.id.txt_dialog_edit_set_restTime);
 			
+			mView.findViewById(R.id.btn_fragment_keyboard_numbers_0).setOnClickListener(view ->
+				{
+					timerBox.setText(appendValue(0));
+				}
+			);
 			mView.findViewById(R.id.btn_fragment_keyboard_numbers_1).setOnClickListener(view ->
 				{
 					timerBox.setText(appendValue(1));
@@ -92,7 +100,7 @@ public class EditSetDialog
 				}
 			);
 			
-			mView.findViewById(R.id.btn_dialog_edit_set_save).setOnClickListener(view ->
+			mView.findViewById(R.id.btn_fragment_keyboard_numbers_save).setOnClickListener(view ->
 			{
 				// Get the minutes and seconds from the time.
 				final int currentLength = time.length();
@@ -120,7 +128,7 @@ public class EditSetDialog
 				getDialog().dismiss();
 			});
 			
-			mView.findViewById(R.id.btn_dialog_edit_set_cancel).setOnClickListener(view ->
+			mView.findViewById(R.id.btn_fragment_keyboard_numbers_cancel).setOnClickListener(view ->
 			{
 				getDialog().dismiss();
 			});
@@ -151,12 +159,25 @@ public class EditSetDialog
 		// Get arguments.
 		exerciseIndex = getArguments().getInt("exerciseIndex");
 		setIndexWithinExerciseIndex = getArguments().getInt("setIndexWithinExerciseIndex");
-		time = Format.ltrimCharacter(getString(R.string.Time_timeStringUnformatted, getArguments().getInt("restMinutes"), getArguments().getInt("restSeconds")), '0'); //[TODO] not working?
+		time = Format.ltrimCharacter(getString(R.string.Time_timeStringUnformatted, getArguments().getInt("restMinutes"), getArguments().getInt("restSeconds")), '0');
 	}
 	
+	@NonNull
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState)
+	{
+		Dialog dialog = super.onCreateDialog(savedInstanceState);
+		dialog.setTitle(getArguments().getString("exerciseName") + " - Set #" + String.valueOf(getArguments().getInt("setIndexWithinExerciseIndex") + 1));
+		return dialog;
+	}
+	// When time is updated, then do some cleaning up.
+
 	// Getters
 	private String getUpdatedTimeString()
 	{
+		// Trim the time of any leading zeroes first.
+		time = Format.ltrimCharacter(time, '0');
+		
 		// Get the minutes and seconds from the time.
 		final int currentLength = time.length();
 		
@@ -179,17 +200,18 @@ public class EditSetDialog
 		return getString(R.string.Time_timeString, Integer.valueOf(minutes), Integer.valueOf(seconds));
 	}
 	
-	public static EditSetDialog newInstance(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds)
+	public static EditSetDialog newInstance(RoutineCreateAdapter.RoutineExerciseSetPositions positionHelper)//int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName)
 	{
 		Bundle bundle = new Bundle();
-		bundle.putInt("exerciseIndex", exerciseIndex);
-		bundle.putInt("setIndexWithinExerciseIndex", setIndexWithinExerciseIndex);
-		bundle.putInt("restMinutes", restMinutes);
-		bundle.putInt("restSeconds", restSeconds);
+		bundle.putInt("exerciseIndex", positionHelper.getExerciseIndex());//exerciseIndex);
+		bundle.putInt("setIndexWithinExerciseIndex", positionHelper.getSetIndexWithinExerciseIndex());//setIndexWithinExerciseIndex);
+		bundle.putInt("restMinutes", positionHelper.getRestMinutes());//restMinutes);
+		bundle.putInt("restSeconds", positionHelper.getRestSeconds());//restSeconds);
+		bundle.putString("exerciseName", positionHelper.getExerciseName());//exerciseName);
 		
-		EditSetDialog fragment = new EditSetDialog();
-		fragment.setArguments(bundle);
-		return fragment;
+		EditSetDialog dialog = new EditSetDialog();
+		dialog.setArguments(bundle);
+		return dialog;
 	}
 	
 	// Methods

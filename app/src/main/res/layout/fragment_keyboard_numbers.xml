@@ -7,128 +7,148 @@
     <LinearLayout
         android:id="@+id/layout_fragment_keyboard_numbers_row1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="4dp">
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/btn_fragment_keyboard_numbers_7"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/Number_7" />
 
         <Button
             android:id="@+id/btn_fragment_keyboard_numbers_8"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/Number_8" />
 
         <Button
             android:id="@+id/btn_fragment_keyboard_numbers_9"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/Number_9" />
 
         <Button
             android:id="@+id/btn_fragment_keyboard_numbers_X"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="0.65"
+            android:layout_weight="1"
             android:text="@string/Cancel_X" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_fragment_keyboard_numbers_row2"
-        style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_fragment_keyboard_numbers_row1"
-        android:paddingBottom="4dp">
+        android:layout_below="@+id/layout_fragment_keyboard_numbers_row1">
 
         <Button
             android:id="@+id/btn_fragment_keyboard_numbers_4"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/Number_4" />
 
         <Button
             android:id="@+id/btn_fragment_keyboard_numbers_5"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/Number_5" />
 
         <Button
             android:id="@+id/btn_fragment_keyboard_numbers_6"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/Number_6" />
 
         <Button
-            style="?android:attr/borderlessButtonStyle"
+            android:id="@+id/btn_fragment_keyboard_numbers_save"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="0.65" />
+            android:layout_weight="1"
+            android:text="@string/text_save" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_fragment_keyboard_numbers_row3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_fragment_keyboard_numbers_row2"
-        android:paddingBottom="4dp">
+        android:layout_below="@+id/layout_fragment_keyboard_numbers_row2">
 
         <Button
             android:id="@+id/btn_fragment_keyboard_numbers_1"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/Number_1" />
 
         <Button
             android:id="@+id/btn_fragment_keyboard_numbers_2"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/Number_2" />
 
         <Button
             android:id="@+id/btn_fragment_keyboard_numbers_3"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/Number_3" />
 
         <Button
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/DefaultButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="0.65" />
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_fragment_keyboard_numbers_row3">
+
+        <Button
+            android:id="@+id/btn_fragment_keyboard_numbers_0"
+            style="@style/DefaultButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Number_0" />
+
+        <Button
+            style="@style/DefaultButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            style="@style/DefaultButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btn_fragment_keyboard_numbers_cancel"
+            style="@style/DefaultButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/text_cancel" />
     </LinearLayout>
 </RelativeLayout>

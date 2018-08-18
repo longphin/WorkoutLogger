@@ -31,15 +31,22 @@ public class RoutineCreateAdapter
 		private int restMinutes;
 		private int restSeconds;
 		
-		public RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds)
+		private String exerciseName;
+		
+		public RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName)
 		{
 			this.exerciseIndex = exerciseIndex;
 			this.setIndexWithinExerciseIndex = setIndexWithinExerciseIndex;
 			this.restMinutes = restMinutes;
 			this.restSeconds = restSeconds;
+			this.exerciseName = exerciseName;
 		}
 		
 		// Getters
+		public String getExerciseName()
+		{
+			return exerciseName;
+		}
 		public int getExerciseIndex()
 		{
 			return exerciseIndex;
@@ -473,7 +480,7 @@ public class RoutineCreateAdapter
 					
 					final int setIndex = position - count - 1;
 					final SessionExerciseSet set = sets.get(setIndex);
-					return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds());
+					return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds(), reh.getExercise().getName());
 				}
 				
 				count += 1; // Add 1 for the "Add set" view.

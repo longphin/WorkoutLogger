@@ -31,7 +31,8 @@
     <string name="Number_4">4</string>
     <string name="Number_5">5</string>
     <string name="Number_6">6</string>
-    <string name="Time_defaultString">00 m : 00 s</string>
-    <string name="Time_timeString">%1$02d m %2$02d s</string>
+    <string name="Time_timeString">%1$01d:%2$02d</string>
     <string name="Time_timeStringUnformatted">%1$d%2$02d</string>
+    <string name="Number_0">0</string>
+    <string name="text_rest">Rest:</string>
 </resources>
