@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.longlife.workoutlogger.view.MainActivity">
+    android:id="@+id/root_main_activity"
+    android:fitsSystemWindows="true"
+    tools:context=".view.MainActivity">
 
-    <Button
-        android:id="@+id/btn_main_gotoRoutines"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="16dp"
-        android:onClick="gotoRoutines"
-        android:text="@string/Routines_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_main_gotoHistory"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomNav_main_activity"
+        android:fitsSystemWindows="true">
 
-    <Button
-        android:id="@+id/btn_main_gotoHistory"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:onClick="gotoHistory"
-        android:text="@string/History_Button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btn_main_gotoRoutines"
-        app:layout_constraintEnd_toStartOf="@+id/btn_main_gotoExercises"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_main_gotoRoutines" />
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar_main_activity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btn_main_gotoExercises"
-        android:layout_width="0dp"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_main_activity"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary" />
+        </android.support.design.widget.AppBarLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLayout_main_activity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+        android:id="@+id/bottomNav_main_activity"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:onClick="gotoExercises"
-        android:text="@string/Exercises_button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btn_main_gotoHistory"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_main_gotoHistory" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="?android:attr/windowBackground"
+        app:layout_anchorGravity="bottom" />
+</RelativeLayout>

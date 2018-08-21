@@ -75,9 +75,10 @@ public class ExercisesFragment
 			.getApplicationComponent()
 			.inject(this);
 		
-		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(getActivity(), viewModelFactory)
-				.get(ExercisesViewModel.class);
+		viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
+		
+		this.rootId = getArguments().getInt("activityRoot");
+		this.layoutId = getArguments().getInt("exerciseItemLayout");
 		
 		addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadRoutineResponse(response)));
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
@@ -88,8 +89,26 @@ public class ExercisesFragment
 		viewModel.loadExercises();
 	}
 	
+	@Override
+	public void exerciseClicked(Long idExercise)
+	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
+		
+		ExerciseEditFragment fragment = (ExerciseEditFragment)manager.findFragmentByTag(ExerciseEditFragment.TAG);
+		if(fragment == null){
+			fragment = ExerciseEditFragment.newInstance(idExercise);
+		}
+		
+		Log.d(TAG, "Editing exercise " + String.valueOf(idExercise));
+		manager.beginTransaction()
+			.replace(R.id.frameLayout_main_activity,//rootId,
+				fragment, ExerciseEditFragment.TAG
+			)
+			.addToBackStack(ExerciseEditFragment.TAG)
+			.commit();
+	}
+
 	// Setters
-	// Methods
 	
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
@@ -174,28 +193,18 @@ public class ExercisesFragment
 		return false;
 	}
 	
-	@Override
-	public void exerciseClicked(Long idExercise)
+	public static ExercisesFragment newInstance(ExercisesViewModel exercisesViewModel, int activityRoot, int exerciseItemLayout)
 	{
-		FragmentManager manager = getActivity().getSupportFragmentManager();
+		ExercisesFragment fragment = new ExercisesFragment();
+		fragment.setAdapter(new ExercisesAdapter(exercisesViewModel, fragment));
 		
-		ExerciseEditFragment fragment = (ExerciseEditFragment)manager.findFragmentByTag(ExerciseEditFragment.TAG);
-		if(fragment == null){
-			fragment = ExerciseEditFragment.newInstance(idExercise);
-		}
+		Bundle bundle = new Bundle();
+		bundle.putInt("activityRoot", activityRoot);
+		bundle.putInt("exerciseItemLayout", exerciseItemLayout);
+		fragment.setArguments(bundle);
 		
-		Log.d(TAG, "Editing exercise " + String.valueOf(idExercise));
-		manager.beginTransaction()
-			.replace(rootId, fragment, ExerciseEditFragment.TAG)
-			.addToBackStack(ExerciseEditFragment.TAG)
-			.commit();
+		return fragment;
 	}
-	public void setRootId(int rootId)
-	{
-		this.rootId = rootId;
-	}
-	
-	public void setLayoutId(int layoutId){this.layoutId = layoutId;}
 	
 	public void setAdapter(ExercisesAdapter adapter)
 	{
@@ -294,6 +303,7 @@ public class ExercisesFragment
 		}
 	}
 	
+	// Methods
 	protected void startCreateFragment()
 	{
 		FragmentManager manager = getActivity().getSupportFragmentManager();
@@ -304,9 +314,10 @@ public class ExercisesFragment
 		}
 		
 		manager.beginTransaction()
-			.replace(rootId, fragment, ExerciseCreateFragment.TAG)
+			.replace(R.id.frameLayout_main_activity,//rootId,
+				fragment, ExerciseCreateFragment.TAG
+			)
 			.addToBackStack(ExerciseCreateFragment.TAG)
 			.commit();
 	}
-	
 }

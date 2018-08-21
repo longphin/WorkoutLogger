@@ -35,4 +35,8 @@
     <string name="Time_timeStringUnformatted">%1$d%2$02d</string>
     <string name="Number_0">0</string>
     <string name="text_rest">Rest:</string>
+
+    <!-- Bottom navigation bar text -->
+    <string name="NavBar_Routines">Routines</string>
+    <string name="NavBar_Exercises">Exercises</string>
 </resources>

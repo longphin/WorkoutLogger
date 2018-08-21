@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -106,9 +106,7 @@ public class RoutineCreateFragment
 			.getApplicationComponent()
 			.inject(this);
 		
-		routinesViewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(getActivity(), viewModelFactory)
-				.get(RoutinesViewModel.class);
+		routinesViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
 		
 		exercisesSelectedViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesSelectableViewModel.class);
 		
@@ -221,8 +219,12 @@ public class RoutineCreateFragment
 		}
 		
 		Log.d(TAG, "Editing exercise " + String.valueOf(idExercise));
-		addFragmentToActivity(manager, fragment, R.id.root_routines, ExerciseEditFragment.TAG, ExerciseEditFragment.TAG);
+		addFragmentToActivity(manager, fragment,
+			R.id.frameLayout_main_activity,//R.id.root_main_activity,
+			ExerciseEditFragment.TAG, ExerciseEditFragment.TAG
+		);
 	}
+	
 	private void renderInsertLoadingState()
 	{
 		if(isAdded())
@@ -365,40 +367,26 @@ public class RoutineCreateFragment
 					// Remove runnables that check the search box input.
 					handler.removeCallbacks(workRunnable);
 					
+					final Context activityContext = getActivity();
+					
 					// Check if input is empty or only contains whitespace. If empty, then we don't need to check for validity.
 					if(charSequence.toString().trim().length() == 0) // empty
 					{
-						if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp, context.getTheme()));
-						}else{
-							searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp));
-						}
+						searchBoxStatusImage.setImageDrawable(ContextCompat.getDrawable(activityContext, R.drawable.ic_error_outline_black_24dp));
 						return;
 					}
 					
 					// Need to check validity. Show a "loading" icon until user finishes entering input.
-					if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-						searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_ethernet_black_24dp, context.getTheme()));
-					}else{
-						searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings_ethernet_black_24dp));
-					}
+					searchBoxStatusImage.setImageDrawable(ContextCompat.getDrawable(activityContext, R.drawable.ic_settings_ethernet_black_24dp));
 					
 					// Create runnable to check the input after a delay.
 					workRunnable = () -> {
 						if(searchAdapter.contains(charSequence.toString())){
 							Log.d(TAG, charSequence.toString() + " is in list");
-							if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-								searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp, context.getTheme()));
-							}else{
-								searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_black_24dp));
-							}
+							searchBoxStatusImage.setImageDrawable(ContextCompat.getDrawable(activityContext, R.drawable.ic_check_black_24dp));
 						}else{
 							Log.d(TAG, charSequence.toString() + " not in list");
-							if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-								searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp, context.getTheme()));
-							}else{
-								searchBoxStatusImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_outline_black_24dp));
-							}
+							searchBoxStatusImage.setImageDrawable(ContextCompat.getDrawable(activityContext, R.drawable.ic_error_outline_black_24dp));
 						}
 					};
 					// Set the runnable's delay.
@@ -433,18 +421,7 @@ public class RoutineCreateFragment
 		dialog.show(getChildFragmentManager(), EditSetDialog.TAG);
 	}
 	
-	private void addFragmentToActivity(FragmentManager fragmentManager,
-		Fragment fragment,
-		int frameId,
-		String tag,
-		String addToBackStack)
-	{
-		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		transaction.replace(frameId, fragment, tag);
-		if(!addToBackStack.isEmpty())
-			transaction.addToBackStack(addToBackStack);
-		transaction.commit();
-	}
+	// Methods
 	
 	@Override
 	public void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds)
@@ -453,9 +430,24 @@ public class RoutineCreateFragment
 		adapter.setRestTimeForSet(exerciseIndex, exerciseSetIndex, restMinutes, restSeconds);
 	}
 	
+	
 	private void renderSelectedExercisesSuccessState(List<Exercise> ex)
 	{
 		adapter.addExercises(ex);
+	}
+	private void addFragmentToActivity(FragmentManager fragmentManager,
+		Fragment fragment,
+		int frameId,
+		String tag,
+		String addToBackStack)
+	{
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		transaction.replace(R.id.frameLayout_main_activity,//frameId,
+			fragment, tag
+		);
+		if(!addToBackStack.isEmpty())
+			transaction.addToBackStack(addToBackStack);
+		transaction.commit();
 	}
 	
 	// Click search exercise button
@@ -465,16 +457,11 @@ public class RoutineCreateFragment
 		
 		ExercisesSelectableFragment fragment = (ExercisesSelectableFragment)manager.findFragmentByTag(ExercisesSelectableFragment.TAG);
 		if(fragment == null){
-			fragment = new ExercisesSelectableFragment();
-			fragment.setRootId(R.id.root_routines);
-			fragment.setAdapter(new ExercisesSelectableAdapter(exercisesViewModel, exercisesSelectedViewModel, this));
-			fragment.setLayoutId(R.layout.fragment_routine_exercises);
+			fragment = ExercisesSelectableFragment.newInstance(exercisesViewModel, exercisesSelectedViewModel, R.id.root_main_activity, R.layout.fragment_routine_exercises);
 		}
 		
-		addFragmentToActivity(manager, fragment, R.id.root_routines, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);
+		addFragmentToActivity(manager, fragment, R.id.root_main_activity, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);
 	}
-	
-	// Methods
 	private void initializeRecyclerView()
 	{
 		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));

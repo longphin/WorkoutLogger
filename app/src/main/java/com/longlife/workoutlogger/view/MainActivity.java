@@ -1,50 +1,108 @@
 package com.longlife.workoutlogger.view;
 
-import android.content.Intent;
+import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
+import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Repository;
-import com.longlife.workoutlogger.view.Exercises.ExercisesActivity;
-import com.longlife.workoutlogger.view.Routines.RoutinesActivity;
+import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
+import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
+import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
+import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 
 import javax.inject.Inject;
 
 public class MainActivity
-	extends AppCompatActivity
+	extends ActivityBase
 {
 	@Inject
 	public Repository repo;
 	
+	// Static
+	private static final String childFragmentTag = MainActivity.class.getSimpleName() + "_Fragment";
+	private static int NavigationItem_Routine = 0;
+	private static int NavigationItem_Exercise = 1;
+	private RoutinesViewModel routinesViewModel;
+	private ExercisesViewModel exercisesViewModel;
+	private AHBottomNavigation bottomNavigationBar;
+
 	// Overrides
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		((MyApplication)getApplication())
+			.getApplicationComponent()
+			.inject(this);
+		
+		routinesViewModel = ViewModelProviders.of(this, viewModelFactory).get(RoutinesViewModel.class);
+		
+		exercisesViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExercisesViewModel.class);
+		
+		bottomNavigationBar = findViewById(R.id.bottomNav_main_activity);
+		initializeBottomNavigation();
 	}
 	
-	// Called when the user presses the Routines button.
-	public void gotoRoutines(View view)
+	// Methods
+	// Initialize bottom navigation bar.
+	private void initializeBottomNavigation()
 	{
-		//Intent intent = new Intent(this, RoutinesActivity.class);
-		Intent intent = new Intent(this, RoutinesActivity.class);
-		startActivity(intent);
+		// Settings
+		bottomNavigationBar.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW); // Always show the labels for items.
+		// Initialize items.
+		AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_settings_ethernet_black_24dp);
+		AHBottomNavigationItem ExerciseItem = new AHBottomNavigationItem(getString(R.string.NavBar_Exercises), R.drawable.ic_settings_ethernet_black_24dp);
+		// Add navigation items.
+		bottomNavigationBar.addItem(RoutineItem);
+		bottomNavigationBar.addItem(ExerciseItem);
+		// Add listeners when selecting the items.
+		bottomNavigationBar.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener()
+		{
+			// Overrides
+			@Override
+			public boolean onTabSelected(int position, boolean wasSelected)
+			{
+				// If the same item was selected, do nothing.
+				//if(wasSelected) return true; // [TODO] If the current fragment is one of the base ones (RoutinesFragment, ExercisesFragment), then do nothing. If not, then go to the base fragment.
+				
+				// Routine fragment.
+				if(position == NavigationItem_Routine){
+					openRoutineFragment();
+					return true;
+				}
+				// Exercise fragment.
+				if(position == NavigationItem_Exercise){
+					openExerciseFragment();
+					return true;
+				}
+				
+				// Touch not handled.
+				return false;
+			}
+		});
+		// Set defaults.
+		bottomNavigationBar.setCurrentItem(NavigationItem_Routine);
+		// Styles.
+		bottomNavigationBar.setDefaultBackgroundColor(Color.WHITE);
+		bottomNavigationBar.setAccentColor(Color.BLACK);
+		bottomNavigationBar.setInactiveColor(Color.GRAY);
 	}
 	
-	// Called when user presses the History button.
-	public void gotoHistory(View view)
+	private void openRoutineFragment()
 	{
-		// [TODO]
+		addFragmentToActivity(manager, RoutinesFragment.newInstance(), R.id.frameLayout_main_activity, childFragmentTag);
 	}
 	
-	// Called when user presses the Goals button.
-	public void gotoExercises(View view)
+	public void openExerciseFragment()
 	{
-		Intent intent = new Intent(this, ExercisesActivity.class);
-		startActivity(intent);
+		addFragmentToActivity(manager, ExercisesFragment.newInstance(exercisesViewModel, R.id.frameLayout_main_activity, R.layout.fragment_exercises), R.id.frameLayout_main_activity, childFragmentTag);
 	}
 }
 // Inner Classes

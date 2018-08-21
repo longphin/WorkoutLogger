@@ -54,9 +54,7 @@ public class ExerciseEditFragment
 			.getApplicationComponent()
 			.inject(this);
 		
-		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(getActivity(), viewModelFactory)
-				.get(ExercisesViewModel.class);
+		viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
 		
 		// Unbundle arguments.
 		this.idExercise = getArguments().getLong("idExercise");

@@ -19,11 +19,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Save"
+            android:text="@string/text_save"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/btn_routineCreateCancel"
@@ -32,7 +30,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:text="Cancel"
+            android:text="@string/text_cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_routineCreateSave"
             app:layout_constraintHorizontal_bias="0.0"

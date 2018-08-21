@@ -93,9 +93,7 @@ public class ExerciseCreateFragment
 			.getApplicationComponent()
 			.inject(this);
 		
-		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(getActivity(), viewModelFactory)
-				.get(ExercisesViewModel.class);
+		viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
 		
 		//viewModel.insertResponse().observe(this, response -> processInsertResponse(response));
 		//composite.add(viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));

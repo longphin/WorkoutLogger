@@ -20,7 +20,7 @@ public abstract class ActivityBase
 	extends AppCompatActivity
 {
 	// Static
-	private static final String TAG = "ActivityBase";
+	private static final String TAG = ActivityBase.class.getSimpleName();
 	private CompositeDisposable composite = new CompositeDisposable();
 	
 	@Inject

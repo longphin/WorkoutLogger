@@ -66,9 +66,7 @@ public class RoutinesFragment
 			.getApplicationComponent()
 			.inject(this);
 		
-		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(getActivity(), viewModelFactory)
-				.get(RoutinesViewModel.class);
+		viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
 		
 		//viewModel.getLoadExercisesResponse().subscribe(response -> processLoadResponse(response));
 		addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
@@ -253,7 +251,9 @@ public class RoutinesFragment
 		}
 		
 		manager.beginTransaction()
-			.replace(R.id.root_routines, fragment, RoutineCreateFragment.TAG)
+			.replace(R.id.frameLayout_main_activity,//R.id.root_routines_layout,
+				fragment, RoutineCreateFragment.TAG
+			)
 			.addToBackStack(RoutineCreateFragment.TAG)
 			.commit();
 		

@@ -25,28 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.Routines.RoutinesActivity"
-            android:configChanges="orientation"
-            android:parentActivityName=".view.MainActivity"
-            android:screenOrientation="portrait">
-
-            <!-- meta-data tag required to support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.MainActivity" />
-        </activity>
-        <activity
-            android:name=".view.Exercises.ExercisesActivity"
-            android:configChanges="orientation"
-            android:parentActivityName=".view.MainActivity"
-            android:screenOrientation="portrait">
-
-            <!-- meta-data tag required to support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.MainActivity" />
-        </activity>
     </application>
 
 </manifest>

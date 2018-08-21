@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
+import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,8 +20,8 @@ import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
 public class ExercisesSelectableFragment
 	extends ExercisesFragment
 {
-	public static final String TAG = ExercisesSelectableFragment.class.getSimpleName();
-	private ExercisesSelectableViewModel viewModel;
+	public static final String TAG = ExercisesFragment.class.getSimpleName(); // The tag will be the same as the base class. //ExercisesSelectableFragment.class.getSimpleName();
+	private ExercisesSelectableViewModel exercisesSelectableViewModel;
 	
 	// Overrides
 	@Override
@@ -28,10 +29,9 @@ public class ExercisesSelectableFragment
 	{
 		super.onCreate(savedInstanceState);
 		
-		viewModel = //ViewModelProvider.AndroidViewModelFactory.getInstance(app).// [TODO] when upgrading lifecycle version to 1.1.1, ViewModelProviders will become deprecated and something like this will need to be used (this line is not correct, by the way).
-			ViewModelProviders.of(getActivity(), viewModelFactory)
-				.get(ExercisesSelectableViewModel.class);
+		exercisesSelectableViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesSelectableViewModel.class);
 	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -41,8 +41,8 @@ public class ExercisesSelectableFragment
 		addExercisesToRoutineButton.setOnClickListener(
 			view ->
 			{
-				viewModel.addExercisesToRoutine();
-				viewModel.clearIdSelectedExercises(); // Clear selected exercises, which is possibly when the selected exercises are clicked again.
+				exercisesSelectableViewModel.addExercisesToRoutine();
+				exercisesSelectableViewModel.clearIdSelectedExercises(); // Clear selected exercises, which is possibly when the selected exercises are clicked again.
 				getActivity().onBackPressed();
 			}
 		);
@@ -51,11 +51,24 @@ public class ExercisesSelectableFragment
 		clearSelectionButton.setOnClickListener(
 			view ->
 			{
-				viewModel.clearIdSelectedExercises();
+				exercisesSelectableViewModel.clearIdSelectedExercises();
 				adapter.notifyDataSetChanged();
 			}
 		);
 		
 		return mView;
+	}
+	
+	public static ExercisesSelectableFragment newInstance(ExercisesViewModel exercisesViewModel, ExercisesSelectableViewModel exercisesSelectableViewModel, int activityRoot, int exerciseItemLayout)
+	{
+		ExercisesSelectableFragment fragment = new ExercisesSelectableFragment();
+		fragment.setAdapter(new ExercisesSelectableAdapter(exercisesViewModel, exercisesSelectableViewModel, fragment));
+		
+		Bundle bundle = new Bundle();
+		bundle.putInt("activityRoot", activityRoot);
+		bundle.putInt("exerciseItemLayout", exerciseItemLayout);
+		fragment.setArguments(bundle);
+		
+		return fragment;
 	}
 }
