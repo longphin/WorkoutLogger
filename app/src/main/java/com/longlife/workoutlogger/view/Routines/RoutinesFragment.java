@@ -257,7 +257,11 @@ public class RoutinesFragment
 			.addToBackStack(RoutineCreateFragment.TAG)
 			.commit();
 		
-		Log.d(TAG, "start routine create fragment");
+		int count = manager.getBackStackEntryCount();
+		Log.d(TAG, "Number of activites in back stack: " + String.valueOf(count));
+		for(int i = 0; i < count; i++){
+			Log.d(TAG, "Backstack: " + manager.getBackStackEntryAt(i).getName());
+		}
 	}
 }
 // Inner Classes

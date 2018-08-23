@@ -97,12 +97,12 @@ public class MainActivity
 	
 	private void openRoutineFragment()
 	{
-		addFragmentToActivity(manager, RoutinesFragment.newInstance(), R.id.frameLayout_main_activity, childFragmentTag);
+		addFragmentToActivity(manager, RoutinesFragment.newInstance(), R.id.frameLayout_main_activity, RoutinesFragment.TAG, RoutinesFragment.TAG);//childFragmentTag, childFragmentTag);
 	}
 	
 	public void openExerciseFragment()
 	{
-		addFragmentToActivity(manager, ExercisesFragment.newInstance(exercisesViewModel, R.id.frameLayout_main_activity, R.layout.fragment_exercises), R.id.frameLayout_main_activity, childFragmentTag);
+		addFragmentToActivity(manager, ExercisesFragment.newInstance(exercisesViewModel, R.id.frameLayout_main_activity, R.layout.fragment_exercises), R.id.frameLayout_main_activity, ExercisesFragment.TAG, ExercisesFragment.TAG);//childFragmentTag, childFragmentTag);
 	}
 }
 // Inner Classes

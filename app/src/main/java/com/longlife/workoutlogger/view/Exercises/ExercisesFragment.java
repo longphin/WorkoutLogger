@@ -82,7 +82,6 @@ public class ExercisesFragment
 		
 		addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadRoutineResponse(response)));
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
-		//addDisposable(viewModel.getExerciseEditedResponse().subscribe(response -> processExerciseEditedResponse(response)));
 		addDisposable(viewModel.getExerciseEditedObservable().subscribe(exercise -> processExerciseEdited(exercise)));
 		
 		Log.d(TAG, "OnCreate: loadExercises()");
@@ -99,15 +98,26 @@ public class ExercisesFragment
 			fragment = ExerciseEditFragment.newInstance(idExercise);
 		}
 		
-		Log.d(TAG, "Editing exercise " + String.valueOf(idExercise));
 		manager.beginTransaction()
 			.replace(R.id.frameLayout_main_activity,//rootId,
 				fragment, ExerciseEditFragment.TAG
 			)
 			.addToBackStack(ExerciseEditFragment.TAG)
 			.commit();
+		
+		int count = manager.getBackStackEntryCount();
+		Log.d(TAG, "Number of activites in back stack: " + String.valueOf(count));
+		for(int i = 0; i < count; i++){
+			Log.d(TAG, "Backstack: " + manager.getBackStackEntryAt(i).getName());
+		}
 	}
-
+	
+	@Override
+	public void exerciseFavorited(Long idExercise, boolean favoritedStatus)
+	{
+		viewModel.updateFavorite(idExercise, favoritedStatus);
+	}
+	
 	// Setters
 	
 	@Override
@@ -140,7 +150,6 @@ public class ExercisesFragment
 					
 					// If the snackbar was dismissed via clicking the action (Undo button), then restore the exercise.
 					if(event == Snackbar.Callback.DISMISS_EVENT_ACTION){
-						//adapter.restoreExercise(deletedItem, deletedIndex);
 						adapter.restoreExercise(firstDeletedExercise.getExercise(), firstDeletedExercise.getPosition());
 						return;
 					}
@@ -179,7 +188,6 @@ public class ExercisesFragment
 	{
 		return true;
 	}
-	// @Required - This is the id of the parent activity/fragment's layout root.
 	
 	@Override
 	public boolean isLongPressDragEnabled()
@@ -196,7 +204,7 @@ public class ExercisesFragment
 	public static ExercisesFragment newInstance(ExercisesViewModel exercisesViewModel, int activityRoot, int exerciseItemLayout)
 	{
 		ExercisesFragment fragment = new ExercisesFragment();
-		fragment.setAdapter(new ExercisesAdapter(exercisesViewModel, fragment));
+		fragment.setAdapter(new ExercisesAdapter(fragment));
 		
 		Bundle bundle = new Bundle();
 		bundle.putInt("activityRoot", activityRoot);
@@ -211,21 +219,12 @@ public class ExercisesFragment
 		this.adapter = adapter;
 	}
 	
+	// Methods
 	private void processExerciseEdited(Exercise exercise)
 	{
+		if(!isAdded())
+			return;
 		adapter.exerciseUpdated(exercise);
-	}
-	private void processInsertExerciseResponse(Response<Exercise> response)
-	{
-		switch(response.getStatus()){
-			case LOADING:
-				break;
-			case SUCCESS:
-				renderInsertExerciseSuccess(response.getValue());
-				break;
-			case ERROR:
-				break;
-		}
 	}
 	
 	private void renderInsertExerciseSuccess(Exercise ex)
@@ -233,18 +232,17 @@ public class ExercisesFragment
 		adapter.addExercise(ex);
 	}
 	
-	private void processLoadRoutineResponse(Response<List<Exercise>> response)
+	private void processInsertExerciseResponse(Response<Exercise> response)
 	{
+		if(!isAdded())
+			return;
 		switch(response.getStatus()){
 			case LOADING:
-				renderLoadRoutineLoadState();
 				break;
 			case SUCCESS:
-				renderLoadRoutineSuccessState(response.getValue());
+				renderInsertExerciseSuccess(response.getValue());
 				break;
 			case ERROR:
-				if(response.getError() != null)
-					renderLoadRoutineErrorState(response.getError());
 				break;
 		}
 	}
@@ -290,8 +288,28 @@ public class ExercisesFragment
 		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 	}
 	
+	private void processLoadRoutineResponse(Response<List<Exercise>> response)
+	{
+		if(!isAdded())
+			return;
+		switch(response.getStatus()){
+			case LOADING:
+				renderLoadRoutineLoadState();
+				break;
+			case SUCCESS:
+				renderLoadRoutineSuccessState(response.getValue());
+				break;
+			case ERROR:
+				if(response.getError() != null)
+					renderLoadRoutineErrorState(response.getError());
+				break;
+		}
+	}
+	
 	private void processExerciseEditedResponse(Response<Exercise> response)
 	{
+		if(!isAdded())
+			return;
 		switch(response.getStatus()){
 			case LOADING:
 				break;
@@ -302,8 +320,6 @@ public class ExercisesFragment
 				break;
 		}
 	}
-	
-	// Methods
 	protected void startCreateFragment()
 	{
 		FragmentManager manager = getActivity().getSupportFragmentManager();

@@ -10,23 +10,19 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.view.Exercises.ExercisesAdapter;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewHolder;
-import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 
 public class ExercisesSelectableAdapter
 	extends ExercisesAdapter
 {
 	// Static
 	private final static String TAG = ExercisesSelectableAdapter.class.getSimpleName();
+	private IExercisesSelectableAdapterCallback exercisesSelectableCallback;
 	
-	private ExercisesSelectableViewModel viewModel;
-	
-	public ExercisesSelectableAdapter(ExercisesViewModel exercisesViewModel, ExercisesSelectableViewModel viewModel, IClickExercise clickExerciseCallback)
+	public ExercisesSelectableAdapter(IClickExercise clickExerciseCallback, IExercisesSelectableAdapterCallback selectableAdapterCallback)
 	{
-		super(exercisesViewModel, clickExerciseCallback);
-		this.viewModel = viewModel;
+		super(clickExerciseCallback);
+		this.exercisesSelectableCallback = selectableAdapterCallback;
 	}
-	
-	// Overrides
 	@Override
 	public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -35,6 +31,7 @@ public class ExercisesSelectableAdapter
 		return (new ExercisesViewHolder(v));
 	}
 	
+	// Overrides
 	@Override
 	public void onBindViewHolder(ExercisesViewHolder holder, int pos)
 	{
@@ -46,7 +43,7 @@ public class ExercisesSelectableAdapter
 		CheckBox selectedCheckBox = holder.getSelectedCheckBox();
 		if(selectedCheckBox != null){
 			Long idCurrentlySelected = ex.getIdExercise();
-			boolean isCurrentlySelected = viewModel.isIdSelected(idCurrentlySelected);
+			boolean isCurrentlySelected = exercisesSelectableCallback.isIdSelected(idCurrentlySelected);//viewModel.isIdSelected(idCurrentlySelected);
 			if(isCurrentlySelected){
 				holder.setSelectedCheckBox(true);
 				Log.d(TAG, "Is " + String.valueOf(idCurrentlySelected) + " selected: Yes");
@@ -59,13 +56,13 @@ public class ExercisesSelectableAdapter
 				view ->
 				{
 					Long id = ex.getIdExercise();
-					boolean isSelected = viewModel.isIdSelected(id);
+					boolean isSelected = exercisesSelectableCallback.isIdSelected(id);//viewModel.isIdSelected(id);
 					if(isSelected){
 						//selectedIdExercises.remove(id);
-						viewModel.removeSelectedExercise(id);
+						exercisesSelectableCallback.removeSelectedExcercise(id);//viewModel.removeSelectedExercise(id);
 					}else{
 						//selectedIdExercises.add(id);
-						viewModel.addSelectedExercise(id);
+						exercisesSelectableCallback.addSelectedExercise(id);//viewModel.addSelectedExercise(id);
 					}
 					Log.d(TAG, String.valueOf(id) + " is " + (!isSelected ? "selected" : "unselected"));
 				}
@@ -75,9 +72,18 @@ public class ExercisesSelectableAdapter
 		CheckBox exerciseSelectedBox = holder.getSelectedCheckBox();
 		exerciseSelectedBox.setOnClickListener(view -> {
 			final int thisPos = holder.getAdapterPosition();
-			viewModel.addSelectedExercise(exercises.get(thisPos).getIdExercise());
+			exercisesSelectableCallback.addSelectedExercise(exercises.get(thisPos).getIdExercise());//viewModel.addSelectedExercise(exercises.get(thisPos).getIdExercise());
 			//selectedIdExercises.add(exercises.get(thisPos).getIdRoutineHistory());
 		});
+	}
+	
+	public interface IExercisesSelectableAdapterCallback
+	{
+		boolean isIdSelected(Long idExercise);
+		
+		void removeSelectedExcercise(Long idExercise);
+		
+		void addSelectedExercise(Long idExercise);
 	}
 	
 }

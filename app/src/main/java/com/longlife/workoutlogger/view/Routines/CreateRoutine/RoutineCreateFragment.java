@@ -225,6 +225,12 @@ public class RoutineCreateFragment
 		);
 	}
 	
+	@Override
+	public void exerciseFavorited(Long idExercise, boolean favoritedStatus)
+	{
+		exercisesViewModel.updateFavorite(idExercise, favoritedStatus);
+	}
+	
 	private void renderInsertLoadingState()
 	{
 		if(isAdded())
@@ -457,7 +463,7 @@ public class RoutineCreateFragment
 		
 		ExercisesSelectableFragment fragment = (ExercisesSelectableFragment)manager.findFragmentByTag(ExercisesSelectableFragment.TAG);
 		if(fragment == null){
-			fragment = ExercisesSelectableFragment.newInstance(exercisesViewModel, exercisesSelectedViewModel, R.id.root_main_activity, R.layout.fragment_routine_exercises);
+			fragment = ExercisesSelectableFragment.newInstance(exercisesSelectedViewModel, R.id.root_main_activity, R.layout.fragment_routine_exercises);
 		}
 		
 		addFragmentToActivity(manager, fragment, R.id.root_main_activity, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);

@@ -14,14 +14,12 @@ import java.util.List;
 public class ExercisesAdapter
 	extends RecyclerView.Adapter<ExercisesViewHolder>
 {
-	private ExercisesViewModel viewModel;
 	protected List<Exercise> exercises = new ArrayList<>();
 	
 	private IClickExercise exerciseClickCallback;
 	
-	public ExercisesAdapter(ExercisesViewModel viewModel, IClickExercise exerciseClickCallback)
+	public ExercisesAdapter(IClickExercise exerciseClickCallback)
 	{
-		this.viewModel = viewModel;
 		this.exerciseClickCallback = exerciseClickCallback;
 	}
 	
@@ -51,7 +49,8 @@ public class ExercisesAdapter
 					holder.setFavoriteIcon(R.drawable.ic_favorite_border_black_24dp);
 				}
 				
-				viewModel.updateFavorite(ex.getIdExercise(), ex.getFavorited());
+				//viewModel.updateFavorite(ex.getIdExercise(), ex.getFavorited());
+				exerciseClickCallback.exerciseFavorited(ex.getIdExercise(), ex.getFavorited());
 			}
 		);
 		
@@ -95,6 +94,8 @@ public class ExercisesAdapter
 	{
 		// When an exercise is clicked, send the clicked exercise.
 		void exerciseClicked(Long idExercise);
+		
+		void exerciseFavorited(Long idExercise, boolean favoritedStatus);
 	}
 	public void setExercises(List<Exercise> exercises)
 	{

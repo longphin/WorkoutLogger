@@ -91,23 +91,20 @@ public abstract class ActivityBase
 	public void addFragmentToActivity(FragmentManager fragmentManager,
 		Fragment fragment,
 		int frameId,
-		String tag)
-	{
-		addFragmentToActivity(fragmentManager, fragment, frameId, tag, "");
-	}
-	
-	public void addFragmentToActivity(FragmentManager fragmentManager,
-		Fragment fragment,
-		int frameId,
 		String tag,
 		String addToBackStack)
 	{
-		
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.replace(frameId, fragment, tag);
 		if(!addToBackStack.isEmpty())
 			transaction.addToBackStack(addToBackStack);//(null);
 		transaction.commit();
+		
+		int count = manager.getBackStackEntryCount();
+		Log.d(TAG, "Number of activites in back stack: " + String.valueOf(count));
+		for(int i = 0; i < count; i++){
+			Log.d(TAG, "Backstack: " + manager.getBackStackEntryAt(i).getName());
+		}
 	}
 }
 // This extends AppCompatActivity and allows us to easily attach an activity to its fragment.
