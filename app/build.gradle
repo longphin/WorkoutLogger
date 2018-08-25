@@ -78,4 +78,7 @@ dependencies {
 
     // Bottom navigation bar.
     implementation 'com.aurelhubert:ahbottomnavigation:2.2.0'
+
+    // Fragment Navigation helper, used for navigating the bottom navigation.
+    implementation 'com.ncapdevi:frag-nav:2.4.0'
 }

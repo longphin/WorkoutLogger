@@ -7,9 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
+import com.longlife.workoutlogger.R;
 
 import javax.inject.Inject;
 
@@ -28,7 +31,7 @@ public abstract class ActivityBase
 	public FragmentManager manager = getSupportFragmentManager();
 	
 	// Overrides
-	@Override
+/*	@Override
 	public void onBackPressed()
 	{
 		if(manager.getBackStackEntryCount() > 0){ // if current view is a fragment, then pop it.
@@ -43,11 +46,7 @@ public abstract class ActivityBase
 		}else{ // else, we are are at the activity level, so we call the super onBackPressed();
 			super.onBackPressed();
 		}
-        /*
-        super.onBackPressed();
-        overridePendingTransition(0, 0);
-        */
-	}
+	}*/
 	
 	@Override
 	public void onDestroy()
@@ -105,6 +104,33 @@ public abstract class ActivityBase
 		for(int i = 0; i < count; i++){
 			Log.d(TAG, "Backstack: " + manager.getBackStackEntryAt(i).getName());
 		}
+	}
+	
+	public void initToolbar(Toolbar toolbar, boolean isBackEnabled)
+	{
+		setSupportActionBar(toolbar);
+		
+		if(isBackEnabled){
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayShowHomeEnabled(true);
+			getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_down_black_24dp);
+			
+		}
+	}
+	
+	public void initToolbar(Toolbar toolbar, String title, boolean isBackEnabled)
+	{
+		
+		setSupportActionBar(toolbar);
+		
+		if(isBackEnabled){
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayShowHomeEnabled(true);
+			getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_down_black_24dp);
+			
+		}
+		
+		getSupportActionBar().setTitle(title);
 	}
 }
 // This extends AppCompatActivity and allows us to easily attach an activity to its fragment.

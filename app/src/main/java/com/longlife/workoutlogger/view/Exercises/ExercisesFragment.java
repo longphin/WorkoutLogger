@@ -65,6 +65,7 @@ public class ExercisesFragment
 	@Inject
 	public Context context;
 	
+	
 	// Overrides
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState)
@@ -201,7 +202,7 @@ public class ExercisesFragment
 		return false;
 	}
 	
-	public static ExercisesFragment newInstance(ExercisesViewModel exercisesViewModel, int activityRoot, int exerciseItemLayout)
+	public static ExercisesFragment newInstance(int activityRoot, int exerciseItemLayout)
 	{
 		ExercisesFragment fragment = new ExercisesFragment();
 		fragment.setAdapter(new ExercisesAdapter(fragment));
