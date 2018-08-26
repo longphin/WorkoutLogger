@@ -71,7 +71,6 @@ public class MainActivity
 		setContentView(R.layout.activity_main);
 		
 		contentFrame = findViewById(R.id.frameLayout_main_activity);
-		toolbar = findViewById(R.id.toolbar_main_activity);
 		bottomTabLayout = findViewById(R.id.bottomNav_main_activity);
 		
 		initToolbar();
@@ -137,9 +136,9 @@ public class MainActivity
 	@Override
 	public void onBackPressed()
 	{
-		
 		if(!mNavController.isRootFragment()){
 			mNavController.popFragment();
+			hideKeyboard(this);
 		}else{
 			
 			if(fragmentHistory.isEmpty()){
@@ -154,6 +153,7 @@ public class MainActivity
 					
 					updateTabSelection(position);
 					
+					hideKeyboard(this);
 				}else{
 					/*// When backtracking is finished, exit app.
 					super.onBackPressed();
@@ -165,9 +165,10 @@ public class MainActivity
 					updateTabSelection(0);
 					
 					fragmentHistory.emptyStack();
+					
+					hideKeyboard(this);
 				}
 			}
-			
 		}
 	}
 	
@@ -258,9 +259,12 @@ public class MainActivity
 	
 	private void initToolbar()
 	{
+		toolbar = findViewById(R.id.toolbar_main_activity);
 		setSupportActionBar(toolbar);
-		
-		
+		toolbar.setNavigationOnClickListener(view ->
+		{
+			onBackPressed();
+		});
 	}
 	
 	private void switchTab(int position)
@@ -291,7 +295,7 @@ public class MainActivity
 	{
 		getSupportActionBar().setDisplayHomeAsUpEnabled(!mNavController.isRootFragment());
 		getSupportActionBar().setDisplayShowHomeEnabled(!mNavController.isRootFragment());
-		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_down_black_24dp);
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
 	}
 	
 	private void initTab()
@@ -302,8 +306,8 @@ public class MainActivity
 		// Settings
 		bottomTabLayout.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW); // Always show the labels for items.
 		// Initialize items.
-		AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_settings_ethernet_black_24dp);
-		AHBottomNavigationItem ExerciseItem = new AHBottomNavigationItem(getString(R.string.NavBar_Exercises), R.drawable.ic_settings_ethernet_black_24dp);
+		AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_storage_black_24dp);
+		AHBottomNavigationItem ExerciseItem = new AHBottomNavigationItem(getString(R.string.NavBar_Exercises), R.drawable.ic_weightlifting);
 		// Add navigation items.
 		bottomTabLayout.addItem(RoutineItem);
 		bottomTabLayout.addItem(ExerciseItem);
