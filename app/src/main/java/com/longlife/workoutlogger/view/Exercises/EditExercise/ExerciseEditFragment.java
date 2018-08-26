@@ -17,6 +17,7 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseHistory;
+import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
 
@@ -27,6 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ExerciseEditFragment
 	extends FragmentBase
+	implements AddNoteDialog.OnInputListener
 {
 	public static final String TAG = ExerciseEditFragment.class.getSimpleName();
 	
@@ -68,7 +70,6 @@ public class ExerciseEditFragment
 		if(mView == null){
 			mView = inflater.inflate(R.layout.fragment_exercise_edit, container, false);
 			name = mView.findViewById(R.id.edit_exercise_edit_name);
-			note = mView.findViewById(R.id.imv_exercise_edit_note);
 			
 			Button cancelButton = mView.findViewById(R.id.btn_exercise_edit_cancel);
 			
@@ -86,22 +87,17 @@ public class ExerciseEditFragment
 						updateToolbarTitle(exercise.getName());
 						// Wait until the exercise is obtained to make the Save button listener available.
 						initializeSaveButton();
+						initializeNoteButton();
 					}
 					, throwable -> {})
 			);
-			
-			/* // [TODO] need to initialize the note with values, and then add an onClick listener to change the note. The note currently is not stored in the database.
-			note.setOnClickListener(view ->
-			{
-				AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);
-				dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
-			});*/
 		}
 		
-		if(exercise == null) // This can happen if the exercise was not loaded in yet.
+		if(exercise == null){
 			updateToolbarTitle("");
-		else
+		}else{
 			updateToolbarTitle(exercise.getName());
+		}
 		return mView;
 	}
 	
@@ -117,21 +113,24 @@ public class ExerciseEditFragment
 		
 		return fragment;
 	}
+	
+	@Override
+	public void sendInput(String descrip)
+	{
+		this.exercise.setDescription(descrip);
+	}
 
 	// Methods
-	
-	// Adds an onClick listener to the save button. This should only be done once the full exercise is obtained.
-	private void initializeSaveButton()
+	private void initializeNoteButton()
 	{
-		Button saveButton = mView.findViewById(R.id.btn_exercise_edit_save);
+		note = mView.findViewById(R.id.imv_exercise_edit_note);
 		
-		saveButton.setOnClickListener(view -> {
-			final ExerciseHistory exerciseHistoryToInsert = new ExerciseHistory(this.exercise);
-			// Update current exercise to the desired values.
-			this.exercise.setName(this.name.getText().toString());
-			viewModel.updateExerciseHistoryFull(exerciseHistoryToInsert, this.exercise);
-			
-			getActivity().onBackPressed();
+		note.setOnClickListener(view ->
+		{
+			if(this.exercise != null){
+				AddNoteDialog dialog = AddNoteDialog.newInstance(this.exercise.getDescription());
+				dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
+			}
 		});
 	}
 	
@@ -140,4 +139,20 @@ public class ExerciseEditFragment
 		((MainActivity)getActivity()).updateToolbarTitle(getString(R.string.Toolbar_ExerciseEdit, exerciseName));
 	}
 	
+	// Adds an onClick listener to the save button. This should only be done once the full exercise is obtained.
+	private void initializeSaveButton()
+	{
+		Button saveButton = mView.findViewById(R.id.btn_exercise_edit_save);
+		
+		saveButton.setOnClickListener(view -> {
+			if(this.exercise != null){
+				final ExerciseHistory exerciseHistoryToInsert = new ExerciseHistory(this.exercise);
+				// Update current exercise to the desired values.
+				this.exercise.setName(this.name.getText().toString());
+				viewModel.updateExerciseHistoryFull(exerciseHistoryToInsert, this.exercise);
+				
+				getActivity().onBackPressed();
+			}
+		});
+	}
 }

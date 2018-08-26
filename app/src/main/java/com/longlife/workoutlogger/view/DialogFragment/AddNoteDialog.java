@@ -85,10 +85,8 @@ public class AddNoteDialog
 	{
 		super.onAttach(context);
 		
-		try{
+		if(getParentFragment() instanceof OnInputListener){
 			onInputListener = (OnInputListener)getParentFragment(); // attach the input return callback to parent fragment.
-		}catch(ClassCastException e){
-			throw new ClassCastException("onAttach failed OnInputListener");
 		}
 	}
 	

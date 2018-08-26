@@ -34,6 +34,7 @@ import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
+import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseFavorited;
 import com.longlife.workoutlogger.view.MainActivity;
 
 import java.util.List;
@@ -85,10 +86,13 @@ public class ExercisesFragment
 		addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadRoutineResponse(response)));
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
 		addDisposable(viewModel.getExerciseEditedObservable().subscribe(exercise -> processExerciseEdited(exercise)));
+		addDisposable(viewModel.getExerciseFavoritedObservable().subscribe(exerciseFavorited -> processExerciseFavorited(exerciseFavorited)));
 		
 		Log.d(TAG, "OnCreate: loadExercises()");
 		viewModel.loadExercises();
 	}
+	
+	// Setters
 	
 	@Override
 	public void exerciseClicked(Long idExercise)
@@ -182,8 +186,7 @@ public class ExercisesFragment
 			snackbar.show();
 		}
 	}
-	
-	// Setters
+	// Methods
 	
 	@Override
 	public boolean isItemViewSwipeEnabled()
@@ -220,11 +223,15 @@ public class ExercisesFragment
 	{
 		this.adapter = adapter;
 	}
-	// Methods
+	
+	private void processExerciseFavorited(ExerciseFavorited exerciseFavorited)
+	{
+		adapter.exerciseFavorited(exerciseFavorited);
+	}
+
 	private void processExerciseEdited(Exercise exercise)
 	{
-		if(!isAdded())
-			return;
+		//if(!isAdded()) return;
 		adapter.exerciseUpdated(exercise);
 	}
 	
@@ -235,8 +242,7 @@ public class ExercisesFragment
 	
 	private void processInsertExerciseResponse(Response<Exercise> response)
 	{
-		if(!isAdded())
-			return;
+		//if(!isAdded()) return;
 		switch(response.getStatus()){
 			case LOADING:
 				break;
@@ -291,8 +297,7 @@ public class ExercisesFragment
 	
 	private void processLoadRoutineResponse(Response<List<Exercise>> response)
 	{
-		if(!isAdded())
-			return;
+		//if(!isAdded()) return;
 		switch(response.getStatus()){
 			case LOADING:
 				renderLoadRoutineLoadState();
@@ -309,8 +314,7 @@ public class ExercisesFragment
 	
 	private void processExerciseEditedResponse(Response<Exercise> response)
 	{
-		if(!isAdded())
-			return;
+		//if(!isAdded()) return;
 		switch(response.getStatus()){
 			case LOADING:
 				break;

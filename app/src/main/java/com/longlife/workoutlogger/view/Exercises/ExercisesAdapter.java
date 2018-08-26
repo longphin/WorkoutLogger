@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseFavorited;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +43,15 @@ public class ExercisesAdapter
 		
 		holder.getFavoriteIcon().setOnClickListener(view ->
 			{
-				ex.setFavorited(!ex.getFavorited());
+/*				ex.setFavorited(!ex.getFavorited());
 				if(ex.getFavorited()){
 					holder.setFavoriteIcon(R.drawable.ic_favorite_black_24dp);
 				}else{
 					holder.setFavoriteIcon(R.drawable.ic_favorite_border_black_24dp);
-				}
+				}*/
 				
 				//viewModel.updateFavorite(ex.getIdExercise(), ex.getFavorited());
-				exerciseClickCallback.exerciseFavorited(ex.getIdExercise(), ex.getFavorited());
+				exerciseClickCallback.exerciseFavorited(ex.getIdExercise(), !ex.getFavorited());
 			}
 		);
 		
@@ -87,6 +88,19 @@ public class ExercisesAdapter
 	public int getItemCount()
 	{
 		return exercises.size();
+	}
+	
+	public void exerciseFavorited(ExerciseFavorited exerciseFavorited)
+	{
+		final Long idExercise = exerciseFavorited.getIdExercise();
+		final boolean favoritedStatus = exerciseFavorited.isFavorited();
+		
+		for(int i = 0; i < exercises.size(); i++){
+			if(exercises.get(i).getIdExercise().equals(idExercise)){
+				exercises.get(i).setFavorited(favoritedStatus);
+				notifyItemChanged(i);
+			}
+		}
 	}
 	
 	// Interface for when an item is clicked. Should be implemented by the Activity/Fragment to start an edit fragment.

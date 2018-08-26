@@ -10,6 +10,7 @@ import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseHistory;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
+import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseFavorited;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,26 +37,35 @@ public class ExercisesViewModel
 	// Observable for when requesting list of all exercises.
 	private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
 	private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
+	// Observable for when an exercise was favorited.
+	private final PublishSubject<ExerciseFavorited> exerciseFavoritedObservable = PublishSubject.create();
+	
+	// Protected
 	
 	// Observable for when an exercise is inserted.
 	//private final Response<Exercise> exerciseEditedResponse = new Response<>();
 	private final PublishSubject<Exercise> exerciseEditedObservable = PublishSubject.create();
 	private final CompositeDisposable disposables = new CompositeDisposable();
 	private Repository repo;
-	// Protected
+	// Overrides
 	
 	public ExercisesViewModel(@NonNull Repository repo)
 	{
 		this.repo = repo;
 	}
-	// Overrides
+	
+	// Getters
 	@Override
 	public void onCleared()
 	{
 		super.onCleared();
 		disposables.clear();
 	}
-	// Getters
+	
+	public PublishSubject<ExerciseFavorited> getExerciseFavoritedObservable()
+	{
+		return exerciseFavoritedObservable;
+	}
 /*	public Observable<Response<Exercise>> getExerciseEditedResponse()
 	{
 		return exerciseEditedResponse.getObservable();
@@ -160,7 +170,7 @@ public class ExercisesViewModel
 				@Override
 				public void onComplete()
 				{
-					Log.d(TAG, "Update successful.");
+					exerciseFavoritedObservable.onNext(new ExerciseFavorited(idExercise, favorited));
 				}
 				
 				@Override
