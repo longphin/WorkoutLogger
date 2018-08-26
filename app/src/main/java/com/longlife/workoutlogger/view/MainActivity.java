@@ -1,20 +1,16 @@
 package com.longlife.workoutlogger.view;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.widget.FrameLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.FragmentHistory;
-import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
@@ -22,9 +18,6 @@ import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 import com.ncapdevi.fragnav.FragNavController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -36,83 +29,117 @@ public class MainActivity
 {
 	@Inject
 	public Repository repo;
-	
-	// Static
-	private static final String childFragmentTag = MainActivity.class.getSimpleName() + "_Fragment";
-	private static final int NavigationItem_Routine = 0;
-	private static final int NavigationItem_Exercise = 1;
-	private static final int NavigationItem_Count = 2;
-	private RoutinesViewModel routinesViewModel;
 	private ExercisesViewModel exercisesViewModel;
-	private AHBottomNavigation bottomNavigationBar;
-	private FragNavController fragmentNavigation;
+	private RoutinesViewModel routinesViewModel;
+	private AHBottomNavigation bottomTabLayout;
+	private FragNavController mNavController;
+	private final AHBottomNavigation.OnTabSelectedListener onTabSelectedListener =
+		new AHBottomNavigation.OnTabSelectedListener()
+		{
+			// Overrides
+			@Override
+			public boolean onTabSelected(int position, boolean wasSelected)
+			{
+				if(wasSelected) // Item was reselected.
+				{
+					mNavController.clearStack();
+					switchTab(position);
+					return true;
+				}else{ // Switching item.
+					fragmentHistory.push(position);
+					switchTab(position);
+					return true;
+				}
+			}
+		};
+	
+	//TabLayout bottomTabLayout;
+	// Other
+	FrameLayout contentFrame;
+	Toolbar toolbar;
+	
 	private FragmentHistory fragmentHistory;
-	private Toolbar toolbar;
-	private View mView;
+	String[] TABS = {"Routine", "Exercise"};
 	
 	// Overrides
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		((MyApplication)getApplication())
-			.getApplicationComponent()
-			.inject(this);
-		
-		// Get view models.
-		routinesViewModel = ViewModelProviders.of(this, viewModelFactory).get(RoutinesViewModel.class);
-		exercisesViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExercisesViewModel.class);
-		
-		// Initialize action toolbar.
+		contentFrame = findViewById(R.id.frameLayout_main_activity);
 		toolbar = findViewById(R.id.toolbar_main_activity);
+		bottomTabLayout = findViewById(R.id.bottomNav_main_activity);
+		
 		initToolbar();
 		
-		// Build bottom navigation.
-		bottomNavigationBar = findViewById(R.id.bottomNav_main_activity);
-		initializeBottomNavigation();
+		initTab();
 		
-		// Build fragment manager to handle navigation.
 		fragmentHistory = new FragmentHistory();
-		buildNavigationManager(savedInstanceState);
+		
+		mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.frameLayout_main_activity)
+			.transactionListener(this)
+			.rootFragmentListener(this, TABS.length)
+			.build();
+		
+		switchTab(0);
+		
+		setOnTabSelectedListener();
 	}
-/*	@Override
-	public View onCreateView(String name, Context context, AttributeSet attrs)
+	
+	@Override
+	public void onStart()
 	{
-		if(mView == null){
-			mView = super.onCreateView(name, context, attrs);
-			
-			toolbar = findViewById(R.id.toolbar_main_activity);
+		super.onStart();
+	}
+
+	@Override
+	public void onStop()
+	{
+		
+		super.onStop();
+	}
+	
+	/*private void initTab() {
+		if (bottomTabLayout != null) {
+			for (int i = 0; i < TABS.length; i++) {
+				bottomTabLayout.addTab(bottomTabLayout.newTab());
+				TabLayout.Tab tab = bottomTabLayout.getTabAt(i);
+				if (tab != null)
+					tab.setCustomView(getTabView(i));
+			}
 		}
-		return mView;
+	}
+	
+	
+	private View getTabView(int position) {
+		View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_item_bottom, null);
+		ImageView icon = (ImageView) view.findViewById(R.id.tab_icon);
+		icon.setImageDrawable(Utils.setDrawableSelector(MainActivity.this, mTabIconsSelected[position], mTabIconsSelected[position]));
+		return view;
 	}*/
 	
 	@Override
-	public void addFragmentToActivity(FragmentManager fragmentManager, Fragment fragment, int frameId, String tag, String addToBackStack)
+	protected void onResume()
 	{
-		super.addFragmentToActivity(fragmentManager, fragment, frameId, tag, addToBackStack);
-		
+		super.onResume();
 	}
 	
 	@Override
-	public Fragment getRootFragment(int index)
+	protected void onPause()
 	{
-		switch(index){
-			case NavigationItem_Routine:
-				return RoutinesFragment.newInstance();
-			case NavigationItem_Exercise:
-				return ExercisesFragment.newInstance(R.id.frameLayout_main_activity, R.layout.fragment_exercises);
-		}
-		throw new IllegalStateException("Unknown fragment index.");
+		super.onPause();
 	}
 	
 	@Override
 	public void onBackPressed()
 	{
-		if(!fragmentNavigation.isRootFragment()){
-			fragmentNavigation.popFragment();
+		
+		if(!mNavController.isRootFragment()){
+			mNavController.popFragment();
 		}else{
+			
 			if(fragmentHistory.isEmpty()){
 				super.onBackPressed();
 			}else{
@@ -122,35 +149,59 @@ public class MainActivity
 					
 					int position = fragmentHistory.popPrevious();
 					
-					fragmentNavigation.switchTab(position);
+					switchTab(position);
 					
-					//updateTabSelection(position);
+					updateTabSelection(position);
 					
 				}else{
 					
-					fragmentNavigation.switchTab(0);
+					switchTab(0);
 					
-					//updateTabSelection(0);
+					updateTabSelection(0);
 					
 					fragmentHistory.emptyStack();
 				}
 			}
+			
 		}
 	}
-	// Initialize bottom navigation bar.
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+		if(mNavController != null){
+			mNavController.onSaveInstanceState(outState);
+		}
+	}
 	
 	@Override
 	public void pushFragment(Fragment fragment)
 	{
-		if(fragmentNavigation != null){
-			fragmentNavigation.pushFragment(fragment);
+		if(mNavController != null){
+			mNavController.pushFragment(fragment);
 		}
 	}
 	
+	
+/*	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				onBackPressed();
+				return true;
+		}
+		
+		
+		return super.onOptionsItemSelected(item);
+		
+	}*/
+	
 	@Override
-	public void onTabTransaction(@Nullable Fragment fragment, int i)
+	public void onTabTransaction(Fragment fragment, int index)
 	{
-		if(getSupportActionBar() != null && fragmentNavigation != null){
+		// If we have a backstack, show the back button
+		if(getSupportActionBar() != null && mNavController != null){
 			updateToolbar();
 		}
 	}
@@ -158,46 +209,102 @@ public class MainActivity
 	@Override
 	public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType)
 	{
-		if(getSupportActionBar() != null && fragmentNavigation != null){
+		//do fragmentty stuff. Maybe change title, I'm not going to tell you how to live your life
+		// If we have a backstack, show the back button
+		if(getSupportActionBar() != null && mNavController != null){
 			updateToolbar();
 		}
 	}
 	
+	@Override
+	public Fragment getRootFragment(int index)
+	{
+		switch(index){
+			
+			case FragNavController.TAB1:
+				return RoutinesFragment.newInstance();
+			case FragNavController.TAB2:
+				return ExercisesFragment.newInstance(R.id.frameLayout_main_activity, R.layout.fragment_exercises);
+		}
+		throw new IllegalStateException("Need to send an index that we know");
+	}
+	
 	// Methods
+	private void setOnTabSelectedListener()
+	{
+		/*bottomTabLayout.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener(){
+			@Override
+			public boolean onTabSelected(int position, boolean wasSelected)
+			{
+				if(wasSelected) // Item was reselected.
+				{
+					mNavController.clearStack();
+					switchTab(position);
+					return true;
+				}else{ // Switching item.
+					fragmentHistory.push(position);
+					switchTab(position);
+					return true;
+				}
+			}
+		});*/
+		bottomTabLayout.setOnTabSelectedListener(onTabSelectedListener);
+	}
+	
 	private void initToolbar()
 	{
 		setSupportActionBar(toolbar);
+		
+		
 	}
 	
-	private void buildNavigationManager(Bundle savedInstanceState)
+	private void switchTab(int position)
 	{
-		FragNavController.Builder builder = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.frameLayout_main_activity);
-		
-		List<Fragment> fragments = new ArrayList<>(NavigationItem_Count);
-		fragments.add(RoutinesFragment.newInstance());
-		fragments.add(ExercisesFragment.newInstance(R.id.frameLayout_main_activity, R.layout.fragment_exercises));
-		
-		builder.rootFragments(fragments);
-		builder.rootFragmentListener(this, NavigationItem_Count);
-		
-		fragmentNavigation = builder.build();
+		mNavController.switchTab(position);
+		bottomTabLayout.enableItemAtPosition(position);
+		//bottomTabLayout.setCurrentItem(position);
+		//        updateToolbarTitle(position);
 	}
 	
-	private void initializeBottomNavigation()
+	private void updateTabSelection(int currentTab)
 	{
-		if(bottomNavigationBar == null)
+	
+/*		for (int i = 0; i <  TABS.length; i++) {
+			TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
+			if(currentTab != i) {
+				selectedTab.getCustomView().setSelected(false);
+			}else{
+				selectedTab.getCustomView().setSelected(true);
+			}
+		}*/
+		bottomTabLayout.removeOnTabSelectedListener();
+		bottomTabLayout.setCurrentItem(currentTab);
+		setOnTabSelectedListener();
+		//bottomTabLayout.enableItemAtPosition(currentTab);
+	}
+	
+	private void updateToolbar()
+	{
+		getSupportActionBar().setDisplayHomeAsUpEnabled(!mNavController.isRootFragment());
+		getSupportActionBar().setDisplayShowHomeEnabled(!mNavController.isRootFragment());
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_down_black_24dp);
+	}
+	
+	private void initTab()
+	{
+		if(bottomTabLayout == null)
 			return;
 		
 		// Settings
-		bottomNavigationBar.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW); // Always show the labels for items.
+		bottomTabLayout.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW); // Always show the labels for items.
 		// Initialize items.
 		AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_settings_ethernet_black_24dp);
 		AHBottomNavigationItem ExerciseItem = new AHBottomNavigationItem(getString(R.string.NavBar_Exercises), R.drawable.ic_settings_ethernet_black_24dp);
 		// Add navigation items.
-		bottomNavigationBar.addItem(RoutineItem);
-		bottomNavigationBar.addItem(ExerciseItem);
+		bottomTabLayout.addItem(RoutineItem);
+		bottomTabLayout.addItem(ExerciseItem);
 		// Add listeners when selecting the items.
-		bottomNavigationBar.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener()
+/*		bottomTabLayout.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener()
 		{
 			// Overrides
 			@Override
@@ -209,95 +316,26 @@ public class MainActivity
 					fragmentNavigation.switchTab(position);
 				return tabSwitched;
 			}
-		});
+		});*/
 		// Set defaults.
 		//bottomNavigationBar.setCurrentItem(NavigationItem_Routine);
 		// Styles.
-		bottomNavigationBar.setDefaultBackgroundColor(Color.WHITE);
-		bottomNavigationBar.setAccentColor(Color.BLACK);
-		bottomNavigationBar.setInactiveColor(Color.GRAY);
+		bottomTabLayout.setDefaultBackgroundColor(Color.WHITE);
+		bottomTabLayout.setAccentColor(Color.BLACK);
+		bottomTabLayout.setInactiveColor(Color.GRAY);
 	}
 	
-	private boolean openFragment(int position, boolean wasSelected)
-	{
-		if(wasSelected)
-			return false;
-		
-		// Routine fragment.
-		if(position == NavigationItem_Routine){
-			openRoutineFragment(wasSelected);
-			return true;
-		}
-		// Exercise fragment.
-		if(position == NavigationItem_Exercise){
-			openExerciseFragment(wasSelected);
-			return true;
-		}
-		
-		throw new IllegalStateException("Tab position invalid.");
-	}
 	
-	private void openRoutineFragment(boolean reselected)
-	{
-		addFragmentToActivity(manager, RoutinesFragment.newInstance(), R.id.frameLayout_main_activity, RoutinesFragment.TAG, RoutinesFragment.TAG);
-		//final int thisId = NavigationItem_Routine;
-		//bottomNavigationBar.setCurrentItem(thisId);
-		
-/*		if(reselected){
-			fragmentNavigation.clearStack();
-			fragmentNavigation.switchTab(thisId);
-			bottomNavigationBar.setCurrentItem(thisId);
-		}else{
-			fragmentHistory.push(thisId);
-			fragmentNavigation.switchTab(thisId);
-			bottomNavigationBar.setCurrentItem(thisId);
-		}*/
-	}
-	
-	private void updateTabSelection(int currentTab)
-	{
-		
-		for(int i = 0; i < NavigationItem_Count; i++){
-			AHBottomNavigationItem selectedItem = bottomNavigationBar.getItem(i);
-			if(currentTab != i){
-				//selectedTab.getCustomView().setSelected(false);
-			}else{
-				bottomNavigationBar.setCurrentItem(i);
-				//selectedTab.getCustomView().setSelected(true);
-			}
-		}
-	}
-	
-	private void updateToolbar()
-	{
-		getSupportActionBar().setDisplayHomeAsUpEnabled(!fragmentNavigation.isRootFragment());
-		getSupportActionBar().setDisplayShowHomeEnabled(!fragmentNavigation.isRootFragment());
-		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_down_black_24dp);
-	}
-	
-	public void openExerciseFragment(boolean reselected)
-	{
-		addFragmentToActivity(manager, ExercisesFragment.newInstance(R.id.frameLayout_main_activity, R.layout.fragment_exercises), R.id.frameLayout_main_activity, ExercisesFragment.TAG, ExercisesFragment.TAG);
-		//final int thisId = NavigationItem_Exercise;
-		//bottomNavigationBar.setCurrentItem(thisId);
-		
-/*		if(reselected){
-			fragmentNavigation.clearStack();
-			fragmentNavigation.switchTab(thisId);
-			bottomNavigationBar.setCurrentItem(thisId);
-		}else{
-			fragmentHistory.push(thisId);
-			fragmentNavigation.switchTab(thisId);
-			bottomNavigationBar.setCurrentItem(thisId);
-		}*/
-	}
+	//    private void updateToolbarTitle(int position){
+	//
+	//
+	//        getSupportActionBar().setTitle(TABS[position]);
+	//
+	//    }
 	
 	public void updateToolbarTitle(String title)
 	{
-		
-		
 		getSupportActionBar().setTitle(title);
-		
 	}
 }
 // Inner Classes
