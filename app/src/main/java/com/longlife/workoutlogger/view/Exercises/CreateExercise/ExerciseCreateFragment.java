@@ -24,6 +24,7 @@ import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
+import com.longlife.workoutlogger.view.MainActivity;
 
 import javax.inject.Inject;
 
@@ -75,6 +76,7 @@ public class ExerciseCreateFragment
 			});
 		}
 		
+		((MainActivity)getActivity()).updateToolbarTitle("Create Exercise");
 		return (mView);
 	}
 	

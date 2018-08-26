@@ -29,6 +29,7 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.utils.Response;
+import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragment;
 import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
 
@@ -95,6 +96,7 @@ public class RoutinesFragment
 			initializeRecyclerView();
 		}
 		
+		((MainActivity)getActivity()).updateToolbarTitle("Routines");
 		return (mView);
 	}
 	
@@ -250,17 +252,15 @@ public class RoutinesFragment
 			fragment = RoutineCreateFragment.newInstance();
 		}
 		
-		manager.beginTransaction()
+/*		manager.beginTransaction()
 			.replace(R.id.frameLayout_main_activity,//R.id.root_routines_layout,
 				fragment, RoutineCreateFragment.TAG
 			)
 			.addToBackStack(RoutineCreateFragment.TAG)
-			.commit();
+			.commit();*/
 		
-		int count = manager.getBackStackEntryCount();
-		Log.d(TAG, "Number of activites in back stack: " + String.valueOf(count));
-		for(int i = 0; i < count; i++){
-			Log.d(TAG, "Backstack: " + manager.getBackStackEntryAt(i).getName());
+		if(fragmentNavigation != null){
+			fragmentNavigation.pushFragment(fragment);
 		}
 	}
 }

@@ -34,6 +34,7 @@ import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
+import com.longlife.workoutlogger.view.MainActivity;
 
 import java.util.List;
 
@@ -99,17 +100,15 @@ public class ExercisesFragment
 			fragment = ExerciseEditFragment.newInstance(idExercise);
 		}
 		
-		manager.beginTransaction()
+		/*manager.beginTransaction()
 			.replace(R.id.frameLayout_main_activity,//rootId,
 				fragment, ExerciseEditFragment.TAG
 			)
 			.addToBackStack(ExerciseEditFragment.TAG)
-			.commit();
+			.commit();*/
 		
-		int count = manager.getBackStackEntryCount();
-		Log.d(TAG, "Number of activites in back stack: " + String.valueOf(count));
-		for(int i = 0; i < count; i++){
-			Log.d(TAG, "Backstack: " + manager.getBackStackEntryAt(i).getName());
+		if(fragmentNavigation != null){
+			fragmentNavigation.pushFragment(fragment);
 		}
 	}
 	
@@ -119,7 +118,26 @@ public class ExercisesFragment
 		viewModel.updateFavorite(idExercise, favoritedStatus);
 	}
 	
-	// Setters
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+		Bundle savedInstanceState)
+	{
+		if(mView == null){
+			mView = inflater.inflate(layoutId, container, false);
+			
+			recyclerView = mView.findViewById(R.id.rv_exercises);
+			viewRootLayout = mView.findViewById(R.id.exercises_overview_layout);
+			
+			FloatingActionButton btn_addRoutine = mView.findViewById(R.id.btn_addExercise);
+			btn_addRoutine.setOnClickListener(view -> startCreateFragment());
+			
+			initializeRecyclerView();
+		}
+		// Inflate the layout for this fragment
+		
+		((MainActivity)getActivity()).updateToolbarTitle("Exercises");
+		return mView;
+	}
 	
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos)
@@ -165,24 +183,7 @@ public class ExercisesFragment
 		}
 	}
 	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-		Bundle savedInstanceState)
-	{
-		if(mView == null){
-			mView = inflater.inflate(layoutId, container, false);
-			
-			recyclerView = mView.findViewById(R.id.rv_exercises);
-			viewRootLayout = mView.findViewById(R.id.exercises_overview_layout);
-			
-			FloatingActionButton btn_addRoutine = mView.findViewById(R.id.btn_addExercise);
-			btn_addRoutine.setOnClickListener(view -> startCreateFragment());
-			
-			initializeRecyclerView();
-		}
-		// Inflate the layout for this fragment
-		return mView;
-	}
+	// Setters
 	
 	@Override
 	public boolean isItemViewSwipeEnabled()
@@ -219,7 +220,6 @@ public class ExercisesFragment
 	{
 		this.adapter = adapter;
 	}
-	
 	// Methods
 	private void processExerciseEdited(Exercise exercise)
 	{
@@ -330,11 +330,14 @@ public class ExercisesFragment
 			fragment = ExerciseCreateFragment.newInstance();
 		}
 		
-		manager.beginTransaction()
+/*		manager.beginTransaction()
 			.replace(R.id.frameLayout_main_activity,//rootId,
 				fragment, ExerciseCreateFragment.TAG
 			)
 			.addToBackStack(ExerciseCreateFragment.TAG)
-			.commit();
+			.commit();*/
+		if(fragmentNavigation != null){
+			fragmentNavigation.pushFragment(fragment);
+		}
 	}
 }

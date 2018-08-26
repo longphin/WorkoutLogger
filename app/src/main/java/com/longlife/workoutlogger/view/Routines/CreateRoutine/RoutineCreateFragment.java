@@ -47,6 +47,7 @@ import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.DialogFragment.EditSetDialog;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
+import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableAdapter;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableFragment;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableViewModel;
@@ -218,11 +219,13 @@ public class RoutineCreateFragment
 			fragment = ExerciseEditFragment.newInstance(idExercise);
 		}
 		
-		Log.d(TAG, "Editing exercise " + String.valueOf(idExercise));
-		addFragmentToActivity(manager, fragment,
+/*		addFragmentToActivity(manager, fragment,
 			R.id.frameLayout_main_activity,//R.id.root_main_activity,
 			ExerciseEditFragment.TAG, ExerciseEditFragment.TAG
-		);
+		);*/
+		if(fragmentNavigation != null){
+			fragmentNavigation.pushFragment(fragment);
+		}
 	}
 	
 	@Override
@@ -413,6 +416,7 @@ public class RoutineCreateFragment
 			}));
 		}
 		
+		((MainActivity)getActivity()).updateToolbarTitle("Create Routine");
 		return (mView);
 	}
 	
@@ -466,7 +470,10 @@ public class RoutineCreateFragment
 			fragment = ExercisesSelectableFragment.newInstance(exercisesSelectedViewModel, R.id.root_main_activity, R.layout.fragment_routine_exercises);
 		}
 		
-		addFragmentToActivity(manager, fragment, R.id.root_main_activity, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);
+		if(fragmentNavigation != null){
+			fragmentNavigation.pushFragment(fragment);
+		}
+		//addFragmentToActivity(manager, fragment, R.id.root_main_activity, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);
 	}
 	private void initializeRecyclerView()
 	{

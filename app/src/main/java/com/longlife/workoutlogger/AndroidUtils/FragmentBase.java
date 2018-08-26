@@ -10,9 +10,8 @@ public class FragmentBase
 	extends Fragment
 {
 	private CompositeDisposable composite = new CompositeDisposable();
+	protected FragmentNavigation fragmentNavigation;
 	// Other
-	FragmentNavigation fragmentNavigation;
-	
 	// Overrides
 	@Override
 	public void onAttach(Context context)
