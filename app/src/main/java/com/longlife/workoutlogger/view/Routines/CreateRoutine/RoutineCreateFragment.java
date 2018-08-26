@@ -416,7 +416,7 @@ public class RoutineCreateFragment
 			}));
 		}
 		
-		((MainActivity)getActivity()).updateToolbarTitle("Create Routine");
+		((MainActivity)getActivity()).updateToolbarTitle(getString(R.string.Toolbar_RoutineCreate));
 		return (mView);
 	}
 	

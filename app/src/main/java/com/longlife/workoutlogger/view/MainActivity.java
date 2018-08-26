@@ -33,6 +33,7 @@ public class MainActivity
 	private RoutinesViewModel routinesViewModel;
 	private AHBottomNavigation bottomTabLayout;
 	private FragNavController mNavController;
+	// Private
 	private final AHBottomNavigation.OnTabSelectedListener onTabSelectedListener =
 		new AHBottomNavigation.OnTabSelectedListener()
 		{
@@ -43,11 +44,12 @@ public class MainActivity
 				if(wasSelected) // Item was reselected.
 				{
 					mNavController.clearStack();
-					switchTab(position);
+					//switchTab(position);
 					return true;
 				}else{ // Switching item.
 					fragmentHistory.push(position);
 					switchTab(position);
+					updateTabSelection(position);
 					return true;
 				}
 			}
@@ -144,7 +146,6 @@ public class MainActivity
 				super.onBackPressed();
 			}else{
 				
-				
 				if(fragmentHistory.getStackSize() > 1){
 					
 					int position = fragmentHistory.popPrevious();
@@ -154,9 +155,13 @@ public class MainActivity
 					updateTabSelection(position);
 					
 				}else{
+					/*// When backtracking is finished, exit app.
+					super.onBackPressed();
+					*/
 					
+					// Alternatively, we may want to go to the Home tab
 					switchTab(0);
-					
+
 					updateTabSelection(0);
 					
 					fragmentHistory.emptyStack();
@@ -262,8 +267,7 @@ public class MainActivity
 	{
 		mNavController.switchTab(position);
 		bottomTabLayout.enableItemAtPosition(position);
-		//bottomTabLayout.setCurrentItem(position);
-		//        updateToolbarTitle(position);
+		//updateTabSelection(position);
 	}
 	
 	private void updateTabSelection(int currentTab)
@@ -303,22 +307,6 @@ public class MainActivity
 		// Add navigation items.
 		bottomTabLayout.addItem(RoutineItem);
 		bottomTabLayout.addItem(ExerciseItem);
-		// Add listeners when selecting the items.
-/*		bottomTabLayout.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener()
-		{
-			// Overrides
-			@Override
-			public boolean onTabSelected(int position, boolean wasSelected)
-			{
-				// If the same item was selected, do nothing.
-				final boolean tabSwitched = openFragment(position, wasSelected);
-				if(tabSwitched)
-					fragmentNavigation.switchTab(position);
-				return tabSwitched;
-			}
-		});*/
-		// Set defaults.
-		//bottomNavigationBar.setCurrentItem(NavigationItem_Routine);
 		// Styles.
 		bottomTabLayout.setDefaultBackgroundColor(Color.WHITE);
 		bottomTabLayout.setAccentColor(Color.BLACK);

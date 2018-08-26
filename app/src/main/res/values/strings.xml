@@ -39,4 +39,10 @@
     <!-- Bottom navigation bar text -->
     <string name="NavBar_Routines">Routines</string>
     <string name="NavBar_Exercises">Exercises</string>
+    <!-- Toolbar title for fragments/activities -->
+    <string name="Toolbar_Routines">Routines</string>
+    <string name="Toolbar_RoutineCreate">Create Routine</string>
+    <string name="Toolbar_Exercises">Exercises</string>
+    <string name="Toolbar_ExerciseCreate">Create Exercise</string>
+    <string name="Toolbar_ExerciseEdit">Edit Exercise: %1$s</string>
 </resources>

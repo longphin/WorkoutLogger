@@ -76,7 +76,7 @@ public class ExerciseCreateFragment
 			});
 		}
 		
-		((MainActivity)getActivity()).updateToolbarTitle("Create Exercise");
+		((MainActivity)getActivity()).updateToolbarTitle(getString(R.string.Toolbar_ExerciseCreate));
 		return (mView);
 	}
 	

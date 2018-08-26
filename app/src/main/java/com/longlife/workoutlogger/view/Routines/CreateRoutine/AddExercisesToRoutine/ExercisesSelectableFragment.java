@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
+import com.longlife.workoutlogger.view.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,6 +57,7 @@ public class ExercisesSelectableFragment
 			}
 		);
 		
+		((MainActivity)getActivity()).updateToolbarTitle(getString(R.string.Toolbar_RoutineCreate));
 		return mView;
 	}
 	

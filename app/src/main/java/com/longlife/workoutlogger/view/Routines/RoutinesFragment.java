@@ -96,7 +96,7 @@ public class RoutinesFragment
 			initializeRecyclerView();
 		}
 		
-		((MainActivity)getActivity()).updateToolbarTitle("Routines");
+		((MainActivity)getActivity()).updateToolbarTitle(getString(R.string.Toolbar_Routines));
 		return (mView);
 	}
 	

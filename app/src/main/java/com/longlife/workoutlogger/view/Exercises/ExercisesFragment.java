@@ -135,7 +135,7 @@ public class ExercisesFragment
 		}
 		// Inflate the layout for this fragment
 		
-		((MainActivity)getActivity()).updateToolbarTitle("Exercises");
+		((MainActivity)getActivity()).updateToolbarTitle(getString(R.string.Toolbar_Exercises));
 		return mView;
 	}
 	

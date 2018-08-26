@@ -98,18 +98,27 @@ public class ExerciseEditFragment
 			});*/
 		}
 		
-		if(exercise == null)
-			((MainActivity)getActivity()).updateToolbarTitle("Edit Exercise");
+		if(exercise == null) // This can happen if the exercise was not loaded in yet.
+			updateToolbarTitle("");
 		else
 			updateToolbarTitle(exercise.getName());
 		return mView;
 	}
 	
-	// Methods
-	private void updateToolbarTitle(String exerciseName)
+	public static ExerciseEditFragment newInstance(Long idExercise)
 	{
-		((MainActivity)getActivity()).updateToolbarTitle("Edit Exercise: " + exercise.getName());
+		Bundle bundle = new Bundle();
+		// We bundle up only the idExercise instead of a Parcelable Exercise because we want all of the exercise details,
+		// but a parcelable only contains specified fields. An observable is created to obtain the exercise using this idExercise.
+		bundle.putLong("idExercise", idExercise);
+		
+		ExerciseEditFragment fragment = new ExerciseEditFragment();
+		fragment.setArguments(bundle);
+		
+		return fragment;
 	}
+
+	// Methods
 	
 	// Adds an onClick listener to the save button. This should only be done once the full exercise is obtained.
 	private void initializeSaveButton()
@@ -125,16 +134,10 @@ public class ExerciseEditFragment
 			getActivity().onBackPressed();
 		});
 	}
-	public static ExerciseEditFragment newInstance(Long idExercise)//Exercise ex)
+	
+	private void updateToolbarTitle(String exerciseName)
 	{
-		Bundle bundle = new Bundle();
-		//bundle.putParcelable("exercise", ex);
-		bundle.putLong("idExercise", idExercise);
-		
-		ExerciseEditFragment fragment = new ExerciseEditFragment();
-		fragment.setArguments(bundle);
-		
-		return fragment;
+		((MainActivity)getActivity()).updateToolbarTitle(getString(R.string.Toolbar_ExerciseEdit, exerciseName));
 	}
 	
 }
