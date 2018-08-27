@@ -101,6 +101,12 @@ public class ExerciseEditFragment
 		return mView;
 	}
 	
+	@Override
+	public void sendInput(String descrip)
+	{
+		this.exercise.setDescription(descrip);
+	}
+	
 	public static ExerciseEditFragment newInstance(Long idExercise)
 	{
 		Bundle bundle = new Bundle();
@@ -112,12 +118,6 @@ public class ExerciseEditFragment
 		fragment.setArguments(bundle);
 		
 		return fragment;
-	}
-	
-	@Override
-	public void sendInput(String descrip)
-	{
-		this.exercise.setDescription(descrip);
 	}
 
 	// Methods

@@ -164,16 +164,18 @@ public class RoutinesFragment
 		return false;
 	}
 	
-	public static RoutinesFragment newInstance()
-	{
-		return (new RoutinesFragment());
-	}
-	
 	@Override
 	public void routineClicked(Long idRoutine)
 	{
 		startEditFragment(idRoutine);
 	}
+	
+	public static RoutinesFragment newInstance()
+	{
+		return (new RoutinesFragment());
+	}
+	
+	// Methods
 	private void processInsertRoutineResponse(Response<Routine> response)
 	{
 		switch(response.getStatus()){
@@ -191,8 +193,6 @@ public class RoutinesFragment
 	{
 		adapter.addRoutine(routine);
 	}
-	
-	// Methods
 	
 	private void processLoadResponse(Response<List<Routine>> response)
 	{

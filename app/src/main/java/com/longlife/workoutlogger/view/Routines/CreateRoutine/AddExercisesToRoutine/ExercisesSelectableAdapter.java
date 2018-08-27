@@ -23,6 +23,8 @@ public class ExercisesSelectableAdapter
 		super(clickExerciseCallback);
 		this.exercisesSelectableCallback = selectableAdapterCallback;
 	}
+	
+	// Overrides
 	@Override
 	public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -31,7 +33,6 @@ public class ExercisesSelectableAdapter
 		return (new ExercisesViewHolder(v));
 	}
 	
-	// Overrides
 	@Override
 	public void onBindViewHolder(ExercisesViewHolder holder, int pos)
 	{

@@ -11,6 +11,7 @@ public class FragmentBase
 {
 	private CompositeDisposable composite = new CompositeDisposable();
 	protected FragmentNavigation fragmentNavigation;
+	
 	// Other
 	// Overrides
 	@Override
@@ -21,17 +22,12 @@ public class FragmentBase
 			fragmentNavigation = (FragmentNavigation)context;
 		}
 	}
+	
 	@Override
 	public void onDestroy()
 	{
 		super.onDestroy();
 		clearDisposables();
-	}
-	
-	// Interface to communicate from fragment to activity, so activity can add the fragment to the navigation manager.
-	public interface FragmentNavigation
-	{
-		void pushFragment(Fragment fragment);
 	}
 	
 	public void addDisposable(Disposable d)
@@ -42,6 +38,12 @@ public class FragmentBase
 	public void clearDisposables()
 	{
 		composite.clear();
+	}
+	
+	// Interface to communicate from fragment to activity, so activity can add the fragment to the navigation manager.
+	public interface FragmentNavigation
+	{
+		void pushFragment(Fragment fragment);
 	}
 }
 // Inner Classes

@@ -36,25 +36,22 @@ public class ExercisesViewModel
 	
 	// Observable for when requesting list of all exercises.
 	private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
-	private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
 	// Observable for when an exercise was favorited.
 	private final PublishSubject<ExerciseFavorited> exerciseFavoritedObservable = PublishSubject.create();
-	
-	// Protected
-	
 	// Observable for when an exercise is inserted.
 	//private final Response<Exercise> exerciseEditedResponse = new Response<>();
 	private final PublishSubject<Exercise> exerciseEditedObservable = PublishSubject.create();
 	private final CompositeDisposable disposables = new CompositeDisposable();
+	private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
 	private Repository repo;
-	// Overrides
 	
+	// Protected
 	public ExercisesViewModel(@NonNull Repository repo)
 	{
 		this.repo = repo;
 	}
 	
-	// Getters
+	// Overrides
 	@Override
 	public void onCleared()
 	{
@@ -62,22 +59,19 @@ public class ExercisesViewModel
 		disposables.clear();
 	}
 	
-	public PublishSubject<ExerciseFavorited> getExerciseFavoritedObservable()
-	{
-		return exerciseFavoritedObservable;
-	}
-/*	public Observable<Response<Exercise>> getExerciseEditedResponse()
-	{
-		return exerciseEditedResponse.getObservable();
-	}*/
+	// Getters
+	/*	public Observable<Response<Exercise>> getExerciseEditedResponse()
+		{
+			return exerciseEditedResponse.getObservable();
+		}*/
 	public PublishSubject<Exercise> getExerciseEditedObservable()
 	{
 		return exerciseEditedObservable;
 	}
 	
-	public Single<Exercise> getExerciseFromId(Long idExercise)
+	public PublishSubject<ExerciseFavorited> getExerciseFavoritedObservable()
 	{
-		return repo.getExerciseFromId(idExercise);
+		return exerciseFavoritedObservable;
 	}
 	
 	public Observable<Response<Exercise>> getExerciseInsertedResponse()
@@ -93,6 +87,11 @@ public class ExercisesViewModel
 	public Observable<Response<List<Exercise>>> getLoadExercisesResponse()
 	{
 		return loadExercisesResponse.getObservable();
+	}
+	
+	public Single<Exercise> getExerciseFromId(Long idExercise)
+	{
+		return repo.getExerciseFromId(idExercise);
 	}
 	
 	public void addDeletedExercise(Exercise ex, int pos)

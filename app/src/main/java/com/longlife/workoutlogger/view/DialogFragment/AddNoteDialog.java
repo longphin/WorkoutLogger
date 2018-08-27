@@ -108,12 +108,6 @@ public class AddNoteDialog
 		return dialog;
 	}
 	
-	// Interface to callback to parent fragment the entered values. Parent must implement this to get back the value.
-	public interface OnInputListener
-	{
-		void sendInput(String descrip);
-	}
-	
 	public static AddNoteDialog newInstance(String descrip)
 	{
 		AddNoteDialog dialog = new AddNoteDialog();
@@ -123,5 +117,11 @@ public class AddNoteDialog
 		dialog.setArguments(bundle);
 		
 		return dialog;
+	}
+	
+	// Interface to callback to parent fragment the entered values. Parent must implement this to get back the value.
+	public interface OnInputListener
+	{
+		void sendInput(String descrip);
 	}
 }

@@ -40,8 +40,7 @@ public class RoutinesAdapter
 			onClickCallback.routineClicked(routine.getIdRoutine());
 		});
 	}
-	// Setters
-	
+
 	@Override
 	public RoutinesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -58,12 +57,7 @@ public class RoutinesAdapter
 		return (routines.size());
 	}
 	
-	// Interface for when an item is clicked. Should be implemented by the Activity/Fragment to start an edit fragment.
-	public interface IClickRoutine
-	{
-		// When an exercise is clicked, send the clicked exercise.
-		void routineClicked(Long idRoutine);
-	}
+	// Setters
 	public void setRoutines(List<Routine> routines)
 	{
 		if(routines == null)
@@ -96,6 +90,13 @@ public class RoutinesAdapter
 	{
 		routines.add(restoredPosition, restoredItem);
 		notifyItemInserted(restoredPosition);
+	}
+	
+	// Interface for when an item is clicked. Should be implemented by the Activity/Fragment to start an edit fragment.
+	public interface IClickRoutine
+	{
+		// When an exercise is clicked, send the clicked exercise.
+		void routineClicked(Long idRoutine);
 	}
 }
 // Inner Classes

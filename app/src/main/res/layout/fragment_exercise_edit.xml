@@ -13,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="textMultiLine"
+        android:inputType="textNoSuggestions"
         app:layout_constraintEnd_toStartOf="@+id/imv_exercise_edit_note"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

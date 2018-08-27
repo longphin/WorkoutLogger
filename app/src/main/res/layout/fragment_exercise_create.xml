@@ -37,7 +37,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="@string/Name"
-        android:inputType="textMultiLine"
+        android:inputType="textNoSuggestions"
         android:maxLength="@integer/Exercise_MaxNameLength"
         app:layout_constraintEnd_toStartOf="@+id/imv_exercise_create_add_note"
         app:layout_constraintStart_toStartOf="parent"

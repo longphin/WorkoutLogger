@@ -28,13 +28,12 @@ public class MainActivity
 						 FragmentBase.FragmentNavigation,
 						 FragNavController.TransactionListener
 {
-	@Inject
-	public Repository repo;
+	// Private
 	private ExercisesViewModel exercisesViewModel;
 	private RoutinesViewModel routinesViewModel;
 	private AHBottomNavigation bottomTabLayout;
 	private FragNavController mNavController;
-	// Private
+	private FragmentHistory fragmentHistory;
 	private final AHBottomNavigation.OnTabSelectedListener onTabSelectedListener =
 		new AHBottomNavigation.OnTabSelectedListener()
 		{
@@ -55,15 +54,13 @@ public class MainActivity
 				}
 			}
 		};
-	
+	private FrameLayout contentFrame;
+	private Toolbar toolbar;
+	private String[] TABS = {"Profile", "Routine", "Exercise"};
 	//TabLayout bottomTabLayout;
+	@Inject
+	public Repository repo;
 	// Other
-	FrameLayout contentFrame;
-	Toolbar toolbar;
-	
-	private FragmentHistory fragmentHistory;
-	String[] TABS = {"Profile", "Routine", "Exercise"};
-	
 	// Overrides
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -95,7 +92,7 @@ public class MainActivity
 	{
 		super.onStart();
 	}
-
+	
 	@Override
 	public void onStop()
 	{
@@ -162,7 +159,7 @@ public class MainActivity
 					
 					// Alternatively, we may want to go to the Home tab
 					switchTab(0);
-
+					
 					updateTabSelection(0);
 					
 					fragmentHistory.emptyStack();
@@ -308,7 +305,7 @@ public class MainActivity
 		// Settings
 		bottomTabLayout.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW); // Always show the labels for items.
 		// Initialize items.
-		AHBottomNavigationItem ProfileItem = new AHBottomNavigationItem(getString(R.string.NavBar_Profile), R.drawable.ic_storage_black_24dp);
+		AHBottomNavigationItem ProfileItem = new AHBottomNavigationItem(getString(R.string.NavBar_Profile), R.drawable.ic_person_black_24dp);
 		AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_storage_black_24dp);
 		AHBottomNavigationItem ExerciseItem = new AHBottomNavigationItem(getString(R.string.NavBar_Exercises), R.drawable.ic_weightlifting);
 		// Add navigation items.

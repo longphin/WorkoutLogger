@@ -71,22 +71,22 @@ public class RoutineCreateFragment
 	private RoutineCreateAdapter adapter;
 	// OnClick listener for when item in recyclerview is clicked.
 	private AdapterView.OnItemClickListener onItemClickListener = (adapterView, view, i, l) -> Log.d(TAG, "Selected " + adapterView.getItemAtPosition(i));
-	// OnClick listener for when "search exercise" image is clicked.
-	private View.OnClickListener onSearchClickListener = view -> startSearchExercises();
 	private AutoCompleteTextView searchBox;
 	private ConstraintLayout coordinatorLayout; // layout for recycler view
 	private View mView;
 	private EditText name;
-	
 	private ImageView searchBoxStatusImage;
 	private RoutinesViewModel routinesViewModel;
 	private ExercisesSelectableViewModel exercisesSelectedViewModel;
+	// OnClick listener for when "search exercise" image is clicked.
+	private View.OnClickListener onSearchClickListener = view -> startSearchExercises();
 	private ExercisesViewModel exercisesViewModel;
+	// Adapter for free form exercise search.
+	private StringArrayAdapter searchAdapter;
 	// View models
 	@Inject
 	public ViewModelProvider.Factory viewModelFactory;
-	// Adapter for free form exercise search.
-	private StringArrayAdapter searchAdapter;
+	// Other
 	String descrip;
 	@Inject
 	Context context;
@@ -95,8 +95,7 @@ public class RoutineCreateFragment
 	{
 		// Required empty public constructor
 	}
-	
-	// Other
+
 	// Overrides
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -203,11 +202,6 @@ public class RoutineCreateFragment
 		return true;
 	}
 	
-	public static RoutineCreateFragment newInstance()
-	{
-		return (new RoutineCreateFragment());
-	}
-	
 	// When exercise is clicked, open up edit fragment
 	@Override
 	public void exerciseClicked(Long idExercise)
@@ -232,71 +226,6 @@ public class RoutineCreateFragment
 	public void exerciseFavorited(Long idExercise, boolean favoritedStatus)
 	{
 		exercisesViewModel.updateFavorite(idExercise, favoritedStatus);
-	}
-	
-	private void renderInsertLoadingState()
-	{
-		if(isAdded())
-			Log.d(TAG, "attached: loading exercises");
-		else
-			Log.d(TAG, "detached: loading exercises");
-	}
-	
-	private void processInsertResponse(Response<Routine> response)
-	{
-		switch(response.getStatus()){
-			case LOADING:
-				renderInsertLoadingState();
-				break;
-			case SUCCESS:
-				renderInsertSuccessState(response.getValue());
-				break;
-			case ERROR:
-				renderInsertErrorState(response.getError());
-				break;
-		}
-	}
-	
-	private void renderInsertErrorState(Throwable throwable)
-	{
-		// change anything if loading data had an error.
-		Log.d(TAG, throwable.getMessage());
-	}
-	
-	// Process list of exercises that were selected in the searchbox fragment.
-	private void processSelectedExercisesResponse(Response<List<Exercise>> response)
-	{
-		switch(response.getStatus()){
-			case LOADING:
-				renderSelectedExercisesState();
-				break;
-			case SUCCESS:
-				renderSelectedExercisesSuccessState(response.getValue());
-				break;
-			case ERROR:
-				renderSelectedExercisesErrorState(response.getError());
-				break;
-		}
-	}
-	
-	private void renderSelectedExercisesState()
-	{
-	}
-	
-	private void renderInsertSuccessState(Routine routine)
-	{
-		if(isAdded()){
-			Log.d(TAG, "attached: " + routine.getName());
-			
-			getActivity().onBackPressed();
-		}else{
-			Log.d(TAG, "detached: " + routine.getName());
-		}
-		clearDisposables();
-	}
-	
-	private void renderSelectedExercisesErrorState(Throwable error)
-	{
 	}
 	
 	@Nullable
@@ -431,8 +360,6 @@ public class RoutineCreateFragment
 		dialog.show(getChildFragmentManager(), EditSetDialog.TAG);
 	}
 	
-	// Methods
-	
 	@Override
 	public void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds)
 	{
@@ -440,11 +367,82 @@ public class RoutineCreateFragment
 		adapter.setRestTimeForSet(exerciseIndex, exerciseSetIndex, restMinutes, restSeconds);
 	}
 	
+	public static RoutineCreateFragment newInstance()
+	{
+		return (new RoutineCreateFragment());
+	}
+	
+	// Methods
+	private void renderInsertLoadingState()
+	{
+		if(isAdded())
+			Log.d(TAG, "attached: loading exercises");
+		else
+			Log.d(TAG, "detached: loading exercises");
+	}
+	
+	private void processInsertResponse(Response<Routine> response)
+	{
+		switch(response.getStatus()){
+			case LOADING:
+				renderInsertLoadingState();
+				break;
+			case SUCCESS:
+				renderInsertSuccessState(response.getValue());
+				break;
+			case ERROR:
+				renderInsertErrorState(response.getError());
+				break;
+		}
+	}
+	
+	private void renderInsertErrorState(Throwable throwable)
+	{
+		// change anything if loading data had an error.
+		Log.d(TAG, throwable.getMessage());
+	}
+	
+	// Process list of exercises that were selected in the searchbox fragment.
+	private void processSelectedExercisesResponse(Response<List<Exercise>> response)
+	{
+		switch(response.getStatus()){
+			case LOADING:
+				renderSelectedExercisesState();
+				break;
+			case SUCCESS:
+				renderSelectedExercisesSuccessState(response.getValue());
+				break;
+			case ERROR:
+				renderSelectedExercisesErrorState(response.getError());
+				break;
+		}
+	}
+	
+	private void renderSelectedExercisesState()
+	{
+	}
+	
+	private void renderInsertSuccessState(Routine routine)
+	{
+		if(isAdded()){
+			Log.d(TAG, "attached: " + routine.getName());
+			
+			getActivity().onBackPressed();
+		}else{
+			Log.d(TAG, "detached: " + routine.getName());
+		}
+		clearDisposables();
+	}
+	
+	private void renderSelectedExercisesErrorState(Throwable error)
+	{
+	}
 	
 	private void renderSelectedExercisesSuccessState(List<Exercise> ex)
 	{
 		adapter.addExercises(ex);
 	}
+	
 	private void addFragmentToActivity(FragmentManager fragmentManager,
 		Fragment fragment,
 		int frameId,
@@ -475,6 +473,7 @@ public class RoutineCreateFragment
 		}
 		//addFragmentToActivity(manager, fragment, R.id.root_main_activity, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);
 	}
+	
 	private void initializeRecyclerView()
 	{
 		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));

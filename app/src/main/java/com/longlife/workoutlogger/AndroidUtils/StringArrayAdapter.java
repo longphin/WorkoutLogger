@@ -82,8 +82,6 @@ public class StringArrayAdapter
 	private ListFilter listFilter = new ListFilter();
 	private List<String> dataListAllItems;
 	
-	// Overrides
-	
 	public StringArrayAdapter(@NonNull Context context, int resource, @NonNull List<String> objects)
 	{
 		super(context, resource, objects);
@@ -93,17 +91,13 @@ public class StringArrayAdapter
 		itemLayout = resource;
 	}
 	
-	// Setters
-	public void setList(List<String> items)
-	{
-		dataListAllItems = items;
-	}
+	// Overrides
 	@Override
 	public int getCount()
 	{
 		return dataList.size();
 	}
-	
+
 	@Override
 	public String getItem(int position)
 	{
@@ -130,6 +124,12 @@ public class StringArrayAdapter
 			listFilter = new ListFilter();
 		}
 		return listFilter;
+	}
+	
+	// Setters
+	public void setList(List<String> items)
+	{
+		dataListAllItems = items;
 	}
 	
 	// Check if the string is within the possible options.

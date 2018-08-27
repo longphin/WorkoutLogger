@@ -27,8 +27,6 @@ public abstract class ExerciseDao
 {
 	
 	// Getters
-	@Query("SELECT Name FROM Exercise WHERE hidden = 0")
-	public abstract Single<List<String>> getExercisesNames();
 	///
 	/// Gets
 	///
@@ -36,8 +34,11 @@ public abstract class ExerciseDao
 	//" ORDER BY favorited DESC, LOWER(name) ASC")
 	public abstract Single<List<Exercise>> getExercises();
 	
+	@Query("SELECT Name FROM Exercise WHERE hidden = 0")
+	public abstract Single<List<String>> getExercisesNames();
+	
 	@Query("SELECT * FROM Exercise WHERE name = :name")
-		// check if the exercise exists in the database already
+	// check if the exercise exists in the database already
 	public abstract Single<Exercise> getExercise(String name);
 	
 	@Query("SELECT EXISTS (SELECT 1 FROM Exercise WHERE idExercise = :idExercise)")

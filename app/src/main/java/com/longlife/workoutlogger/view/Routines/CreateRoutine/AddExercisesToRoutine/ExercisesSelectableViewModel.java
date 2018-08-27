@@ -24,9 +24,8 @@ public class ExercisesSelectableViewModel
 	private final static String TAG = ExercisesSelectableViewModel.class.getSimpleName();
 	// Private
 	private final Response<List<Exercise>> addExercisesToRoutine = new Response<>();
-	private Set<Long> selectedIdExercises = new HashSet<>();
-	
 	private final CompositeDisposable disposables = new CompositeDisposable();
+	private Set<Long> selectedIdExercises = new HashSet<>();
 	private Repository repo;
 	
 	public ExercisesSelectableViewModel(Repository repo)

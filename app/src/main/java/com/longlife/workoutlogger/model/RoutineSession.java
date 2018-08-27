@@ -35,18 +35,12 @@ public class RoutineSession
 	@TypeConverters({PerformanceStatusConverter.class})
 	private PerformanceStatus performanceStatus = PerformanceStatus.NEW;
 	
-	// Getters
-	public PerformanceStatus getPerformanceStatus()
-	{
-		return performanceStatus;
-	}
-	
 	public RoutineSession()
 	{
 	
 	}
 	
-	// Setters
+	// Getters
 	public Long getIdRoutineHistory()
 	{
 		return idRoutineHistory;
@@ -57,11 +51,17 @@ public class RoutineSession
 		return idRoutineSession;
 	}
 	
+	public PerformanceStatus getPerformanceStatus()
+	{
+		return performanceStatus;
+	}
+	
 	public Date getSessionDate()
 	{
 		return sessionDate;
 	}
 	
+	// Setters
 	public void setPerformanceStatus(PerformanceStatus performanceStatus)
 	{
 		this.performanceStatus = performanceStatus;

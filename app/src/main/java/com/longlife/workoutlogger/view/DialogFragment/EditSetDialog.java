@@ -171,7 +171,7 @@ public class EditSetDialog
 		return dialog;
 	}
 	// When time is updated, then do some cleaning up.
-
+	
 	// Getters
 	private String getUpdatedTimeString()
 	{

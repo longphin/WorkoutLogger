@@ -43,13 +43,14 @@ public class RoutineCreateAdapter
 		}
 		
 		// Getters
-		public String getExerciseName()
-		{
-			return exerciseName;
-		}
 		public int getExerciseIndex()
 		{
 			return exerciseIndex;
+		}
+		
+		public String getExerciseName()
+		{
+			return exerciseName;
 		}
 		
 		public int getRestMinutes()
@@ -68,17 +69,24 @@ public class RoutineCreateAdapter
 		}
 	}
 	
+	// Static
 	private static final int ADD_SET_TYPE = 3;
 	private static final String TAG = RoutineCreateAdapter.class.getSimpleName();
 	private static final int HEADER_TYPE = 1;
 	private static final int SET_TYPE = 2;
 	private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
 	private Context context;
-	// Static
 	private IOnSetClick onSetClickListener;
 	
 	
 	// Other
+	public RoutineCreateAdapter(Context context, IOnSetClick onSetClickListener)
+	{
+		this.context = context;
+		this.onSetClickListener = onSetClickListener;
+	}
+	
+	// Overrides
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
@@ -162,20 +170,16 @@ public class RoutineCreateAdapter
 		return 0;
 	}
 	
-	public RoutineCreateAdapter(Context context, IOnSetClick onSetClickListener)
-	{
-		this.context = context;
-		this.onSetClickListener = onSetClickListener;
-	}
+	// Getters
 	public static int getHeaderTypeEnum(){return HEADER_TYPE;}
-	
+	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
+
 	public List<RoutineExerciseHelper> getRoutineExerciseHelpers()
 	{
 		return exercisesToInclude;
 	}
 	
-	// Overrides
-	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
+	// Methods
 	private int getHeaderPosition(int headerIndex)
 	{
 		if(headerIndex == 0)
@@ -284,7 +288,7 @@ public class RoutineCreateAdapter
 		
 		moveHeader(headerIndex - 1, headerIndex);
 	}
-	
+
 	// Move header down.
 	private void moveHeaderDown(int headerIndex)
 	{
@@ -294,8 +298,6 @@ public class RoutineCreateAdapter
 		moveHeader(headerIndex, headerIndex + 1);
 	}
 	
-	// Getters
-	// Methods
 	private void bindSetViewHolder(@NonNull RoutineCreateSetViewHolder holder, int position)
 	{
 		holder.getView().setOnClickListener(view ->
@@ -319,6 +321,39 @@ public class RoutineCreateAdapter
 			+ (exercisesToInclude.get(bottomHeaderIndex).IsExpanded() ? bottomChildren : 0) // If the bottom is expanded, we need to include the children as the bottom-most item affected.
 			+ 1; // Include the bottom-most "add set" button view.
 		notifyItemRangeChanged(topHeaderPos, rangeAffected);
+	}
+	
+	private RoutineExerciseSetPositions getIdSessionExerciseAtPosition(int position)
+	{
+		int count = 0;
+		
+		for(int i = 0; i < exercisesToInclude.size(); i++)
+		{//RoutineExerciseHelper reh : exercisesToInclude){
+			/* // We don't care about the header.
+			if(count >= position)
+				return HEADER_TYPE;
+			*/
+			
+			final RoutineExerciseHelper reh = exercisesToInclude.get(i);
+			
+			if(reh.IsExpanded()){
+				List<SessionExerciseSet> sets = reh.getSets();
+				count += sets.size();
+				if(count >= position) // This means the selected set is in this parent exercise, so find the exact set and return that id.
+				{
+					count -= sets.size();
+					
+					final int setIndex = position - count - 1;
+					final SessionExerciseSet set = sets.get(setIndex);
+					return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds(), reh.getExercise().getName());
+				}
+				
+				count += 1; // Add 1 for the "Add set" view.
+			}
+			count += 1; // Iterate to next header.
+		}
+		
+		return null;
 	}
 	
 	// Get the header position given the recyclerview position.
@@ -456,39 +491,6 @@ public class RoutineCreateAdapter
 				notifyItemChanged(getHeaderPosition(i));
 			}
 		}
-	}
-	
-	private RoutineExerciseSetPositions getIdSessionExerciseAtPosition(int position)
-	{
-		int count = 0;
-		
-		for(int i = 0; i < exercisesToInclude.size(); i++)
-		{//RoutineExerciseHelper reh : exercisesToInclude){
-			/* // We don't care about the header.
-			if(count >= position)
-				return HEADER_TYPE;
-			*/
-			
-			final RoutineExerciseHelper reh = exercisesToInclude.get(i);
-			
-			if(reh.IsExpanded()){
-				List<SessionExerciseSet> sets = reh.getSets();
-				count += sets.size();
-				if(count >= position) // This means the selected set is in this parent exercise, so find the exact set and return that id.
-				{
-					count -= sets.size();
-					
-					final int setIndex = position - count - 1;
-					final SessionExerciseSet set = sets.get(setIndex);
-					return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds(), reh.getExercise().getName());
-				}
-				
-				count += 1; // Add 1 for the "Add set" view.
-			}
-			count += 1; // Iterate to next header.
-		}
-		
-		return null;
 	}
 	
 	public interface IOnSetClick

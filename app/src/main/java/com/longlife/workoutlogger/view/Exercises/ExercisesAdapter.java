@@ -15,9 +15,8 @@ import java.util.List;
 public class ExercisesAdapter
 	extends RecyclerView.Adapter<ExercisesViewHolder>
 {
-	protected List<Exercise> exercises = new ArrayList<>();
-	
 	private IClickExercise exerciseClickCallback;
+	protected List<Exercise> exercises = new ArrayList<>();
 	
 	public ExercisesAdapter(IClickExercise exerciseClickCallback)
 	{
@@ -62,13 +61,25 @@ public class ExercisesAdapter
 		});
 	}
 	
-	// Setters
 	@Override
 	public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
 	{
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_exercise, parent, false);
 		
 		return (new ExercisesViewHolder(v));
+	}
+	
+	@Override
+	public int getItemCount()
+	{
+		return exercises.size();
+	}
+	
+	// Setters
+	public void setExercises(List<Exercise> exercises)
+	{
+		this.exercises = exercises;
+		notifyDataSetChanged();
 	}
 	
 	public void exerciseUpdated(Exercise updatedExercise)
@@ -84,12 +95,6 @@ public class ExercisesAdapter
 		}
 	}
 	
-	@Override
-	public int getItemCount()
-	{
-		return exercises.size();
-	}
-	
 	public void exerciseFavorited(ExerciseFavorited exerciseFavorited)
 	{
 		final Long idExercise = exerciseFavorited.getIdExercise();
@@ -101,20 +106,6 @@ public class ExercisesAdapter
 				notifyItemChanged(i);
 			}
 		}
-	}
-	
-	// Interface for when an item is clicked. Should be implemented by the Activity/Fragment to start an edit fragment.
-	public interface IClickExercise
-	{
-		// When an exercise is clicked, send the clicked exercise.
-		void exerciseClicked(Long idExercise);
-		
-		void exerciseFavorited(Long idExercise, boolean favoritedStatus);
-	}
-	public void setExercises(List<Exercise> exercises)
-	{
-		this.exercises = exercises;
-		notifyDataSetChanged();
 	}
 	
 	public Exercise getExercise(int position)
@@ -138,5 +129,14 @@ public class ExercisesAdapter
 	{
 		exercises.add(ex);
 		notifyItemInserted(exercises.size() - 1);
+	}
+	
+	// Interface for when an item is clicked. Should be implemented by the Activity/Fragment to start an edit fragment.
+	public interface IClickExercise
+	{
+		// When an exercise is clicked, send the clicked exercise.
+		void exerciseClicked(Long idExercise);
+		
+		void exerciseFavorited(Long idExercise, boolean favoritedStatus);
 	}
 }

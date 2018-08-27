@@ -52,18 +52,15 @@ public class ExercisesFragment
 	public static final String TAG = ExercisesFragment.class.getSimpleName();
 	@Required
 	private int rootId; //This is the root of the layout from the parent activity. This is needed to determine how to attach the child ExercisesCreateFragment when opened to create a new exercise.
-	
-	@Inject
-	public ViewModelProvider.Factory viewModelFactory;
-	
 	private ExercisesViewModel viewModel;
 	@Required
 	private int layoutId;
-	
 	private RecyclerView recyclerView;
 	private ConstraintLayout viewRootLayout; // layout for recycler view
 	protected View mView;
 	protected ExercisesAdapter adapter;
+	@Inject
+	public ViewModelProvider.Factory viewModelFactory;
 	@Inject
 	public Context context;
 	
@@ -91,13 +88,12 @@ public class ExercisesFragment
 		Log.d(TAG, "OnCreate: loadExercises()");
 		viewModel.loadExercises();
 	}
+
 	@Override
 	public void exerciseClicked(Long idExercise)
 	{
 		startEditFragment(idExercise);
 	}
-	
-	// Setters
 	
 	@Override
 	public void exerciseFavorited(Long idExercise, boolean favoritedStatus)
@@ -111,10 +107,10 @@ public class ExercisesFragment
 	{
 		if(mView == null){
 			mView = inflater.inflate(layoutId, container, false);
-			
+
 			recyclerView = mView.findViewById(R.id.rv_exercises);
 			viewRootLayout = mView.findViewById(R.id.exercises_overview_layout);
-			
+
 			FloatingActionButton btn_addRoutine = mView.findViewById(R.id.btn_addExercise);
 			btn_addRoutine.setOnClickListener(view -> startCreateFragment());
 			
@@ -169,7 +165,6 @@ public class ExercisesFragment
 			snackbar.show();
 		}
 	}
-	// Methods
 	
 	@Override
 	public boolean isItemViewSwipeEnabled()
@@ -189,6 +184,12 @@ public class ExercisesFragment
 		return false;
 	}
 	
+	// Setters
+	public void setAdapter(ExercisesAdapter adapter)
+	{
+		this.adapter = adapter;
+	}
+	
 	public static ExercisesFragment newInstance(int activityRoot, int exerciseItemLayout)
 	{
 		ExercisesFragment fragment = new ExercisesFragment();
@@ -202,11 +203,7 @@ public class ExercisesFragment
 		return fragment;
 	}
 	
-	public void setAdapter(ExercisesAdapter adapter)
-	{
-		this.adapter = adapter;
-	}
-	
+	// Methods
 	private void processExerciseFavorited(ExerciseFavorited exerciseFavorited)
 	{
 		adapter.exerciseFavorited(exerciseFavorited);
@@ -266,18 +263,6 @@ public class ExercisesFragment
 		adapter.setExercises(exercises);
 	}
 	
-	public void initializeRecyclerView()
-	{
-		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-		//adapter = new ExercisesAdapter();
-		recyclerView.setAdapter(adapter);
-		recyclerView.setItemAnimator(new DefaultItemAnimator());
-		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-		
-		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
-		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-	}
-	
 	private void processLoadRoutineResponse(Response<List<Exercise>> response)
 	{
 		//if(!isAdded()) return;
@@ -308,25 +293,6 @@ public class ExercisesFragment
 				break;
 		}
 	}
-	protected void startCreateFragment()
-	{
-		FragmentManager manager = getActivity().getSupportFragmentManager();
-		
-		ExerciseCreateFragment fragment = (ExerciseCreateFragment)manager.findFragmentByTag(ExerciseCreateFragment.TAG);
-		if(fragment == null){
-			fragment = ExerciseCreateFragment.newInstance();
-		}
-		
-/*		manager.beginTransaction()
-			.replace(R.id.frameLayout_main_activity,//rootId,
-				fragment, ExerciseCreateFragment.TAG
-			)
-			.addToBackStack(ExerciseCreateFragment.TAG)
-			.commit();*/
-		if(fragmentNavigation != null){
-			fragmentNavigation.pushFragment(fragment);
-		}
-	}
 	
 	private void startEditFragment(Long idExercise)
 	{
@@ -337,6 +303,38 @@ public class ExercisesFragment
 			fragment = ExerciseEditFragment.newInstance(idExercise);
 		}
 		
+		if(fragmentNavigation != null){
+			fragmentNavigation.pushFragment(fragment);
+		}
+	}
+	
+	public void initializeRecyclerView()
+	{
+		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+		//adapter = new ExercisesAdapter();
+		recyclerView.setAdapter(adapter);
+		recyclerView.setItemAnimator(new DefaultItemAnimator());
+		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+		
+		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
+		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+	}
+	
+	protected void startCreateFragment()
+	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
+		
+		ExerciseCreateFragment fragment = (ExerciseCreateFragment)manager.findFragmentByTag(ExerciseCreateFragment.TAG);
+		if(fragment == null){
+			fragment = ExerciseCreateFragment.newInstance();
+		}
+
+/*		manager.beginTransaction()
+			.replace(R.id.frameLayout_main_activity,//rootId,
+				fragment, ExerciseCreateFragment.TAG
+			)
+			.addToBackStack(ExerciseCreateFragment.TAG)
+			.commit();*/
 		if(fragmentNavigation != null){
 			fragmentNavigation.pushFragment(fragment);
 		}

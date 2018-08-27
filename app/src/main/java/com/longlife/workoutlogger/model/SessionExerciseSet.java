@@ -60,7 +60,7 @@ public class SessionExerciseSet
 	{
 	
 	}
-
+	
 	// Overrides
 	@Ignore
 	@Override
@@ -79,21 +79,6 @@ public class SessionExerciseSet
 	}
 	
 	// Getters
-	public int getRestMinutes()
-	{
-		return restMinutes;
-	}
-	
-	public int getRestSeconds()
-	{
-		return restSeconds;
-	}
-	
-	// Setters
-	public void setRestMinutes(int restMinutes)
-	{
-		this.restMinutes = restMinutes;
-	}
 	public float getDuration()
 	{
 		return duration;
@@ -108,10 +93,20 @@ public class SessionExerciseSet
 	{
 		return idSessionExerciseSet;
 	}
-	
+
 	public Integer getReps()
 	{
 		return reps;
+	}
+	
+	public int getRestMinutes()
+	{
+		return restMinutes;
+	}
+	
+	public int getRestSeconds()
+	{
+		return restSeconds;
 	}
 	
 	public Double getWeights()
@@ -119,10 +114,17 @@ public class SessionExerciseSet
 		return weights;
 	}
 	
+	// Setters
+	public void setRestMinutes(int restMinutes)
+	{
+		this.restMinutes = restMinutes;
+	}
+	
 	public void setRestSeconds(int restSeconds)
 	{
 		this.restSeconds = restSeconds;
 	}
+	
 	public void setIdSessionExerciseSet(Long i)
 	{
 		idSessionExerciseSet = i;
