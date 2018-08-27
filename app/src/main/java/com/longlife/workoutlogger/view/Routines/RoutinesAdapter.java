@@ -18,9 +18,11 @@ public class RoutinesAdapter
 	// Static
 	private static final String TAG = RoutinesAdapter.class.getSimpleName();
 	private List<Routine> routines = new ArrayList<>();
+	private IClickRoutine onClickCallback;
 	
-	public RoutinesAdapter()
+	public RoutinesAdapter(IClickRoutine onClickCallback)
 	{
+		this.onClickCallback = onClickCallback;
 	}
 	
 	// Overrides
@@ -32,7 +34,13 @@ public class RoutinesAdapter
 		
 		holder.setNameText(routine.getName() + " (" + String.valueOf(routine.getIdRoutine()) + " -> " + String.valueOf(routine.getCurrentIdRoutineHistory()) + ")");
 		holder.setDescripText(routine.getDescription());
+		
+		holder.getNameTextView().setOnClickListener(view ->
+		{
+			onClickCallback.routineClicked(routine.getIdRoutine());
+		});
 	}
+	// Setters
 	
 	@Override
 	public RoutinesViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
@@ -50,7 +58,12 @@ public class RoutinesAdapter
 		return (routines.size());
 	}
 	
-	// Setters
+	// Interface for when an item is clicked. Should be implemented by the Activity/Fragment to start an edit fragment.
+	public interface IClickRoutine
+	{
+		// When an exercise is clicked, send the clicked exercise.
+		void routineClicked(Long idRoutine);
+	}
 	public void setRoutines(List<Routine> routines)
 	{
 		if(routines == null)
@@ -63,8 +76,6 @@ public class RoutinesAdapter
 	public void addRoutine(Routine routine)
 	{
 		Log.d(TAG, "inserted routine " + routine.getName() + " " + String.valueOf(routine.getIdRoutine()));
-		if(routine == null)
-			return;
 		
 		this.routines.add(routine);
 		notifyItemInserted(routines.size() - 1);

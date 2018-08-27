@@ -91,30 +91,13 @@ public class ExercisesFragment
 		Log.d(TAG, "OnCreate: loadExercises()");
 		viewModel.loadExercises();
 	}
-	
-	// Setters
-	
 	@Override
 	public void exerciseClicked(Long idExercise)
 	{
-		FragmentManager manager = getActivity().getSupportFragmentManager();
-		
-		ExerciseEditFragment fragment = (ExerciseEditFragment)manager.findFragmentByTag(ExerciseEditFragment.TAG);
-		if(fragment == null){
-			fragment = ExerciseEditFragment.newInstance(idExercise);
-		}
-		
-		/*manager.beginTransaction()
-			.replace(R.id.frameLayout_main_activity,//rootId,
-				fragment, ExerciseEditFragment.TAG
-			)
-			.addToBackStack(ExerciseEditFragment.TAG)
-			.commit();*/
-		
-		if(fragmentNavigation != null){
-			fragmentNavigation.pushFragment(fragment);
-		}
+		startEditFragment(idExercise);
 	}
+	
+	// Setters
 	
 	@Override
 	public void exerciseFavorited(Long idExercise, boolean favoritedStatus)
@@ -340,6 +323,20 @@ public class ExercisesFragment
 			)
 			.addToBackStack(ExerciseCreateFragment.TAG)
 			.commit();*/
+		if(fragmentNavigation != null){
+			fragmentNavigation.pushFragment(fragment);
+		}
+	}
+	
+	private void startEditFragment(Long idExercise)
+	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
+		
+		ExerciseEditFragment fragment = (ExerciseEditFragment)manager.findFragmentByTag(ExerciseEditFragment.TAG);
+		if(fragment == null){
+			fragment = ExerciseEditFragment.newInstance(idExercise);
+		}
+		
 		if(fragmentNavigation != null){
 			fragmentNavigation.pushFragment(fragment);
 		}

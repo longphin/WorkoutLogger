@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
@@ -31,6 +30,7 @@ import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragment;
+import com.longlife.workoutlogger.view.Routines.EditRoutine.RoutineEditFragment;
 import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
 
 import java.util.List;
@@ -39,7 +39,8 @@ import javax.inject.Inject;
 
 public class RoutinesFragment
 	extends FragmentBase
-	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener
+	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
+						 RoutinesAdapter.IClickRoutine
 {
 	public static final String TAG = RoutinesFragment.class.getSimpleName();
 	private RoutinesViewModel viewModel;
@@ -168,7 +169,11 @@ public class RoutinesFragment
 		return (new RoutinesFragment());
 	}
 	
-	// Methods
+	@Override
+	public void routineClicked(Long idRoutine)
+	{
+		startEditFragment(idRoutine);
+	}
 	private void processInsertRoutineResponse(Response<Routine> response)
 	{
 		switch(response.getStatus()){
@@ -187,19 +192,7 @@ public class RoutinesFragment
 		adapter.addRoutine(routine);
 	}
 	
-	private void initializeRecyclerView()
-	{
-		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-		adapter = new RoutinesAdapter();
-		recyclerView.setAdapter(adapter);
-		recyclerView.setItemAnimator(new DefaultItemAnimator());
-		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
-		
-		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
-		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-		
-		viewModel.loadRoutines();
-	}
+	// Methods
 	
 	private void processLoadResponse(Response<List<Routine>> response)
 	{
@@ -218,29 +211,26 @@ public class RoutinesFragment
 	
 	private void renderLoadingState()
 	{
-		Toast.makeText(context, "loading routines", Toast.LENGTH_SHORT);
-		
 		Log.d(TAG, "loading routines");
 	}
 	
-	private void renderSuccessState(List<Routine> routines)
+	private void initializeRecyclerView()
 	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(routines == null ? 0 : routines.size());
-		sb.append(" routines obtained");
+		recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+		adapter = new RoutinesAdapter(this);
+		recyclerView.setAdapter(adapter);
+		recyclerView.setItemAnimator(new DefaultItemAnimator());
+		recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
 		
-		Toast.makeText(context, sb.toString(), Toast.LENGTH_SHORT);
+		ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
+		new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 		
-		Log.d(TAG, sb.toString());
-		
-		adapter.setRoutines(routines);
-		adapter.notifyDataSetChanged();
+		viewModel.loadRoutines();
 	}
 	
 	private void renderErrorState(Throwable throwable)
 	{
 		// change anything if loading data had an error.
-		Toast.makeText(context, throwable.getMessage(), Toast.LENGTH_SHORT);
 		Log.d(TAG, throwable.getMessage());
 	}
 	
@@ -258,6 +248,27 @@ public class RoutinesFragment
 			)
 			.addToBackStack(RoutineCreateFragment.TAG)
 			.commit();*/
+		
+		if(fragmentNavigation != null){
+			fragmentNavigation.pushFragment(fragment);
+		}
+	}
+	
+	private void renderSuccessState(List<Routine> routines)
+	{
+		Log.d(TAG, String.valueOf(routines.size()) + " routines obtained");
+		
+		adapter.setRoutines(routines);
+		adapter.notifyDataSetChanged();
+	}
+	
+	private void startEditFragment(Long idRoutine)
+	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
+		RoutineEditFragment fragment = (RoutineEditFragment)manager.findFragmentByTag(RoutineEditFragment.TAG);
+		if(fragment == null){
+			fragment = RoutineEditFragment.newInstance(idRoutine);
+		}
 		
 		if(fragmentNavigation != null){
 			fragmentNavigation.pushFragment(fragment);

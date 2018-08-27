@@ -39,6 +39,12 @@ public class RoutinesViewHolder
 		return foreground;
 	}
 	
+	// Getters
+	public TextView getNameTextView()
+	{
+		return name;
+	}
+	
 	// Setters
 	public void setNameText(String s)
 	{

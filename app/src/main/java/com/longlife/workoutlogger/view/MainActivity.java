@@ -15,6 +15,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
+import com.longlife.workoutlogger.view.Profile.ProfileFragment;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 import com.ncapdevi.fragnav.FragNavController;
@@ -61,7 +62,7 @@ public class MainActivity
 	Toolbar toolbar;
 	
 	private FragmentHistory fragmentHistory;
-	String[] TABS = {"Routine", "Exercise"};
+	String[] TABS = {"Profile", "Routine", "Exercise"};
 	
 	// Overrides
 	@Override
@@ -226,10 +227,11 @@ public class MainActivity
 	public Fragment getRootFragment(int index)
 	{
 		switch(index){
-			
 			case FragNavController.TAB1:
-				return RoutinesFragment.newInstance();
+				return ProfileFragment.newInstance();
 			case FragNavController.TAB2:
+				return RoutinesFragment.newInstance();
+			case FragNavController.TAB3:
 				return ExercisesFragment.newInstance(R.id.frameLayout_main_activity, R.layout.fragment_exercises);
 		}
 		throw new IllegalStateException("Need to send an index that we know");
@@ -306,9 +308,11 @@ public class MainActivity
 		// Settings
 		bottomTabLayout.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW); // Always show the labels for items.
 		// Initialize items.
+		AHBottomNavigationItem ProfileItem = new AHBottomNavigationItem(getString(R.string.NavBar_Profile), R.drawable.ic_storage_black_24dp);
 		AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_storage_black_24dp);
 		AHBottomNavigationItem ExerciseItem = new AHBottomNavigationItem(getString(R.string.NavBar_Exercises), R.drawable.ic_weightlifting);
 		// Add navigation items.
+		bottomTabLayout.addItem(ProfileItem);
 		bottomTabLayout.addItem(RoutineItem);
 		bottomTabLayout.addItem(ExerciseItem);
 		// Styles.
