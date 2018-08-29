@@ -104,7 +104,7 @@ public class ExerciseEditFragment
 	@Override
 	public void sendInput(String descrip)
 	{
-		this.exercise.setDescription(descrip);
+		this.exercise.setNote(descrip);
 	}
 	
 	public static ExerciseEditFragment newInstance(Long idExercise)
@@ -128,7 +128,7 @@ public class ExerciseEditFragment
 		note.setOnClickListener(view ->
 		{
 			if(this.exercise != null){
-				AddNoteDialog dialog = AddNoteDialog.newInstance(this.exercise.getDescription());
+				AddNoteDialog dialog = AddNoteDialog.newInstance(this.exercise.getNote());
 				dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
 			}
 		});

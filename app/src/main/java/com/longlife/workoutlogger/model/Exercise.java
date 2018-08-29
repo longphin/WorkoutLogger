@@ -54,7 +54,7 @@ public class Exercise
 	// This is the idExerciseHistory that this current exercise corresponds to.
 	private Long currentIdExerciseHistory;
 	// Note for the exercise.
-	private String description;
+	private String note;
 	// Flag to indicate whether exercise is favorited.
 	private boolean favorited;
 	// Flag to indicate whether exercise is hidden.
@@ -74,7 +74,7 @@ public class Exercise
 	public Exercise(String name, String descrip)
 	{
 		this.name = name;
-		this.description = descrip;
+		this.note = descrip;
 	}
 	
 	@Ignore
@@ -112,9 +112,9 @@ public class Exercise
 		return currentIdExerciseHistory;
 	}
 	
-	public String getDescription()
+	public String getNote()
 	{
-		return description;
+		return note;
 	}
 	
 	public ExerciseType getExerciseType()
@@ -168,9 +168,9 @@ public class Exercise
 		this.exerciseType = exerciseType;
 	}
 	
-	public void setDescription(String description)
+	public void setNote(String note)
 	{
-		this.description = description;
+		this.note = note;
 	}
 	
 	public void setMeasurementType(MeasurementType measurementType)

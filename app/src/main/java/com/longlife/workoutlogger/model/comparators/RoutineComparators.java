@@ -1,9 +1,9 @@
 package com.longlife.workoutlogger.model.comparators;
 
-import com.longlife.workoutlogger.data.UserProfile;
 import com.longlife.workoutlogger.model.Routine;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 /**
  * Created by Longphi on 2/2/2018.
@@ -18,7 +18,8 @@ public class RoutineComparators
 		public int compare(Routine r1, Routine r2)
 		{
 			// Order by name.
-			int res = r1.getName().toLowerCase(UserProfile.getLocale()).compareTo(r2.getName().toLowerCase(UserProfile.getLocale()));
+			Locale locale = Locale.US; // [TODO] this should be obtained from user profile
+			int res = r1.getName().toLowerCase(locale).compareTo(r2.getName().toLowerCase(locale));
 			
 			// Order by id.
 			if(res == 0)

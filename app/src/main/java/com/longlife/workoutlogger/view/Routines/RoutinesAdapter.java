@@ -33,7 +33,7 @@ public class RoutinesAdapter
 		Routine routine = routines.get(position);
 		
 		holder.setNameText(routine.getName() + " (" + String.valueOf(routine.getIdRoutine()) + " -> " + String.valueOf(routine.getCurrentIdRoutineHistory()) + ")");
-		holder.setDescripText(routine.getDescription());
+		holder.setDescripText(routine.getNote());
 		
 		holder.getNameTextView().setOnClickListener(view ->
 		{

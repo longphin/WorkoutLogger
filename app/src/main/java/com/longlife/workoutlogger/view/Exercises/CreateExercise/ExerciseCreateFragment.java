@@ -137,7 +137,7 @@ public class ExerciseCreateFragment
 	{
 		Exercise newExercise = new Exercise();
 		newExercise.setName(name.getText().toString());
-		newExercise.setDescription(descrip);
+		newExercise.setNote(descrip);
 		
 		// Check if required fields were set.
 		try{

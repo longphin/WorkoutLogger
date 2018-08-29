@@ -264,7 +264,7 @@ public class RoutineCreateFragment
 				if(!this.name.getText().toString().trim().equals("")){
 					Routine routineToAdd = new Routine();
 					routineToAdd.setName(name.getText().toString());
-					routineToAdd.setDescription(descrip);//descrip.getText().toString());
+					routineToAdd.setNote(descrip);//descrip.getText().toString());
 					routinesViewModel.insertRoutineFull(routineToAdd, adapter.getRoutineExerciseHelpers());
 					
 					getActivity().onBackPressed();

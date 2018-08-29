@@ -61,6 +61,7 @@ public class MainActivity
 	@Inject
 	public Repository repo;
 	// Other
+	// [TODO] Upon the activity created, need to query the database to get the user profile; The POJO should have user first name, and preferred measurement system.
 	// Overrides
 	@Override
 	public void onCreate(Bundle savedInstanceState)

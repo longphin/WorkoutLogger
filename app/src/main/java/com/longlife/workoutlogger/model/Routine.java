@@ -22,7 +22,7 @@ public class Routine
 	@Required
 	private String name;
 	// Note for routine.
-	private String description;
+	private String note;
 	// Flag for hiding the routine.
 	@NonNull
 	private boolean hidden = false;
@@ -38,9 +38,9 @@ public class Routine
 		return currentIdRoutineHistory;
 	}
 	
-	public String getDescription()
+	public String getNote()
 	{
-		return description;
+		return note;
 	}
 	
 	public Long getIdRoutine()
@@ -79,9 +79,9 @@ public class Routine
 		this.idRoutine = idRoutine;
 	}
 	
-	public void setDescription(String description)
+	public void setNote(String note)
 	{
-		this.description = description;
+		this.note = note;
 	}
 	
 }

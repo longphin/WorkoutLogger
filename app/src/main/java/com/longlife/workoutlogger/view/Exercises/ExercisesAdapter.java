@@ -32,7 +32,7 @@ public class ExercisesAdapter
 		// Name
 		holder.setNameText(ex.getName() + " (" + String.valueOf(ex.getIdExercise()) + " -> " + String.valueOf(ex.getCurrentIdExerciseHistory()) + ")");
 		// Description
-		holder.setDescripText(ex.getDescription());
+		holder.setDescripText(ex.getNote());
 		// Favorite icon
 		if(ex.getFavorited()){
 			holder.setFavoriteIcon(R.drawable.ic_favorite_black_24dp);

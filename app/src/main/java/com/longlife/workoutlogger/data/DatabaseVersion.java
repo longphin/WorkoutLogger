@@ -22,7 +22,8 @@ public class DatabaseVersion
 	private static final int V3_4 = 15; // Removed auto-generate from primary keys, so that keys can be reused if they are deleted.
 	private static final int V3_5 = 16; // Split set rest time from only seconds to minutes and seconds.
 	private static final int V3_5b = 17; // Gave set rest time a default of 0's.
+	private static final int V4_0 = 18; // Added user profile.
 	
-	public static final int CURRENT = V3_5b;
+	public static final int CURRENT = V4_0;
 }
 // Inner Classes
