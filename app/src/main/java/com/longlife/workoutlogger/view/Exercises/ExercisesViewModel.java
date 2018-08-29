@@ -10,7 +10,7 @@ import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseHistory;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
-import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseFavorited;
+import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseLocked;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,8 +36,8 @@ public class ExercisesViewModel
 	
 	// Observable for when requesting list of all exercises.
 	private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
-	// Observable for when an exercise was favorited.
-	private final PublishSubject<ExerciseFavorited> exerciseFavoritedObservable = PublishSubject.create();
+	// Observable for when an exercise was locked.
+	private final PublishSubject<ExerciseLocked> exerciseLockedObservable = PublishSubject.create();
 	// Observable for when an exercise is inserted.
 	//private final Response<Exercise> exerciseEditedResponse = new Response<>();
 	private final PublishSubject<Exercise> exerciseEditedObservable = PublishSubject.create();
@@ -69,9 +69,9 @@ public class ExercisesViewModel
 		return exerciseEditedObservable;
 	}
 	
-	public PublishSubject<ExerciseFavorited> getExerciseFavoritedObservable()
+	public PublishSubject<ExerciseLocked> getExerciseLockedObservable()
 	{
-		return exerciseFavoritedObservable;
+		return exerciseLockedObservable;
 	}
 	
 	public Observable<Response<Exercise>> getExerciseInsertedResponse()
@@ -155,9 +155,9 @@ public class ExercisesViewModel
 		);
 	}
 	
-	public void updateFavorite(Long idExercise, boolean favorited)
+	public void updateLockedStatus(Long idExercise, boolean lockedStatus)
 	{
-		Completable.fromAction(() -> repo.updateFavorite(idExercise, favorited))
+		Completable.fromAction(() -> repo.updateLockedStatus(idExercise, lockedStatus))
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(new CompletableObserver()
@@ -169,7 +169,7 @@ public class ExercisesViewModel
 				@Override
 				public void onComplete()
 				{
-					exerciseFavoritedObservable.onNext(new ExerciseFavorited(idExercise, favorited));
+					exerciseLockedObservable.onNext(new ExerciseLocked(idExercise, lockedStatus));
 				}
 				
 				@Override

@@ -190,6 +190,12 @@ public class RoutineCreateFragment
 	}
 	
 	@Override
+	public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+	{
+		return ItemTouchHelper.RIGHT;
+	}
+	
+	@Override
 	public boolean isLongPressDragEnabled()
 	{
 		return false;
@@ -223,9 +229,9 @@ public class RoutineCreateFragment
 	}
 	
 	@Override
-	public void exerciseFavorited(Long idExercise, boolean favoritedStatus)
+	public void exerciseLocked(Long idExercise, boolean lockStatus)
 	{
-		exercisesViewModel.updateFavorite(idExercise, favoritedStatus);
+		exercisesViewModel.updateLockedStatus(idExercise, lockStatus);
 	}
 	
 	@Nullable

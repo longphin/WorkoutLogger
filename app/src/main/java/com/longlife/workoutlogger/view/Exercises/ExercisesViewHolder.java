@@ -18,7 +18,7 @@ public class ExercisesViewHolder
 	private RelativeLayout viewBackground;
 	private ConstraintLayout viewForeground;
 	private CheckBox selectedCheckBox;
-	private ImageView favoriteIcon;
+	private ImageView lockedIcon;
 	public ExercisesViewHolder(View itemView)
 	{
 		super(itemView);
@@ -27,7 +27,7 @@ public class ExercisesViewHolder
 		this.descrip = itemView.findViewById(R.id.txt_exerciseDescrip);
 		this.viewBackground = itemView.findViewById(R.id.background_exercise_item);
 		this.viewForeground = itemView.findViewById(R.id.foreground_exercise_item);
-		this.favoriteIcon = itemView.findViewById(R.id.icon_exercise_favorite);
+		this.lockedIcon = itemView.findViewById(R.id.icon_exercise_favorite);
 		this.selectedCheckBox = itemView.findViewById(R.id.ch_selectExercise);
 	}
 	
@@ -43,7 +43,7 @@ public class ExercisesViewHolder
 	}
 	
 	// Getters
-	public ImageView getFavoriteIcon(){ return favoriteIcon;}
+	public ImageView getLockedIcon(){ return lockedIcon;}
 	
 	public TextView getNameTextView()
 	{
@@ -56,9 +56,9 @@ public class ExercisesViewHolder
 	}
 	
 	// Setters
-	public void setFavoriteIcon(int icon)
+	public void setLockedIcon(int icon)
 	{
-		favoriteIcon.setImageResource(icon);
+		lockedIcon.setImageResource(icon);
 	}
 	
 	public void setNameText(String s)

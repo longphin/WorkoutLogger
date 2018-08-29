@@ -165,6 +165,12 @@ public class RoutinesFragment
 	}
 	
 	@Override
+	public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+	{
+		return ItemTouchHelper.RIGHT;
+	}
+	
+	@Override
 	public void routineClicked(Long idRoutine)
 	{
 		startEditFragment(idRoutine);

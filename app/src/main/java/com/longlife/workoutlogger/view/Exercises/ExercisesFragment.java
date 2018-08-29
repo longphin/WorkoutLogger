@@ -34,7 +34,7 @@ import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
-import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseFavorited;
+import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseLocked;
 import com.longlife.workoutlogger.view.MainActivity;
 
 import java.util.List;
@@ -64,7 +64,6 @@ public class ExercisesFragment
 	@Inject
 	public Context context;
 	
-	
 	// Overrides
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState)
@@ -83,7 +82,7 @@ public class ExercisesFragment
 		addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadRoutineResponse(response)));
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
 		addDisposable(viewModel.getExerciseEditedObservable().subscribe(exercise -> processExerciseEdited(exercise)));
-		addDisposable(viewModel.getExerciseFavoritedObservable().subscribe(exerciseFavorited -> processExerciseFavorited(exerciseFavorited)));
+		addDisposable(viewModel.getExerciseLockedObservable().subscribe(exerciseLocked -> processExerciseLocked(exerciseLocked)));
 		
 		Log.d(TAG, "OnCreate: loadExercises()");
 		viewModel.loadExercises();
@@ -96,9 +95,9 @@ public class ExercisesFragment
 	}
 	
 	@Override
-	public void exerciseFavorited(Long idExercise, boolean favoritedStatus)
+	public void exerciseLocked(Long idExercise, boolean lockStatus)
 	{
-		viewModel.updateFavorite(idExercise, favoritedStatus);
+		viewModel.updateLockedStatus(idExercise, lockStatus);
 	}
 	
 	@Override
@@ -184,6 +183,12 @@ public class ExercisesFragment
 		return false;
 	}
 	
+	@Override
+	public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+	{
+		return adapter.getSwipeDirs(viewHolder.getAdapterPosition());
+	}
+	
 	// Setters
 	public void setAdapter(ExercisesAdapter adapter)
 	{
@@ -204,9 +209,9 @@ public class ExercisesFragment
 	}
 	
 	// Methods
-	private void processExerciseFavorited(ExerciseFavorited exerciseFavorited)
+	private void processExerciseLocked(ExerciseLocked exerciseLocked)
 	{
-		adapter.exerciseFavorited(exerciseFavorited);
+		adapter.exerciseLocked(exerciseLocked);
 	}
 
 	private void processExerciseEdited(Exercise exercise)

@@ -18,9 +18,9 @@ public class ExerciseComparators
 		public int compare(Exercise e1, Exercise e2)
 		{
 			// Order by favorites.
-			if((e1.getFavorited() ? 1 : 0) > (e2.getFavorited() ? 1 : 0))
+			if((e1.getLocked() ? 1 : 0) > (e2.getLocked() ? 1 : 0))
 				return -1;
-			else if((e1.getFavorited() ? 1 : 0) < (e2.getFavorited() ? 1 : 0))
+			else if((e1.getLocked() ? 1 : 0) < (e2.getLocked() ? 1 : 0))
 				return 1;
 			
 			// Order by name.

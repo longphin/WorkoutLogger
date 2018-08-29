@@ -1,15 +1,15 @@
 package com.longlife.workoutlogger.view.Exercises.Helper;
 
 // Helper class for when an exercise is favorited.
-public class ExerciseFavorited
+public class ExerciseLocked
 {
 	private Long idExercise;
-	private boolean isFavorited;
+	private boolean isLocked;
 	
-	public ExerciseFavorited(Long idExercise, boolean isFavorited)
+	public ExerciseLocked(Long idExercise, boolean isLocked)
 	{
 		this.idExercise = idExercise;
-		this.isFavorited = isFavorited;
+		this.isLocked = isLocked;
 	}
 	
 	// Getters
@@ -18,8 +18,8 @@ public class ExerciseFavorited
 		return idExercise;
 	}
 	
-	public boolean isFavorited()
+	public boolean isLocked()
 	{
-		return isFavorited;
+		return isLocked;
 	}
 }

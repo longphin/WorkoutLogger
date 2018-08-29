@@ -1,13 +1,14 @@
 package com.longlife.workoutlogger.view.Exercises;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
-import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseFavorited;
+import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseLocked;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ public class ExercisesAdapter
 		this.exerciseClickCallback = exerciseClickCallback;
 	}
 	
+	private static int lockedIconEnabled = R.drawable.ic_lock_black_24dp;
+	private static int lockedIconDisabled = R.drawable.ic_lock_open_black_24dp;
 	// Overrides
 	@Override
 	public void onBindViewHolder(ExercisesViewHolder holder, int pos)
@@ -33,24 +36,24 @@ public class ExercisesAdapter
 		holder.setNameText(ex.getName() + " (" + String.valueOf(ex.getIdExercise()) + " -> " + String.valueOf(ex.getCurrentIdExerciseHistory()) + ")");
 		// Description
 		holder.setDescripText(ex.getNote());
-		// Favorite icon
-		if(ex.getFavorited()){
-			holder.setFavoriteIcon(R.drawable.ic_favorite_black_24dp);
+		// Lock icon
+		if(ex.getLocked()){
+			holder.setLockedIcon(ExercisesAdapter.lockedIconEnabled);
 		}else{
-			holder.setFavoriteIcon(R.drawable.ic_favorite_border_black_24dp);
+			holder.setLockedIcon(ExercisesAdapter.lockedIconDisabled);
 		}
 		
-		holder.getFavoriteIcon().setOnClickListener(view ->
+		holder.getLockedIcon().setOnClickListener(view ->
 			{
-/*				ex.setFavorited(!ex.getFavorited());
-				if(ex.getFavorited()){
-					holder.setFavoriteIcon(R.drawable.ic_favorite_black_24dp);
+/*				ex.setLocked(!ex.getLocked());
+				if(ex.getLocked()){
+					holder.setLockedIcon(R.drawable.ic_favorite_black_24dp);
 				}else{
-					holder.setFavoriteIcon(R.drawable.ic_favorite_border_black_24dp);
+					holder.setLockedIcon(R.drawable.ic_favorite_border_black_24dp);
 				}*/
 				
-				//viewModel.updateFavorite(ex.getIdExercise(), ex.getFavorited());
-				exerciseClickCallback.exerciseFavorited(ex.getIdExercise(), !ex.getFavorited());
+				//viewModel.updateLockedStatus(ex.getIdExercise(), ex.getLocked());
+				exerciseClickCallback.exerciseLocked(ex.getIdExercise(), !ex.getLocked());
 			}
 		);
 		
@@ -95,14 +98,14 @@ public class ExercisesAdapter
 		}
 	}
 	
-	public void exerciseFavorited(ExerciseFavorited exerciseFavorited)
+	public void exerciseLocked(ExerciseLocked exerciseLocked)
 	{
-		final Long idExercise = exerciseFavorited.getIdExercise();
-		final boolean favoritedStatus = exerciseFavorited.isFavorited();
+		final Long idExercise = exerciseLocked.getIdExercise();
+		final boolean lockStatus = exerciseLocked.isLocked();
 		
 		for(int i = 0; i < exercises.size(); i++){
 			if(exercises.get(i).getIdExercise().equals(idExercise)){
-				exercises.get(i).setFavorited(favoritedStatus);
+				exercises.get(i).setLocked(lockStatus);
 				notifyItemChanged(i);
 			}
 		}
@@ -131,12 +134,20 @@ public class ExercisesAdapter
 		notifyItemInserted(exercises.size() - 1);
 	}
 	
+	public int getSwipeDirs(int adapterPosition)
+	{
+		if(exercises.get(adapterPosition).getLocked())
+			return 0;
+		else
+			return ItemTouchHelper.RIGHT;
+	}
+	
 	// Interface for when an item is clicked. Should be implemented by the Activity/Fragment to start an edit fragment.
 	public interface IClickExercise
 	{
 		// When an exercise is clicked, send the clicked exercise.
 		void exerciseClicked(Long idExercise);
 		
-		void exerciseFavorited(Long idExercise, boolean favoritedStatus);
+		void exerciseLocked(Long idExercise, boolean lockStatus);
 	}
 }

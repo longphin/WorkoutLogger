@@ -80,9 +80,9 @@ public class Repository
 	public Single<Exercise> getExerciseFromId(Long id){return exerciseDao.getExerciseFromId(id);}
 	
 	// UPDATES
-	public void updateFavorite(Long idExercise, boolean favorited)
+	public void updateLockedStatus(Long idExercise, boolean locked)
 	{
-		exerciseDao.updateFavorite(idExercise, favorited);
+		exerciseDao.updateLockedStatus(idExercise, locked);
 	}
 	
 	///

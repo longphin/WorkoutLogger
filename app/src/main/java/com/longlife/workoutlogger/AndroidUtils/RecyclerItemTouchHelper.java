@@ -121,6 +121,12 @@ public class RecyclerItemTouchHelper
 		return super.convertToAbsoluteDirection(flags, layoutDirection);
 	}
 	
+	@Override
+	public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder)
+	{
+		return listener.getSwipeDirs(recyclerView, viewHolder);
+	}
+	
 	// Inner Classes
 	public interface RecyclerItemTouchHelperListener
 	{
@@ -132,6 +138,8 @@ public class RecyclerItemTouchHelper
 		void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position);
 		
 		boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target);
+		
+		int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder);
 	}
 }
 // Inner Classes

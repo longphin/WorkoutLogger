@@ -21,7 +21,7 @@ import io.reactivex.annotations.NonNull;
  */
 
 @Entity(indices = {
-	@Index(value = {"favorited", "name"}),
+	@Index(value = {"locked", "name"}),
 	@Index(value = {"hidden", "name"})
 }
 )
@@ -55,8 +55,8 @@ public class Exercise
 	private Long currentIdExerciseHistory;
 	// Note for the exercise.
 	private String note;
-	// Flag to indicate whether exercise is favorited.
-	private boolean favorited;
+	// Flag to indicate whether exercise is locked.
+	private boolean locked;
 	// Flag to indicate whether exercise is hidden.
 	@NonNull
 	private boolean hidden = false;
@@ -122,9 +122,9 @@ public class Exercise
 		return exerciseType;
 	}
 	
-	public boolean getFavorited()
+	public boolean getLocked()
 	{
-		return favorited;
+		return locked;
 	}
 	
 	public Long getIdExercise()
@@ -158,9 +158,9 @@ public class Exercise
 		idExercise = val;
 	}
 	
-	public void setFavorited(boolean favorited)
+	public void setLocked(boolean locked)
 	{
-		this.favorited = favorited;
+		this.locked = locked;
 	}
 	
 	public void setExerciseType(ExerciseType exerciseType)

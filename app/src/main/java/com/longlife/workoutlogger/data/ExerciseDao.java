@@ -31,7 +31,6 @@ public abstract class ExerciseDao
 	/// Gets
 	///
 	@Query("SELECT * FROM Exercise WHERE hidden = 0")
-	//" ORDER BY favorited DESC, LOWER(name) ASC")
 	public abstract Single<List<Exercise>> getExercises();
 	
 	@Query("SELECT Name FROM Exercise WHERE hidden = 0")
@@ -53,8 +52,8 @@ public abstract class ExerciseDao
 	///
 	/// UPDATE
 	///
-	@Query("UPDATE Exercise SET favorited = :favorited WHERE idExercise = :idExercise")
-	public abstract void updateFavorite(Long idExercise, boolean favorited);
+	@Query("UPDATE Exercise SET locked = :lockedStatus WHERE idExercise = :idExercise")
+	public abstract void updateLockedStatus(Long idExercise, boolean lockedStatus);
 	
 	@Query("UPDATE Exercise SET currentIdExerciseHistory = :idExerciseHistory WHERE idExercise = :idExercise")
 	public abstract void updateIdHistory(Long idExercise, Long idExerciseHistory);
