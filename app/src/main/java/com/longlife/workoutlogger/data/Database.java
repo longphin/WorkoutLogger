@@ -4,6 +4,7 @@ import android.arch.persistence.room.RoomDatabase;
 
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseHistory;
+import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineHistory;
 import com.longlife.workoutlogger.model.RoutineSession;
@@ -17,6 +18,7 @@ import com.longlife.workoutlogger.model.SessionExerciseSet;
 @android.arch.persistence.room.Database(
 	entities =
 		{
+			Profile.class,
 			Exercise.class,
 			ExerciseHistory.class,
 			Routine.class,
@@ -35,6 +37,8 @@ public abstract class Database
 	public abstract ExerciseDao exerciseDao();
 	
 	public abstract RoutineDao routineDao();
+	
+	public abstract ProfileDao profileDao();
 	
 
     /*

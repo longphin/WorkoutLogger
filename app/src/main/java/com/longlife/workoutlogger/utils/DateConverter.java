@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class DateConverter
 {
-	//private static DateFormat df = new SimpleDateFormat(Constants.TIME_STAMP_FORMAT, UserProfile.getLocale());
+	//private static DateFormat df = new SimpleDateFormat(Constants.TIME_STAMP_FORMAT, Profile.getLocale());
 	
 	@TypeConverter
 	public static Date StrToDate(String value)

@@ -23,7 +23,8 @@ public class DatabaseVersion
 	private static final int V3_5 = 16; // Split set rest time from only seconds to minutes and seconds.
 	private static final int V3_5b = 17; // Gave set rest time a default of 0's.
 	private static final int V4_0 = 18; // Added user profile.
+	private static final int V4_1 = 19; // Added profile model and profile is obtained on start up.
 	
-	public static final int CURRENT = V4_0;
+	public static final int CURRENT = V4_1;
 }
 // Inner Classes

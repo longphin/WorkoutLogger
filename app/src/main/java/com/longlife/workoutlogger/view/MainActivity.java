@@ -1,9 +1,12 @@
 package com.longlife.workoutlogger.view;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -11,16 +14,19 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.FragmentHistory;
+import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Repository;
+import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
-import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Profile.ProfileFragment;
+import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
-import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 import com.ncapdevi.fragnav.FragNavController;
 
 import javax.inject.Inject;
+
+import io.reactivex.observers.DisposableMaybeObserver;
 
 public class MainActivity
 	extends ActivityBase
@@ -28,9 +34,10 @@ public class MainActivity
 						 FragmentBase.FragmentNavigation,
 						 FragNavController.TransactionListener
 {
+	// Static
+	private static final String TAG = MainActivity.class.getSimpleName();
 	// Private
-	private ExercisesViewModel exercisesViewModel;
-	private RoutinesViewModel routinesViewModel;
+	private ProfileViewModel profileViewModel;
 	private AHBottomNavigation bottomTabLayout;
 	private FragNavController mNavController;
 	private FragmentHistory fragmentHistory;
@@ -61,14 +68,22 @@ public class MainActivity
 	@Inject
 	public Repository repo;
 	// Other
-	// [TODO] Upon the activity created, need to query the database to get the user profile; The POJO should have user first name, and preferred measurement system.
 	// Overrides
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		((MyApplication)this.getApplication())
+			.getApplicationComponent()
+			.inject(this);
+		
+		profileViewModel = ViewModelProviders.of(this, viewModelFactory).get(ProfileViewModel.class);
+		getProfile();
+		
+		// Get UI.
 		contentFrame = findViewById(R.id.frameLayout_main_activity);
 		bottomTabLayout = findViewById(R.id.bottomNav_main_activity);
 		
@@ -88,17 +103,10 @@ public class MainActivity
 		setOnTabSelectedListener();
 	}
 	
-	@Override
-	public void onStart()
+	// Methods
+	private void processProfile(@NonNull Profile profile)
 	{
-		super.onStart();
-	}
-	
-	@Override
-	public void onStop()
-	{
-		
-		super.onStop();
+		profileViewModel.setCachedProfile(profile);
 	}
 	
 	/*private void initTab() {
@@ -119,18 +127,6 @@ public class MainActivity
 		icon.setImageDrawable(Utils.setDrawableSelector(MainActivity.this, mTabIconsSelected[position], mTabIconsSelected[position]));
 		return view;
 	}*/
-	
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-	}
-	
-	@Override
-	protected void onPause()
-	{
-		super.onPause();
-	}
 	
 	@Override
 	public void onBackPressed()
@@ -235,7 +231,33 @@ public class MainActivity
 		throw new IllegalStateException("Need to send an index that we know");
 	}
 	
-	// Methods
+	// Initialize user profile. If one does not exist in database, then one will be inserted.
+	private void getProfile()
+	{
+		// Do back end stuff on launch.
+		profileViewModel.getProfile()
+			.subscribe(new DisposableMaybeObserver<Profile>()
+			{
+				// Overrides
+				@Override
+				public void onSuccess(Profile profile) // Successfully loaded a profile.
+				{
+					processProfile(profile);
+				}
+				
+				@Override
+				public void onError(Throwable e)
+				{
+					Log.d(TAG, "Could not load profile.");
+				}
+				
+				@Override
+				public void onComplete() // If there is no profile, then we need to insert a record.
+				{
+					addDisposable(profileViewModel.insertProfile(new Profile()).subscribe(profile -> processProfile(profile)));
+				}
+			});
+	}
 	private void setOnTabSelectedListener()
 	{
 		/*bottomTabLayout.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener(){

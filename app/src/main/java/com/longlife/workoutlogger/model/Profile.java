@@ -3,12 +3,10 @@ package com.longlife.workoutlogger.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import java.util.Locale;
-
 @Entity
-public class UserProfile
+public class Profile
 {
-	private Locale locale = Locale.US;
+	//private Locale locale = Locale.US;
 	@PrimaryKey
 	private Long idProfile;
 	private String firstName;
@@ -30,11 +28,11 @@ public class UserProfile
 		return lastName;
 	}
 	
-	public Locale getLocale()
+	/*public Locale getLocale()
 	
 	{
 		return locale;
-	}
+	}*/
 	
 	// Setters
 	public void setIdProfile(Long idProfile)
@@ -52,10 +50,9 @@ public class UserProfile
 		this.lastName = lastName;
 	}
 	
-	public void setLocale(Locale l)
+	/*public void setLocale(Locale l)
 	{
 		locale = l;
-	}
+	}*/
 }
-// [TODO] These will editable from a profile page once implemented.
 // Inner Classes

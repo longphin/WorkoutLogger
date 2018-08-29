@@ -2,6 +2,7 @@ package com.longlife.workoutlogger.data;
 
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseHistory;
+import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 public class Repository
@@ -17,18 +19,25 @@ public class Repository
 	// Private
 	private final ExerciseDao exerciseDao;
 	private final RoutineDao routineDao;
+	private final ProfileDao profileDao;
 	
 	@Inject
-	public Repository(ExerciseDao exerciseDao, RoutineDao routineDao)
+	public Repository(ExerciseDao exerciseDao, RoutineDao routineDao, ProfileDao profileDao)
 	{
 		this.exerciseDao = exerciseDao;
 		this.routineDao = routineDao;
+		this.profileDao = profileDao;
 	}
 	
 	// Getters
 	public ExerciseDao getExerciseDao()
 	{
 		return exerciseDao;
+	}
+	
+	public Maybe<Profile> getProfile()
+	{
+		return profileDao.getProfile();
 	}
 	
 	public Single<List<Exercise>> getExercises()
@@ -39,6 +48,11 @@ public class Repository
 	public Single<List<String>> getExercisesNames()
 	{
 		return exerciseDao.getExercisesNames();
+	}
+	
+	public ProfileDao getProfileDao()
+	{
+		return profileDao;
 	}
 	
 	public RoutineDao getRoutineDao()
@@ -116,6 +130,15 @@ public class Repository
 	public Single<Exercise> insertExerciseHistoryFull(Exercise exercise)
 	{
 		return Single.fromCallable(() -> exerciseDao.insertExerciseHistoryFull(exercise));
+	}
+	
+	public Single<Profile> insertProfile(Profile profileToInsert)
+	{
+		return Single.fromCallable(() -> profileDao.insertProfile(profileToInsert))
+			.map(idProfile -> {
+				profileToInsert.setIdProfile(idProfile);
+				return profileToInsert;
+			});
 	}
 }
 // Inner Classes
