@@ -79,6 +79,8 @@ public class ExercisesFragment
 		this.rootId = getArguments().getInt("activityRoot");
 		this.layoutId = getArguments().getInt("exerciseItemLayout");
 		
+		setAdapter(new ExercisesAdapter(getActivity(), this));
+		
 		addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadRoutineResponse(response)));
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
 		addDisposable(viewModel.getExerciseEditedObservable().subscribe(exercise -> processExerciseEdited(exercise)));
@@ -198,7 +200,7 @@ public class ExercisesFragment
 	public static ExercisesFragment newInstance(int activityRoot, int exerciseItemLayout)
 	{
 		ExercisesFragment fragment = new ExercisesFragment();
-		fragment.setAdapter(new ExercisesAdapter(fragment));
+		//fragment.setAdapter(new ExercisesAdapter(getActivity(), fragment));
 		
 		Bundle bundle = new Bundle();
 		bundle.putInt("activityRoot", activityRoot);

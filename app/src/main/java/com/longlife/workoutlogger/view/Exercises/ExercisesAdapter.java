@@ -1,8 +1,11 @@
 package com.longlife.workoutlogger.view.Exercises;
 
+import android.content.Context;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,14 +21,19 @@ public class ExercisesAdapter
 {
 	private IClickExercise exerciseClickCallback;
 	protected List<Exercise> exercises = new ArrayList<>();
-	
-	public ExercisesAdapter(IClickExercise exerciseClickCallback)
-	{
-		this.exerciseClickCallback = exerciseClickCallback;
-	}
+	// Static
+	private static final String TAG = ExercisesAdapter.class.getSimpleName();
+	private Context context;
 	
 	private static int lockedIconEnabled = R.drawable.ic_lock_black_24dp;
 	private static int lockedIconDisabled = R.drawable.ic_lock_open_black_24dp;
+	
+	public ExercisesAdapter(Context context, IClickExercise exerciseClickCallback)
+	{
+		this.context = context;
+		this.exerciseClickCallback = exerciseClickCallback;
+	}
+
 	// Overrides
 	@Override
 	public void onBindViewHolder(ExercisesViewHolder holder, int pos)
@@ -53,15 +61,59 @@ public class ExercisesAdapter
 				}*/
 				
 				//viewModel.updateLockedStatus(ex.getIdExercise(), ex.getLocked());
-				exerciseClickCallback.exerciseLocked(ex.getIdExercise(), !ex.getLocked());
+				final boolean newLockStatus = !ex.getLocked();
+				exerciseClickCallback.exerciseLocked(ex.getIdExercise(), newLockStatus);
+				
+				if(newLockStatus){
+					holder.setLockedIcon(ExercisesAdapter.lockedIconEnabled);
+				}else{
+					holder.setLockedIcon(ExercisesAdapter.lockedIconDisabled);
+				}
 			}
 		);
 		
 		// Edit exercise
-		holder.getNameTextView().setOnClickListener(view ->
+		holder.getNameTextView()
+			.setOnClickListener(view ->
 		{
 			exerciseClickCallback.exerciseClicked(ex.getIdExercise());
 		});
+		
+		// Create listener for the "more options" button. credit: Shaba Aafreen @https://stackoverflow.com/questions/37601346/create-options-menu-for-recyclerview-item
+		if(holder.getMoreOptionsView() != null){
+			holder.getMoreOptionsView().setOnClickListener(new View.OnClickListener()
+			{
+				// Overrides
+				@Override
+				public void onClick(View view)
+				{
+					
+					//creating a popup menu
+					PopupMenu popup = new PopupMenu(context, holder.getMoreOptionsView());
+					//inflating menu from xml resource
+					popup.inflate(R.menu.exercise_options_menu);
+					//adding click listener
+					popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+					{
+						// Overrides
+						@Override
+						public boolean onMenuItemClick(MenuItem item)
+						{
+							switch(item.getItemId()){
+								case R.id.menu_exercise_options:
+									//handle menu1 click
+									return true;
+								default:
+									return false;
+							}
+						}
+					});
+					//displaying the popup
+					popup.show();
+					
+				}
+			});
+		}
 	}
 	
 	@Override
@@ -106,7 +158,8 @@ public class ExercisesAdapter
 		for(int i = 0; i < exercises.size(); i++){
 			if(exercises.get(i).getIdExercise().equals(idExercise)){
 				exercises.get(i).setLocked(lockStatus);
-				notifyItemChanged(i);
+				//notifyItemChanged(i);
+				return;
 			}
 		}
 	}

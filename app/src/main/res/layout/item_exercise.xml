@@ -74,8 +74,23 @@
             android:layout_marginTop="8dp"
             android:soundEffectsEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txt_exercise_moreOptions"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
+            app:srcCompat="@drawable/ic_lock_black_24dp" />
+
+        <TextView
+            android:id="@+id/txt_exercise_moreOptions"
+            android:layout_width="18dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
+            android:text="&#8942;"
+            android:textAlignment="center"
+            android:textAppearance="?android:textAppearanceLarge"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

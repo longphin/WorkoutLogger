@@ -1,5 +1,6 @@
 package com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +19,9 @@ public class ExercisesSelectableAdapter
 	private final static String TAG = ExercisesSelectableAdapter.class.getSimpleName();
 	private IExercisesSelectableAdapterCallback exercisesSelectableCallback;
 	
-	public ExercisesSelectableAdapter(IClickExercise clickExerciseCallback, IExercisesSelectableAdapterCallback selectableAdapterCallback)
+	public ExercisesSelectableAdapter(Context context, IClickExercise clickExerciseCallback, IExercisesSelectableAdapterCallback selectableAdapterCallback)
 	{
-		super(clickExerciseCallback);
+		super(context, clickExerciseCallback);
 		this.exercisesSelectableCallback = selectableAdapterCallback;
 	}
 	
@@ -57,13 +58,11 @@ public class ExercisesSelectableAdapter
 				view ->
 				{
 					Long id = ex.getIdExercise();
-					boolean isSelected = exercisesSelectableCallback.isIdSelected(id);//viewModel.isIdSelected(id);
+					boolean isSelected = exercisesSelectableCallback.isIdSelected(id);
 					if(isSelected){
-						//selectedIdExercises.remove(id);
-						exercisesSelectableCallback.removeSelectedExcercise(id);//viewModel.removeSelectedExercise(id);
+						exercisesSelectableCallback.removeSelectedExcercise(id);
 					}else{
-						//selectedIdExercises.add(id);
-						exercisesSelectableCallback.addSelectedExercise(id);//viewModel.addSelectedExercise(id);
+						exercisesSelectableCallback.addSelectedExercise(id);
 					}
 					Log.d(TAG, String.valueOf(id) + " is " + (!isSelected ? "selected" : "unselected"));
 				}
@@ -73,8 +72,7 @@ public class ExercisesSelectableAdapter
 		CheckBox exerciseSelectedBox = holder.getSelectedCheckBox();
 		exerciseSelectedBox.setOnClickListener(view -> {
 			final int thisPos = holder.getAdapterPosition();
-			exercisesSelectableCallback.addSelectedExercise(exercises.get(thisPos).getIdExercise());//viewModel.addSelectedExercise(exercises.get(thisPos).getIdExercise());
-			//selectedIdExercises.add(exercises.get(thisPos).getIdRoutineHistory());
+			exercisesSelectableCallback.addSelectedExercise(exercises.get(thisPos).getIdExercise());
 		});
 	}
 	

@@ -30,6 +30,8 @@ public class ExercisesSelectableFragment
 	{
 		super.onCreate(savedInstanceState);
 		
+		setAdapter(new ExercisesSelectableAdapter(getActivity(), this, this));
+		
 		exercisesSelectableViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesSelectableViewModel.class);
 	}
 
@@ -82,7 +84,7 @@ public class ExercisesSelectableFragment
 	public static ExercisesSelectableFragment newInstance(ExercisesSelectableViewModel exercisesSelectableViewModel, int activityRoot, int exerciseItemLayout)
 	{
 		ExercisesSelectableFragment fragment = new ExercisesSelectableFragment();
-		fragment.setAdapter(new ExercisesSelectableAdapter(fragment, fragment));
+		//fragment.setAdapter(new ExercisesSelectableAdapter(fragment, fragment));
 		
 		Bundle bundle = new Bundle();
 		bundle.putInt("activityRoot", activityRoot);
