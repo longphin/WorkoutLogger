@@ -41,6 +41,7 @@ public class MainActivity
 	private AHBottomNavigation bottomTabLayout;
 	private FragNavController mNavController;
 	private FragmentHistory fragmentHistory;
+	private boolean enableBottomNavClick = true;
 	private final AHBottomNavigation.OnTabSelectedListener onTabSelectedListener =
 		new AHBottomNavigation.OnTabSelectedListener()
 		{
@@ -48,10 +49,13 @@ public class MainActivity
 			@Override
 			public boolean onTabSelected(int position, boolean wasSelected)
 			{
+				if(!enableBottomNavClick)
+					return true;
 				if(wasSelected) // Item was reselected.
 				{
-					mNavController.clearStack();
+					//mNavController.clearStack();
 					//switchTab(position);
+					//return true;
 					return true;
 				}else{ // Switching item.
 					fragmentHistory.push(position);
@@ -89,7 +93,7 @@ public class MainActivity
 		
 		initToolbar();
 		
-		initTab();
+		initBottomNavigation();
 		
 		fragmentHistory = new FragmentHistory();
 		
@@ -109,7 +113,7 @@ public class MainActivity
 		profileViewModel.setCachedProfile(profile);
 	}
 	
-	/*private void initTab() {
+	/*private void initBottomNavigation() {
 		if (bottomTabLayout != null) {
 			for (int i = 0; i < TABS.length; i++) {
 				bottomTabLayout.addTab(bottomTabLayout.newTab());
@@ -307,9 +311,11 @@ public class MainActivity
 				selectedTab.getCustomView().setSelected(true);
 			}
 		}*/
-		bottomTabLayout.removeOnTabSelectedListener();
+		//bottomTabLayout.removeOnTabSelectedListener();
+		enableBottomNavClick = false;
 		bottomTabLayout.setCurrentItem(currentTab);
-		setOnTabSelectedListener();
+		enableBottomNavClick = true;
+		//setOnTabSelectedListener();
 		//bottomTabLayout.enableItemAtPosition(currentTab);
 	}
 	
@@ -320,7 +326,7 @@ public class MainActivity
 		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
 	}
 	
-	private void initTab()
+	private void initBottomNavigation()
 	{
 		if(bottomTabLayout == null)
 			return;
