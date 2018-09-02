@@ -234,6 +234,12 @@ public class RoutineCreateFragment
 		exercisesViewModel.updateLockedStatus(idExercise, lockStatus);
 	}
 	
+	@Override
+	public void exercisePerform(Long idExercise, String exerciseName)
+	{
+		// [TODO] Routines does not need to implement this. May want to separate this interface so this routine does not need to be overridden.
+	}
+	
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)

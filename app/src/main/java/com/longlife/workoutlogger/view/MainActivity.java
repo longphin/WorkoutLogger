@@ -19,6 +19,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
+import com.longlife.workoutlogger.view.Perform.PerformFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
@@ -42,32 +43,32 @@ public class MainActivity
 	private FragNavController mNavController;
 	private FragmentHistory fragmentHistory;
 	private boolean enableBottomNavClick = true;
-	private final AHBottomNavigation.OnTabSelectedListener onTabSelectedListener =
-		new AHBottomNavigation.OnTabSelectedListener()
-		{
-			// Overrides
-			@Override
-			public boolean onTabSelected(int position, boolean wasSelected)
+	/*	private final AHBottomNavigation.OnTabSelectedListener onTabSelectedListener =
+			new AHBottomNavigation.OnTabSelectedListener()
 			{
-				if(!enableBottomNavClick)
-					return true;
-				if(wasSelected) // Item was reselected.
+				// Overrides
+				@Override
+				public boolean onTabSelected(int position, boolean wasSelected)
 				{
-					//mNavController.clearStack();
-					//switchTab(position);
-					//return true;
-					return true;
-				}else{ // Switching item.
-					fragmentHistory.push(position);
-					switchTab(position);
-					updateTabSelection(position);
-					return true;
+					if(!enableBottomNavClick)
+						return true;
+					if(wasSelected) // Item was reselected.
+					{
+						//mNavController.clearStack();
+						//switchTab(position);
+						//return true;
+						return true;
+					}else{ // Switching item.
+						fragmentHistory.push(position);
+						switchTab(position);
+						updateTabSelection(position);
+						return true;
+					}
 				}
-			}
-		};
+			};*/
 	private FrameLayout contentFrame;
 	private Toolbar toolbar;
-	private String[] TABS = {"Profile", "Routine", "Exercise"};
+	private String[] TABS = {"Profile", "Routine", "Exercise", "Perform"};
 	//TabLayout bottomTabLayout;
 	@Inject
 	public Repository repo;
@@ -107,7 +108,21 @@ public class MainActivity
 		setOnTabSelectedListener();
 	}
 	
-	// Methods
+	@Override
+	public Fragment getRootFragment(int index)
+	{
+		switch(index){
+			case FragNavController.TAB1:
+				return ProfileFragment.newInstance();
+			case FragNavController.TAB2:
+				return RoutinesFragment.newInstance();
+			case FragNavController.TAB3:
+				return ExercisesFragment.newInstance(R.id.frameLayout_main_activity, R.layout.fragment_exercises);
+			case FragNavController.TAB4:
+				return PerformFragment.newInstance();
+		}
+		throw new IllegalStateException("Need to send an index that we know");
+	}
 	private void processProfile(@NonNull Profile profile)
 	{
 		profileViewModel.setCachedProfile(profile);
@@ -130,6 +145,26 @@ public class MainActivity
 		ImageView icon = (ImageView) view.findViewById(R.id.tab_icon);
 		icon.setImageDrawable(Utils.setDrawableSelector(MainActivity.this, mTabIconsSelected[position], mTabIconsSelected[position]));
 		return view;
+	}*/
+	
+	/*
+	private static int performItemPosition = 3;
+	public void startPerformingExercise(Long idExercise, String exerciseName)
+	{
+		FragmentManager manager = getSupportFragmentManager();
+		
+		PerformExerciseFragment fragment = (PerformExerciseFragment)manager.findFragmentByTag(PerformExerciseFragment.TAG);
+		if(fragment == null){
+			enableBottomNavClick = false;
+			fragmentHistory.push(performItemPosition);
+			switchTab(performItemPosition);
+			updateTabSelection(performItemPosition);
+			enableBottomNavClick = true;
+
+			fragment = PerformExerciseFragment.newInstance(idExercise, exerciseName);
+			pushFragment(fragment);
+		}
+		// [TODO] else, there is already a performing fragment, meaning we cannot start another performance.
 	}*/
 	
 	@Override
@@ -221,19 +256,7 @@ public class MainActivity
 		}
 	}
 	
-	@Override
-	public Fragment getRootFragment(int index)
-	{
-		switch(index){
-			case FragNavController.TAB1:
-				return ProfileFragment.newInstance();
-			case FragNavController.TAB2:
-				return RoutinesFragment.newInstance();
-			case FragNavController.TAB3:
-				return ExercisesFragment.newInstance(R.id.frameLayout_main_activity, R.layout.fragment_exercises);
-		}
-		throw new IllegalStateException("Need to send an index that we know");
-	}
+	// Methods
 	
 	// Initialize user profile. If one does not exist in database, then one will be inserted.
 	private void getProfile()
@@ -280,7 +303,30 @@ public class MainActivity
 				}
 			}
 		});*/
-		bottomTabLayout.setOnTabSelectedListener(onTabSelectedListener);
+		//bottomTabLayout.setOnTabSelectedListener(onTabSelectedListener);
+		bottomTabLayout.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener()
+																						 {
+																							 // Overrides
+																							 @Override
+																							 public boolean onTabSelected(int position, boolean wasSelected)
+																							 {
+																								 if(!enableBottomNavClick)
+																									 return true;
+																								 if(wasSelected) // Item was reselected.
+																								 {
+																									 //mNavController.clearStack();
+																									 //switchTab(position);
+																									 //return true;
+																									 return true;
+																								 }else{ // Switching item.
+																									 fragmentHistory.push(position);
+																									 switchTab(position);
+																									 updateTabSelection(position);
+																									 return true;
+																								 }
+																							 }
+																						 }
+		);
 	}
 	
 	private void initToolbar()
@@ -337,10 +383,12 @@ public class MainActivity
 		AHBottomNavigationItem ProfileItem = new AHBottomNavigationItem(getString(R.string.NavBar_Profile), R.drawable.ic_person_black_24dp);
 		AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_storage_black_24dp);
 		AHBottomNavigationItem ExerciseItem = new AHBottomNavigationItem(getString(R.string.NavBar_Exercises), R.drawable.ic_weightlifting);
+		AHBottomNavigationItem PerformItem = new AHBottomNavigationItem(getString(R.string.NavBar_Perform), R.drawable.ic_play_arrow_black_24dp);
 		// Add navigation items.
 		bottomTabLayout.addItem(ProfileItem);
 		bottomTabLayout.addItem(RoutineItem);
 		bottomTabLayout.addItem(ExerciseItem);
+		bottomTabLayout.addItem(PerformItem);
 		// Styles.
 		bottomTabLayout.setDefaultBackgroundColor(Color.WHITE);
 		bottomTabLayout.setAccentColor(Color.BLACK);

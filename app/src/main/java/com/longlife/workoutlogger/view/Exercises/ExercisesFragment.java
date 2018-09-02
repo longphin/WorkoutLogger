@@ -35,6 +35,7 @@ import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFr
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
 import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseLocked;
+import com.longlife.workoutlogger.view.Exercises.PerformExercise.PerformExerciseFragment;
 import com.longlife.workoutlogger.view.MainActivity;
 
 import java.util.List;
@@ -191,7 +192,20 @@ public class ExercisesFragment
 		return adapter.getSwipeDirs(viewHolder.getAdapterPosition());
 	}
 	
-	// Setters
+	@Override
+	public void exercisePerform(Long idExercise, String exerciseName)
+	{
+		FragmentManager manager = getActivity().getSupportFragmentManager();
+		
+		PerformExerciseFragment fragment = (PerformExerciseFragment)manager.findFragmentByTag(PerformExerciseFragment.TAG);
+		if(fragment == null){
+			fragment = PerformExerciseFragment.newInstance(idExercise, exerciseName);
+		}
+		
+		if(fragmentNavigation != null){
+			fragmentNavigation.pushFragment(fragment);
+		}
+	}
 	public void setAdapter(ExercisesAdapter adapter)
 	{
 		this.adapter = adapter;
@@ -210,7 +224,7 @@ public class ExercisesFragment
 		return fragment;
 	}
 	
-	// Methods
+	// Setters
 	private void processExerciseLocked(ExerciseLocked exerciseLocked)
 	{
 		adapter.exerciseLocked(exerciseLocked);
@@ -300,6 +314,7 @@ public class ExercisesFragment
 				break;
 		}
 	}
+	// Methods
 	
 	private void startEditFragment(Long idExercise)
 	{

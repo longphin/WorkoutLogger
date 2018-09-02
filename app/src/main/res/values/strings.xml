@@ -40,6 +40,7 @@
     <string name="NavBar_Profile">Profile</string>
     <string name="NavBar_Routines">Routines</string>
     <string name="NavBar_Exercises">Exercises</string>
+    <string name="NavBar_Perform">Perform</string>
     <!-- Toolbar title for fragments/activities -->
     <string name="Toolbar_Routines">Routines</string>
     <string name="Toolbar_RoutineCreate">Create Routine</string>
@@ -47,6 +48,7 @@
     <string name="Toolbar_Exercises">Exercises</string>
     <string name="Toolbar_ExerciseCreate">Create Exercise</string>
     <string name="Toolbar_ExerciseEdit">Edit Exercise: %1$s</string>
+    <string name="Toolbar_PerformExercise">Perform Exercise: %1$s</string>
 
     <string name="ComingSoon">Coming Soon</string>
     <string name="Perform">Perform</string>
