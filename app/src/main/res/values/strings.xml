@@ -35,6 +35,7 @@
     <string name="Time_timeStringUnformatted">%1$d%2$02d</string>
     <string name="Number_0">0</string>
     <string name="text_rest">Rest:</string>
+    <string name="set_header">Rest: %1$01d:%2$02d</string>
 
     <!-- Bottom navigation bar text -->
     <string name="NavBar_Profile">Profile</string>

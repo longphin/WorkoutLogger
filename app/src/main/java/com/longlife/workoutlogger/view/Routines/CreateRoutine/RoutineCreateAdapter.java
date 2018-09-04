@@ -172,7 +172,6 @@ public class RoutineCreateAdapter
 	
 	// Getters
 	public static int getHeaderTypeEnum(){return HEADER_TYPE;}
-	// [TODO] This currently iterates through all visible items and determines the type of the item at the end position. This is VERY inefficient. Make this use an array later.
 
 	public List<RoutineExerciseHelper> getRoutineExerciseHelpers()
 	{
@@ -300,11 +299,47 @@ public class RoutineCreateAdapter
 	
 	private void bindSetViewHolder(@NonNull RoutineCreateSetViewHolder holder, int position)
 	{
+		final int pos = holder.getAdapterPosition();
+		final SessionExerciseSet set = getSetAtPosition(pos);
+		holder.getTitleView().setText(context.getString(R.string.set_header, set.getRestMinutes(), set.getRestSeconds()));
+		
 		holder.getView().setOnClickListener(view ->
 		{
-			int pos = holder.getAdapterPosition();
-			onSetClickListener.onSetClick(getIdSessionExerciseAtPosition(pos));
+			int clickedPos = holder.getAdapterPosition();
+			onSetClickListener.onSetClick(getIdSessionExerciseAtPosition(clickedPos));
 		});
+	}
+	
+	private SessionExerciseSet getSetAtPosition(int position)
+	{
+		int count = 0;
+		
+		for(int i = 0; i < exercisesToInclude.size(); i++)
+		{//RoutineExerciseHelper reh : exercisesToInclude){
+			/* // We don't care about the header.
+			if(count >= position)
+				return HEADER_TYPE;
+			*/
+			
+			final RoutineExerciseHelper reh = exercisesToInclude.get(i);
+			
+			if(reh.IsExpanded()){
+				List<SessionExerciseSet> sets = reh.getSets();
+				count += sets.size();
+				if(count >= position) // This means the selected set is in this parent exercise, so find the exact set and return that id.
+				{
+					count -= sets.size();
+					
+					final int setIndex = position - count - 1;
+					return sets.get(setIndex);
+				}
+				
+				count += 1; // Add 1 for the "Add set" view.
+			}
+			count += 1; // Iterate to next header.
+		}
+		
+		return null;
 	}
 	
 	// Helper for moving header up or down.
@@ -498,7 +533,7 @@ public class RoutineCreateAdapter
 		void onSetClick(@Nullable RoutineExerciseSetPositions idSessionExerciseSet);
 	}
 	
-	void setRestTimeForSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds)
+	public void setRestTimeForSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds)
 	{
 		// Check if the exercise to look up is within bounds.
 		if(exerciseIndex > exercisesToInclude.size() - 1)
@@ -509,6 +544,12 @@ public class RoutineCreateAdapter
 		if(exerciseSetIndex > exerciseSetsToAffect.size() - 1)
 			return;
 		exerciseSetsToAffect.get(exerciseSetIndex).setRest(restMinutes, restSeconds);
+		
+		// If the exercise is expanded, then update the timer being displayed.
+		if(exercisesToInclude.get(exerciseIndex).IsExpanded()){
+			final int setPosition = getHeaderPosition(exerciseIndex) + exerciseSetIndex + 1;
+			notifyItemChanged(setPosition);
+		}
 	}
 }
 // Inner Classes
