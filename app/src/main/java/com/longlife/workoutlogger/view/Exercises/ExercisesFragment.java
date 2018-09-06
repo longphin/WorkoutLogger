@@ -243,7 +243,6 @@ public class ExercisesFragment
 
 	private void processExerciseEdited(Exercise exercise)
 	{
-		//if(!isAdded()) return;
 		adapter.exerciseUpdated(exercise);
 	}
 	
@@ -251,20 +250,7 @@ public class ExercisesFragment
 	{
 		adapter.addExercise(ex);
 	}
-	
-	private void processInsertExerciseResponse(Response<Exercise> response)
-	{
-		//if(!isAdded()) return;
-		switch(response.getStatus()){
-			case LOADING:
-				break;
-			case SUCCESS:
-				renderInsertExerciseSuccess(response.getValue());
-				break;
-			case ERROR:
-				break;
-		}
-	}
+	// Methods
 	
 	private void renderLoadRoutineErrorState(@NonNull Throwable throwable)
 	{
@@ -325,7 +311,21 @@ public class ExercisesFragment
 				break;
 		}
 	}
-	// Methods
+	
+	private void processInsertExerciseResponse(Response<Exercise> response)
+	{
+		if(!isAdded())
+			return;
+		switch(response.getStatus()){
+			case LOADING:
+				break;
+			case SUCCESS:
+				renderInsertExerciseSuccess(response.getValue());
+				break;
+			case ERROR:
+				break;
+		}
+	}
 	
 	private void startEditFragment(Long idExercise)
 	{
