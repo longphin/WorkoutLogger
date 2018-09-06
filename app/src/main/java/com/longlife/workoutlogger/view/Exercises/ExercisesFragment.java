@@ -50,6 +50,8 @@ public class ExercisesFragment
 	implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
 						 ExercisesAdapter.IClickExercise
 {
+	// Overrides
+	
 	public static final String TAG = ExercisesFragment.class.getSimpleName();
 	@Required
 	private int rootId; //This is the root of the layout from the parent activity. This is needed to determine how to attach the child ExercisesCreateFragment when opened to create a new exercise.
@@ -65,7 +67,12 @@ public class ExercisesFragment
 	@Inject
 	public Context context;
 	
-	// Overrides
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+	}
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState)
 	{
@@ -86,6 +93,14 @@ public class ExercisesFragment
 		addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
 		addDisposable(viewModel.getExerciseEditedObservable().subscribe(exercise -> processExerciseEdited(exercise)));
 		addDisposable(viewModel.getExerciseLockedObservable().subscribe(exerciseLocked -> processExerciseLocked(exerciseLocked)));
+		addDisposable(viewModel.getExerciseRestoredObservable().subscribe(exerciseDeleted -> {
+			if(isAdded())
+				// If this fragment is currently active, then the adapter needs to re-add the exercise and notify the insert.
+				adapter.restoreExercise(exerciseDeleted.getExercise(), exerciseDeleted.getPosition());
+			else
+				// If this fragment is not currently active but is listening, then the adapter just needs to notify that the item was changed.
+				adapter.notifyItemChanged(exerciseDeleted.getPosition());
+		})); //[TODO] not quite working. it restored exercise twice.
 		
 		Log.d(TAG, "OnCreate: loadExercises()");
 		viewModel.loadExercises();
@@ -131,13 +146,13 @@ public class ExercisesFragment
 			int position = viewHolder.getAdapterPosition();
 			final Exercise deletedItem = adapter.getExercise(position);
 			
-			Log.d(TAG, "Deleting... " + deletedItem.getName() + " at position " + String.valueOf(position));
-			
 			// Start the deleting process. It is only removed in the adapter, but it saved in the viewModel.
 			// While the snackbar to undo the delete is available, the viewModel will keep the reference.
 			// Upon the snackbar being dismissed, it will permanently remove the exercise.
 			viewModel.addDeletedExercise(deletedItem, position);
-			adapter.removeExercise(position);
+			viewModel.setExerciseHiddenStatus(deletedItem.getIdExercise(), true);
+			if(isAdded())
+				adapter.removeExercise(position);
 			
 			Snackbar snackbar = Snackbar
 				.make(viewRootLayout, deletedItem.getName() + " deleted.", Snackbar.LENGTH_LONG);
@@ -154,13 +169,9 @@ public class ExercisesFragment
 					
 					// If the snackbar was dismissed via clicking the action (Undo button), then restore the exercise.
 					if(event == Snackbar.Callback.DISMISS_EVENT_ACTION){
-						adapter.restoreExercise(firstDeletedExercise.getExercise(), firstDeletedExercise.getPosition());
+						viewModel.restoreExercise(firstDeletedExercise); // Unhides an exercise and publishes the restoration event.
 						return;
 					}
-					
-					// For other dismiss events, permanently delete the exercise.
-					Log.d(TAG, "Exercise deleted permanently: " + firstDeletedExercise.getExercise().getName() + " " + String.valueOf(firstDeletedExercise.getExercise().getIdExercise()));
-					viewModel.setExerciseHiddenStatus(firstDeletedExercise.getExercise().getIdExercise(), true);
 				}
 			});
 			snackbar.setActionTextColor(Color.YELLOW);

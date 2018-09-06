@@ -101,9 +101,9 @@ public class Repository
 	///
 	/// DELETE methods
 	///
-	public void setExerciseAsHidden(Long idExercise, boolean isHidden)
+	public void setExerciseHiddenStatus(Long idExercise, boolean hide)
 	{
-		exerciseDao.setExerciseAsHidden(idExercise, isHidden ? 1 : 0);
+		exerciseDao.setExerciseHiddenStatus(idExercise, hide ? 1 : 0);
 	}
 	
 	public void deleteExercise(Exercise ex)

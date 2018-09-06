@@ -38,20 +38,24 @@ public class ExercisesViewModel
 	private final Response<List<Exercise>> loadExercisesResponse = new Response<>();
 	// Observable for when an exercise was locked.
 	private final PublishSubject<ExerciseLocked> exerciseLockedObservable = PublishSubject.create();
-	// Observable for when an exercise is inserted.
-	//private final Response<Exercise> exerciseEditedResponse = new Response<>();
+	// Observable for when an exercise is edited.
 	private final PublishSubject<Exercise> exerciseEditedObservable = PublishSubject.create();
+	// Observable for when an exercise is unhidden.
+	private final PublishSubject<DeletedExercise> exerciseRestoredObservable = PublishSubject.create();
+	
+	// Protected
+	
 	private final CompositeDisposable disposables = new CompositeDisposable();
 	private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
 	private Repository repo;
 	
-	// Protected
+	// Overrides
 	public ExercisesViewModel(@NonNull Repository repo)
 	{
 		this.repo = repo;
 	}
 	
-	// Overrides
+	// Getters
 	@Override
 	public void onCleared()
 	{
@@ -59,7 +63,10 @@ public class ExercisesViewModel
 		disposables.clear();
 	}
 	
-	// Getters
+	public PublishSubject<DeletedExercise> getExerciseRestoredObservable()
+	{
+		return exerciseRestoredObservable;
+	}
 	/*	public Observable<Response<Exercise>> getExerciseEditedResponse()
 		{
 			return exerciseEditedResponse.getObservable();
@@ -182,7 +189,7 @@ public class ExercisesViewModel
 	
 	public void setExerciseHiddenStatus(Long idExercise, boolean isHidden)
 	{
-		Completable.fromAction(() -> repo.setExerciseAsHidden(idExercise, isHidden))
+		Completable.fromAction(() -> repo.setExerciseHiddenStatus(idExercise, isHidden))
 			.subscribeOn(Schedulers.io())
 			.observeOn(AndroidSchedulers.mainThread())
 			.subscribe(new CompletableObserver()
@@ -229,5 +236,11 @@ public class ExercisesViewModel
 				},
 				throwable -> {}
 			));
+	}
+	
+	public void restoreExercise(DeletedExercise deletedExercise)
+	{
+		setExerciseHiddenStatus(deletedExercise.getExercise().getIdExercise(), false);
+		exerciseRestoredObservable.onNext(deletedExercise);
 	}
 }

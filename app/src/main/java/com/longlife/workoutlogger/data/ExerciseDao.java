@@ -128,12 +128,12 @@ public abstract class ExerciseDao
 	///
 	/// Deletes
 	///
-	// [TODO] Need to check if the exercise is tied to a session, then we use setExerciseAsHidden() instead. Otherwise, we can delete.
+	// [TODO] Need to check if the exercise is tied to a session, then we use setExerciseHiddenStatus() instead. Otherwise, we can delete.
 	@Delete
 	public abstract void deleteExercise(Exercise ex);
 	
 	@Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
-	public abstract void setExerciseAsHidden(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
+	public abstract void setExerciseHiddenStatus(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
 	
 	@Update
 	public abstract void updateExercise(Exercise ex);
