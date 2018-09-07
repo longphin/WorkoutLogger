@@ -1,15 +1,5 @@
 <resources>
     <string name="app_name">Workout Logger</string>
-    <!-- strings on MainActivity -->
-    <string name="Routines_button">Routines</string>
-    <string name="History_Button">History</string>
-    <string name="Exercises_button">Exercises</string>
-
-    <!-- strings on RoutinesActivity -->
-
-    <!-- strings on HistoryActivity -->
-
-    <!-- strings on GoalsActivity -->
     <string name="text_save">Save</string>
     <string name="text_cancel">Cancel</string>
 

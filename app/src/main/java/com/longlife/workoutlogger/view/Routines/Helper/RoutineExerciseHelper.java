@@ -7,33 +7,36 @@ import java.util.List;
 
 // This is a simple object that contains the exercise and the details for associated sets.
 // This is used when creating a routine.
-public class RoutineExerciseHelper
-{
-	private Exercise exercise;
-	private List<SessionExerciseSet> sets;
-	private boolean isExpanded;
-	public RoutineExerciseHelper(Exercise ex, List<SessionExerciseSet> sets, boolean isExpanded)
-	{
-		this.exercise = ex;
-		this.sets = sets;
-		this.isExpanded = isExpanded;
-	}
-	
-	// Getters
-	public Exercise getExercise(){return exercise;}
-	
-	public List<SessionExerciseSet> getSets(){return sets;}
+public class RoutineExerciseHelper {
+    private Exercise exercise;
+    private List<SessionExerciseSet> sets;
+    private boolean isExpanded;
 
-	// Setters
-	public void setExercise(Exercise exercise)
-	{
-		this.exercise = exercise;
-	}
-	
-	public boolean IsExpanded(){return isExpanded;}
-	
-	public void IsExpanded(boolean bool)
-	{
-		isExpanded = bool;
-	}
+    public RoutineExerciseHelper(Exercise ex, List<SessionExerciseSet> sets, boolean isExpanded) {
+        this.exercise = ex;
+        this.sets = sets;
+        this.isExpanded = isExpanded;
+    }
+
+
+    public Exercise getExercise() {
+        return exercise;
+    }
+
+
+    public void setExercise(Exercise exercise) {
+        this.exercise = exercise;
+    }
+
+    public List<SessionExerciseSet> getSets() {
+        return sets;
+    }
+
+    public boolean IsExpanded() {
+        return isExpanded;
+    }
+
+    public void IsExpanded(boolean bool) {
+        isExpanded = bool;
+    }
 }

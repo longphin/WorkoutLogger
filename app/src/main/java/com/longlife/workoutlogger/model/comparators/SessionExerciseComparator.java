@@ -9,15 +9,14 @@ import java.util.Comparator;
  */
 
 public class SessionExerciseComparator
-	implements Comparator<SessionExercise>
-{
-	// Overrides
-	@Override
-	public int compare(SessionExercise se1, SessionExercise se2)
-	{
-		// Order by id.
-		return (se1.getIdSessionExercise() >= se2.getIdSessionExercise() ? 1 : -1);
-	}
+        implements Comparator<SessionExercise> {
+
+    @Override
+    public int compare(SessionExercise se1, SessionExercise se2) {
+        // Order by id.
+        if (se1.getIdSessionExercise().equals(se2.getIdSessionExercise())) return 0;
+        return (se1.getIdSessionExercise() >= se2.getIdSessionExercise() ? 1 : -1);
+    }
 }
 
-// Inner Classes
+

@@ -2,88 +2,74 @@ package com.longlife.workoutlogger.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
-
 import io.reactivex.annotations.NonNull;
 
 /**
  * This will be the Routine object.
  */
 @Entity
-public class Routine
-{
-	// Incremented value to ensure each Routine gets a unique Id.
-	@PrimaryKey
-	@NonNull
-	private Long idRoutine;
-	// This is the current idRoutineHistory that this routine corresponds to.
-	private Long currentIdRoutineHistory;
-	@Required
-	private String name;
-	// Note for routine.
-	private String note;
-	// Flag for hiding the routine.
-	@NonNull
-	private boolean hidden = false;
-	
-	public Routine()
-	{
-	
-	}
-	
-	// Getters
-	public Long getCurrentIdRoutineHistory()
-	{
-		return currentIdRoutineHistory;
-	}
-	
-	public String getNote()
-	{
-		return note;
-	}
-	
-	public Long getIdRoutine()
-	{
-		return idRoutine;
-	}
-	
-	public String getName()
-	{
-		return name;
-	}
-	
-	public boolean isHidden()
-	{
-		return hidden;
-	}
-	
-	// Setters
-	public void setCurrentIdRoutineHistory(Long currentIdRoutineHistory)
-	{
-		this.currentIdRoutineHistory = currentIdRoutineHistory;
-	}
-	
-	public void setHidden(boolean hidden)
-	{
-		this.hidden = hidden;
-	}
-	
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-	
-	public void setIdRoutine(Long idRoutine)
-	{
-		this.idRoutine = idRoutine;
-	}
-	
-	public void setNote(String note)
-	{
-		this.note = note;
-	}
-	
+public class Routine {
+    // Incremented value to ensure each Routine gets a unique Id.
+    @PrimaryKey
+    @NonNull
+    private Long idRoutine;
+    // This is the current idRoutineHistory that this routine corresponds to.
+    private Long currentIdRoutineHistory;
+    @Required
+    private String name;
+    // Note for routine.
+    private String note;
+    // Flag for hiding the routine.
+    @NonNull
+    private boolean hidden = false;
+
+    public Routine() {
+
+    }
+
+
+    public Long getCurrentIdRoutineHistory() {
+        return currentIdRoutineHistory;
+    }
+
+
+    public void setCurrentIdRoutineHistory(Long currentIdRoutineHistory) {
+        this.currentIdRoutineHistory = currentIdRoutineHistory;
+    }
+
+    public Long getIdRoutine() {
+        return idRoutine;
+    }
+
+    public void setIdRoutine(Long idRoutine) {
+        this.idRoutine = idRoutine;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
 }
 
-// Inner Classes
+
