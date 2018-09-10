@@ -2,15 +2,19 @@ package com.longlife.workoutlogger.data;
 
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseHistory;
+import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
-import io.reactivex.Maybe;
-import io.reactivex.Single;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
+
+import javax.inject.Inject;
+
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 public class Repository {
 
@@ -100,5 +104,18 @@ public class Repository {
                     profileToInsert.setIdProfile(idProfile);
                     return profileToInsert;
                 });
+    }
+
+    // Get latest unperformed exercise session for an exercise.
+    public Maybe<SessionExercise> getLatestExerciseSession(Long idExercise) {
+        return exerciseDao.getLatestExerciseSession(idExercise);
+    }
+
+    public Single<ExerciseSessionWithSets> getSessionExerciseWithSets(Long idSessionExercise) {
+        return exerciseDao.getSessionExerciseWithSets(idSessionExercise);
+    }
+
+    public Single<SessionExercise> insertNewSessionForExercise(Long idExerciseHistory) {
+        return Single.fromCallable(() -> routineDao.insertNewSessionForExercise(idExerciseHistory));
     }
 }

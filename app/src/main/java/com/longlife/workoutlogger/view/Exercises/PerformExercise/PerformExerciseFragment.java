@@ -1,32 +1,64 @@
 package com.longlife.workoutlogger.view.Exercises.PerformExercise;
 
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
+import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
+import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
+import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Perform.PerformFragment;
+import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateAdapter;
+import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
+
+import javax.inject.Inject;
+
+import io.reactivex.observers.DisposableMaybeObserver;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PerformExerciseFragment
-        extends FragmentBase {
+        extends FragmentBase implements RoutineCreateAdapter.IOnSetClick, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     public static final String TAG = PerformFragment.TAG;
     private Long idExercise;
+    @Inject
+    public ViewModelProvider.Factory viewModelFactory;
+    private Long idExerciseHistory;
+    private Long idSessionExercise;
+    private ExercisesViewModel exercisesViewModel;
 
     public PerformExerciseFragment() {
         // Required empty public constructor
     }
 
-    public static PerformExerciseFragment newInstance(Long idExercise, String exerciseName) {
+    private ExerciseSessionWithSets exerciseWithSets;
+    private View mView;
+    private RecyclerView exercisesRecyclerView;
+    private RoutineCreateAdapter adapter;
+    private ConstraintLayout coordinatorLayout; // layout for recycler view
+
+    public static PerformExerciseFragment newInstance(Long idExercise, Long idExerciseHistory, String exerciseName) {
         Bundle bundle = new Bundle();
         bundle.putLong("idExercise", idExercise);
+        bundle.putLong("idExerciseHistory", idExerciseHistory);
         bundle.putString("exerciseName", exerciseName);
 
         PerformExerciseFragment fragment = new PerformExerciseFragment();
@@ -35,20 +67,126 @@ public class PerformExerciseFragment
         return fragment;
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         idExercise = getArguments().getLong("idExercise");
+        idExerciseHistory = getArguments().getLong("idExerciseHistory");
+
+        exercisesViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
+
+        // [TODO] need to get the latest idSessionExercise for this idExercise. idSessionExercise = getLatestSession(idExercise)
+        exercisesViewModel.getLatestExerciseSession(idExercise)
+                .subscribe(new DisposableMaybeObserver<SessionExercise>() {
+                    @Override
+                    public void onSuccess(SessionExercise sessionExercise) {
+                        // A valid session was found for the exercise, so obtain the sets related to that session.
+                        addDisposable(exercisesViewModel.getSessionExerciseWithSets(sessionExercise.getIdSessionExercise())
+                                .subscribe(sessionExerciseWithSets -> setSessionExerciseWithSets(sessionExerciseWithSets)));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        // [TODO] this is supposed to insert a routine session, then insert session exercise, then insert one set. After all those inserts, it should return that session exercise with sets.
+                        addDisposable(
+                                exercisesViewModel.insertNewSessionForExercise(idExerciseHistory) // Insert a new session.
+                                        .flatMap(sessionExercise -> exercisesViewModel.getSessionExerciseWithSets(sessionExercise.getIdSessionExercise())) // From that session, grab the exercise session with sets.
+                                        .subscribe(sessionExerciseWithSets -> setSessionExerciseWithSets(sessionExerciseWithSets))
+                        );
+                    }
+                });
+    }
+
+    private void setSessionExerciseWithSets(ExerciseSessionWithSets exerciseWithSets) {
+        this.exerciseWithSets = exerciseWithSets;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_perform_exercise, container, false);
+            exercisesRecyclerView = mView.findViewById(R.id.rv_perform_exercise);
+            coordinatorLayout = mView.findViewById(R.id.perform_exercise_layout);
+
+            initializeRecyclerView();
+        }
+
         ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_PerformExercise, getArguments().getString("exerciseName")));
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_perform_exercise, container, false);
+        return mView;
+    }
+
+    private void initializeRecyclerView() {
+        exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        adapter = new RoutineCreateAdapter(getContext(), this);
+        exercisesRecyclerView.setAdapter(adapter);
+
+        // Callback to detach swipe to delete motion.
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(exercisesRecyclerView);
+    }
+
+    @Override
+    public void onSetClick(@Nullable RoutineCreateAdapter.RoutineExerciseSetPositions idSessionExerciseSet) {
+        // [TODO]
+    }
+
+    @Override
+    public boolean isItemViewSwipeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isLongPressDragEnabled() {
+        return false;
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos) {
+        if (viewHolder instanceof RecyclerViewHolderSwipeable) {
+            int position = viewHolder.getAdapterPosition();
+
+            int swipedItemType = adapter.getItemViewType(position);
+
+            if (swipedItemType == RoutineCreateAdapter.getHeaderTypeEnum()) {
+                // get the removed item name to display it in snack bar
+
+                // backup of removed item for undo purpose
+                final int deletedIndex = adapter.getHeaderIndex(position);
+                final RoutineExerciseHelper deletedItem = adapter.getHeaderAtPosition(position);
+                //final int deletedIndex = position;
+                String name = deletedItem.getExercise().getName();
+
+                // remove the item from recycler view
+                adapter.removeExerciseAtPosition(position);
+
+                // showing snack bar with Undo option
+                Snackbar snackbar = Snackbar
+                        .make(coordinatorLayout, name + " deleted.", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", view -> adapter.restoreExercise(deletedItem, deletedIndex));
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+            } else {
+                adapter.removeItemAtPosition(position);
+            }
+        }
+    }
+
+    @Override
+    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        return false;
+    }
+
+    @Override
+    public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        return 0;
     }
 }

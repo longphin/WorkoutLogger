@@ -1,8 +1,13 @@
 package com.longlife.workoutlogger.model;
 
-import android.arch.persistence.room.*;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import io.reactivex.annotations.NonNull;
 
 /**
@@ -47,7 +52,10 @@ public class SessionExerciseSet
     }
 
     public SessionExerciseSet() {
+    }
 
+    public SessionExerciseSet(Long idSessionExercise) {
+        this.idSessionExercise = idSessionExercise;
     }
 
     @Ignore

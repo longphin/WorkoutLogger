@@ -7,6 +7,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseLocked;
@@ -92,7 +93,7 @@ public class ExercisesAdapter
                     switch (item.getItemId()) {
                         case R.id.menu_exercise_options:
                             //handle menu1 click
-                            exerciseClickCallback.exercisePerform(ex.getIdExercise(), ex.getName());
+                            exerciseClickCallback.exercisePerform(ex.getIdExercise(), ex.getCurrentIdExerciseHistory(), ex.getName());
                             return true;
                         default:
                             return false;
@@ -173,6 +174,6 @@ public class ExercisesAdapter
 
         void exerciseLocked(Long idExercise, boolean lockStatus);
 
-        void exercisePerform(Long idExercise, String exerciseName);
+        void exercisePerform(Long idExercise, Long idExerciseHistory, String exerciseName);
     }
 }

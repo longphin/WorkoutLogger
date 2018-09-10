@@ -25,8 +25,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import com.longlife.workoutlogger.AndroidUtils.*;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
+import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
+import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
+import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
+import com.longlife.workoutlogger.AndroidUtils.StringArrayAdapter;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
@@ -44,8 +54,9 @@ import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRout
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 
-import javax.inject.Inject;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class RoutineCreateFragment
         extends FragmentBase
@@ -408,7 +419,7 @@ public class RoutineCreateFragment
     }
 
     @Override
-    public void exercisePerform(Long idExercise, String exerciseName) {
+    public void exercisePerform(Long idExercise, Long idExerciseHistory, String exerciseName) {
         // [TODO] Routines does not need to implement this. May want to separate this interface so this routine does not need to be overridden.
     }
 

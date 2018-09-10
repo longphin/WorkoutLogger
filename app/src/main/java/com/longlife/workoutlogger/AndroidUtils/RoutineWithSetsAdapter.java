@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.view.Routines.CreateRoutine;
+package com.longlife.workoutlogger.AndroidUtils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,6 +13,7 @@ import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateAddSetViewHolder;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateSetViewHolder;
+import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateViewHolder;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.ArrayList;
@@ -20,11 +21,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class RoutineCreateAdapter
+public abstract class RoutineWithSetsAdapter
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int ADD_SET_TYPE = 3;
-    private static final String TAG = RoutineCreateAdapter.class.getSimpleName();
+    private static final String TAG = RoutineWithSetsAdapter.class.getSimpleName();
     private static final int HEADER_TYPE = 1;
     private static final int SET_TYPE = 2;
     private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
@@ -32,7 +33,7 @@ public class RoutineCreateAdapter
     private IOnSetClick onSetClickListener;
 
     // Other
-    public RoutineCreateAdapter(Context context, IOnSetClick onSetClickListener) {
+    public RoutineWithSetsAdapter(Context context, IOnSetClick onSetClickListener) {
         this.context = context;
         this.onSetClickListener = onSetClickListener;
     }
@@ -45,6 +46,10 @@ public class RoutineCreateAdapter
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return getViewHolder(parent, viewType);
+    }
+
+    protected RecyclerView.ViewHolder getViewHolder(ViewGroup parent, int viewType) {
         View v;
 
         switch (viewType) {
@@ -70,7 +75,6 @@ public class RoutineCreateAdapter
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int pos) {
         int position = holder.getAdapterPosition();
-        //ViewType viewType = viewTypes.get(position);
 
         if (holder instanceof RoutineCreateViewHolder) {
             bindHeaderViewHolder((RoutineCreateViewHolder) holder, position);
@@ -520,4 +524,5 @@ public class RoutineCreateAdapter
         }
     }
 }
+
 

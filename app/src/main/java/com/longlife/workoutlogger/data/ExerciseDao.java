@@ -1,12 +1,22 @@
 package com.longlife.workoutlogger.data;
 
-import android.arch.persistence.room.*;
+import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Transaction;
+import android.arch.persistence.room.Update;
+
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseHistory;
-import io.reactivex.Single;
+import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
+import com.longlife.workoutlogger.model.SessionExercise;
 
 import java.util.List;
 import java.util.Set;
+
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 
 
@@ -70,6 +80,21 @@ public abstract class ExerciseDao {
     @Query("UPDATE Exercise SET currentIdExerciseHistory = :idExerciseHistory WHERE idExercise = :idExercise")
     // Update the history id that an exercise points to. This is to keep track of which history is the exercise's most current history.
     public abstract void updateIdHistory(Long idExercise, Long idExerciseHistory);
+
+    @Query("SELECT * FROM SessionExercise WHERE idSessionExercise=:idSessionExercise")
+    // Get session exercise with related sets.
+    public abstract Single<ExerciseSessionWithSets> getSessionExerciseWithSets(Long idSessionExercise);
+
+    @Query("SELECT se.*" +
+            "FROM ExerciseHistory as eh" +
+            " INNER JOIN SessionExercise as se ON se.idExerciseHistory=eh.idExerciseHistory" +
+            " INNER JOIN RoutineSession as rs ON rs.idRoutineSession=se.idRoutineSession " +
+            "WHERE eh.idExercise=:idExercise " +
+            "AND rs.performanceStatus=0 " + // Only look for new sessions, so we do not have to recreate a new session. // [TODO] Figure out a way to not hard-code this value. Get it from the enum.
+            "AND rs.idRoutineHistory IS NULL " + // Only look for sessions specifically for this exercise, not related to a routine.
+            "LIMIT 1")
+    // Get the latest unperformed session for an exercise.
+    public abstract Maybe<SessionExercise> getLatestExerciseSession(Long idExercise);
 
     @Transaction
     // When updating an exercise, save it into history and update it in the Exercise table. Returns the exercise with the updated history id.

@@ -1,12 +1,24 @@
 package com.longlife.workoutlogger.data;
 
-import android.arch.persistence.room.*;
-import com.longlife.workoutlogger.model.*;
+import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Transaction;
+
+import com.longlife.workoutlogger.enums.PerformanceStatus;
+import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.RoutineHistory;
+import com.longlife.workoutlogger.model.RoutineSession;
+import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
-import io.reactivex.Maybe;
-import io.reactivex.Single;
 
 import java.util.List;
+
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 
 
@@ -49,8 +61,8 @@ public abstract class RoutineDao {
 
         // Insert this newly created routine to history.
         Long idRoutineHistory = insertRoutineHistory(new RoutineHistory(r));
-        r.setCurrentIdRoutineHistory(idRoutineHistory);
-        updateIdHistory(idRoutine, idRoutineHistory);
+        r.setCurrentIdRoutineHistory(idRoutineHistory); // Make the routine point to this newly created most-current history.
+        updateIdHistory(idRoutine, idRoutineHistory);  // Update the routine in database.
 
         // Insert routine session using the new routine history id.
         RoutineSession routineSessionToAdd = new RoutineSession();
@@ -69,6 +81,27 @@ public abstract class RoutineDao {
             insertSessionExerciseSets(setsToAdd);
         }
         return r;
+    }
+
+    @Transaction
+    // Insert a session for an exercise.
+    public SessionExercise insertNewSessionForExercise(Long idExerciseHistory) {
+        // Insert new routine session.
+        RoutineSession routineSessionToAdd = new RoutineSession();
+        routineSessionToAdd.setSessionDateNow(); // Set the session date as current time.
+        routineSessionToAdd.setPerformanceStatus(PerformanceStatus.INCOMPLETE); // Initialize the session as incomplete.
+        Long idRoutineSession = insertRoutineSession(routineSessionToAdd);
+        routineSessionToAdd.setIdRoutineSession(idRoutineSession); // Update session with the new id.
+
+        // Insert SessionExercise.
+        SessionExercise newSessionExercise = new SessionExercise(idExerciseHistory, idRoutineSession);
+        Long idSessionExercise = insertSessionExercise(newSessionExercise);
+        newSessionExercise.setIdSessionExercise(idSessionExercise); // Update session with the new id.
+
+        // Insert a default set. // [TODO] Instead of defaulting to 1 set, include the number of sets in latest performed session (or 1 if no such session).
+        insertSessionExerciseSet(new SessionExerciseSet(idSessionExercise));
+
+        return newSessionExercise;
     }
 
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
@@ -94,6 +127,10 @@ public abstract class RoutineDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     // Insert sets.
     public abstract void insertSessionExerciseSets(List<SessionExerciseSet> ses);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    // Insert set.
+    public abstract void insertSessionExerciseSet(SessionExerciseSet ses);
 
     @Delete
     // Delete routine.

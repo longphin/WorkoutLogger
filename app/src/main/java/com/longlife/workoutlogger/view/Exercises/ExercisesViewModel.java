@@ -3,15 +3,24 @@ package com.longlife.workoutlogger.view.Exercises;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.util.Log;
+
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.enums.Status;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseHistory;
+import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
+import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
 import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseLocked;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,10 +28,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 public class ExercisesViewModel
         extends ViewModel {
@@ -55,11 +60,12 @@ public class ExercisesViewModel
         disposables.clear();
     }
 
+    public Maybe<SessionExercise> getLatestExerciseSession(Long idExercise) {
+        return repo.getLatestExerciseSession(idExercise)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
-	/*	public Observable<Response<Exercise>> getExerciseEditedResponse()
-		{
-			return exerciseEditedResponse.getObservable();
-		}*/
     public PublishSubject<Exercise> getExerciseEditedObservable() {
         return exerciseEditedObservable;
     }
@@ -82,6 +88,12 @@ public class ExercisesViewModel
 
     public Observable<Response<List<Exercise>>> getLoadExercisesResponse() {
         return loadExercisesResponse.getObservable();
+    }
+
+    public Single<ExerciseSessionWithSets> getSessionExerciseWithSets(Long idSessionExercise) {
+        return repo.getSessionExerciseWithSets(idSessionExercise)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Single<Exercise> getExerciseFromId(Long idExercise) {
@@ -218,5 +230,11 @@ public class ExercisesViewModel
                         e.getMessage();
                     }
                 });
+    }
+
+    public Single<SessionExercise> insertNewSessionForExercise(Long idExerciseHistory) {
+        return repo.insertNewSessionForExercise(idExerciseHistory)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

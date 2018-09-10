@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
@@ -37,8 +38,9 @@ import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseLocked;
 import com.longlife.workoutlogger.view.Exercises.PerformExercise.PerformExerciseFragment;
 import com.longlife.workoutlogger.view.MainActivity;
 
-import javax.inject.Inject;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -247,12 +249,12 @@ public class ExercisesFragment
     }
 
     @Override
-    public void exercisePerform(Long idExercise, String exerciseName) {
+    public void exercisePerform(Long idExercise, Long idExerciseHistory, String exerciseName) {
         FragmentManager manager = getActivity().getSupportFragmentManager();
 
         PerformExerciseFragment fragment = (PerformExerciseFragment) manager.findFragmentByTag(PerformExerciseFragment.TAG);
         if (fragment == null) {
-            fragment = PerformExerciseFragment.newInstance(idExercise, exerciseName);
+            fragment = PerformExerciseFragment.newInstance(idExercise, idExerciseHistory, exerciseName);
         }
 
         if (fragmentNavigation != null) {
