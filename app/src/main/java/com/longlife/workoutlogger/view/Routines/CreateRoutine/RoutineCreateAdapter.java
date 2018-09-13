@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateAddSetViewHolder;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateSetViewHolder;
@@ -27,6 +28,15 @@ public class RoutineCreateAdapter
     private static final String TAG = RoutineCreateAdapter.class.getSimpleName();
     private static final int HEADER_TYPE = 1;
     private static final int SET_TYPE = 2;
+
+    public void setExercisesToInclude(List<RoutineExerciseHelper> exercisesToInclude) {
+        this.exercisesToInclude = exercisesToInclude;
+    }
+
+    public void setExercisesToInclude(ExerciseSessionWithSets exerciseWithSets) {
+        for ()
+    }
+
     private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
     private Context context;
     private IOnSetClick onSetClickListener;

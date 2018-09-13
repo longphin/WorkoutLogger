@@ -76,7 +76,8 @@ public class PerformExerciseFragment
 
         exercisesViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
 
-        // [TODO] need to get the latest idSessionExercise for this idExercise. idSessionExercise = getLatestSession(idExercise)
+        // Look up an existing session for this exercise. If there is none, then create a new one with some default sets.
+        // [TODO] We probably should not look up an existing session. Should always create a new session?
         exercisesViewModel.getLatestExerciseSession(idExercise)
                 .subscribe(new DisposableMaybeObserver<SessionExercise>() {
                     @Override
@@ -93,7 +94,7 @@ public class PerformExerciseFragment
 
                     @Override
                     public void onComplete() {
-                        // [TODO] this is supposed to insert a routine session, then insert session exercise, then insert one set. After all those inserts, it should return that session exercise with sets.
+                        // Insert a routine session, then insert session exercise, then insert one set. After all those inserts, it returns that session exercise with sets.
                         addDisposable(
                                 exercisesViewModel.insertNewSessionForExercise(idExerciseHistory) // Insert a new session.
                                         .flatMap(sessionExercise -> exercisesViewModel.getSessionExerciseWithSets(sessionExercise.getIdSessionExercise())) // From that session, grab the exercise session with sets.
@@ -132,6 +133,10 @@ public class PerformExerciseFragment
         // Callback to detach swipe to delete motion.
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(exercisesRecyclerView);
+
+        if (exerciseWithSets != null) {
+            adapter.setExercisesToInclude(exerciseWithSets);
+        }
     }
 
     @Override

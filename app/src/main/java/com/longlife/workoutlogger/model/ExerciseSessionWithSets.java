@@ -10,6 +10,8 @@ public class ExerciseSessionWithSets {
     @Embedded
     public SessionExercise sessionExercise;
 
+    // Need to add Exercise object POJO that goes through ExerciseHistory. Or change RoutineExerciseHelper to a POJO (may be easier).
+
     @Relation(parentColumn = "idSessionExercise", entityColumn = "idSessionExercise", entity = SessionExerciseSet.class)
     public List<SessionExerciseSet> sets;
 }
