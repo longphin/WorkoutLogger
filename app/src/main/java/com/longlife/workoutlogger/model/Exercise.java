@@ -69,7 +69,7 @@ public class Exercise implements Parcelable {
     // That that this instance was created.
     @TypeConverters({DateConverter.class})
     @NonNull
-    private Date createDate = (new GregorianCalendar()).getTime();
+    private Date lastUpdateDate = (new GregorianCalendar()).getTime();
 
     // Copy constructor. Does not copy idExercise.
     @Ignore
@@ -82,7 +82,7 @@ public class Exercise implements Parcelable {
         hidden = ex.isHidden(); // This is not used by leaf nodes.
         exerciseType = ex.getExerciseType();
         measurementType = ex.getMeasurementType();
-        createDate = (new GregorianCalendar()).getTime();
+        lastUpdateDate = (new GregorianCalendar()).getTime();
     }
 
     public Exercise() {
@@ -141,12 +141,12 @@ public class Exercise implements Parcelable {
     }
 
     @NonNull
-    public Date getCreateDate() {
-        return createDate;
+    public Date getLastUpdateDate() {
+        return lastUpdateDate;
     }
 
-    public void setCreateDate(@NonNull Date createDate) {
-        this.createDate = createDate;
+    public void setLastUpdateDate(@NonNull Date lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     @Override
@@ -203,8 +203,8 @@ public class Exercise implements Parcelable {
         hidden = b;
     }
 
-    public void setCreateDateAsNow() {
-        createDate = (new GregorianCalendar()).getTime();
+    public void setUpdateDateAsNow() {
+        lastUpdateDate = (new GregorianCalendar()).getTime();
     }
 }
 

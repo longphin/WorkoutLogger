@@ -5,7 +5,6 @@ import android.arch.persistence.room.RoomDatabase;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
-import com.longlife.workoutlogger.model.RoutineHistory;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
@@ -20,7 +19,6 @@ import com.longlife.workoutlogger.model.SessionExerciseSet;
                         Profile.class,
                         Exercise.class,
                         Routine.class,
-                        RoutineHistory.class,
                         RoutineSession.class,
                         SessionExercise.class,
                         SessionExerciseSet.class

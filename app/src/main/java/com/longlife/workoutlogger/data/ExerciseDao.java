@@ -68,7 +68,7 @@ public abstract class ExerciseDao {
             " INNER JOIN RoutineSession as rs ON rs.idRoutineSession=se.idRoutineSession " +
             "WHERE e.idExercise=:idExercise " +
             "AND rs.performanceStatus=0 " + // Only look for new sessions, so we do not have to recreate a new session. // [TODO] Figure out a way to not hard-code this value. Get it from the enum.
-            "AND rs.idRoutineHistory IS NULL " + // Only look for sessions specifically for this exercise, not related to a routine.
+            "AND rs.idRoutine IS NULL " + // Only look for sessions specifically for this exercise, not related to a routine.
             "LIMIT 1")
     // Get the latest unperformed session for an exercise.
     public abstract Maybe<SessionExercise> getLatestExerciseSession(Long idExercise);
@@ -85,7 +85,7 @@ public abstract class ExerciseDao {
 
         // Point the current row to the newly inserted leaf node.
         source.setIdExerciseLeaf(idLeaf);
-        source.setCreateDateAsNow();
+        source.setUpdateDateAsNow();
         updateExercise(source);
 
         return source;

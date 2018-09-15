@@ -19,14 +19,14 @@ import java.util.GregorianCalendar;
 /**
  * Created by Longphi on 1/7/2018.
  */
-@Entity(foreignKeys = @ForeignKey(entity = RoutineHistory.class, parentColumns = "idRoutineHistory", childColumns = "idRoutineHistory", onDelete = ForeignKey.CASCADE),
-        indices = {@Index(value = {"idRoutineHistory"})})
+@Entity(foreignKeys = @ForeignKey(entity = Routine.class, parentColumns = "idRoutine", childColumns = "idRoutine", onDelete = ForeignKey.CASCADE),
+        indices = {@Index(value = {"idRoutine"})})
 public class RoutineSession {
     @PrimaryKey
     @NonNull
     private Long idRoutineSession;
     @Nullable
-    private Long idRoutineHistory;
+    private Long idRoutine;
     @TypeConverters({DateConverter.class})
     private Date sessionDate;
     // Flag for determining if the session was performed. If the last session for a routine was performed,
@@ -40,12 +40,12 @@ public class RoutineSession {
     }
 
 
-    public Long getIdRoutineHistory() {
-        return idRoutineHistory;
+    public Long getIdRoutine() {
+        return idRoutine;
     }
 
-    public void setIdRoutineHistory(Long i) {
-        idRoutineHistory = i;
+    public void setIdRoutine(Long i) {
+        idRoutine = i;
     }
 
     public Long getIdRoutineSession() {

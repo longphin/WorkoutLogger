@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Routine;
 
@@ -35,7 +36,7 @@ public class RoutinesAdapter
         int position = holder.getAdapterPosition();
         Routine routine = routines.get(position);
 
-        holder.setNameText(routine.getName() + " (" + String.valueOf(routine.getIdRoutine()) + " -> " + String.valueOf(routine.getCurrentIdRoutineHistory()) + ")");
+        holder.setNameText(routine.getName() + " (" + String.valueOf(routine.getIdRoutine()) + ")");
         holder.setDescripText(routine.getNote());
 
         holder.getNameTextView().setOnClickListener(view ->

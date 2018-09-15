@@ -9,7 +9,6 @@ import android.arch.persistence.room.Transaction;
 import com.longlife.workoutlogger.enums.PerformanceStatus;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.Routine;
-import com.longlife.workoutlogger.model.RoutineHistory;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
@@ -32,7 +31,7 @@ public abstract class RoutineDao {
     // Get list of routines.
     public abstract Single<List<Routine>> getRoutines();
 
-    @Query("SELECT * FROM RoutineSession WHERE idRoutineHistory = :idRoutine AND performanceStatus <> 2" + // 2 for PerformanceStatus.COMPLETE
+    @Query("SELECT * FROM RoutineSession WHERE idRoutine = :idRoutine AND performanceStatus <> 2" + // 2 for PerformanceStatus.COMPLETE
             " ORDER BY sessionDate DESC LIMIT 1")
     // Get the latest routine session for a given routine that has not been performed yet. May not return one.
     public abstract Maybe<RoutineSession> getLatestRoutineSession(Long idRoutine);
@@ -59,14 +58,9 @@ public abstract class RoutineDao {
         Long idRoutine = insertRoutine(r);
         r.setIdRoutine(idRoutine);
 
-        // Insert this newly created routine to history.
-        Long idRoutineHistory = insertRoutineHistory(new RoutineHistory(r));
-        r.setCurrentIdRoutineHistory(idRoutineHistory); // Make the routine point to this newly created most-current history.
-        updateIdHistory(idRoutine, idRoutineHistory);  // Update the routine in database.
-
         // Insert routine session using the new routine history id.
         RoutineSession routineSessionToAdd = new RoutineSession();
-        routineSessionToAdd.setIdRoutineHistory(idRoutineHistory);
+        routineSessionToAdd.setIdRoutine(idRoutine);
         Long idRoutineSession = insertRoutineSession(routineSessionToAdd);
 
         // Insert exercises for the session using the new session.
@@ -107,14 +101,6 @@ public abstract class RoutineDao {
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
     // Insert routine.
     public abstract Long insertRoutine(Routine r);
-
-    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    // Insert routine history.
-    public abstract Long insertRoutineHistory(RoutineHistory rh);
-
-    @Query("UPDATE Routine SET currentIdRoutineHistory = :idRoutineHistory WHERE idRoutine = :idRoutine")
-    // Update the history id that a routine points to. This is to keep the history id to the most current one.
-    public abstract void updateIdHistory(Long idRoutine, Long idRoutineHistory);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     // Insert a session.

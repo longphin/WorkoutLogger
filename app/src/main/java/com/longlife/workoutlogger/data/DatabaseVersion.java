@@ -31,7 +31,8 @@ public class DatabaseVersion {
     private static final int V4_3b = 22; // Fixing some NULL annotations.
     private static final int V4_4 = 23; // Combining exercise history to Exercise entity.
     private static final int V4_4b = 24; // fixes inserting exercise.
+    private static final int V4_4c = 25; // Removed routine history.
 
-    public static final int CURRENT = V4_4b;
+    public static final int CURRENT = V4_4c;
 }
 

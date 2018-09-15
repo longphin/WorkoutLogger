@@ -2,7 +2,9 @@ package com.longlife.workoutlogger.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
+
 import io.reactivex.annotations.NonNull;
 
 /**
@@ -14,8 +16,6 @@ public class Routine {
     @PrimaryKey
     @NonNull
     private Long idRoutine;
-    // This is the current idRoutineHistory that this routine corresponds to.
-    private Long currentIdRoutineHistory;
     @Required
     private String name;
     // Note for routine.
@@ -26,16 +26,6 @@ public class Routine {
 
     public Routine() {
 
-    }
-
-
-    public Long getCurrentIdRoutineHistory() {
-        return currentIdRoutineHistory;
-    }
-
-
-    public void setCurrentIdRoutineHistory(Long currentIdRoutineHistory) {
-        this.currentIdRoutineHistory = currentIdRoutineHistory;
     }
 
     public Long getIdRoutine() {
