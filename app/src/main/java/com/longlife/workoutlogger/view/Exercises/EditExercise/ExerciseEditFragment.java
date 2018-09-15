@@ -11,18 +11,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
-import com.longlife.workoutlogger.model.ExerciseHistory;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 import javax.inject.Inject;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ExerciseEditFragment
         extends FragmentBase
@@ -117,10 +118,11 @@ public class ExerciseEditFragment
 
         saveButton.setOnClickListener(view -> {
             if (this.exercise != null) {
-                final ExerciseHistory exerciseHistoryToInsert = new ExerciseHistory(this.exercise);
+                //final Exercise exerciseHistoryToInsert = new Exercise(this.exercise);
                 // Update current exercise to the desired values.
                 this.exercise.setName(this.name.getText().toString());
-                viewModel.updateExerciseHistoryFull(exerciseHistoryToInsert, this.exercise);
+                //viewModel.updateExerciseHistoryFull(exerciseHistoryToInsert, this.exercise);
+                viewModel.updateExercise(exercise);
 
                 getActivity().onBackPressed();
             }

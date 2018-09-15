@@ -43,7 +43,7 @@ public class ExercisesAdapter
         final int position = holder.getAdapterPosition();
         Exercise ex = exercises.get(position);
         // Name
-        holder.setNameText(ex.getName() + " (" + String.valueOf(ex.getIdExercise()) + " -> " + String.valueOf(ex.getCurrentIdExerciseHistory()) + ")");
+        holder.setNameText(ex.getName() + " (" + String.valueOf(ex.getIdExercise()) + " -> " + String.valueOf(ex.getIdExerciseLeaf()) + ")");
         // Description
         holder.setDescripText(ex.getNote());
         // Lock icon
@@ -93,7 +93,7 @@ public class ExercisesAdapter
                     switch (item.getItemId()) {
                         case R.id.menu_exercise_options:
                             //handle menu1 click
-                            exerciseClickCallback.exercisePerform(ex.getIdExercise(), ex.getCurrentIdExerciseHistory(), ex.getName());
+                            exerciseClickCallback.exercisePerform(ex.getIdExercise(), ex.getIdExerciseLeaf(), ex.getName());
                             return true;
                         default:
                             return false;

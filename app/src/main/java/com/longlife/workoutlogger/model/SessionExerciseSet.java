@@ -54,6 +54,7 @@ public class SessionExerciseSet
     public SessionExerciseSet() {
     }
 
+    @Ignore
     public SessionExerciseSet(Long idSessionExercise) {
         this.idSessionExercise = idSessionExercise;
     }

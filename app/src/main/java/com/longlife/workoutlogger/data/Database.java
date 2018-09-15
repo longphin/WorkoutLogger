@@ -1,7 +1,14 @@
 package com.longlife.workoutlogger.data;
 
 import android.arch.persistence.room.RoomDatabase;
-import com.longlife.workoutlogger.model.*;
+
+import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.Profile;
+import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.RoutineHistory;
+import com.longlife.workoutlogger.model.RoutineSession;
+import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.model.SessionExerciseSet;
 
 /**
  * Created by Longphi on 1/5/2018.
@@ -12,7 +19,6 @@ import com.longlife.workoutlogger.model.*;
                 {
                         Profile.class,
                         Exercise.class,
-                        ExerciseHistory.class,
                         Routine.class,
                         RoutineHistory.class,
                         RoutineSession.class,

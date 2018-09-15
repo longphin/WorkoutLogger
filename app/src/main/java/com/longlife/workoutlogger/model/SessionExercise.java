@@ -1,6 +1,11 @@
 package com.longlife.workoutlogger.model;
 
-import android.arch.persistence.room.*;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
+
 import io.reactivex.annotations.NonNull;
 
 /**
@@ -10,12 +15,12 @@ import io.reactivex.annotations.NonNull;
 @Entity(
         foreignKeys = {
                 @ForeignKey(entity = RoutineSession.class, parentColumns = "idRoutineSession", childColumns = "idRoutineSession", onDelete = ForeignKey.CASCADE),
-                @ForeignKey(entity = ExerciseHistory.class, parentColumns = "idExerciseHistory", childColumns = "idExerciseHistory", onDelete = ForeignKey.CASCADE)
+                @ForeignKey(entity = Exercise.class, parentColumns = "idExercise", childColumns = "idExercise", onDelete = ForeignKey.CASCADE)
         },
         indices = {
-                @Index(value = {"idRoutineSession", "idExerciseHistory"}),
+                @Index(value = {"idRoutineSession", "idExercise"}),
                 @Index(value = {"idRoutineSession"}),
-                @Index(value = {"idExerciseHistory"})
+                @Index(value = {"idExercise"})
         }
 )
 public class SessionExercise {
@@ -23,25 +28,25 @@ public class SessionExercise {
     @NonNull
     private Long idSessionExercise;
     private Long idRoutineSession;
-    private Long idExerciseHistory;
+    private Long idExercise;
 
     public SessionExercise() {
 
     }
 
     @Ignore
-    public SessionExercise(Long idExerciseHistory, Long idRoutineSession) {
-        this.idExerciseHistory = idExerciseHistory;
+    public SessionExercise(Long idExercise, Long idRoutineSession) {
+        this.idExercise = idExercise;
         this.idRoutineSession = idRoutineSession;
     }
 
 
-    public Long getIdExerciseHistory() {
-        return idExerciseHistory;
+    public Long getIdExercise() {
+        return idExercise;
     }
 
-    public void setIdExerciseHistory(Long i) {
-        idExerciseHistory = i;
+    public void setIdExercise(Long i) {
+        idExercise = i;
     }
 
     public Long getIdRoutineSession() {

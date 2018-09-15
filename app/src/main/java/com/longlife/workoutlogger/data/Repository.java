@@ -1,7 +1,6 @@
 package com.longlife.workoutlogger.data;
 
 import com.longlife.workoutlogger.model.Exercise;
-import com.longlife.workoutlogger.model.ExerciseHistory;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
@@ -67,11 +66,6 @@ public class Repository {
         return Single.fromCallable(() -> routineDao.insertRoutineFull(routine, reh));
     }
 
-    // Insert exercise.
-    public Single<Long> insertExercise(Exercise exercise) {
-        return Single.fromCallable(() -> exerciseDao.insertExerciseFull(exercise));
-    }
-
     // Hide/unhide an exercise.
     public void setExerciseHiddenStatus(Long idExercise, boolean hide) {
         exerciseDao.setExerciseHiddenStatus(idExercise, hide ? 1 : 0);
@@ -87,9 +81,9 @@ public class Repository {
         routineDao.setRoutineAsHidden(idRoutine, hide ? 1 : 0);
     }
 
-    // Update the history for a routine.
-    public Single<Exercise> updateExerciseHistoryFull(ExerciseHistory exerciseHistory, Exercise exercise) {
-        return Single.fromCallable(() -> exerciseDao.updateExerciseHistoryFull(exerciseHistory, exercise));
+    // Update the history for an exercise.
+    public Single<Exercise> updateExercise(Exercise ex) {
+        return Single.fromCallable(() -> exerciseDao.updateExerciseFull(ex));
     }
 
     // Insert history for an exercise. This creates a new history value and updates the exercise.

@@ -29,7 +29,9 @@ public class DatabaseVersion {
     private static final int V4_2 = 20; // Changed exercise favorited to locked icon.
     private static final int V4_3 = 21; // Add methods for initially creating an exercise session and obtaining an exercise session.
     private static final int V4_3b = 22; // Fixing some NULL annotations.
+    private static final int V4_4 = 23; // Combining exercise history to Exercise entity.
+    private static final int V4_4b = 24; // fixes inserting exercise.
 
-    public static final int CURRENT = V4_3b;
+    public static final int CURRENT = V4_4b;
 }
 

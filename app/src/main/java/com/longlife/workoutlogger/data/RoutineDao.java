@@ -43,7 +43,7 @@ public abstract class RoutineDao {
 
     @Query("SELECT e.*" +
             " FROM SessionExercise as se" +
-            " INNER JOIN Exercise as e on se.idExerciseHistory=e.idExercise" +
+            " INNER JOIN Exercise as e on se.idExercise=e.idExercise" +
             " WHERE se.idSessionExercise = :idSessionExercise")
     // Get exercises for a given session.
     public abstract Single<Exercise> getExerciseFromSession(Long idSessionExercise);
@@ -71,7 +71,7 @@ public abstract class RoutineDao {
 
         // Insert exercises for the session using the new session.
         for (int i = 0; i < reh.size(); i++) {
-            Long idSessionExercise = insertSessionExercise(new SessionExercise(reh.get(i).getExercise().getCurrentIdExerciseHistory(), idRoutineSession));
+            Long idSessionExercise = insertSessionExercise(new SessionExercise(reh.get(i).getExercise().getIdExerciseLeaf(), idRoutineSession));
 
             // Insert sets for each exercise added.
             List<SessionExerciseSet> setsToAdd = reh.get(i).getSets();

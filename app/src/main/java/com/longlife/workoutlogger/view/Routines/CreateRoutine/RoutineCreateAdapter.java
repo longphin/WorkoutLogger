@@ -34,7 +34,7 @@ public class RoutineCreateAdapter
     }
 
     public void setExercisesToInclude(ExerciseSessionWithSets exerciseWithSets) {
-        for ()
+
     }
 
     private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
@@ -195,7 +195,7 @@ public class RoutineCreateAdapter
 
         final Exercise exercise = headerItem.getExercise();
 
-        holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + " -> " + String.valueOf(exercise.getCurrentIdExerciseHistory()) + ")");
+        holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + " -> " + String.valueOf(exercise.getIdExerciseLeaf()) + ")");
     }
 
     // When header is clicked, expand or collapse header.

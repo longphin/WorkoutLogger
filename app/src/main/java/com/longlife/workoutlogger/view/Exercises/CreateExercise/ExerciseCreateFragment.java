@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.RequiredFieldException;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
@@ -24,9 +25,10 @@ import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
-import io.reactivex.disposables.CompositeDisposable;
 
 import javax.inject.Inject;
+
+import io.reactivex.disposables.CompositeDisposable;
 
 public class ExerciseCreateFragment
         extends Fragment
@@ -148,7 +150,7 @@ public class ExerciseCreateFragment
         }
 
         //viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
-        // Insert the new exercise into Exercise and ExerciseHistory tables.
+        // Insert the new exercise into Exercise.
         viewModel.insertExerciseHistoryFull(newExercise);
 
         getActivity().onBackPressed();
