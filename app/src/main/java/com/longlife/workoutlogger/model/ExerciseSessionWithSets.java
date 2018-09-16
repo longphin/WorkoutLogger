@@ -16,4 +16,16 @@ public class ExerciseSessionWithSets {
 
     @Relation(parentColumn = "idSessionExercise", entityColumn = "idSessionExercise", entity = SessionExerciseSet.class)
     public List<SessionExerciseSet> sets;
+
+    public SessionExercise getSessionExercise() {
+        return sessionExercise;
+    }
+
+    public Exercise getExercise() {
+        return exercise.get(0);
+    }
+
+    public List<SessionExerciseSet> getSets() {
+        return sets;
+    }
 }

@@ -249,12 +249,12 @@ public class ExercisesFragment
     }
 
     @Override
-    public void exercisePerform(Long idExercise, Long idExerciseHistory, String exerciseName) {
+    public void exercisePerform(Long idExercise, Long idExerciseLeaf, String exerciseName) {
         FragmentManager manager = getActivity().getSupportFragmentManager();
 
         PerformExerciseFragment fragment = (PerformExerciseFragment) manager.findFragmentByTag(PerformExerciseFragment.TAG);
         if (fragment == null) {
-            fragment = PerformExerciseFragment.newInstance(idExercise, idExerciseHistory, exerciseName);
+            fragment = PerformExerciseFragment.newInstance(idExercise, idExerciseLeaf, exerciseName);
         }
 
         if (fragmentNavigation != null) {

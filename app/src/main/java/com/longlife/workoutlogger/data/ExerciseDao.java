@@ -25,43 +25,40 @@ import io.reactivex.Single;
 
 @android.arch.persistence.room.Dao
 public abstract class ExerciseDao {
-    @Query("SELECT * FROM Exercise WHERE hidden = 0 AND idExerciseSource IS NULL")
     // Get a list of exercises that are not hidden.
+    @Query("SELECT * FROM Exercise WHERE hidden = 0 AND idExerciseSource IS NULL")
     public abstract Single<List<Exercise>> getExercises();
 
-    @Query("SELECT Name FROM Exercise WHERE hidden = 0 AND idExerciseSOurce IS NULL")
     // Get the name of exercises that are not hidden.
+    @Query("SELECT Name FROM Exercise WHERE hidden = 0 AND idExerciseSOurce IS NULL")
     public abstract Single<List<String>> getExercisesNames();
 
-    @Query("SELECT * FROM Exercise WHERE name = :name")
     // Check if an exercise with the given name already exists.
+    @Query("SELECT * FROM Exercise WHERE name = :name")
     public abstract Single<Exercise> getExercise(String name);
 
-    @Query("SELECT EXISTS (SELECT 1 FROM Exercise WHERE idExercise = :idExercise)")
     // Check if an exercise with the given id already exists.
+    @Query("SELECT EXISTS (SELECT 1 FROM Exercise WHERE idExercise = :idExercise)")
     public abstract Single<Integer> exerciseExists(Long idExercise);
 
-    @Query("SELECT * FROM Exercise WHERE idExercise IN (:ids)")
     // Get a list of exercises given a list of idExercises.
+    @Query("SELECT * FROM Exercise WHERE idExercise IN (:ids)")
     public abstract Single<List<Exercise>> getExerciseFromId(Set<Long> ids);
 
-    @Query("SELECT * FROM Exercise WHERE idExercise=:id")
     // Get a single exercise given the id.
+    @Query("SELECT * FROM Exercise WHERE idExercise=:id")
     public abstract Single<Exercise> getExerciseFromId(Long id);
 
-    @Query("UPDATE Exercise SET locked = :lockedStatus WHERE idExercise = :idExercise")
     // Update the lock status of an exercise.
+    @Query("UPDATE Exercise SET locked = :lockedStatus WHERE idExercise = :idExercise")
     public abstract void updateLockedStatus(Long idExercise, boolean lockedStatus);
 
-    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    // Insert an exercise and returns the id of the new exercise. This should NOT be used directly.
-    public abstract Long insertExercise(Exercise ex);
-
+    // Get session exercise with related sets.
     @Transaction
     @Query("SELECT * FROM SessionExercise WHERE idSessionExercise=:idSessionExercise")
-    // Get session exercise with related sets.
     public abstract Single<ExerciseSessionWithSets> getSessionExerciseWithSets(Long idSessionExercise);
 
+    // Get the latest unperformed session for an exercise.
     @Query("SELECT se.*" +
             "FROM Exercise as e" +
             " INNER JOIN SessionExercise as se ON se.idExercise=e.idExercise" +
@@ -70,8 +67,11 @@ public abstract class ExerciseDao {
             "AND rs.performanceStatus=0 " + // Only look for new sessions, so we do not have to recreate a new session. // [TODO] Figure out a way to not hard-code this value. Get it from the enum.
             "AND rs.idRoutine IS NULL " + // Only look for sessions specifically for this exercise, not related to a routine.
             "LIMIT 1")
-    // Get the latest unperformed session for an exercise.
     public abstract Maybe<SessionExercise> getLatestExerciseSession(Long idExercise);
+
+    // Update an exercise. Do not use directly. Instead, use updateExerciseFull(idExerciseSource) to create a new child instance for the exercise history.
+    @Update
+    public abstract void updateExercise(Exercise ex);
 
     // Update exercise source and save it to history.
     @Transaction
@@ -91,13 +91,9 @@ public abstract class ExerciseDao {
         return source;
     }
 
-    @Update
-    // Update an exercise.
-    public abstract void updateExercise(Exercise ex);
-
-    @Transaction
     // When inserting an exercise, save it into history and update it in the Exercise table. Returns the exercise with updated ids.
-    public Exercise insertExerciseHistoryFull(Exercise source) {
+    @Transaction
+    public Exercise insertExerciseFull(Exercise source) {
         // Insert exercise
         Long idSource = insertExercise(source);
         source.setIdExercise(idSource);
@@ -116,15 +112,19 @@ public abstract class ExerciseDao {
         return source;
     }
 
-    @Query("UPDATE Exercise SET idExerciseLeaf = :idExerciseLeaf WHERE idExercise = :idExercise")
+    // Insert an exercise. Do not use directly. Instead, use insertExerciseFull(exercise) to insert a source exercise and a leaf copy.
+    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
+    public abstract Long insertExercise(Exercise ex);
+
     // Update the history id that an exercise points to. This is to keep track of which history is the exercise's most current history.
+    @Query("UPDATE Exercise SET idExerciseLeaf = :idExerciseLeaf WHERE idExercise = :idExercise")
     public abstract void updateIdLeaf(Long idExercise, Long idExerciseLeaf);
 
-    @Delete
     // Delete an exercise. Currently, we do not use this because exercises will only be hidden/unhidden.
+    @Delete
     public abstract void deleteExercise(Exercise ex);
 
-    @Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
     // Hide/unhide an exercise.
+    @Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
     public abstract void setExerciseHiddenStatus(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
 }

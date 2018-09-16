@@ -43,7 +43,7 @@ public class ExercisesAdapter
         final int position = holder.getAdapterPosition();
         Exercise ex = exercises.get(position);
         // Name
-        holder.setNameText(ex.getName() + " (" + String.valueOf(ex.getIdExercise()) + " -> " + String.valueOf(ex.getIdExerciseLeaf()) + ")");
+        holder.setNameText(ex.getName() + " (" + String.valueOf(ex.getIdExercise()) + " -> leaf " + String.valueOf(ex.getIdExerciseLeaf()) + ")");
         // Description
         holder.setDescripText(ex.getNote());
         // Lock icon
@@ -55,14 +55,6 @@ public class ExercisesAdapter
 
         holder.getLockedIcon().setOnClickListener(view ->
                 {
-/*				ex.setLocked(!ex.getLocked());
-				if(ex.getLocked()){
-					holder.setLockedIcon(R.drawable.ic_favorite_black_24dp);
-				}else{
-					holder.setLockedIcon(R.drawable.ic_favorite_border_black_24dp);
-				}*/
-
-                    //viewModel.updateLockedStatus(ex.getIdExercise(), ex.getLocked());
                     final boolean newLockStatus = !ex.getLocked();
                     exerciseClickCallback.exerciseLocked(ex.getIdExercise(), newLockStatus);
 
@@ -135,7 +127,6 @@ public class ExercisesAdapter
         for (int i = 0; i < exercises.size(); i++) {
             if (exercises.get(i).getIdExercise().equals(idExercise)) {
                 exercises.get(i).setLocked(lockStatus);
-                //notifyItemChanged(i);
                 return;
             }
         }
@@ -174,6 +165,6 @@ public class ExercisesAdapter
 
         void exerciseLocked(Long idExercise, boolean lockStatus);
 
-        void exercisePerform(Long idExercise, Long idExerciseHistory, String exerciseName);
+        void exercisePerform(Long idExercise, Long idExerciseLeaf, String exerciseName);
     }
 }

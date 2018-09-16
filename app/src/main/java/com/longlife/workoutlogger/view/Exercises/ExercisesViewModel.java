@@ -160,8 +160,8 @@ public class ExercisesViewModel
                 });
     }
 
-    public void insertExerciseHistoryFull(Exercise exercise) {
-        disposables.add(repo.insertExerciseHistoryFull(exercise)
+    public void insertExercise(Exercise exercise) {
+        disposables.add(repo.insertExercise(exercise)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -199,8 +199,8 @@ public class ExercisesViewModel
                 });
     }
 
-    public Single<SessionExercise> insertNewSessionForExercise(Long idExerciseHistory) {
-        return repo.insertNewSessionForExercise(idExerciseHistory)
+    public Single<SessionExercise> insertNewSessionForExercise(Long idExerciseLeaf) {
+        return repo.insertNewSessionForExercise(idExerciseLeaf)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

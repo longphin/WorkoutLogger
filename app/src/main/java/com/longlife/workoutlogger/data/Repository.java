@@ -87,8 +87,8 @@ public class Repository {
     }
 
     // Insert history for an exercise. This creates a new history value and updates the exercise.
-    public Single<Exercise> insertExerciseHistoryFull(Exercise exercise) {
-        return Single.fromCallable(() -> exerciseDao.insertExerciseHistoryFull(exercise));
+    public Single<Exercise> insertExercise(Exercise exercise) {
+        return Single.fromCallable(() -> exerciseDao.insertExerciseFull(exercise));
     }
 
     // Insert profile.
@@ -109,7 +109,7 @@ public class Repository {
         return exerciseDao.getSessionExerciseWithSets(idSessionExercise);
     }
 
-    public Single<SessionExercise> insertNewSessionForExercise(Long idExerciseHistory) {
-        return Single.fromCallable(() -> routineDao.insertNewSessionForExercise(idExerciseHistory));
+    public Single<SessionExercise> insertNewSessionForExercise(Long idExerciseLeaf) {
+        return Single.fromCallable(() -> routineDao.insertNewSessionForExercise(idExerciseLeaf));
     }
 }

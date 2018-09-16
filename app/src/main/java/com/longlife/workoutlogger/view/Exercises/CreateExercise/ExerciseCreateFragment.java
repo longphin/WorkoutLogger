@@ -151,7 +151,7 @@ public class ExerciseCreateFragment
 
         //viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
         // Insert the new exercise into Exercise.
-        viewModel.insertExerciseHistoryFull(newExercise);
+        viewModel.insertExercise(newExercise);
 
         getActivity().onBackPressed();
     }

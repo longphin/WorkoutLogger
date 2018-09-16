@@ -41,7 +41,7 @@ public class PerformExerciseFragment
     private Long idExercise;
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
-    private Long idExerciseHistory;
+    private Long idExerciseLeaf;
     private Long idSessionExercise;
     private ExercisesViewModel exercisesViewModel;
 
@@ -55,10 +55,10 @@ public class PerformExerciseFragment
     private RoutineCreateAdapter adapter;
     private ConstraintLayout coordinatorLayout; // layout for recycler view
 
-    public static PerformExerciseFragment newInstance(Long idExercise, Long idExerciseHistory, String exerciseName) {
+    public static PerformExerciseFragment newInstance(Long idExercise, Long idExerciseLeaf, String exerciseName) {
         Bundle bundle = new Bundle();
         bundle.putLong("idExercise", idExercise);
-        bundle.putLong("idExerciseHistory", idExerciseHistory);
+        bundle.putLong("idExerciseLeaf", idExerciseLeaf);
         bundle.putString("exerciseName", exerciseName);
 
         PerformExerciseFragment fragment = new PerformExerciseFragment();
@@ -72,7 +72,7 @@ public class PerformExerciseFragment
         super.onCreate(savedInstanceState);
 
         idExercise = getArguments().getLong("idExercise");
-        idExerciseHistory = getArguments().getLong("idExerciseHistory");
+        idExerciseLeaf = getArguments().getLong("idExerciseLeaf");
 
         exercisesViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
 
@@ -96,7 +96,7 @@ public class PerformExerciseFragment
                     public void onComplete() {
                         // Insert a routine session, then insert session exercise, then insert one set. After all those inserts, it returns that session exercise with sets.
                         addDisposable(
-                                exercisesViewModel.insertNewSessionForExercise(idExerciseHistory) // Insert a new session.
+                                exercisesViewModel.insertNewSessionForExercise(idExerciseLeaf) // Insert a new session.
                                         .flatMap(sessionExercise -> exercisesViewModel.getSessionExerciseWithSets(sessionExercise.getIdSessionExercise())) // From that session, grab the exercise session with sets.
                                         .subscribe(sessionExerciseWithSets -> setSessionExerciseWithSets(sessionExerciseWithSets))
                         );
@@ -106,6 +106,10 @@ public class PerformExerciseFragment
 
     private void setSessionExerciseWithSets(ExerciseSessionWithSets exerciseWithSets) {
         this.exerciseWithSets = exerciseWithSets;
+        // If the data was obtained after the view was initialized, then we need to fill the adapter.
+        if (exercisesRecyclerView != null) {
+            fillAdapterData();
+        }
     }
 
     @Override
@@ -125,6 +129,13 @@ public class PerformExerciseFragment
         return mView;
     }
 
+    private void fillAdapterData() {
+        adapter.setExercisesToInclude(exerciseWithSets);
+        adapter.notifyDataSetChanged();
+
+        ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_PerformExercise, exerciseWithSets.getExercise().getName() + " (session " + String.valueOf(exerciseWithSets.getSessionExercise().getIdRoutineSession()) + ")"));
+    }
+
     private void initializeRecyclerView() {
         exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         adapter = new RoutineCreateAdapter(getContext(), this);
@@ -135,7 +146,8 @@ public class PerformExerciseFragment
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(exercisesRecyclerView);
 
         if (exerciseWithSets != null) {
-            adapter.setExercisesToInclude(exerciseWithSets);
+            // If the data was obtained before the view was finished, then we can fill the data now.
+            fillAdapterData();
         }
     }
 

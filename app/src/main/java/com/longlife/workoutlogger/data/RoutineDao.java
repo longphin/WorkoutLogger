@@ -27,28 +27,28 @@ import io.reactivex.Single;
 
 @android.arch.persistence.room.Dao
 public abstract class RoutineDao {
-    @Query("SELECT * FROM Routine WHERE hidden = 0")
     // Get list of routines.
+    @Query("SELECT * FROM Routine WHERE hidden = 0")
     public abstract Single<List<Routine>> getRoutines();
 
+    // Get the latest routine session for a given routine that has not been performed yet. May not return one.
     @Query("SELECT * FROM RoutineSession WHERE idRoutine = :idRoutine AND performanceStatus <> 2" + // 2 for PerformanceStatus.COMPLETE
             " ORDER BY sessionDate DESC LIMIT 1")
-    // Get the latest routine session for a given routine that has not been performed yet. May not return one.
     public abstract Maybe<RoutineSession> getLatestRoutineSession(Long idRoutine);
 
-    @Query("SELECT * FROM SessionExercise WHERE idRoutineSession = :idRoutineSession")
     // Get all sessions exercises for a given routine.
+    @Query("SELECT * FROM SessionExercise WHERE idRoutineSession = :idRoutineSession")
     public abstract Single<List<SessionExercise>> getSessionExercises(Long idRoutineSession);
 
+    // Get exercises for a given session.
     @Query("SELECT e.*" +
             " FROM SessionExercise as se" +
             " INNER JOIN Exercise as e on se.idExercise=e.idExercise" +
             " WHERE se.idSessionExercise = :idSessionExercise")
-    // Get exercises for a given session.
     public abstract Single<Exercise> getExerciseFromSession(Long idSessionExercise);
 
-    @Query("SELECT * FROM Routine WHERE idRoutine = :idRoutine")
     // Get a routine.
+    @Query("SELECT * FROM Routine WHERE idRoutine = :idRoutine")
     public abstract Single<Routine> getRoutine(Long idRoutine);
 
     // Inserts routine, routine history, routine session, session exercises, session exercise sets. Returns the updated routine.
@@ -77,9 +77,9 @@ public abstract class RoutineDao {
         return r;
     }
 
-    @Transaction
     // Insert a session for an exercise.
-    public SessionExercise insertNewSessionForExercise(Long idExerciseHistory) {
+    @Transaction
+    public SessionExercise insertNewSessionForExercise(Long idExerciseLeaf) {
         // Insert new routine session.
         RoutineSession routineSessionToAdd = new RoutineSession();
         routineSessionToAdd.setSessionDateNow(); // Set the session date as current time.
@@ -88,7 +88,7 @@ public abstract class RoutineDao {
         routineSessionToAdd.setIdRoutineSession(idRoutineSession); // Update session with the new id.
 
         // Insert SessionExercise.
-        SessionExercise newSessionExercise = new SessionExercise(idExerciseHistory, idRoutineSession);
+        SessionExercise newSessionExercise = new SessionExercise(idExerciseLeaf, idRoutineSession);
         Long idSessionExercise = insertSessionExercise(newSessionExercise);
         newSessionExercise.setIdSessionExercise(idSessionExercise); // Update session with the new id.
 
@@ -98,43 +98,43 @@ public abstract class RoutineDao {
         return newSessionExercise;
     }
 
-    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    // Insert routine.
-    public abstract Long insertRoutine(Routine r);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     // Insert a session.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract Long insertRoutineSession(RoutineSession rs);
 
-    @Insert
     // Insert a session exercise.
+    @Insert
     public abstract Long insertSessionExercise(SessionExercise se);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    // Insert sets.
-    public abstract void insertSessionExerciseSets(List<SessionExerciseSet> ses);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     // Insert set.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertSessionExerciseSet(SessionExerciseSet ses);
 
-    @Delete
+    // Insert routine.
+    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
+    public abstract Long insertRoutine(Routine r);
+
+    // Insert sets.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertSessionExerciseSets(List<SessionExerciseSet> ses);
+
     // Delete routine.
+    @Delete
     public abstract void deleteRoutine(Routine r);
 
-    @Delete
     // Delete session.
+    @Delete
     public abstract void deleteRoutineSession(RoutineSession rs);
 
-    @Delete
     // Delete session exercise.
+    @Delete
     public abstract void deleteSessionExercise(SessionExercise se);
 
-    @Delete
     // Delete set.
+    @Delete
     public abstract void deleteSessionExerciseSet(SessionExerciseSet ses);
 
-    @Query("UPDATE Routine SET hidden = :isHidden WHERE idRoutine=:idRoutine")
     // Hide/unhide a routine.
+    @Query("UPDATE Routine SET hidden = :isHidden WHERE idRoutine=:idRoutine")
     public abstract void setRoutineAsHidden(Long idRoutine, int isHidden);
 }

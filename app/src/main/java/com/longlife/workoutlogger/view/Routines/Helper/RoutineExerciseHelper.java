@@ -1,6 +1,7 @@
 package com.longlife.workoutlogger.view.Routines.Helper;
 
 import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 
 import java.util.List;
@@ -18,6 +19,11 @@ public class RoutineExerciseHelper {
         this.isExpanded = isExpanded;
     }
 
+    public RoutineExerciseHelper(ExerciseSessionWithSets exerciseWithSets) {
+        this.exercise = exerciseWithSets.getExercise();
+        this.sets = exerciseWithSets.getSets();
+        this.isExpanded = true;
+    }
 
     public Exercise getExercise() {
         return exercise;
