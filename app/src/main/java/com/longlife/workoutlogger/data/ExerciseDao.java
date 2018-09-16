@@ -85,7 +85,7 @@ public abstract class ExerciseDao {
 
         // Point the current row to the newly inserted leaf node.
         source.setIdExerciseLeaf(idLeaf);
-        source.setUpdateDateAsNow();
+        source.setUpdateDateAsNow(); // [TODO] check if we are truly getting all of the exercise data. Why is it returning UpdateDate = null and making so we have to call this to set the date?
         updateExercise(source);
 
         return source;

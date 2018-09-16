@@ -204,6 +204,6 @@ public class PerformExerciseFragment
 
     @Override
     public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        return 0;
+        return ItemTouchHelper.RIGHT;
     }
 }

@@ -34,7 +34,8 @@ public class RoutineCreateAdapter
     }
 
     public void setExercisesToInclude(ExerciseSessionWithSets exerciseWithSets) {
-        this.exercisesToInclude = Arrays.asList(new RoutineExerciseHelper(exerciseWithSets));
+        exercisesToInclude.clear();
+        exercisesToInclude.add(new RoutineExerciseHelper(exerciseWithSets));
     }
 
     private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
