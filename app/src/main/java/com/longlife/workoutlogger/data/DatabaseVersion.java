@@ -32,7 +32,8 @@ public class DatabaseVersion {
     private static final int V4_4 = 23; // Combining exercise history to Exercise entity.
     private static final int V4_4b = 24; // fixes inserting exercise.
     private static final int V4_4c = 25; // Removed routine history.
+    private static final int V4_4d = 26; // Added type for set.
 
-    public static final int CURRENT = V4_4c;
+    public static final int CURRENT = V4_4d;
 }
 

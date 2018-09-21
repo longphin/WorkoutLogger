@@ -22,6 +22,7 @@ import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.view.DialogFragment.PerformSetDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Perform.PerformFragment;
@@ -36,7 +37,10 @@ import io.reactivex.observers.DisposableMaybeObserver;
  * A simple {@link Fragment} subclass.
  */
 public class PerformExerciseFragment
-        extends FragmentBase implements RoutineCreateAdapter.IOnSetClick, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+        extends FragmentBase
+        implements RoutineCreateAdapter.IOnSetClick,
+        RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
+        PerformSetDialog.IOnSave {
     public static final String TAG = PerformFragment.TAG;
     private Long idExercise;
     @Inject
@@ -152,8 +156,12 @@ public class PerformExerciseFragment
     }
 
     @Override
-    public void onSetClick(@Nullable RoutineCreateAdapter.RoutineExerciseSetPositions idSessionExerciseSet) {
-        // [TODO]
+    public void onSetClick(@Nullable RoutineCreateAdapter.RoutineExerciseSetPositions positionHelper) {
+        if (positionHelper == null)
+            return;
+
+        PerformSetDialog dialog = PerformSetDialog.newInstance(positionHelper);
+        dialog.show(getChildFragmentManager(), PerformSetDialog.TAG);
     }
 
     @Override
@@ -205,5 +213,10 @@ public class PerformExerciseFragment
     @Override
     public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         return ItemTouchHelper.RIGHT;
+    }
+
+    @Override
+    public void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, double weight, int reps) {
+        // [TODO] When set edit dialog is saved, store the values into the adapter/database.
     }
 }

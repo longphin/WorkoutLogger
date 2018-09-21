@@ -43,4 +43,10 @@
 
     <string name="ComingSoon">Coming Soon</string>
     <string name="Perform">Perform</string>
+    <string name="Reps">Reps:</string>
+    <string name="Weight">Weight:</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Assisted">Assisted</string>
 </resources>

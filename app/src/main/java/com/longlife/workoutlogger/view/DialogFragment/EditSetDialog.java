@@ -10,19 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.Format;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateAdapter;
 
-// [TODO] need to implement. This dialog fragment will be opened when a set in the RoutineCreate fragment is selected. It will allow user to set the rest time and set type (warm-up, regular, drop-set).
 public class EditSetDialog
         extends DialogBase {
     public static final String TAG = EditSetDialog.class.getSimpleName();
     private int exerciseIndex;
     private int setIndexWithinExerciseIndex;
     private TextView timerBox;
-    private String time = "";// = "0";
+    private String time = "";
     private View mView;
     private IOnSave onSaveListener;
 
@@ -52,7 +52,7 @@ public class EditSetDialog
             mView = inflater.inflate(R.layout.dialog_edit_set, container, false);
 
             // Initialize view.
-            timerBox = mView.findViewById(R.id.txt_dialog_edit_set_restTime);
+            timerBox = mView.findViewById(R.id.txt_perform_exercise_rest);
 
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_0).setOnClickListener(view ->
                     {
@@ -149,7 +149,6 @@ public class EditSetDialog
         return mView;
     }
 
-    // Methods
     // Add a number to the start of the value.
     private String appendValue(int number) {
         // Limit the length of the entered time.
@@ -171,9 +170,8 @@ public class EditSetDialog
 
         return getUpdatedTimeString();
     }
+
     // When time is updated, then do some cleaning up.
-
-
     private String getUpdatedTimeString() {
         // Trim the time of any leading zeroes first.
         time = Format.ltrimCharacter(time, '0');

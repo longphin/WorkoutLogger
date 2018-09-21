@@ -489,16 +489,20 @@ public class RoutineCreateAdapter
     }
 
     public interface IOnSetClick {
-        void onSetClick(@Nullable RoutineExerciseSetPositions idSessionExerciseSet);
+        void onSetClick(@Nullable RoutineExerciseSetPositions positionHelper);
     }
 
     // Helper class specific for the set being edited. Contains the index of the position and the set position within that index.
     public class RoutineExerciseSetPositions {
+        // Suppose we have exercises = List<Exercise>. Then for exercises.get(i), exerciseIndex = i.
         private int exerciseIndex;
+        // Suppose we have exercises = List<Exercise>. Then for exercises.get(i).getSets().get(j), setIndexWithinExerciseIndex = j.
         private int setIndexWithinExerciseIndex;
+        // Minutes of rest for the set.
         private int restMinutes;
+        // Seconds of rest for the set.
         private int restSeconds;
-
+        // Exercise name for this set.
         private String exerciseName;
 
         public RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName) {
@@ -508,7 +512,6 @@ public class RoutineCreateAdapter
             this.restSeconds = restSeconds;
             this.exerciseName = exerciseName;
         }
-
 
         public int getExerciseIndex() {
             return exerciseIndex;

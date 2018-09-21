@@ -6,4 +6,5 @@
     <color name="colorWindowBackground">#FAFAFA</color>
 
     <color name="item_background">#fa315b</color>
+    <color name="colorLightGrey">#8b9296</color>
 </resources>

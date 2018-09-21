@@ -5,8 +5,12 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.longlife.workoutlogger.enums.SetType;
+import com.longlife.workoutlogger.enums.SetTypeConverter;
 
 import io.reactivex.annotations.NonNull;
 
@@ -43,6 +47,18 @@ public class SessionExerciseSet
     @NonNull
     private int restSeconds = 0;
     private float duration;
+
+    @NonNull
+    @TypeConverters({SetTypeConverter.class})
+    private SetType type = SetType.REGULAR;
+
+    public SetType getType() {
+        return type;
+    }
+
+    public void setType(SetType type) {
+        this.type = type;
+    }
 
     @Ignore
     private SessionExerciseSet(Parcel parcel) {
