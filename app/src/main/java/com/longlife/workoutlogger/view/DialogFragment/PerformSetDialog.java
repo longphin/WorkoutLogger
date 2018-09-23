@@ -3,6 +3,7 @@ package com.longlife.workoutlogger.view.DialogFragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +19,14 @@ import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateAdapt
 public class PerformSetDialog extends DialogBase {
 
     public static final String TAG = PerformSetDialog.class.getSimpleName();
+    private final static String decimalCharacter = "."; // [TODO] Change this to use the user's locale, such as "," instead for decimals.
     // Indicates what the user will be editing when they press the number buttons.
     private EditingType currentFocus = EditingType.WEIGHT;
     private int exerciseIndex; // [TODO] Probably can use idSessionExercise instead since all changes should be propogated to the database.
     private int setIndexWithinExerciseIndex; // [TODO] Probably can use idSessionExerciseSet insteaad since all changes should be propogated to the database.
     private String time = "";
+    private String weight = "";
+    private String rep = "";
     private TextView timerHeader;
     private TextView timerBox;
     private TextView weightHeader;
@@ -139,7 +143,7 @@ public class PerformSetDialog extends DialogBase {
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_X).setOnClickListener(view ->
                     {
-                        timerBox.setText(removeValue());
+                        deleteCharacter(currentFocus);
                     }
             );
 
@@ -186,9 +190,6 @@ public class PerformSetDialog extends DialogBase {
             {
                 if (currentFocus != EditingType.WEIGHT) {
                     currentFocus = EditingType.WEIGHT;
-                    blank1.setText("");
-                    blank2.setText("");
-                    blank3.setText("");
                     resetFocusedBox(currentFocus);
                 }
             });
@@ -198,9 +199,6 @@ public class PerformSetDialog extends DialogBase {
             {
                 if (currentFocus != EditingType.REP) {
                     currentFocus = EditingType.REP;
-                    blank1.setText(".");
-                    blank2.setText(R.string.Assisted);
-                    blank3.setText("");
                     resetFocusedBox(currentFocus);
                 }
             });
@@ -210,28 +208,39 @@ public class PerformSetDialog extends DialogBase {
             {
                 if (currentFocus != EditingType.REST) {
                     currentFocus = EditingType.REST;
-                    blank1.setText("");
-                    blank2.setText("");
-                    blank3.setText("");
                     resetFocusedBox(currentFocus);
+                }
+            });
+
+            // Set click events for the dynamic items.
+            blank1.setOnClickListener(view ->
+            {
+                if (currentFocus == EditingType.WEIGHT) {
+                    weight = appendCharacter(weight, decimalCharacter);
+                    weightBox.setText(weight);
                 }
             });
 
             // Initialize values.
             timerBox.setText(getUpdatedTimeString());
+
+            // Initialize keyboard depending on the current focus.
+            resetFocusedBox(currentFocus);
         }
 
         return mView;
     }
 
     private void numberClicked(int num) {
-        // [TODO] if editing type = weight or reps, change the corresponding box.
         if (currentFocus == EditingType.WEIGHT) {
+            weight = appendCharacter(weight, String.valueOf(num));
+            weightBox.setText(weight);
             return;
         }
 
-        // [TODO] if editing type = weight or reps, change the corresponding box.
         if (currentFocus == EditingType.REP) {
+            rep = appendCharacter(rep, String.valueOf(num));
+            repBox.setText(rep);
             return;
         }
 
@@ -241,14 +250,18 @@ public class PerformSetDialog extends DialogBase {
         }
     }
 
-    private String removeValue() {
-        // Nothing to delete, so just show 0's.
-        if (time.trim().isEmpty())
-            return getString(R.string.Time_timeString, 0, 0);
+    private void deleteCharacter(EditingType currentFocus) {
+        if (currentFocus == EditingType.WEIGHT) {
+            weight = deleteCharacterFromNumberStr(weight);
+            weightBox.setText(weight);
+        }
 
-        time = time.substring(0, time.length() - 1);
+        if (currentFocus == EditingType.REP) {
+            rep = deleteCharacterFromNumberStr(rep);
+            repBox.setText(rep);
+        }
 
-        return getUpdatedTimeString();
+        if (currentFocus == EditingType.REST) timerBox.setText(removeValue());
     }
 
     // Reset borders for the focused item.
@@ -256,6 +269,10 @@ public class PerformSetDialog extends DialogBase {
         if (newFocus == EditingType.WEIGHT) {
             weightHeader.setBackgroundResource(R.color.colorPrimary);
             weightBox.setBackgroundResource(R.drawable.back_border_lightblue);
+
+            blank1.setText(decimalCharacter);
+            blank2.setText(R.string.Assisted);
+            blank3.setText("");
         } else {
             weightHeader.setBackgroundResource(R.color.colorLightGrey);
             weightBox.setBackgroundResource(R.drawable.back_border_grey);
@@ -264,6 +281,10 @@ public class PerformSetDialog extends DialogBase {
         if (newFocus == EditingType.REP) {
             repHeader.setBackgroundResource(R.color.colorPrimary);
             repBox.setBackgroundResource(R.drawable.back_border_lightblue);
+
+            blank1.setText("");
+            blank2.setText("");
+            blank3.setText("");
         } else {
             repHeader.setBackgroundResource(R.color.colorLightGrey);
             repBox.setBackgroundResource(R.drawable.back_border_grey);
@@ -272,10 +293,36 @@ public class PerformSetDialog extends DialogBase {
         if (newFocus == EditingType.REST) {
             timerHeader.setBackgroundResource(R.color.colorPrimary);
             timerBox.setBackgroundResource(R.drawable.back_border_lightblue);
+
+            blank1.setText("");
+            blank2.setText("");
+            blank3.setText("");
         } else {
             timerHeader.setBackgroundResource(R.color.colorLightGrey);
             timerBox.setBackgroundResource(R.drawable.back_border_grey);
         }
+    }
+
+    private String appendCharacter(String text, @NonNull String toAppend) {
+        // Need to add a 0 in front if appending a decimal to empty string.
+        if (toAppend.equals(decimalCharacter)) {
+            if (text.contains(decimalCharacter))
+                return text; // The text already has a decimal. Cannot add another one.
+
+            if (text.equals("")) // Decimal was the first value entered, so pre-append it with a 0.
+                return ("0" + decimalCharacter);
+            else
+                return (text + decimalCharacter);
+        }
+
+        // If appending a 0 and the text only contains 0, then no need to append an additional 0.
+        if (toAppend.equals("0") && text.matches("^[0]+$")) return text;
+
+        if ((!text.contains(decimalCharacter) && text.length() < 4) // If appending to an integer, then check that the integer is < 4 digits.
+                || (text.contains(decimalCharacter) && text.substring(text.indexOf(decimalCharacter), text.length()).length() <= 2)) // If appending to a double, then check that the decimal places is < 2 digits.
+            return (text + toAppend);
+
+        return text;
     }
 
     // When time is updated, then do some cleaning up.
@@ -313,6 +360,28 @@ public class PerformSetDialog extends DialogBase {
 
         // Append the number to the current time.
         time += String.valueOf(number);
+
+        return getUpdatedTimeString();
+    }
+
+    private String deleteCharacterFromNumberStr(String text) {
+        // If the string is empty, then do not delete anything.
+        if (text.equals("")) return text;
+
+        // Remove the last character.
+        text = text.substring(0, text.length() - 1);
+
+        // If the only remaining character is a 0, then just empty the string.
+        if (text.equals("0")) return "";
+        else return text;
+    }
+
+    private String removeValue() {
+        // Nothing to delete, so just show 0's.
+        if (time.trim().isEmpty())
+            return getString(R.string.Time_timeString, 0, 0);
+
+        time = time.substring(0, time.length() - 1);
 
         return getUpdatedTimeString();
     }
