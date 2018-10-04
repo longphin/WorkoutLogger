@@ -216,7 +216,8 @@ public class PerformExerciseFragment
     }
 
     @Override
-    public void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, double weight, int reps) {
+    public void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, @Nullable Double weight, @Nullable Integer reps) {
         // [TODO] When set edit dialog is saved, store the values into the adapter/database.
+        adapter.setWeightForSet(exerciseIndex, exerciseSetIndex, restMinutes, restSeconds, weight, reps);
     }
 }

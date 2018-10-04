@@ -8,11 +8,12 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.longlife.workoutlogger.enums.SetType;
 import com.longlife.workoutlogger.enums.SetTypeConverter;
 
-import io.reactivex.annotations.NonNull;
 
 /**
  * Created by Longphi on 1/4/2018.
@@ -36,15 +37,14 @@ public class SessionExerciseSet
         }
     };
     @PrimaryKey
-    @NonNull
     private Long idSessionExerciseSet;
     private Long idSessionExercise;
+    @Nullable
     private Integer reps;
+    @Nullable
     private Double weights;
 
-    @NonNull
     private int restMinutes = 0;
-    @NonNull
     private int restSeconds = 0;
     private float duration;
 
@@ -52,6 +52,7 @@ public class SessionExerciseSet
     @TypeConverters({SetTypeConverter.class})
     private SetType type = SetType.REGULAR;
 
+    @NonNull
     public SetType getType() {
         return type;
     }
@@ -115,6 +116,7 @@ public class SessionExerciseSet
         idSessionExerciseSet = i;
     }
 
+    @Nullable
     public Integer getReps() {
         return reps;
     }
@@ -123,7 +125,6 @@ public class SessionExerciseSet
         this.reps = reps;
     }
 
-    @NonNull
     public int getRestMinutes() {
         return restMinutes;
     }
@@ -133,7 +134,6 @@ public class SessionExerciseSet
         this.restMinutes = restMinutes;
     }
 
-    @NonNull
     public int getRestSeconds() {
         return restSeconds;
     }
@@ -142,6 +142,7 @@ public class SessionExerciseSet
         this.restSeconds = restSeconds;
     }
 
+    @Nullable
     public Double getWeights() {
         return weights;
     }

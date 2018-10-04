@@ -289,15 +289,11 @@ public class RoutineCreateAdapter
         notifyItemRangeChanged(topHeaderPos, rangeAffected);
     }
 
+    @Nullable
     private RoutineExerciseSetPositions getIdSessionExerciseAtPosition(int position) {
         int count = 0;
 
-        for (int i = 0; i < exercisesToInclude.size(); i++) {//RoutineExerciseHelper reh : exercisesToInclude){
-			/* // We don't care about the header.
-			if(count >= position)
-				return HEADER_TYPE;
-			*/
-
+        for (int i = 0; i < exercisesToInclude.size(); i++) {
             final RoutineExerciseHelper reh = exercisesToInclude.get(i);
 
             if (reh.IsExpanded()) {
@@ -309,7 +305,7 @@ public class RoutineCreateAdapter
 
                     final int setIndex = position - count - 1;
                     final SessionExerciseSet set = sets.get(setIndex);
-                    return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds(), reh.getExercise().getName());
+                    return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds(), reh.getExercise().getName(), set.getWeights(), set.getReps());
                 }
 
                 count += 1; // Add 1 for the "Add set" view.
@@ -472,20 +468,41 @@ public class RoutineCreateAdapter
 
     public void setRestTimeForSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds) {
         // Check if the exercise to look up is within bounds.
-        if (exerciseIndex > exercisesToInclude.size() - 1)
+        if (exerciseIndex < 0 || exerciseIndex > exercisesToInclude.size() - 1)
             return;
         List<SessionExerciseSet> exerciseSetsToAffect = exercisesToInclude.get(exerciseIndex).getSets();
 
         // Check if the setIndex is within bounds.
-        if (exerciseSetIndex > exerciseSetsToAffect.size() - 1)
+        if (exerciseSetIndex < 0 || exerciseSetIndex > exerciseSetsToAffect.size() - 1)
             return;
         exerciseSetsToAffect.get(exerciseSetIndex).setRest(restMinutes, restSeconds);
 
+        notifySetChanged(exerciseIndex, exerciseSetIndex);
+    }
+
+    public void notifySetChanged(int exerciseIndex, int exerciseSetIndex) {
         // If the exercise is expanded, then update the timer being displayed.
         if (exercisesToInclude.get(exerciseIndex).IsExpanded()) {
             final int setPosition = getHeaderPosition(exerciseIndex) + exerciseSetIndex + 1;
             notifyItemChanged(setPosition);
         }
+    }
+
+    public void setWeightForSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, @Nullable Double weight, @Nullable Integer reps) {
+        // Check if the exercise to look up is within bounds.
+        if (exerciseIndex < 0 || exerciseIndex > exercisesToInclude.size() - 1)
+            return;
+        List<SessionExerciseSet> exerciseSetsToAffect = exercisesToInclude.get(exerciseIndex).getSets();
+
+        // Check if the setIndex is within bounds.
+        if (exerciseSetIndex < 0 || exerciseSetIndex > exerciseSetsToAffect.size() - 1)
+            return;
+        SessionExerciseSet affectedSet = exerciseSetsToAffect.get(exerciseSetIndex);
+        affectedSet.setRest(restMinutes, restSeconds);
+        affectedSet.setWeights(weight);
+        affectedSet.setReps(reps);
+
+        notifySetChanged(exerciseIndex, exerciseSetIndex);
     }
 
     public interface IOnSetClick {
@@ -505,12 +522,32 @@ public class RoutineCreateAdapter
         // Exercise name for this set.
         private String exerciseName;
 
+        // Weights for the set.
+        private Double weight;
+        // Reps for the set.
+        private Integer reps;
+
+        public RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName, Double weight, Integer reps) {
+            this(exerciseIndex, setIndexWithinExerciseIndex, restMinutes, restSeconds, exerciseName);
+
+            this.weight = weight;
+            this.reps = reps;
+        }
+
+        public Double getWeight() {
+            return weight;
+        }
+
         public RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName) {
             this.exerciseIndex = exerciseIndex;
             this.setIndexWithinExerciseIndex = setIndexWithinExerciseIndex;
             this.restMinutes = restMinutes;
             this.restSeconds = restSeconds;
             this.exerciseName = exerciseName;
+        }
+
+        public Integer getReps() {
+            return reps;
         }
 
         public int getExerciseIndex() {

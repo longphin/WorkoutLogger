@@ -16,10 +16,14 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.Format;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateAdapter;
 
+import static com.longlife.workoutlogger.model.Profile.decimalCharacter;
+import static com.longlife.workoutlogger.utils.Format.convertDoubleToStrWithoutZeroes;
+import static com.longlife.workoutlogger.utils.Format.convertStrToDouble;
+import static com.longlife.workoutlogger.utils.Format.convertStrToInt;
+
 public class PerformSetDialog extends DialogBase {
 
     public static final String TAG = PerformSetDialog.class.getSimpleName();
-    private final static String decimalCharacter = "."; // [TODO] Change this to use the user's locale, such as "," instead for decimals.
     // Indicates what the user will be editing when they press the number buttons.
     private EditingType currentFocus = EditingType.WEIGHT;
     private int exerciseIndex; // [TODO] Probably can use idSessionExercise instead since all changes should be propogated to the database.
@@ -51,6 +55,15 @@ public class PerformSetDialog extends DialogBase {
         bundle.putInt("restSeconds", positionHelper.getRestSeconds());//restSeconds);
         bundle.putString("exerciseName", positionHelper.getExerciseName());//exerciseName);
 
+        // Get set stats that are optional.
+        final Double weight = positionHelper.getWeight();
+        if (weight != null)
+            bundle.putDouble("weight", positionHelper.getWeight());
+
+        final Integer reps = positionHelper.getReps();
+        if (reps != null)
+            bundle.putInt("reps", positionHelper.getReps());
+
         PerformSetDialog dialog = new PerformSetDialog();
         dialog.setArguments(bundle);
 
@@ -65,6 +78,18 @@ public class PerformSetDialog extends DialogBase {
         exerciseIndex = getArguments().getInt("exerciseIndex");
         setIndexWithinExerciseIndex = getArguments().getInt("setIndexWithinExerciseIndex");
         time = Format.ltrimCharacter(getString(R.string.Time_timeStringUnformatted, getArguments().getInt("restMinutes"), getArguments().getInt("restSeconds")), '0');
+
+        final Double weight = getArguments().getDouble("weight");
+        if (weight.equals(0d))
+            this.weight = "";
+        else
+            this.weight = convertDoubleToStrWithoutZeroes(weight);
+
+        final Integer rep = getArguments().getInt("reps");
+        if (rep.equals(0))
+            this.rep = "";
+        else
+            this.rep = String.valueOf(rep);
     }
 
     @Override
@@ -89,6 +114,9 @@ public class PerformSetDialog extends DialogBase {
             weightBox = mView.findViewById(R.id.txt_perform_exercise_weights);
             repHeader = mView.findViewById(R.id.txt_perform_exercise_repsHeader);
             repBox = mView.findViewById(R.id.txt_perform_exercise_reps);
+
+            if (!weight.isEmpty()) weightBox.setText(weight);
+            if (!rep.isEmpty()) repBox.setText(rep);
 
             // Numbers buttons and click listeners.
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_0).setOnClickListener(view ->
@@ -149,12 +177,16 @@ public class PerformSetDialog extends DialogBase {
 
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_save).setOnClickListener(view ->
             {
+                // Get weight and rep as numbers.
+                final Double finalWeight = convertStrToDouble(weight);
+                final Integer finalRep = convertStrToInt(rep);
+
                 // Get the minutes and seconds from the time.
                 final int currentLength = time.length();
 
                 // If empty, then just show 0's.
                 if (currentLength == 0) {
-                    //onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, 0, 0); // [TODO]
+                    onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, 0, 0, finalWeight, finalRep);
                     getDialog().dismiss();
                     return;
                 }
@@ -170,7 +202,7 @@ public class PerformSetDialog extends DialogBase {
                     minutes = time.substring(0, time.length() - 2);
                 }
 
-                //onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, Integer.valueOf(minutes), Integer.valueOf(seconds)); // [TODO]
+                onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, Integer.valueOf(minutes), Integer.valueOf(seconds), finalWeight, finalRep);
 
                 getDialog().dismiss();
             });
@@ -184,6 +216,7 @@ public class PerformSetDialog extends DialogBase {
             blank1 = mView.findViewById(R.id.btn_fragment_keyboard_numbers_blank1);
             blank2 = mView.findViewById(R.id.btn_fragment_keyboard_numbers_blank2);
             blank3 = mView.findViewById(R.id.btn_fragment_keyboard_numbers_blank3);
+            blank3.setText(R.string.Next);
 
             // User wants to edit the weights.
             weightBox.setOnClickListener(view ->
@@ -315,8 +348,13 @@ public class PerformSetDialog extends DialogBase {
                 return (text + decimalCharacter);
         }
 
-        // If appending a 0 and the text only contains 0, then no need to append an additional 0.
-        if (toAppend.equals("0") && text.matches("^[0]+$")) return text;
+        // Check if the text only contains 0 before appending a number. If the number is currently 0, then either replace the number or do nothing depending on the value being appended.
+        if (text.matches("^[0]+$")) // Text is all 0.
+        {
+            if (toAppend.equals("0"))
+                return text; // If appending 0 to a 0 integer, then do nothing.
+            return toAppend; // Else, appending a non-zero to a 0 integer, just set the number as the new number.
+        }
 
         if ((!text.contains(decimalCharacter) && text.length() < 4) // If appending to an integer, then check that the integer is < 4 digits.
                 || (text.contains(decimalCharacter) && text.substring(text.indexOf(decimalCharacter), text.length()).length() <= 2)) // If appending to a double, then check that the decimal places is < 2 digits.
@@ -394,7 +432,7 @@ public class PerformSetDialog extends DialogBase {
     }
 
     public interface IOnSave {
-        void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, double weight, int reps);
+        void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, @Nullable Double weight, @Nullable Integer reps);
     }
 
 }
