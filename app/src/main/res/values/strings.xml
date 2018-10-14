@@ -51,4 +51,6 @@
     <string name="Assisted">Assisted</string>
     <string name="saveAndRest">Save and Rest</string>
     <string name="Next">Next</string>
+    <string name="zeroDouble">0</string>
+    <string name="zeroInt">0</string>
 </resources>

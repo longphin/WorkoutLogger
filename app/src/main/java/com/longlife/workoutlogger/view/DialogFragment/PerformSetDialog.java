@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.Format;
-import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateAdapter;
+import com.longlife.workoutlogger.view.Exercises.PerformExercise.PerformRoutineAdapter;
 
 import static com.longlife.workoutlogger.model.Profile.decimalCharacter;
 import static com.longlife.workoutlogger.utils.Format.convertDoubleToStrWithoutZeroes;
@@ -43,11 +43,15 @@ public class PerformSetDialog extends DialogBase {
     private View mView;
     private IOnSave onSaveListener;
 
+    // Set limited digits for numbers.
+    private static final int weightsDigitLimit = 4;
+    private static final int repsDigitLimit = 3;
+
     public PerformSetDialog() {
         // Required empty public constructor
     }
 
-    public static PerformSetDialog newInstance(RoutineCreateAdapter.RoutineExerciseSetPositions positionHelper) {
+    public static PerformSetDialog newInstance(PerformRoutineAdapter.RoutineExerciseSetPositions positionHelper) {
         Bundle bundle = new Bundle();
         bundle.putInt("exerciseIndex", positionHelper.getExerciseIndex());//exerciseIndex);
         bundle.putInt("setIndexWithinExerciseIndex", positionHelper.getSetIndexWithinExerciseIndex());//setIndexWithinExerciseIndex);
@@ -249,7 +253,7 @@ public class PerformSetDialog extends DialogBase {
             blank1.setOnClickListener(view ->
             {
                 if (currentFocus == EditingType.WEIGHT) {
-                    weight = appendCharacter(weight, decimalCharacter);
+                    weight = appendCharacter(weight, decimalCharacter, weightsDigitLimit);
                     weightBox.setText(weight);
                 }
             });
@@ -266,13 +270,13 @@ public class PerformSetDialog extends DialogBase {
 
     private void numberClicked(int num) {
         if (currentFocus == EditingType.WEIGHT) {
-            weight = appendCharacter(weight, String.valueOf(num));
+            weight = appendCharacter(weight, String.valueOf(num), weightsDigitLimit);
             weightBox.setText(weight);
             return;
         }
 
         if (currentFocus == EditingType.REP) {
-            rep = appendCharacter(rep, String.valueOf(num));
+            rep = appendCharacter(rep, String.valueOf(num), repsDigitLimit);
             repBox.setText(rep);
             return;
         }
@@ -336,7 +340,7 @@ public class PerformSetDialog extends DialogBase {
         }
     }
 
-    private String appendCharacter(String text, @NonNull String toAppend) {
+    private String appendCharacter(String text, @NonNull String toAppend, int integerDigitsLimit) {
         // Need to add a 0 in front if appending a decimal to empty string.
         if (toAppend.equals(decimalCharacter)) {
             if (text.contains(decimalCharacter))
@@ -356,7 +360,7 @@ public class PerformSetDialog extends DialogBase {
             return toAppend; // Else, appending a non-zero to a 0 integer, just set the number as the new number.
         }
 
-        if ((!text.contains(decimalCharacter) && text.length() < 4) // If appending to an integer, then check that the integer is < 4 digits.
+        if ((!text.contains(decimalCharacter) && text.length() < integerDigitsLimit) // If appending to an integer, then check that the integer is < the limited number of digits.
                 || (text.contains(decimalCharacter) && text.substring(text.indexOf(decimalCharacter), text.length()).length() <= 2)) // If appending to a double, then check that the decimal places is < 2 digits.
             return (text + toAppend);
 

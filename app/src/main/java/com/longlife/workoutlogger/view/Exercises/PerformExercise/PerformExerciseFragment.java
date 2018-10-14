@@ -38,7 +38,7 @@ import io.reactivex.observers.DisposableMaybeObserver;
  */
 public class PerformExerciseFragment
         extends FragmentBase
-        implements RoutineCreateAdapter.IOnSetClick,
+        implements PerformRoutineAdapter.IOnSetClick,
         RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
         PerformSetDialog.IOnSave {
     public static final String TAG = PerformFragment.TAG;
@@ -56,7 +56,7 @@ public class PerformExerciseFragment
     private ExerciseSessionWithSets exerciseWithSets;
     private View mView;
     private RecyclerView exercisesRecyclerView;
-    private RoutineCreateAdapter adapter;
+    private PerformRoutineAdapter adapter;
     private ConstraintLayout coordinatorLayout; // layout for recycler view
 
     public static PerformExerciseFragment newInstance(Long idExercise, Long idExerciseLeaf, String exerciseName) {
@@ -142,7 +142,7 @@ public class PerformExerciseFragment
 
     private void initializeRecyclerView() {
         exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        adapter = new RoutineCreateAdapter(getContext(), this);
+        adapter = new PerformRoutineAdapter(getContext(), this);
         exercisesRecyclerView.setAdapter(adapter);
 
         // Callback to detach swipe to delete motion.

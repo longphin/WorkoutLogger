@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/txt_routine_create_exercise_set_title"
+            android:id="@+id/txt_routine_create_exercise_set_rest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"

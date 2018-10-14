@@ -10,9 +10,10 @@ import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateAddSetViewHolder;
-import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateSetViewHolder;
+import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateAdapter;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateViewHolder;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
@@ -21,35 +22,38 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class RoutineWithSetsAdapter
+public abstract class ExercisesWithSetsAdapter
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int ADD_SET_TYPE = 3;
-    private static final String TAG = RoutineWithSetsAdapter.class.getSimpleName();
+    private static final String TAG = RoutineCreateAdapter.class.getSimpleName();
     private static final int HEADER_TYPE = 1;
     private static final int SET_TYPE = 2;
+    protected Context context;
+    protected IOnSetClick onSetClickListener;
     private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
-    private Context context;
-    private IOnSetClick onSetClickListener;
 
     // Other
-    public RoutineWithSetsAdapter(Context context, IOnSetClick onSetClickListener) {
+    public ExercisesWithSetsAdapter(Context context, IOnSetClick onSetClickListener) {
         this.context = context;
         this.onSetClickListener = onSetClickListener;
     }
-
 
     public static int getHeaderTypeEnum() {
         return HEADER_TYPE;
     }
 
+    public void setExercisesToInclude(List<RoutineExerciseHelper> exercisesToInclude) {
+        this.exercisesToInclude = exercisesToInclude;
+    }
+
+    public void setExercisesToInclude(ExerciseSessionWithSets exerciseWithSets) {
+        exercisesToInclude.clear();
+        exercisesToInclude.add(new RoutineExerciseHelper(exerciseWithSets));
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return getViewHolder(parent, viewType);
-    }
-
-    protected RecyclerView.ViewHolder getViewHolder(ViewGroup parent, int viewType) {
         View v;
 
         switch (viewType) {
@@ -58,7 +62,12 @@ public abstract class RoutineWithSetsAdapter
                 return new RoutineCreateViewHolder(v);
             case SET_TYPE:
                 v = LayoutInflater.from(this.context).inflate(getSetLayout(), parent, false);
+                return createSetViewHolder(v);
+                /*
+                v = LayoutInflater.from(this.context).inflate(getSetLayout(), parent, false);
                 return new RoutineCreateSetViewHolder(v);
+                */
+
             case ADD_SET_TYPE:
                 v = LayoutInflater.from(this.context).inflate(R.layout.item_add_set, parent, false);
                 return new RoutineCreateAddSetViewHolder(v);
@@ -68,20 +77,25 @@ public abstract class RoutineWithSetsAdapter
         }
     }
 
-    protected int getSetLayout() {
+    public abstract int getSetLayout();
+
+    public abstract RecyclerView.ViewHolder createSetViewHolder(View v);
+    /*{
         return R.layout.item_routine_create_exercise_set;
     }
+    */
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int pos) {
         int position = holder.getAdapterPosition();
+        //ViewType viewType = viewTypes.get(position);
 
         if (holder instanceof RoutineCreateViewHolder) {
             bindHeaderViewHolder((RoutineCreateViewHolder) holder, position);
             return;
         }
-        if (holder instanceof RoutineCreateSetViewHolder) {
-            bindSetViewHolder((RoutineCreateSetViewHolder) holder, position);
+        if (holder instanceof ExercisesWithSetsViewHolder) {
+            bindSetViewHolder(holder, position);
             return;
         }
         if (holder instanceof RoutineCreateAddSetViewHolder) {
@@ -189,7 +203,7 @@ public abstract class RoutineWithSetsAdapter
 
         final Exercise exercise = headerItem.getExercise();
 
-        holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + " -> " + String.valueOf(exercise.getIdExerciseLeaf()) + ")");
+        holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + " -> source " + String.valueOf(exercise.getIdExerciseSource()) + ")");
     }
 
     // When header is clicked, expand or collapse header.
@@ -225,7 +239,9 @@ public abstract class RoutineWithSetsAdapter
         moveHeader(headerIndex, headerIndex + 1);
     }
 
-    private void bindSetViewHolder(@NonNull RoutineCreateSetViewHolder holder, int position) {
+    public abstract void bindSetViewHolder(@NonNull RecyclerView.ViewHolder holder, int position);
+    /*
+    protected void bindSetViewHolder(@NonNull RoutineCreateSetViewHolder holder, int position) {
         final int pos = holder.getAdapterPosition();
         final SessionExerciseSet set = getSetAtPosition(pos);
         holder.getRestTextView().setText(context.getString(R.string.set_header, set.getRestMinutes(), set.getRestSeconds()));
@@ -236,8 +252,9 @@ public abstract class RoutineWithSetsAdapter
             onSetClickListener.onSetClick(getIdSessionExerciseAtPosition(clickedPos));
         });
     }
+    */
 
-    private SessionExerciseSet getSetAtPosition(int position) {
+    protected SessionExerciseSet getSetAtPosition(int position) {
         int count = 0;
 
         for (int i = 0; i < exercisesToInclude.size(); i++) {//RoutineExerciseHelper reh : exercisesToInclude){
@@ -282,15 +299,11 @@ public abstract class RoutineWithSetsAdapter
         notifyItemRangeChanged(topHeaderPos, rangeAffected);
     }
 
-    private RoutineExerciseSetPositions getIdSessionExerciseAtPosition(int position) {
+    @Nullable
+    protected RoutineExerciseSetPositions getIdSessionExerciseAtPosition(int position) {
         int count = 0;
 
-        for (int i = 0; i < exercisesToInclude.size(); i++) {//RoutineExerciseHelper reh : exercisesToInclude){
-			/* // We don't care about the header.
-			if(count >= position)
-				return HEADER_TYPE;
-			*/
-
+        for (int i = 0; i < exercisesToInclude.size(); i++) {
             final RoutineExerciseHelper reh = exercisesToInclude.get(i);
 
             if (reh.IsExpanded()) {
@@ -302,7 +315,7 @@ public abstract class RoutineWithSetsAdapter
 
                     final int setIndex = position - count - 1;
                     final SessionExerciseSet set = sets.get(setIndex);
-                    return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds(), reh.getExercise().getName());
+                    return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds(), reh.getExercise().getName(), set.getWeights(), set.getReps());
                 }
 
                 count += 1; // Add 1 for the "Add set" view.
@@ -465,20 +478,41 @@ public abstract class RoutineWithSetsAdapter
 
     public void setRestTimeForSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds) {
         // Check if the exercise to look up is within bounds.
-        if (exerciseIndex > exercisesToInclude.size() - 1)
+        if (exerciseIndex < 0 || exerciseIndex > exercisesToInclude.size() - 1)
             return;
         List<SessionExerciseSet> exerciseSetsToAffect = exercisesToInclude.get(exerciseIndex).getSets();
 
         // Check if the setIndex is within bounds.
-        if (exerciseSetIndex > exerciseSetsToAffect.size() - 1)
+        if (exerciseSetIndex < 0 || exerciseSetIndex > exerciseSetsToAffect.size() - 1)
             return;
         exerciseSetsToAffect.get(exerciseSetIndex).setRest(restMinutes, restSeconds);
 
+        notifySetChanged(exerciseIndex, exerciseSetIndex);
+    }
+
+    public void notifySetChanged(int exerciseIndex, int exerciseSetIndex) {
         // If the exercise is expanded, then update the timer being displayed.
         if (exercisesToInclude.get(exerciseIndex).IsExpanded()) {
             final int setPosition = getHeaderPosition(exerciseIndex) + exerciseSetIndex + 1;
             notifyItemChanged(setPosition);
         }
+    }
+
+    public void setWeightForSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, @Nullable Double weight, @Nullable Integer reps) {
+        // Check if the exercise to look up is within bounds.
+        if (exerciseIndex < 0 || exerciseIndex > exercisesToInclude.size() - 1)
+            return;
+        List<SessionExerciseSet> exerciseSetsToAffect = exercisesToInclude.get(exerciseIndex).getSets();
+
+        // Check if the setIndex is within bounds.
+        if (exerciseSetIndex < 0 || exerciseSetIndex > exerciseSetsToAffect.size() - 1)
+            return;
+        SessionExerciseSet affectedSet = exerciseSetsToAffect.get(exerciseSetIndex);
+        affectedSet.setRest(restMinutes, restSeconds);
+        affectedSet.setWeights(weight);
+        affectedSet.setReps(reps);
+
+        notifySetChanged(exerciseIndex, exerciseSetIndex);
     }
 
     public interface IOnSetClick {
@@ -487,12 +521,28 @@ public abstract class RoutineWithSetsAdapter
 
     // Helper class specific for the set being edited. Contains the index of the position and the set position within that index.
     public class RoutineExerciseSetPositions {
+        // Suppose we have exercises = List<Exercise>. Then for exercises.get(i), exerciseIndex = i.
         private int exerciseIndex;
+        // Suppose we have exercises = List<Exercise>. Then for exercises.get(i).getSets().get(j), setIndexWithinExerciseIndex = j.
         private int setIndexWithinExerciseIndex;
+        // Minutes of rest for the set.
         private int restMinutes;
+        // Seconds of rest for the set.
         private int restSeconds;
-
+        // Exercise name for this set.
         private String exerciseName;
+
+        // Weights for the set.
+        private Double weight;
+        // Reps for the set.
+        private Integer reps;
+
+        public RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName, Double weight, Integer reps) {
+            this(exerciseIndex, setIndexWithinExerciseIndex, restMinutes, restSeconds, exerciseName);
+
+            this.weight = weight;
+            this.reps = reps;
+        }
 
         public RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName) {
             this.exerciseIndex = exerciseIndex;
@@ -502,6 +552,13 @@ public abstract class RoutineWithSetsAdapter
             this.exerciseName = exerciseName;
         }
 
+        public Double getWeight() {
+            return weight;
+        }
+
+        public Integer getReps() {
+            return reps;
+        }
 
         public int getExerciseIndex() {
             return exerciseIndex;
@@ -524,5 +581,3 @@ public abstract class RoutineWithSetsAdapter
         }
     }
 }
-
-

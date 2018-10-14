@@ -19,6 +19,8 @@ public class Format {
     // This will convert a double to a string, without trailing zeroes.
     // Example: xx.00 will return "xx", and xx.x0 will return "xx.x".
     public static String convertDoubleToStrWithoutZeroes(Double d) {
+        if (d == null) return ("");
+
         try {
             String str = String.valueOf(d);
             // Trim certain characters.

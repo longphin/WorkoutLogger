@@ -9,8 +9,8 @@
         android:id="@+id/item_routine_create_exercise_set_background"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@color/item_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,35 +39,36 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/txt_exercise_perform_set_weight"
-            android:layout_width="168dp"
+            android:id="@+id/txt_perform_routine_set_weights"
+            android:layout_width="94dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/txt_routine_create_exercise_set_rest"
-            app:layout_constraintEnd_toStartOf="@+id/txt_exercise_perform_set_reps"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txt_perform_routine_set_reps"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Weight" />
+            tools:text="50 lbs" />
 
         <TextView
-            android:id="@+id/txt_exercise_perform_set_reps"
-            android:layout_width="168dp"
+            android:id="@+id/txt_perform_routine_set_reps"
+            android:layout_width="94dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/txt_routine_create_exercise_set_rest"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="72dp"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txt_routine_create_exercise_set_rest"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Reps" />
+            tools:text="x12" />
 
         <TextView
             android:id="@+id/txt_routine_create_exercise_set_rest"
-            android:layout_width="0dp"
-            android:layout_height="17dp"
-            android:textAlignment="viewStart"
+            android:layout_width="94dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Rest: 1m 22s" />
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>
