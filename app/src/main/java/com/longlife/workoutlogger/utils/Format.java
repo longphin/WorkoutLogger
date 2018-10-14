@@ -57,7 +57,10 @@ public class Format {
         if (str.endsWith(decimalCharacter)) // Check if the weight ends in a decimal (i.e. "xx."). If it does, then ignore the ending decimal.
         {
             if (str.length() < 2) return null; // If weight only has a decimal, then return 0.
-            return Double.parseDouble(str.substring(0, str.length() - 2)); // Else, return the weight without the ending decimal.
+            if (str.startsWith("0") && str.length() == 2)
+                return null; // string starts with 0 and ends with . (i.e. "0.")
+
+            return Double.parseDouble(str.substring(0, str.length() - 1)); // Else, return the weight without the ending decimal.
         }
 
         // Else, the input is a regular number.

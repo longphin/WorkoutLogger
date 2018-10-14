@@ -30,13 +30,11 @@ public abstract class ExercisesWithSetsAdapter
     private static final int HEADER_TYPE = 1;
     private static final int SET_TYPE = 2;
     protected Context context;
-    protected IOnSetClick onSetClickListener;
     private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
 
     // Other
-    public ExercisesWithSetsAdapter(Context context, IOnSetClick onSetClickListener) {
+    public ExercisesWithSetsAdapter(Context context) {
         this.context = context;
-        this.onSetClickListener = onSetClickListener;
     }
 
     public static int getHeaderTypeEnum() {
@@ -513,10 +511,6 @@ public abstract class ExercisesWithSetsAdapter
         affectedSet.setReps(reps);
 
         notifySetChanged(exerciseIndex, exerciseSetIndex);
-    }
-
-    public interface IOnSetClick {
-        void onSetClick(@Nullable RoutineExerciseSetPositions positionHelper);
     }
 
     // Helper class specific for the set being edited. Contains the index of the position and the set position within that index.

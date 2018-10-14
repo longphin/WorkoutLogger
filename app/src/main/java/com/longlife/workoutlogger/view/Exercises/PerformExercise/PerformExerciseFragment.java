@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.longlife.workoutlogger.AndroidUtils.ExercisesWithSetsAdapter;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
@@ -156,15 +157,6 @@ public class PerformExerciseFragment
     }
 
     @Override
-    public void onSetClick(@Nullable RoutineCreateAdapter.RoutineExerciseSetPositions positionHelper) {
-        if (positionHelper == null)
-            return;
-
-        PerformSetDialog dialog = PerformSetDialog.newInstance(positionHelper);
-        dialog.show(getChildFragmentManager(), PerformSetDialog.TAG);
-    }
-
-    @Override
     public boolean isItemViewSwipeEnabled() {
         return true;
     }
@@ -219,5 +211,14 @@ public class PerformExerciseFragment
     public void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, @Nullable Double weight, @Nullable Integer reps) {
         // [TODO] When set edit dialog is saved, store the values into the adapter/database.
         adapter.setWeightForSet(exerciseIndex, exerciseSetIndex, restMinutes, restSeconds, weight, reps);
+    }
+
+    @Override
+    public void onSetClick(@Nullable ExercisesWithSetsAdapter.RoutineExerciseSetPositions positionHelper, PerformSetDialog.EditingType initialFocus) {
+        if (positionHelper == null)
+            return;
+
+        PerformSetDialog dialog = PerformSetDialog.newInstance(positionHelper, initialFocus);
+        dialog.show(getChildFragmentManager(), PerformSetDialog.TAG);
     }
 }

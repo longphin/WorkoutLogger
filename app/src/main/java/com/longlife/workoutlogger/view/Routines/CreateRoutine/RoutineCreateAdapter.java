@@ -2,6 +2,7 @@ package com.longlife.workoutlogger.view.Routines.CreateRoutine;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +17,16 @@ public class RoutineCreateAdapter
         extends ExercisesWithSetsAdapter {
     private static final String TAG = RoutineCreateAdapter.class.getSimpleName();
 
+    private IOnSetClick onSetClickListener;
+
     public RoutineCreateAdapter(Context context, IOnSetClick onSetClickListener) {
-        super(context, onSetClickListener);
+        super(context);
+
+        this.onSetClickListener = onSetClickListener;
+    }
+
+    public interface IOnSetClick {
+        void onSetClick(@Nullable RoutineExerciseSetPositions positionHelper);
     }
 
     @Override

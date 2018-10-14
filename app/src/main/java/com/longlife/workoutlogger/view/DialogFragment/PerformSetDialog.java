@@ -51,13 +51,14 @@ public class PerformSetDialog extends DialogBase {
         // Required empty public constructor
     }
 
-    public static PerformSetDialog newInstance(PerformRoutineAdapter.RoutineExerciseSetPositions positionHelper) {
+    public static PerformSetDialog newInstance(PerformRoutineAdapter.RoutineExerciseSetPositions positionHelper, EditingType initialFocus) {
         Bundle bundle = new Bundle();
         bundle.putInt("exerciseIndex", positionHelper.getExerciseIndex());//exerciseIndex);
         bundle.putInt("setIndexWithinExerciseIndex", positionHelper.getSetIndexWithinExerciseIndex());//setIndexWithinExerciseIndex);
         bundle.putInt("restMinutes", positionHelper.getRestMinutes());//restMinutes);
         bundle.putInt("restSeconds", positionHelper.getRestSeconds());//restSeconds);
         bundle.putString("exerciseName", positionHelper.getExerciseName());//exerciseName);
+        bundle.putInt("initialFocus", initialFocus.asInt());
 
         // Get set stats that are optional.
         final Double weight = positionHelper.getWeight();
@@ -94,6 +95,10 @@ public class PerformSetDialog extends DialogBase {
             this.rep = "";
         else
             this.rep = String.valueOf(rep);
+
+        // Set the initial focus item.
+        final int initialFocus = getArguments().getInt("initialFocus");
+        currentFocus = EditingType.fromInt(initialFocus);
     }
 
     @Override
@@ -429,10 +434,32 @@ public class PerformSetDialog extends DialogBase {
     }
 
     // An enum indicating which item is being edited.
-    private enum EditingType {
-        WEIGHT, // User is entering in the weights.
-        REP, // User is entering in the reps.
-        REST // User is entering the rest time.
+    public enum EditingType {
+        WEIGHT(0), // User is entering in the weights.
+        REP(1), // User is entering in the reps.
+        REST(2); // User is entering the rest time.
+
+        private Integer _value;
+
+        EditingType(Integer val) {
+            this._value = val;
+        }
+
+        public static EditingType fromInt(Integer i) {
+            if (i == null)
+                return (null);
+
+            for (EditingType et : EditingType.values()) {
+                if (et.asInt() == i) {
+                    return (et);
+                }
+            }
+            return (null);
+        }
+
+        public int asInt() {
+            return _value;
+        }
     }
 
     public interface IOnSave {
