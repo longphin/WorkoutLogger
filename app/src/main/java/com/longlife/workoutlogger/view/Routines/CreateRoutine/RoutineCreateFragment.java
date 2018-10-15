@@ -10,9 +10,7 @@ import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -419,7 +417,7 @@ public class RoutineCreateFragment
     }
 
     @Override
-    public void exercisePerform(Long idExercise, Long idExerciseLeaf, String exerciseName) {
+    public void exercisePerform(Long idExercise, String exerciseName) {
         // [TODO] Routines does not need to implement this. May want to separate this interface so this routine does not need to be overridden.
     }
 
@@ -436,20 +434,6 @@ public class RoutineCreateFragment
     @Override
     public void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds) {
         adapter.setRestTimeForSet(exerciseIndex, exerciseSetIndex, restMinutes, restSeconds);
-    }
-
-    private void addFragmentToActivity(FragmentManager fragmentManager,
-                                       Fragment fragment,
-                                       int frameId,
-                                       String tag,
-                                       String addToBackStack) {
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frameLayout_main_activity,//frameId,
-                fragment, tag
-        );
-        if (!addToBackStack.isEmpty())
-            transaction.addToBackStack(addToBackStack);
-        transaction.commit();
     }
 
     // Click search exercise button

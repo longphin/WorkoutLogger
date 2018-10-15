@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
 import com.longlife.workoutlogger.view.MainActivity;
@@ -22,9 +23,9 @@ public class ExercisesSelectableFragment
     public static final String TAG = ExercisesFragment.class.getSimpleName(); // The tag will be the same as the base class. //ExercisesSelectableFragment.class.getSimpleName();
     private ExercisesSelectableViewModel exercisesSelectableViewModel;
 
-    public static ExercisesSelectableFragment newInstance(ExercisesSelectableViewModel exercisesSelectableViewModel, int activityRoot, int exerciseItemLayout) {
+    public static ExercisesSelectableFragment newInstance(ExercisesSelectableViewModel exercisesSelectableViewModel, // [TODO] this is obtained in onCreate() instead. Is this needed and it is better to pass the viewmodel in this function?
+                                                          int activityRoot, int exerciseItemLayout) {
         ExercisesSelectableFragment fragment = new ExercisesSelectableFragment();
-        //fragment.setAdapter(new ExercisesSelectableAdapter(fragment, fragment));
 
         Bundle bundle = new Bundle();
         bundle.putInt("activityRoot", activityRoot);
@@ -48,6 +49,7 @@ public class ExercisesSelectableFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
+        // [TODO] When adding exercises to routine, it does not seem to properly remove an exercise.
         Button addExercisesToRoutineButton = mView.findViewById(R.id.btn_routine_exercises_addExercisesToRoutine);
         addExercisesToRoutineButton.setOnClickListener(
                 view ->

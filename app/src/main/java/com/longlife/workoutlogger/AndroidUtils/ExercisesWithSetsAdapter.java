@@ -201,7 +201,7 @@ public abstract class ExercisesWithSetsAdapter
 
         final Exercise exercise = headerItem.getExercise();
 
-        holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + " -> source " + String.valueOf(exercise.getIdExerciseSource()) + ")");
+        holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + ")");
     }
 
     // When header is clicked, expand or collapse header.

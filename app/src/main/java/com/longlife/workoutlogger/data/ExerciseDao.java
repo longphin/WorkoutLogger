@@ -26,11 +26,11 @@ import io.reactivex.Single;
 @android.arch.persistence.room.Dao
 public abstract class ExerciseDao {
     // Get a list of exercises that are not hidden.
-    @Query("SELECT * FROM Exercise WHERE hidden = 0 AND idExerciseSource IS NULL")
+    @Query("SELECT * FROM Exercise WHERE hidden = 0")
     public abstract Single<List<Exercise>> getExercises();
 
     // Get the name of exercises that are not hidden.
-    @Query("SELECT Name FROM Exercise WHERE hidden = 0 AND idExerciseSOurce IS NULL")
+    @Query("SELECT Name FROM Exercise WHERE hidden = 0")
     public abstract Single<List<String>> getExercisesNames();
 
     // Check if an exercise with the given name already exists.
@@ -69,27 +69,17 @@ public abstract class ExerciseDao {
             "LIMIT 1")
     public abstract Maybe<SessionExercise> getLatestExerciseSession(Long idExercise);
 
-    // Update an exercise. Do not use directly. Instead, use updateExerciseFull(idExerciseSource) to create a new child instance for the exercise history.
+    @Transaction
+    public Exercise updateExerciseFull(Exercise ex) // [TODO] when exercise is updated, use this.
+    {
+        updateExercise(ex);
+
+        return ex;
+    }
+
+    // Update an exercise.
     @Update
     public abstract void updateExercise(Exercise ex);
-
-    // Update exercise source and save it to history.
-    @Transaction
-    public Exercise updateExerciseFull(Exercise source) {
-        Exercise leaf = new Exercise(source);
-
-        // Insert leaf node.
-        Long idLeaf = insertExercise(leaf);
-        leaf.setIdExerciseLeaf(null);
-        leaf.setIdExercise(idLeaf);
-
-        // Point the current row to the newly inserted leaf node.
-        source.setIdExerciseLeaf(idLeaf);
-        source.setUpdateDateAsNow(); // [TODO] check if we are truly getting all of the exercise data. Why is it returning UpdateDate = null and making so we have to call this to set the date?
-        updateExercise(source);
-
-        return source;
-    }
 
     // When inserting an exercise, save it into history and update it in the Exercise table. Returns the exercise with updated ids.
     @Transaction
@@ -98,27 +88,12 @@ public abstract class ExerciseDao {
         Long idSource = insertExercise(source);
         source.setIdExercise(idSource);
 
-        // Insert history
-        Exercise leaf = new Exercise(source);
-        //leaf.setIdExercise(null); // Copy constructor does not copy idExercise.
-        leaf.setIdExerciseSource(idSource);
-        Long idLeaf = insertExercise(leaf);
-        leaf.setIdExercise(idLeaf); // Technically don't need to do this because leaf is never used.
-
-        // Update the exercise with the obtained history id.
-        updateIdLeaf(idSource, idLeaf);
-        source.setIdExerciseLeaf(idLeaf);
-
         return source;
     }
 
     // Insert an exercise. Do not use directly. Instead, use insertExerciseFull(exercise) to insert a source exercise and a leaf copy.
     @Insert(onConflict = OnConflictStrategy.ROLLBACK)
     public abstract Long insertExercise(Exercise ex);
-
-    // Update the history id that an exercise points to. This is to keep track of which history is the exercise's most current history.
-    @Query("UPDATE Exercise SET idExerciseLeaf = :idExerciseLeaf WHERE idExercise = :idExercise")
-    public abstract void updateIdLeaf(Long idExercise, Long idExerciseLeaf);
 
     // Delete an exercise. Currently, we do not use this because exercises will only be hidden/unhidden.
     @Delete

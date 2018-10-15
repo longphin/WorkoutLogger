@@ -30,14 +30,26 @@ public class SessionExercise {
     private Long idRoutineSession;
     private Long idExercise;
 
+    // Note for the exercise. Initially set as the exercise's current note.
+    private String note;
+
+    @Ignore
+    public SessionExercise(Long idExercise, Long idRoutineSession, String note) {
+        this.idExercise = idExercise;
+        this.idRoutineSession = idRoutineSession;
+        this.note = note;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
     public SessionExercise() {
 
     }
 
-    @Ignore
-    public SessionExercise(Long idExercise, Long idRoutineSession) {
-        this.idExercise = idExercise;
-        this.idRoutineSession = idRoutineSession;
+    public void setNote(String note) {
+        this.note = note;
     }
 
 

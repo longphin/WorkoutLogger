@@ -34,7 +34,8 @@ public class DatabaseVersion {
     private static final int V4_4c = 25; // Removed routine history.
     private static final int V4_4d = 26; // Added type for set.
     private static final int V4_4e = 27; // Fixed null annotation for sets.
+    private static final int V5 = 28; // Removing exercise history. Instead, history should be applied to session exercise.
 
-    public static final int CURRENT = V4_4e;
+    public static final int CURRENT = V5;
 }
 

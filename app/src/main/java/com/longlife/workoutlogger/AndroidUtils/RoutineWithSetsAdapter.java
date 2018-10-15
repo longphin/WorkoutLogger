@@ -189,7 +189,7 @@ public abstract class RoutineWithSetsAdapter
 
         final Exercise exercise = headerItem.getExercise();
 
-        holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + " -> " + String.valueOf(exercise.getIdExerciseLeaf()) + ")");
+        holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + ")");
     }
 
     // When header is clicked, expand or collapse header.

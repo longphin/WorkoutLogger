@@ -199,8 +199,8 @@ public class ExercisesViewModel
                 });
     }
 
-    public Single<SessionExercise> insertNewSessionForExercise(Long idExerciseLeaf) {
-        return repo.insertNewSessionForExercise(idExerciseLeaf)
+    public Single<SessionExercise> insertNewSessionForExercise(Long idExercise, String note) {
+        return repo.insertNewSessionForExercise(idExercise, note)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

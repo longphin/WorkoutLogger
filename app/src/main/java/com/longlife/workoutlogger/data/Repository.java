@@ -109,7 +109,7 @@ public class Repository {
         return exerciseDao.getSessionExerciseWithSets(idSessionExercise);
     }
 
-    public Single<SessionExercise> insertNewSessionForExercise(Long idExerciseLeaf) {
-        return Single.fromCallable(() -> routineDao.insertNewSessionForExercise(idExerciseLeaf));
+    public Single<SessionExercise> insertNewSessionForExercise(Long idExercise, String note) {
+        return Single.fromCallable(() -> routineDao.insertNewSessionForExercise(idExercise, note));
     }
 }

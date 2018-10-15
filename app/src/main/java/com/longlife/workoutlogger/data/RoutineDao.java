@@ -65,7 +65,7 @@ public abstract class RoutineDao {
 
         // Insert exercises for the session using the new session.
         for (int i = 0; i < reh.size(); i++) {
-            Long idSessionExercise = insertSessionExercise(new SessionExercise(reh.get(i).getExercise().getIdExerciseLeaf(), idRoutineSession));
+            Long idSessionExercise = insertSessionExercise(new SessionExercise(reh.get(i).getExercise().getIdExercise(), idRoutineSession, reh.get(i).getExercise().getNote()));
 
             // Insert sets for each exercise added.
             List<SessionExerciseSet> setsToAdd = reh.get(i).getSets();
@@ -79,7 +79,7 @@ public abstract class RoutineDao {
 
     // Insert a session for an exercise.
     @Transaction
-    public SessionExercise insertNewSessionForExercise(Long idExerciseLeaf) {
+    public SessionExercise insertNewSessionForExercise(Long idExercise, String note) {
         // Insert new routine session.
         RoutineSession routineSessionToAdd = new RoutineSession();
         routineSessionToAdd.setSessionDateNow(); // Set the session date as current time.
@@ -88,7 +88,7 @@ public abstract class RoutineDao {
         routineSessionToAdd.setIdRoutineSession(idRoutineSession); // Update session with the new id.
 
         // Insert SessionExercise.
-        SessionExercise newSessionExercise = new SessionExercise(idExerciseLeaf, idRoutineSession);
+        SessionExercise newSessionExercise = new SessionExercise(idExercise, idRoutineSession, note);
         Long idSessionExercise = insertSessionExercise(newSessionExercise);
         newSessionExercise.setIdSessionExercise(idSessionExercise); // Update session with the new id.
 

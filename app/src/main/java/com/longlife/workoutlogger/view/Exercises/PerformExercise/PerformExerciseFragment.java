@@ -46,8 +46,8 @@ public class PerformExerciseFragment
     private Long idExercise;
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
-    private Long idExerciseLeaf;
     private Long idSessionExercise;
+    private String note;
     private ExercisesViewModel exercisesViewModel;
 
     public PerformExerciseFragment() {
@@ -60,10 +60,9 @@ public class PerformExerciseFragment
     private PerformRoutineAdapter adapter;
     private ConstraintLayout coordinatorLayout; // layout for recycler view
 
-    public static PerformExerciseFragment newInstance(Long idExercise, Long idExerciseLeaf, String exerciseName) {
+    public static PerformExerciseFragment newInstance(Long idExercise, String exerciseName) {
         Bundle bundle = new Bundle();
         bundle.putLong("idExercise", idExercise);
-        bundle.putLong("idExerciseLeaf", idExerciseLeaf);
         bundle.putString("exerciseName", exerciseName);
 
         PerformExerciseFragment fragment = new PerformExerciseFragment();
@@ -77,7 +76,7 @@ public class PerformExerciseFragment
         super.onCreate(savedInstanceState);
 
         idExercise = getArguments().getLong("idExercise");
-        idExerciseLeaf = getArguments().getLong("idExerciseLeaf");
+        note = getArguments().getString("note");
 
         exercisesViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
 
@@ -101,7 +100,7 @@ public class PerformExerciseFragment
                     public void onComplete() {
                         // Insert a routine session, then insert session exercise, then insert one set. After all those inserts, it returns that session exercise with sets.
                         addDisposable(
-                                exercisesViewModel.insertNewSessionForExercise(idExerciseLeaf) // Insert a new session.
+                                exercisesViewModel.insertNewSessionForExercise(idExercise, note) // Insert a new session.
                                         .flatMap(sessionExercise -> exercisesViewModel.getSessionExerciseWithSets(sessionExercise.getIdSessionExercise())) // From that session, grab the exercise session with sets.
                                         .subscribe(sessionExerciseWithSets -> setSessionExerciseWithSets(sessionExerciseWithSets))
                         );

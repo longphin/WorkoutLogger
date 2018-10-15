@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.view.Exercises.ExercisesAdapter;
@@ -13,7 +14,6 @@ import com.longlife.workoutlogger.view.Exercises.ExercisesViewHolder;
 
 public class ExercisesSelectableAdapter
         extends ExercisesAdapter {
-
     private final static String TAG = ExercisesSelectableAdapter.class.getSimpleName();
     private IExercisesSelectableAdapterCallback exercisesSelectableCallback;
 
@@ -21,7 +21,6 @@ public class ExercisesSelectableAdapter
         super(context, clickExerciseCallback);
         this.exercisesSelectableCallback = selectableAdapterCallback;
     }
-
 
     @Override
     public ExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -31,12 +30,11 @@ public class ExercisesSelectableAdapter
     }
 
     @Override
-    public void onBindViewHolder(ExercisesViewHolder holder, int pos) {
-        super.onBindViewHolder(holder, pos);
-
+    protected void bindMyViewHolder(ExercisesViewHolder holder, int pos) {
         final int position = holder.getAdapterPosition();
         final Exercise ex = exercises.get(position);
 
+        // Get the checkbox
         CheckBox selectedCheckBox = holder.getSelectedCheckBox();
         if (selectedCheckBox != null) {
             Long idCurrentlySelected = ex.getIdExercise();
@@ -63,12 +61,6 @@ public class ExercisesSelectableAdapter
                     }
             );
         }
-
-        CheckBox exerciseSelectedBox = holder.getSelectedCheckBox();
-        exerciseSelectedBox.setOnClickListener(view -> {
-            final int thisPos = holder.getAdapterPosition();
-            exercisesSelectableCallback.addSelectedExercise(exercises.get(thisPos).getIdExercise());
-        });
     }
 
     public interface IExercisesSelectableAdapterCallback {

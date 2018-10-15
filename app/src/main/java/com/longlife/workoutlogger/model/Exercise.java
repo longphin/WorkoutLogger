@@ -8,7 +8,6 @@ import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
 import com.longlife.workoutlogger.enums.ExerciseType;
@@ -25,8 +24,8 @@ import java.util.GregorianCalendar;
  */
 
 @Entity(indices = {
-        @Index(value = {"locked", "name"}),
-        @Index(value = {"idExerciseSource", "hidden", "name"})
+        @Index(value = {"locked"}),
+        @Index(value = {"hidden"})
 }
 )
 public class Exercise implements Parcelable {
@@ -45,16 +44,13 @@ public class Exercise implements Parcelable {
         }
     };
 
+    // Name of the exercise.
     @Required
     private String name;
+    // This is the idExercise for the exercise.
     @PrimaryKey
     private Long idExercise;
-    // This is the idExercise for the parent exercise.
-    @Nullable
-    private Long idExerciseSource;
-    // This is the idExercise for the leaf-most child. This is only relevant for source idExercises.
-    @Nullable
-    private Long idExerciseLeaf;
+
     // Note for the exercise.
     private String note;
     // Flag to indicate whether exercise is locked.
@@ -75,8 +71,6 @@ public class Exercise implements Parcelable {
     @Ignore
     public Exercise(Exercise ex) {
         name = ex.getName();
-        idExerciseSource = (ex.getIdExerciseSource() == null ? ex.getIdExercise() : ex.getIdExerciseSource());
-        idExerciseLeaf = ex.getIdExerciseLeaf(); // Leaf nodes do not need this, but this is done for completeness.
         note = ex.getNote();
         locked = ex.getLocked(); // This is not used by leaf nodes.
         hidden = ex.isHidden(); // This is not used by leaf nodes.
@@ -110,24 +104,6 @@ public class Exercise implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeLong(idExercise);
         parcel.writeString(name);
-    }
-
-    @Nullable
-    public Long getIdExerciseSource() {
-        return idExerciseSource;
-    }
-
-    public void setIdExerciseSource(@Nullable Long idExerciseSource) {
-        this.idExerciseSource = idExerciseSource;
-    }
-
-    @Nullable
-    public Long getIdExerciseLeaf() {
-        return idExerciseLeaf;
-    }
-
-    public void setIdExerciseLeaf(@Nullable Long idExerciseLeaf) {
-        this.idExerciseLeaf = idExerciseLeaf;
     }
 
     public void setName(String name) {
