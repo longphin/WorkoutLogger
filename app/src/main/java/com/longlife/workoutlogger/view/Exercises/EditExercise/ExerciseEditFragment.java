@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+// [TODO] This does not seem to be saving the edit properly. The exercise details are not updated from viewmodel, either.
+// [TODO] Instead of using Exercise object, we only need to use ExerciseShort object because only a subset of fields should be updated.
 public class ExerciseEditFragment
         extends FragmentBase
         implements AddNoteDialog.OnInputListener {
@@ -54,7 +57,6 @@ public class ExerciseEditFragment
         return fragment;
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +72,8 @@ public class ExerciseEditFragment
         this.idExercise = getArguments().getLong("idExercise");
     }
 
+    private Button saveButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,7 +84,12 @@ public class ExerciseEditFragment
             Button cancelButton = mView.findViewById(R.id.btn_exercise_edit_cancel);
 
             // On click listener for canceling.
-            cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
+            cancelButton.setOnClickListener(view ->
+                    getActivity().onBackPressed()
+            );
+
+            //initializeSaveButton();
+            //initializeNoteButton();
 
             // Observer to get exercise data. This might not be needed because we are passed the parcelable Exercise. If the parcel does not contain fields that we want, then we only need the idExercise.
             addDisposable(viewModel.getExerciseFromId(idExercise)
@@ -88,9 +97,7 @@ public class ExerciseEditFragment
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             exercise -> {
-                                this.exercise = exercise;
-                                this.name.setText(exercise.getName());
-                                updateToolbarTitle(exercise.getName());
+                                setExercise(exercise);
                                 // Wait until the exercise is obtained to make the Save button listener available.
                                 initializeSaveButton();
                                 initializeNoteButton();
@@ -112,20 +119,43 @@ public class ExerciseEditFragment
         ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_ExerciseEdit, exerciseName));
     }
 
+    private void setExercise(Exercise ex) {
+        this.exercise = ex;
+        this.name.setText(ex.getName());
+        updateToolbarTitle(ex.getName());
+    }
+
     // Adds an onClick listener to the save button. This should only be done once the full exercise is obtained.
     private void initializeSaveButton() {
-        Button saveButton = mView.findViewById(R.id.btn_exercise_edit_save);
+        saveButton = mView.findViewById(R.id.btn_exercise_edit_save);
 
-        saveButton.setOnClickListener(view -> {
-            if (this.exercise != null) {
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (exercise != null) {
+                    //final Exercise exerciseHistoryToInsert = new Exercise(this.exercise);
+                    // Update current exercise to the desired values.
+                    exercise.setName(name.getText().toString());
+                    //viewModel.updateExerciseHistoryFull(exerciseHistoryToInsert, this.exercise);
+                    viewModel.updateExerciseShort(exercise);
+                    Log.d(TAG, "exercise (" + String.valueOf(exercise.getIdExercise()) + ") " + exercise.getName());
+
+                    getActivity().onBackPressed();
+                }
+            }
+                /*
+                view -> {
+            if (exercise != null) {
                 //final Exercise exerciseHistoryToInsert = new Exercise(this.exercise);
                 // Update current exercise to the desired values.
-                this.exercise.setName(this.name.getText().toString());
+                exercise.setName(name.getText().toString());
                 //viewModel.updateExerciseHistoryFull(exerciseHistoryToInsert, this.exercise);
                 viewModel.updateExercise(exercise);
+                Log.d(TAG, "exercise " + exercise.getName());
 
                 getActivity().onBackPressed();
             }
+        }*/
         });
     }
 

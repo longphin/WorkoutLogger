@@ -9,6 +9,7 @@ import android.arch.persistence.room.Update;
 
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
+import com.longlife.workoutlogger.model.ExerciseShort;
 import com.longlife.workoutlogger.model.SessionExercise;
 
 import java.util.List;
@@ -49,6 +50,10 @@ public abstract class ExerciseDao {
     @Query("SELECT * FROM Exercise WHERE idExercise=:id")
     public abstract Single<Exercise> getExerciseFromId(Long id);
 
+    // Get a subset of columns from exercise give the id.
+    @Query("SELECT idExercise, name, note FROM Exercise WHERE idExercise=:id")
+    public abstract Single<ExerciseShort> getExerciseShortFromId(Long id);
+
     // Update the lock status of an exercise.
     @Query("UPDATE Exercise SET locked = :lockedStatus WHERE idExercise = :idExercise")
     public abstract void updateLockedStatus(Long idExercise, boolean lockedStatus);
@@ -68,14 +73,6 @@ public abstract class ExerciseDao {
             "AND rs.idRoutine IS NULL " + // Only look for sessions specifically for this exercise, not related to a routine.
             "LIMIT 1")
     public abstract Maybe<SessionExercise> getLatestExerciseSession(Long idExercise);
-
-    @Transaction
-    public Exercise updateExerciseFull(Exercise ex) // [TODO] when exercise is updated, use this.
-    {
-        updateExercise(ex);
-
-        return ex;
-    }
 
     // Update an exercise.
     @Update
@@ -102,4 +99,10 @@ public abstract class ExerciseDao {
     // Hide/unhide an exercise.
     @Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
     public abstract void setExerciseHiddenStatus(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
+
+    @Query("UPDATE Exercise " +
+            "SET name = :name " +
+            ", note = :note " +
+            "WHERE idExercise = :idExercise")
+    public abstract void updateExerciseShort(Long idExercise, String name, String note);
 }

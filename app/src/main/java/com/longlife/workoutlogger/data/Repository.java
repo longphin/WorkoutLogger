@@ -82,8 +82,17 @@ public class Repository {
     }
 
     // Update the history for an exercise.
-    public Single<Exercise> updateExercise(Exercise ex) {
+/*    public Single<Exercise> updateExercise(Exercise ex) {
         return Single.fromCallable(() -> exerciseDao.updateExerciseFull(ex));
+    }*/
+    // [TODO] Does not seem to work?
+    public void updateExercise(Exercise ex) {
+        exerciseDao.updateExercise(ex);
+    }
+
+    public void updateExerciseShort(Exercise ex) // [TODO] use ExerciseShort object instead.
+    {
+        exerciseDao.updateExerciseShort(ex.getIdExercise(), ex.getName(), ex.getNote());
     }
 
     // Insert history for an exercise. This creates a new history value and updates the exercise.

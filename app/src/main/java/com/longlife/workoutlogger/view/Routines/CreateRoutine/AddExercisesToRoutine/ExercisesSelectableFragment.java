@@ -49,7 +49,6 @@ public class ExercisesSelectableFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        // [TODO] When adding exercises to routine, it does not seem to properly remove an exercise.
         Button addExercisesToRoutineButton = mView.findViewById(R.id.btn_routine_exercises_addExercisesToRoutine);
         addExercisesToRoutineButton.setOnClickListener(
                 view ->

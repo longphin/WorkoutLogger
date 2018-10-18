@@ -205,7 +205,8 @@ public class ExercisesViewModel
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void updateExercise(Exercise exercise) {
+    public void updateExerciseShort(Exercise exercise) {
+        /*
         disposables.add(repo.updateExercise(exercise)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -217,5 +218,25 @@ public class ExercisesViewModel
                         throwable -> {
                         }
                 ));
+        */
+        Completable.fromAction(() -> repo.updateExerciseShort(exercise))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        exerciseEditedObservable.onNext(exercise);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 }
