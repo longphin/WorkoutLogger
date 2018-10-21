@@ -42,7 +42,6 @@ import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
-import com.longlife.workoutlogger.view.DialogFragment.EditSetDialog;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;

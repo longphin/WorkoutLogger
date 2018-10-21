@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.view.DialogFragment;
+package com.longlife.workoutlogger.view.Exercises.PerformExercise;
 
 
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.Format;
-import com.longlife.workoutlogger.view.Exercises.PerformExercise.PerformRoutineAdapter;
 
 import static com.longlife.workoutlogger.model.Profile.decimalCharacter;
 import static com.longlife.workoutlogger.utils.Format.convertDoubleToStrWithoutZeroes;

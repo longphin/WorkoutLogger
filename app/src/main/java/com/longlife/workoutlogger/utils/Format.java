@@ -81,4 +81,8 @@ public class Format {
             throw new NumberFormatException("Could not recognize " + str + " as a number.");
         }
     }
+
+    public static long convertToMilliseconds(int minutes, int seconds) {
+        return minutes * 60000 + seconds * 1000;
+    }
 }

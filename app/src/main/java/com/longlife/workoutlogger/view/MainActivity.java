@@ -1,13 +1,17 @@
 package com.longlife.workoutlogger.view;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
+
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
@@ -23,9 +27,10 @@ import com.longlife.workoutlogger.view.Profile.ProfileFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
 import com.ncapdevi.fragnav.FragNavController;
-import io.reactivex.observers.DisposableMaybeObserver;
 
 import javax.inject.Inject;
+
+import io.reactivex.observers.DisposableMaybeObserver;
 
 public class MainActivity
         extends ActivityBase
@@ -384,6 +389,19 @@ public class MainActivity
 
     public void updateToolbarTitle(String title) {
         getSupportActionBar().setTitle(title);
+    }
+
+    public void startTimerNotificationService(View v, int minutes, int seconds) {
+        Intent serviceIntent = new Intent(this, TimerNotificationService.class);
+        serviceIntent.putExtra(TimerNotificationService.EXTRA_MINUTES, minutes);
+        serviceIntent.putExtra(TimerNotificationService.EXTRA_SECONDS, seconds);
+
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
+
+    public void stopTimerNotificationService(View v) {
+        Intent serviceIntent = new Intent(this, TimerNotificationService.class);
+        stopService(serviceIntent);
     }
 }
 

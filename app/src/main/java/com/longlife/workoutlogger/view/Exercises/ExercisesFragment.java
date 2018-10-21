@@ -102,7 +102,7 @@ public class ExercisesFragment
             else
                 // If this fragment is not currently active but is listening, then the adapter just needs to notify that the item was changed.
                 adapter.notifyItemChanged(exerciseDeleted.getPosition());
-        })); //[TODO] not quite working. it restored exercise twice.
+        }));
 
         Log.d(TAG, "OnCreate: loadExercises()");
         viewModel.loadExercises();

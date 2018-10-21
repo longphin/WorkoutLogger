@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="4dp"
-    tools:context=".view.DialogFragment.PerformSetDialog">
+    tools:context=".view.Exercises.PerformExercise.PerformSetDialog">
 
     <TextView
         android:id="@+id/txt_perform_exercise_weightsHeader"

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="4dp"
-    tools:context=".view.DialogFragment.EditSetDialog">
+    tools:context=".view.Routines.CreateRoutine.EditSetDialog">
 
     <TextView
         android:id="@+id/txt_perform_exercise_restHeader"

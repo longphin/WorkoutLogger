@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.view.DialogFragment;
+package com.longlife.workoutlogger.view.Routines.CreateRoutine;
 
 
 import android.app.Dialog;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.Format;
-import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateAdapter;
 
 public class EditSetDialog
         extends DialogBase {

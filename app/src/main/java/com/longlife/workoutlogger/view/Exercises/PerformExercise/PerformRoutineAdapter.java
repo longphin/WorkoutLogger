@@ -10,7 +10,6 @@ import android.view.View;
 import com.longlife.workoutlogger.AndroidUtils.ExercisesWithSetsAdapter;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
-import com.longlife.workoutlogger.view.DialogFragment.PerformSetDialog;
 
 import static com.longlife.workoutlogger.utils.Format.convertDoubleToStrWithoutZeroes;
 
@@ -65,6 +64,15 @@ public class PerformRoutineAdapter
             onSetClickListener.onSetClick(getIdSessionExerciseAtPosition(clickedPos), PerformSetDialog.EditingType.REST);
         });
 
+        performHolder.getStartRestView().setOnClickListener(view ->
+        {
+            int clickedPos = holder.getAdapterPosition();
+            SessionExerciseSet clickedSet = getSetAtPosition(clickedPos);
+            if (clickedSet != null) {
+                onSetClickListener.startRestTimer(view, clickedSet.getRestMinutes(), clickedSet.getRestSeconds());
+            }
+        });
+
         /*performHolder.getView().setOnClickListener(view ->
         {
             int clickedPos = holder.getAdapterPosition();
@@ -84,5 +92,7 @@ public class PerformRoutineAdapter
 
     public interface IOnSetClick {
         void onSetClick(@Nullable RoutineExerciseSetPositions positionHelper, PerformSetDialog.EditingType initialFocus);
+
+        void startRestTimer(View v, int minutes, int seconds);
     }
 }

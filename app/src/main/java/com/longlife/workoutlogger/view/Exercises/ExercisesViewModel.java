@@ -110,7 +110,7 @@ public class ExercisesViewModel
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void loadExercises() {
+    public void loadExercises() { //[TODO] Instead of loading Exercise objects, load ExerciseShort objects because the exercise lists only need the name and lock status.
         Log.d(TAG, "loadExercises()");
         if (loadExercisesResponse.getStatus() == Status.LOADING)
             return;

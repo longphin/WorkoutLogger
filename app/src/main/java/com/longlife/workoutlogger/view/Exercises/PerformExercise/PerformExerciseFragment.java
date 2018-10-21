@@ -23,7 +23,6 @@ import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
-import com.longlife.workoutlogger.view.DialogFragment.PerformSetDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Perform.PerformFragment;
@@ -219,5 +218,10 @@ public class PerformExerciseFragment
 
         PerformSetDialog dialog = PerformSetDialog.newInstance(positionHelper, initialFocus);
         dialog.show(getChildFragmentManager(), PerformSetDialog.TAG);
+    }
+
+    @Override
+    public void startRestTimer(View v, int minutes, int seconds) {
+        ((MainActivity) getActivity()).startTimerNotificationService(v, minutes, seconds);
     }
 }
