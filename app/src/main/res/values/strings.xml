@@ -53,4 +53,8 @@
     <string name="Next">Next</string>
     <string name="zeroDouble">0</string>
     <string name="zeroInt">0</string>
+
+    <!-- Notification title when rest timer is up -->
+    <string name="notificationChannelName">Rest Timer</string>
+    <string name="notificationChannelDescription">Rest for %1$01d:%2$02d</string>
 </resources>

@@ -85,4 +85,11 @@ public class Format {
     public static long convertToMilliseconds(int minutes, int seconds) {
         return minutes * 60000 + seconds * 1000;
     }
+
+    public static TimeHolder getMinutesFromMillis(long millis) {
+        int minutes = (int) Math.floor(millis / 60000);
+        int seconds = (int) Math.floor((millis % 60000) / 1000);
+
+        return new TimeHolder(minutes, seconds);
+    }
 }

@@ -19,6 +19,7 @@ import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.FragmentHistory;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.TimerNotificationService;
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
