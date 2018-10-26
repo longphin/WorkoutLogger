@@ -416,6 +416,24 @@ public abstract class ExercisesWithSetsAdapter
         throw new IndexOutOfBoundsException("Header not found for " + String.valueOf(position));
     }
 
+    // Get the index of a set within a header.
+    // Since some sub items take up adapter positions, this needs to iterate to see if headers are expanded.
+    protected int getSetIndexWithinHeader(int position) {
+        int count = 0; // Keeps track of the iterator count for visible items.
+
+        for (RoutineExerciseHelper reh : exercisesToInclude) {
+            if (reh.IsExpanded()) {
+                if (count + reh.getSets().size() >= position) {
+                    return position - count - 1;
+                }
+                count += reh.getSets().size() + 1; // The +1 is for the "add set" button view.
+            }
+            count += 1; // go to next header
+        }
+
+        throw new IndexOutOfBoundsException("Set index not found for " + String.valueOf(position));
+    }
+
     // Remove the item from the recyclerview at a position. It can be a header item or set item.
     public void removeItemAtPosition(int position) {
         int count = 0;
@@ -488,7 +506,7 @@ public abstract class ExercisesWithSetsAdapter
         notifySetChanged(exerciseIndex, exerciseSetIndex);
     }
 
-    public void notifySetChanged(int exerciseIndex, int exerciseSetIndex) {
+    private void notifySetChanged(int exerciseIndex, int exerciseSetIndex) {
         // If the exercise is expanded, then update the timer being displayed.
         if (exercisesToInclude.get(exerciseIndex).IsExpanded()) {
             final int setPosition = getHeaderPosition(exerciseIndex) + exerciseSetIndex + 1;
@@ -531,14 +549,14 @@ public abstract class ExercisesWithSetsAdapter
         // Reps for the set.
         private Integer reps;
 
-        public RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName, Double weight, Integer reps) {
+        private RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName, Double weight, Integer reps) {
             this(exerciseIndex, setIndexWithinExerciseIndex, restMinutes, restSeconds, exerciseName);
 
             this.weight = weight;
             this.reps = reps;
         }
 
-        public RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName) {
+        private RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName) {
             this.exerciseIndex = exerciseIndex;
             this.setIndexWithinExerciseIndex = setIndexWithinExerciseIndex;
             this.restMinutes = restMinutes;

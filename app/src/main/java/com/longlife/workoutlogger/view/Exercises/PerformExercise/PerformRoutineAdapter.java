@@ -69,7 +69,7 @@ public class PerformRoutineAdapter
             int clickedPos = holder.getAdapterPosition();
             SessionExerciseSet clickedSet = getSetAtPosition(clickedPos);
             if (clickedSet != null) {
-                onSetClickListener.startRestTimer(view, clickedSet.getRestMinutes(), clickedSet.getRestSeconds());
+                onSetClickListener.startRestTimer(view, getHeaderIndex(clickedPos), getSetIndexWithinHeader(clickedPos), clickedSet.getRestMinutes(), clickedSet.getRestSeconds());
             }
         });
 
@@ -93,6 +93,6 @@ public class PerformRoutineAdapter
     public interface IOnSetClick {
         void onSetClick(@Nullable RoutineExerciseSetPositions positionHelper, PerformSetDialog.EditingType initialFocus);
 
-        void startRestTimer(View v, int minutes, int seconds);
+        void startRestTimer(View v, int headerIndex, int setIndex, int minutes, int seconds);
     }
 }

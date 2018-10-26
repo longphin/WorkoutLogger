@@ -18,6 +18,8 @@ import com.longlife.workoutlogger.view.MainActivity;
 
 public class TimerNotificationService
         extends Service {
+    public static final String EXTRA_HEADERINDEX = "headerIndex";
+    public static final String EXTRA_SETINDEX = "setIndex";
     public static final String EXTRA_MINUTES = "restMinutes";
     public static final String EXTRA_SECONDS = "restSeconds";
     private static int NOTIFICATION_ID = 49; // This can be anything, I believe.
@@ -28,6 +30,8 @@ public class TimerNotificationService
     private int seconds;
     private NotificationManager notificationManager;
     private NotificationCompat.Builder notificationBuilder;
+    private int headerIndex;
+    private int setIndex;
 
     @Override
     public void onCreate() {
@@ -38,6 +42,8 @@ public class TimerNotificationService
     public int onStartCommand(Intent intent, int flags, int startId) {
         stopTimer();
 
+        headerIndex = intent.getIntExtra(EXTRA_HEADERINDEX, -1);
+        setIndex = intent.getIntExtra(EXTRA_SETINDEX, -1);
         minutes = intent.getIntExtra(EXTRA_MINUTES, 0);
         seconds = intent.getIntExtra(EXTRA_SECONDS, 0);
 
@@ -59,15 +65,13 @@ public class TimerNotificationService
     }
 
     private void initializeNotificationBuilder() {
-        if (notificationBuilder == null) {
-            Intent notificationIntent = new Intent(this, MainActivity.class); // [TODO] When the notification is clicked, it will bring the user to the Main Activity. May want to change this to go to the performing screen.
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-            notificationBuilder = new NotificationCompat.Builder(this, getString(R.string.notificationChannelName))
-                    .setContentTitle("Timer")
-                    .setContentText(getString(R.string.notificationChannelDescription, minutes, seconds))//String.valueOf(minutes) + ":" + String.valueOf(seconds))
-                    .setSmallIcon(R.drawable.notification_icon_24dp)
-                    .setContentIntent(pendingIntent);
-        }
+        Intent notificationIntent = new Intent(this, MainActivity.class); // [TODO] When the notification is clicked, it will bring the user to the Main Activity. May want to change this to go to the performing screen.
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        notificationBuilder = new NotificationCompat.Builder(this, getString(R.string.notificationChannelName))
+                .setContentTitle("Timer (" + String.valueOf(headerIndex) + " -> " + String.valueOf(setIndex) + ")")
+                .setContentText(getString(R.string.notificationChannelDescription, minutes, seconds))//String.valueOf(minutes) + ":" + String.valueOf(seconds))
+                .setSmallIcon(R.drawable.notification_icon_24dp)
+                .setContentIntent(pendingIntent);
     }
 
     @Nullable
@@ -81,7 +85,8 @@ public class TimerNotificationService
             @Override
             public void onTick(long millisUntilFinished) {
                 initializeNotificationManager();
-                initializeNotificationBuilder();
+                if (notificationBuilder == null)
+                    initializeNotificationBuilder();
 
                 TimeHolder timeUntilFinished = Format.getMinutesFromMillis(millisUntilFinished);
                 notificationManager.notify(NOTIFICATION_ID,
@@ -113,6 +118,6 @@ public class TimerNotificationService
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             initializeNotificationManager();
             notificationManager.deleteNotificationChannel(getString(R.string.notificationChannelName));
-        }
+        } //[TODO] implement notifications for build versions < 0reo. Use NotificationManagerCompat.from(this);
     }
 }

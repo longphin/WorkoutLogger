@@ -221,7 +221,7 @@ public class PerformExerciseFragment
     }
 
     @Override
-    public void startRestTimer(View v, int minutes, int seconds) {
-        ((MainActivity) getActivity()).startTimerNotificationService(v, minutes, seconds);
+    public void startRestTimer(View v, int headerIndex, int setIndex, int minutes, int seconds) {
+        ((MainActivity) getActivity()).startTimerNotificationService(v, headerIndex, setIndex, minutes, seconds);
     }
 }

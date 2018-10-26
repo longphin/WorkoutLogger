@@ -392,8 +392,10 @@ public class MainActivity
         getSupportActionBar().setTitle(title);
     }
 
-    public void startTimerNotificationService(View v, int minutes, int seconds) {
+    public void startTimerNotificationService(View v, int headerIndex, int setIndex, int minutes, int seconds) {
         Intent serviceIntent = new Intent(this, TimerNotificationService.class);
+        serviceIntent.putExtra(TimerNotificationService.EXTRA_HEADERINDEX, headerIndex);
+        serviceIntent.putExtra(TimerNotificationService.EXTRA_SETINDEX, setIndex);
         serviceIntent.putExtra(TimerNotificationService.EXTRA_MINUTES, minutes);
         serviceIntent.putExtra(TimerNotificationService.EXTRA_SECONDS, seconds);
 
