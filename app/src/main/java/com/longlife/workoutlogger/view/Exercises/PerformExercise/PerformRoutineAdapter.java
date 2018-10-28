@@ -19,6 +19,9 @@ public class PerformRoutineAdapter
 
     private IOnSetClick onSetClickListener;
 
+    private static Integer performingHeaderIndex;
+    private static Integer performingSetIndexWithinHeader;
+
     public PerformRoutineAdapter(Context context, IOnSetClick onSetClickListener) {
         super(context);
 
@@ -64,14 +67,27 @@ public class PerformRoutineAdapter
             onSetClickListener.onSetClick(getIdSessionExerciseAtPosition(clickedPos), PerformSetDialog.EditingType.REST);
         });
 
+        // Change "start rest" timer button if needed.
+        final int headerIndex = getHeaderIndex(pos);
+        final int setIndexWithinHeader = getSetIndexWithinHeader(pos);
+        if (performingHeaderIndex != null && performingSetIndexWithinHeader != null
+                && headerIndex == performingHeaderIndex && setIndexWithinHeader == performingSetIndexWithinHeader) {
+            performHolder.getStartRestView().setBackgroundResource(R.drawable.ic_pause_black_24dp);//.setImageResource(R.drawable.ic_pause_black_24dp);// [TODO] not working properly
+        }
+
         performHolder.getStartRestView().setOnClickListener(view ->
         {
-            int clickedPos = holder.getAdapterPosition();
-            SessionExerciseSet clickedSet = getSetAtPosition(clickedPos);
+            final int clickedPos = holder.getAdapterPosition();
+            final SessionExerciseSet clickedSet = getSetAtPosition(clickedPos);
             if (clickedSet != null) {
-                onSetClickListener.startRestTimer(view, getHeaderIndex(clickedPos), getSetIndexWithinHeader(clickedPos), clickedSet.getRestMinutes(), clickedSet.getRestSeconds());
+                performingHeaderIndex = getHeaderIndex(clickedPos);
+                performingSetIndexWithinHeader = getSetIndexWithinHeader(clickedPos);
+
+                onSetClickListener.startRestTimer(view, performingHeaderIndex, performingSetIndexWithinHeader, clickedSet.getRestMinutes(), clickedSet.getRestSeconds());
             }
         });
+
+        // [TODO] When rest timer finished, need to set performingHeaderIndex and performingSetIndexWithinHeader to null
 
         /*performHolder.getView().setOnClickListener(view ->
         {

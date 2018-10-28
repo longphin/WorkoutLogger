@@ -30,7 +30,7 @@ public abstract class ExercisesWithSetsAdapter
     private static final int HEADER_TYPE = 1;
     private static final int SET_TYPE = 2;
     protected Context context;
-    private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
+    protected List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
 
     // Other
     public ExercisesWithSetsAdapter(Context context) {

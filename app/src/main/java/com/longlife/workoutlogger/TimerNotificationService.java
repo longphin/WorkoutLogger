@@ -1,16 +1,13 @@
 package com.longlife.workoutlogger;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.longlife.workoutlogger.utils.Format;
 import com.longlife.workoutlogger.utils.TimeHolder;
@@ -28,8 +25,6 @@ public class TimerNotificationService
     private boolean timerInProgress;
     private int minutes;
     private int seconds;
-    private NotificationManager notificationManager;
-    private NotificationCompat.Builder notificationBuilder;
     private int headerIndex;
     private int setIndex;
 
@@ -47,15 +42,14 @@ public class TimerNotificationService
         minutes = intent.getIntExtra(EXTRA_MINUTES, 0);
         seconds = intent.getIntExtra(EXTRA_SECONDS, 0);
 
-        initializeNotificationBuilder();
-        Notification notification = notificationBuilder.build();
-        startForeground(NOTIFICATION_ID, notification);
+        startForeground(NOTIFICATION_ID, createNotificationBuilder(minutes, seconds).build());
 
         startTimer(Format.convertToMilliseconds(minutes, seconds));
 
         return START_NOT_STICKY; // [TODO] Need to learn about the different types and make sure what happens when the system destroys our notification.
     }
 
+    // Stops timer and resets some values.
     private void stopTimer() {
         if (timer != null && timerInProgress) {
             timer.cancel();
@@ -64,13 +58,17 @@ public class TimerNotificationService
         timerInProgress = false;
     }
 
-    private void initializeNotificationBuilder() {
+    // Creates the rest notification given the rest times.
+    private NotificationCompat.Builder createNotificationBuilder(int minutes, int seconds) {
         Intent notificationIntent = new Intent(this, MainActivity.class); // [TODO] When the notification is clicked, it will bring the user to the Main Activity. May want to change this to go to the performing screen.
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        notificationBuilder = new NotificationCompat.Builder(this, getString(R.string.notificationChannelName))
+
+        return new NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle("Timer (" + String.valueOf(headerIndex) + " -> " + String.valueOf(setIndex) + ")")
                 .setContentText(getString(R.string.notificationChannelDescription, minutes, seconds))//String.valueOf(minutes) + ":" + String.valueOf(seconds))
-                .setSmallIcon(R.drawable.notification_icon_24dp)
+                .setSmallIcon(R.mipmap.temp_ic_pause_asset)//R.drawable.notification_icon_24dp) //[TODO] This temporarily uses a mipmap instead of a drawable/vector image because the android emulator errors in API 23 and below. Google should fix this later, so wait for that.
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent);
     }
 
@@ -80,19 +78,13 @@ public class TimerNotificationService
         return null;
     }
 
+    // Starts up a timer to update the notification channel.
     private void startTimer(long durationInMillis) {
         timer = new CountDownTimer(durationInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                initializeNotificationManager();
-                if (notificationBuilder == null)
-                    initializeNotificationBuilder();
-
                 TimeHolder timeUntilFinished = Format.getMinutesFromMillis(millisUntilFinished);
-                notificationManager.notify(NOTIFICATION_ID,
-                        notificationBuilder.setContentText(getString(R.string.notificationChannelDescription, timeUntilFinished.getMinutes(), timeUntilFinished.getSeconds())).build()
-                );
-
+                updateNotification(createNotificationBuilder(timeUntilFinished.getMinutes(), timeUntilFinished.getSeconds()));//notificationBuilder);
             }
 
             @Override
@@ -104,9 +96,9 @@ public class TimerNotificationService
         timerInProgress = true;
     }
 
-    private void initializeNotificationManager() {
-        if (notificationManager == null)
-            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    private void updateNotification(NotificationCompat.Builder builder) {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     @Override
@@ -114,10 +106,5 @@ public class TimerNotificationService
         super.onDestroy();
 
         stopTimer();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            initializeNotificationManager();
-            notificationManager.deleteNotificationChannel(getString(R.string.notificationChannelName));
-        } //[TODO] implement notifications for build versions < 0reo. Use NotificationManagerCompat.from(this);
     }
 }

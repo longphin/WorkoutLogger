@@ -4,7 +4,6 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
 
 import com.longlife.workoutlogger.data.RoomModule;
 
@@ -36,7 +35,9 @@ import com.longlife.workoutlogger.data.RoomModule;
 public class MyApplication
         extends Application {
     private MyApplicationComponent component;
-    public static final String NOTIFICATION_CHANNEL_NAME = "notificationChannel";
+    private static final String NOTIFICATION_CHANNEL_NAME = "Rest Timer Notification";
+    public static String NOTIFICATION_CHANNEL_ID = "RestTimerNotification"; // This can be anything, I believe.
+    private static String NOTIFICATION_CHANNEL_DESCRIPTION = "Displays time remaining while resting.";
 
     @Override
     public void onCreate() {
@@ -47,12 +48,13 @@ public class MyApplication
                 .roomModule(new RoomModule(this))
                 .build();
 
-        createNotificationChannel(NOTIFICATION_CHANNEL_NAME);
+        createNotificationChannel();
     }
 
-    private void createNotificationChannel(@NonNull String IdNotificationChannel) {
+    private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(IdNotificationChannel, "example channel", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel.setDescription(NOTIFICATION_CHANNEL_DESCRIPTION);
 
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(notificationChannel);
