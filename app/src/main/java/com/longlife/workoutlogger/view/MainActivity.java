@@ -1,9 +1,13 @@
 package com.longlife.workoutlogger.view;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -40,38 +44,34 @@ public class MainActivity
         FragNavController.TransactionListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    //TabLayout bottomTabLayout;
     @Inject
     public Repository repo;
+
+    // Service for the rest timer notification.
+    private TimerNotificationService timerNotificationService;
+    private boolean timerNotificationBound = false;
+    private ServiceConnection timerNotificationConnection = new ServiceConnection() {
+        // A connection with the service has been established. This service will run in the same process as this activity.
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            TimerNotificationService.LocalBinder binder = (TimerNotificationService.LocalBinder) iBinder;
+            timerNotificationService = binder.getService();
+            timerNotificationBound = true;
+            Log.d(TAG, "Timer service bounded.");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            timerNotificationBound = false;
+            Log.d(TAG, "Timer service unbounded.");
+        }
+    };
 
     private ProfileViewModel profileViewModel;
     private AHBottomNavigation bottomTabLayout;
     private FragNavController mNavController;
     private FragmentHistory fragmentHistory;
     private boolean enableBottomNavClick = true;
-    /*	private final AHBottomNavigation.OnTabSelectedListener onTabSelectedListener =
-            new AHBottomNavigation.OnTabSelectedListener()
-            {
-
-                @Override
-                public boolean onTabSelected(int position, boolean wasSelected)
-                {
-                    if(!enableBottomNavClick)
-                        return true;
-                    if(wasSelected) // Item was reselected.
-                    {
-                        //mNavController.clearStack();
-                        //switchTab(position);
-                        //return true;
-                        return true;
-                    }else{ // Switching item.
-                        fragmentHistory.push(position);
-                        switchTab(position);
-                        updateTabSelection(position);
-                        return true;
-                    }
-                }
-            };*/
     private FrameLayout contentFrame;
     private Toolbar toolbar;
     private String[] TABS = {"Profile", "Routine", "Exercise", "Perform"};
@@ -142,45 +142,6 @@ public class MainActivity
                     }
                 });
     }
-	
-	/*private void initBottomNavigation() {
-		if (bottomTabLayout != null) {
-			for (int i = 0; i < TABS.length; i++) {
-				bottomTabLayout.addTab(bottomTabLayout.newTab());
-				TabLayout.Tab tab = bottomTabLayout.getTabAt(i);
-				if (tab != null)
-					tab.setCustomView(getTabView(i));
-			}
-		}
-	}
-	
-	
-	private View getTabView(int position) {
-		View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.tab_item_bottom, null);
-		ImageView icon = (ImageView) view.findViewById(R.id.tab_icon);
-		icon.setImageDrawable(Utils.setDrawableSelector(MainActivity.this, mTabIconsSelected[position], mTabIconsSelected[position]));
-		return view;
-	}*/
-	
-	/*
-	private static int performItemPosition = 3;
-	public void startPerformingExercise(Long idExercise, String exerciseName)
-	{
-		FragmentManager manager = getSupportFragmentManager();
-		
-		PerformExerciseFragment fragment = (PerformExerciseFragment)manager.findFragmentByTag(PerformExerciseFragment.TAG);
-		if(fragment == null){
-			enableBottomNavClick = false;
-			fragmentHistory.push(performItemPosition);
-			switchTab(performItemPosition);
-			updateTabSelection(performItemPosition);
-			enableBottomNavClick = true;
-
-			fragment = PerformExerciseFragment.newInstance(idExercise, exerciseName);
-			pushFragment(fragment);
-		}
-		// [TODO] else, there is already a performing fragment, meaning we cannot start another performance.
-	}*/
 
     private void initToolbar() {
         toolbar = findViewById(R.id.toolbar_main_activity);
@@ -218,39 +179,8 @@ public class MainActivity
         bottomTabLayout.enableItemAtPosition(position);
         //updateTabSelection(position);
     }
-	
-	
-/*	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				onBackPressed();
-				return true;
-		}
-		
-		
-		return super.onOptionsItemSelected(item);
-		
-	}*/
 
     private void setOnTabSelectedListener() {
-		/*bottomTabLayout.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener(){
-			@Override
-			public boolean onTabSelected(int position, boolean wasSelected)
-			{
-				if(wasSelected) // Item was reselected.
-				{
-					mNavController.clearStack();
-					switchTab(position);
-					return true;
-				}else{ // Switching item.
-					fragmentHistory.push(position);
-					switchTab(position);
-					return true;
-				}
-			}
-		});*/
-        //bottomTabLayout.setOnTabSelectedListener(onTabSelectedListener);
         bottomTabLayout.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 
                                                      @Override
@@ -319,20 +249,9 @@ public class MainActivity
 
     private void updateTabSelection(int currentTab) {
 
-/*		for (int i = 0; i <  TABS.length; i++) {
-			TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
-			if(currentTab != i) {
-				selectedTab.getCustomView().setSelected(false);
-			}else{
-				selectedTab.getCustomView().setSelected(true);
-			}
-		}*/
-        //bottomTabLayout.removeOnTabSelectedListener();
         enableBottomNavClick = false;
         bottomTabLayout.setCurrentItem(currentTab);
         enableBottomNavClick = true;
-        //setOnTabSelectedListener();
-        //bottomTabLayout.enableItemAtPosition(currentTab);
     }
 
     @Override
@@ -400,11 +319,28 @@ public class MainActivity
         serviceIntent.putExtra(TimerNotificationService.EXTRA_SECONDS, seconds);
 
         ContextCompat.startForegroundService(this, serviceIntent);
+        bindService(serviceIntent, timerNotificationConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void stopTimerNotificationService(View v) {
         Intent serviceIntent = new Intent(this, TimerNotificationService.class);
         stopService(serviceIntent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Unbind from timer service.
+        if (timerNotificationBound) {
+            unbindService(timerNotificationConnection);
+            timerNotificationBound = false;
+        }
     }
 }
 

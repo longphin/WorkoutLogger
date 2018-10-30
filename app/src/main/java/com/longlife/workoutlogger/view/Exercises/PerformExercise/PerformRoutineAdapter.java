@@ -72,7 +72,7 @@ public class PerformRoutineAdapter
         final int setIndexWithinHeader = getSetIndexWithinHeader(pos);
         if (performingHeaderIndex != null && performingSetIndexWithinHeader != null
                 && headerIndex == performingHeaderIndex && setIndexWithinHeader == performingSetIndexWithinHeader) {
-            performHolder.getStartRestView().setBackgroundResource(R.drawable.ic_pause_black_24dp);//.setImageResource(R.drawable.ic_pause_black_24dp);// [TODO] not working properly
+            performHolder.getStartRestView().setImageResource(R.drawable.ic_pause_black_24dp);//.setBackgroundResource(R.drawable.ic_pause_black_24dp);//.setImageResource(R.drawable.ic_pause_black_24dp);// [TODO] not working properly
         }
 
         performHolder.getStartRestView().setOnClickListener(view ->
@@ -83,6 +83,7 @@ public class PerformRoutineAdapter
                 performingHeaderIndex = getHeaderIndex(clickedPos);
                 performingSetIndexWithinHeader = getSetIndexWithinHeader(clickedPos);
 
+                performHolder.getStartRestView().setImageResource(R.drawable.ic_pause_black_24dp);//.setBackgroundResource(R.drawable.ic_pause_black_24dp);
                 onSetClickListener.startRestTimer(view, performingHeaderIndex, performingSetIndexWithinHeader, clickedSet.getRestMinutes(), clickedSet.getRestSeconds());
             }
         });

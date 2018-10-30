@@ -35,7 +35,7 @@ import com.longlife.workoutlogger.data.RoomModule;
 public class MyApplication
         extends Application {
     private MyApplicationComponent component;
-    private static final String NOTIFICATION_CHANNEL_NAME = "Rest Timer Notification";
+    public static final String NOTIFICATION_CHANNEL_NAME = "Rest Timer";
     public static String NOTIFICATION_CHANNEL_ID = "RestTimerNotification"; // This can be anything, I believe.
     private static String NOTIFICATION_CHANNEL_DESCRIPTION = "Displays time remaining while resting.";
 
