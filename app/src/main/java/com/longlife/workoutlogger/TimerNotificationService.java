@@ -115,14 +115,13 @@ public class TimerNotificationService
     private void destroyNotification() {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.cancel(NOTIFICATION_ID);
+        notificationManager.cancelAll();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         stopTimer();
-        stopForeground(true);
     }
 
     @Nullable

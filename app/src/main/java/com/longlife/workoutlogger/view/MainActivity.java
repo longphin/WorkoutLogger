@@ -2,17 +2,13 @@ package com.longlife.workoutlogger.view;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -50,9 +46,6 @@ public class MainActivity
     @Inject
     public Repository repo;
 
-    // Service for the rest timer notification.
-    private TimerNotificationService timerNotificationService;
-    private boolean timerNotificationBound = false;
     // Broadcast receiver for rest timer notification.
     BroadcastReceiver restTimerReceiver;
 
@@ -64,23 +57,6 @@ public class MainActivity
     private FrameLayout contentFrame;
     private Toolbar toolbar;
     private String[] TABS = {"Profile", "Routine", "Exercise", "Perform"};
-    private ServiceConnection timerNotificationConnection = new ServiceConnection() {
-        // A connection with the service has been established. This service will run in the same process as this activity.
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            TimerNotificationService.LocalBinder binder = (TimerNotificationService.LocalBinder) iBinder;
-            timerNotificationService = binder.getService();
-            timerNotificationBound = true;
-            Log.d(TAG, "Timer service bounded.");
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            timerNotificationBound = false;
-            Log.d(TAG, "Timer service unbounded.");
-            // [TODO] Why is the service not being disconnected? Should this trigger when the service uses stopSelf()?
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,7 +96,7 @@ public class MainActivity
                 final int setIndex = intent.getIntExtra(TimerNotificationService.EXTRA_SETINDEX, -1);
 
                 Log.d(TAG, "Timer finished for " + String.valueOf(headerIndex) + " - " + String.valueOf(setIndex));
-                stopTimerNotificationService();
+                ((MyApplication) getApplication()).stopTimerNotificationService();
                 // [TODO] Send the result to the performing fragment.
             }
         };
@@ -329,19 +305,7 @@ public class MainActivity
     }
 
     public void startTimerNotificationService(View v, int headerIndex, int setIndex, int minutes, int seconds) {
-        Intent serviceIntent = new Intent(this, TimerNotificationService.class);
-        serviceIntent.putExtra(TimerNotificationService.EXTRA_HEADERINDEX, headerIndex);
-        serviceIntent.putExtra(TimerNotificationService.EXTRA_SETINDEX, setIndex);
-        serviceIntent.putExtra(TimerNotificationService.EXTRA_MINUTES, minutes);
-        serviceIntent.putExtra(TimerNotificationService.EXTRA_SECONDS, seconds);
-
-        ContextCompat.startForegroundService(this, serviceIntent);
-        bindService(serviceIntent, timerNotificationConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    public void stopTimerNotificationService() {
-        Intent serviceIntent = new Intent(this, TimerNotificationService.class);
-        stopService(serviceIntent);
+        ((MyApplication) getApplication()).startTimerNotificationService(v, headerIndex, setIndex, minutes, seconds);
     }
 
     @Override
@@ -354,12 +318,6 @@ public class MainActivity
     @Override
     protected void onStop() {
         super.onStop();
-
-        // Unbind from timer service.
-        if (timerNotificationBound) {
-            unbindService(timerNotificationConnection);
-            timerNotificationBound = false;
-        }
 
         LocalBroadcastManager.getInstance(this).unregisterReceiver(restTimerReceiver);
     }
