@@ -1,9 +1,11 @@
 package com.longlife.workoutlogger.view;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -50,6 +53,17 @@ public class MainActivity
     // Service for the rest timer notification.
     private TimerNotificationService timerNotificationService;
     private boolean timerNotificationBound = false;
+    // Broadcast receiver for rest timer notification.
+    BroadcastReceiver restTimerReceiver;
+
+    private ProfileViewModel profileViewModel;
+    private AHBottomNavigation bottomTabLayout;
+    private FragNavController mNavController;
+    private FragmentHistory fragmentHistory;
+    private boolean enableBottomNavClick = true;
+    private FrameLayout contentFrame;
+    private Toolbar toolbar;
+    private String[] TABS = {"Profile", "Routine", "Exercise", "Perform"};
     private ServiceConnection timerNotificationConnection = new ServiceConnection() {
         // A connection with the service has been established. This service will run in the same process as this activity.
         @Override
@@ -64,19 +78,9 @@ public class MainActivity
         public void onServiceDisconnected(ComponentName componentName) {
             timerNotificationBound = false;
             Log.d(TAG, "Timer service unbounded.");
+            // [TODO] Why is the service not being disconnected? Should this trigger when the service uses stopSelf()?
         }
     };
-
-    private ProfileViewModel profileViewModel;
-    private AHBottomNavigation bottomTabLayout;
-    private FragNavController mNavController;
-    private FragmentHistory fragmentHistory;
-    private boolean enableBottomNavClick = true;
-    private FrameLayout contentFrame;
-    private Toolbar toolbar;
-    private String[] TABS = {"Profile", "Routine", "Exercise", "Perform"};
-    // Other
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +112,18 @@ public class MainActivity
         switchTab(0);
 
         setOnTabSelectedListener();
+
+        restTimerReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final int headerIndex = intent.getIntExtra(TimerNotificationService.EXTRA_HEADERINDEX, -1);
+                final int setIndex = intent.getIntExtra(TimerNotificationService.EXTRA_SETINDEX, -1);
+
+                Log.d(TAG, "Timer finished for " + String.valueOf(headerIndex) + " - " + String.valueOf(setIndex));
+                stopTimerNotificationService();
+                // [TODO] Send the result to the performing fragment.
+            }
+        };
     }
 
     @Override
@@ -181,26 +197,27 @@ public class MainActivity
     }
 
     private void setOnTabSelectedListener() {
-        bottomTabLayout.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+        bottomTabLayout.setOnTabSelectedListener(
+                new AHBottomNavigation.OnTabSelectedListener() {
 
-                                                     @Override
-                                                     public boolean onTabSelected(int position, boolean wasSelected) {
-                                                         if (!enableBottomNavClick)
-                                                             return true;
-                                                         if (wasSelected) // Item was reselected.
-                                                         {
-                                                             //mNavController.clearStack();
-                                                             //switchTab(position);
-                                                             //return true;
-                                                             return true;
-                                                         } else { // Switching item.
-                                                             fragmentHistory.push(position);
-                                                             switchTab(position);
-                                                             updateTabSelection(position);
-                                                             return true;
-                                                         }
-                                                     }
-                                                 }
+                    @Override
+                    public boolean onTabSelected(int position, boolean wasSelected) {
+                        if (!enableBottomNavClick)
+                            return true;
+                        if (wasSelected) // Item was reselected.
+                        {
+                            //mNavController.clearStack();
+                            //switchTab(position);
+                            //return true;
+                            return true;
+                        } else { // Switching item.
+                            fragmentHistory.push(position);
+                            switchTab(position);
+                            updateTabSelection(position);
+                            return true;
+                        }
+                    }
+                }
         );
     }
 
@@ -322,7 +339,7 @@ public class MainActivity
         bindService(serviceIntent, timerNotificationConnection, Context.BIND_AUTO_CREATE);
     }
 
-    public void stopTimerNotificationService(View v) {
+    public void stopTimerNotificationService() {
         Intent serviceIntent = new Intent(this, TimerNotificationService.class);
         stopService(serviceIntent);
     }
@@ -330,6 +347,8 @@ public class MainActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(restTimerReceiver, new IntentFilter(TimerNotificationService.BROADCAST_INTENT_NAME));
     }
 
     @Override
@@ -341,6 +360,8 @@ public class MainActivity
             unbindService(timerNotificationConnection);
             timerNotificationBound = false;
         }
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(restTimerReceiver);
     }
 }
 
