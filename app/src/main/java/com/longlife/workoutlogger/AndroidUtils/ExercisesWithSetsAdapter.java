@@ -514,7 +514,7 @@ public abstract class ExercisesWithSetsAdapter
         }
     }
 
-    public void setWeightForSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, @Nullable Double weight, @Nullable Integer reps) {
+    public void setWeightForSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, @Nullable Double weight, @Nullable Integer reps, int weightUnit) {
         // Check if the exercise to look up is within bounds.
         if (exerciseIndex < 0 || exerciseIndex > exercisesToInclude.size() - 1)
             return;
@@ -527,6 +527,7 @@ public abstract class ExercisesWithSetsAdapter
         affectedSet.setRest(restMinutes, restSeconds);
         affectedSet.setWeights(weight);
         affectedSet.setReps(reps);
+        affectedSet.setWeightUnit(weightUnit);
 
         notifySetChanged(exerciseIndex, exerciseSetIndex);
     }

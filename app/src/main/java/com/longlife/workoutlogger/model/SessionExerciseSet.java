@@ -52,6 +52,13 @@ public class SessionExerciseSet
     @TypeConverters({SetTypeConverter.class})
     private SetType type = SetType.REGULAR;
 
+    // The type of a unit.
+    private int weightUnit = 1;
+
+    public int getWeightUnit() {
+        return weightUnit;
+    }
+
     @NonNull
     public SetType getType() {
         return type;
@@ -59,6 +66,10 @@ public class SessionExerciseSet
 
     public void setType(SetType type) {
         this.type = type;
+    }
+
+    public void setWeightUnit(int weightUnit) {
+        this.weightUnit = weightUnit;
     }
 
     @Ignore

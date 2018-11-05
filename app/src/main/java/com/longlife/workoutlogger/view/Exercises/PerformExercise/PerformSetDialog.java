@@ -5,14 +5,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.enums.WeightUnits;
 import com.longlife.workoutlogger.utils.Format;
 
 import static com.longlife.workoutlogger.model.Profile.decimalCharacter;
@@ -20,9 +26,13 @@ import static com.longlife.workoutlogger.utils.Format.convertDoubleToStrWithoutZ
 import static com.longlife.workoutlogger.utils.Format.convertStrToDouble;
 import static com.longlife.workoutlogger.utils.Format.convertStrToInt;
 
-public class PerformSetDialog extends DialogBase {
+public class PerformSetDialog extends DialogBase
+        implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = PerformSetDialog.class.getSimpleName();
+    // Populate a drop down list (spinner) with selectable weight units.
+    private Spinner spinner;
+
     // Indicates what the user will be editing when they press the number buttons.
     private EditingType currentFocus = EditingType.WEIGHT;
     private int exerciseIndex; // [TODO] Probably can use idSessionExercise instead since all changes should be propogated to the database.
@@ -98,6 +108,8 @@ public class PerformSetDialog extends DialogBase {
         // Set the initial focus item.
         final int initialFocus = getArguments().getInt("initialFocus");
         currentFocus = EditingType.fromInt(initialFocus);
+
+        // [TODO] Need to get the set's weight unit as well.
     }
 
     @Override
@@ -194,7 +206,7 @@ public class PerformSetDialog extends DialogBase {
 
                 // If empty, then just show 0's.
                 if (currentLength == 0) {
-                    onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, 0, 0, finalWeight, finalRep);
+                    onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, 0, 0, finalWeight, finalRep, ((WeightUnits.Unit) spinner.getSelectedItem()).getId());
                     getDialog().dismiss();
                     return;
                 }
@@ -210,7 +222,7 @@ public class PerformSetDialog extends DialogBase {
                     minutes = time.substring(0, time.length() - 2);
                 }
 
-                onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, Integer.valueOf(minutes), Integer.valueOf(seconds), finalWeight, finalRep);
+                onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, Integer.valueOf(minutes), Integer.valueOf(seconds), finalWeight, finalRep, ((WeightUnits.Unit) spinner.getSelectedItem()).getId());
 
                 getDialog().dismiss();
             });
@@ -262,6 +274,9 @@ public class PerformSetDialog extends DialogBase {
                 }
             });
 
+            // Initialize a dropdown with selectable weight units.
+            initializeWeightSelector(mView);
+
             // Initialize values.
             timerBox.setText(getUpdatedTimeString());
 
@@ -270,6 +285,17 @@ public class PerformSetDialog extends DialogBase {
         }
 
         return mView;
+    }
+
+    private void initializeWeightSelector(View mView) {
+        spinner = mView.findViewById(R.id.spinner_perform_exercise_units);
+        // Selectable values.
+        WeightUnits units = new WeightUnits(getActivity(), ((ActivityBase) getActivity()).getCurrentLocale()); // Get the weights based on locale.
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.weight_unit_spinner_item, units.getUnitsList());
+        // Specify the layout to use when the list appears.
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner.
+        spinner.setAdapter(adapter);
     }
 
     private void numberClicked(int num) {
@@ -432,6 +458,17 @@ public class PerformSetDialog extends DialogBase {
         return getUpdatedTimeString();
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+        final String itemAtPosition = (String) adapterView.getItemAtPosition(pos);
+        Log.d(TAG, "selected " + itemAtPosition);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
     // An enum indicating which item is being edited.
     public enum EditingType {
         WEIGHT(0), // User is entering in the weights.
@@ -462,7 +499,7 @@ public class PerformSetDialog extends DialogBase {
     }
 
     public interface IOnSave {
-        void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, @Nullable Double weight, @Nullable Integer reps);
+        void saveSet(int exerciseIndex, int exerciseSetIndex, int restMinutes, int restSeconds, @Nullable Double weight, @Nullable Integer reps, int weightUnit);
     }
 
 }

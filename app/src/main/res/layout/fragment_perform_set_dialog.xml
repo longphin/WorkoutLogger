@@ -27,6 +27,7 @@
         android:textSize="@dimen/header_large"
         tools:text="45" />
 
+    <!--
     <TextView
         android:id="@+id/txt_perform_exercise_units"
         android:layout_width="51dp"
@@ -37,6 +38,20 @@
         android:text="lbs"
         android:textAlignment="center"
         android:textSize="@dimen/header_large" />
+    -->
+
+    <Spinner
+        android:id="@+id/spinner_perform_exercise_units"
+        android:layout_width="51dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_perform_exercise_restHeader"
+        android:layout_toEndOf="@+id/txt_perform_exercise_weights"
+        android:background="@drawable/back_border_grey"
+        android:entries="@array/units_array"
+        android:textAlignment="center"
+        android:textSize="@dimen/header_large"
+        tools:listitem="@layout/weight_unit_spinner_item"
+        tools:text="lbs" />
 
     <TextView
         android:id="@+id/txt_perform_exercise_repsHeader"
@@ -65,7 +80,7 @@
         android:layout_width="32dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txt_perform_exercise_restHeader"
-        android:layout_toEndOf="@+id/txt_perform_exercise_units"
+        android:layout_toEndOf="@+id/spinner_perform_exercise_units"
         android:text="@string/Cancel_X"
         android:textAlignment="center"
         android:textSize="@dimen/header_large" />

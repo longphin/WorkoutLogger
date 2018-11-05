@@ -16,7 +16,6 @@ import android.view.View;
 import com.longlife.workoutlogger.data.RoomModule;
 
 /*
-[TODO] Allow changing weight metric when editing a set.
 [TODO] Allow different type of exercises.
 [TODO] Change exercise lists to use a ShortExercise object instead. We do not need the entire exercise details, just the id, name, type, etc.
 [TODO] Put cached objects in repository.
@@ -29,12 +28,13 @@ import com.longlife.workoutlogger.data.RoomModule;
 [TODO] Allow users to activate/deactivate Workouts.
 {TODO] Create planner and calendar to see upcoming routines. The listed routines will be based on the active Workouts.
 [TODO] Create variations for exercises that users can swap in and out.
-[TODO] Allow users to upload progress pictures of themselves. Have them time-stamped so they can also be used to verify challenges.
-[TODO] Allow users to upload their own image for an exercise.
+[TODO] Allow users to upload progress pictures of themselves. Have them time-stamped so they can also be used to verify challenges. -- Premium feature.
+[TODO] Allow users to upload their own image for an exercise. -- Premium feature
 [TODO] Add user preference settings. - PreferenceFragments etc.
 
 [TODO] Add server and API.
-    [TODO] Add syncing to cloud/server.
+    [TODO] Add user login and verification. Identify if user is premium.
+    [TODO] Add syncing to cloud/server. -- Premium feature
     [TODO] Add occasional "challenges" Workouts. Eventually, there should be multiple challenges available, related user's goal. But initially, these will probably be the same challenges for everyone for the duration.
             For example, everyone can opt-in to the month's weight-loss challenge.
 
