@@ -313,7 +313,7 @@ public abstract class ExercisesWithSetsAdapter
 
                     final int setIndex = position - count - 1;
                     final SessionExerciseSet set = sets.get(setIndex);
-                    return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds(), reh.getExercise().getName(), set.getWeights(), set.getReps());
+                    return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds(), reh.getExercise().getName(), set.getWeights(), set.getReps(), set.getWeightUnit());
                 }
 
                 count += 1; // Add 1 for the "Add set" view.
@@ -547,14 +547,17 @@ public abstract class ExercisesWithSetsAdapter
 
         // Weights for the set.
         private Double weight;
+        // Weight Unit type.
+        private int weightUnit;
         // Reps for the set.
         private Integer reps;
 
-        private RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName, Double weight, Integer reps) {
+        private RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName, Double weight, Integer reps, int weightUnit) {
             this(exerciseIndex, setIndexWithinExerciseIndex, restMinutes, restSeconds, exerciseName);
 
             this.weight = weight;
             this.reps = reps;
+            this.weightUnit = weightUnit;
         }
 
         private RoutineExerciseSetPositions(int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName) {
@@ -591,6 +594,10 @@ public abstract class ExercisesWithSetsAdapter
 
         public int getSetIndexWithinExerciseIndex() {
             return setIndexWithinExerciseIndex;
+        }
+
+        public int getWeightUnit() {
+            return weightUnit;
         }
     }
 }

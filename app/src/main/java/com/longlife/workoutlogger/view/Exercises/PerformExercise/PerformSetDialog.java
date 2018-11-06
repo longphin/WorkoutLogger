@@ -15,11 +15,12 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.enums.WeightUnits;
+import com.longlife.workoutlogger.enums.WeightUnitTypes;
 import com.longlife.workoutlogger.utils.Format;
+
+import java.util.Locale;
 
 import static com.longlife.workoutlogger.model.Profile.decimalCharacter;
 import static com.longlife.workoutlogger.utils.Format.convertDoubleToStrWithoutZeroes;
@@ -68,6 +69,7 @@ public class PerformSetDialog extends DialogBase
         bundle.putInt("restSeconds", positionHelper.getRestSeconds());//restSeconds);
         bundle.putString("exerciseName", positionHelper.getExerciseName());//exerciseName);
         bundle.putInt("initialFocus", initialFocus.asInt());
+        bundle.putInt("weightUnit", positionHelper.getWeightUnit());
 
         // Get set stats that are optional.
         final Double weight = positionHelper.getWeight();
@@ -195,36 +197,39 @@ public class PerformSetDialog extends DialogBase
                     }
             );
 
-            mView.findViewById(R.id.btn_fragment_keyboard_numbers_save).setOnClickListener(view ->
-            {
-                // Get weight and rep as numbers.
-                final Double finalWeight = convertStrToDouble(weight);
-                final Integer finalRep = convertStrToInt(rep);
+            mView.findViewById(R.id.btn_fragment_keyboard_numbers_save).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                // Get the minutes and seconds from the time.
-                final int currentLength = time.length();
+                    // Get weight and rep as numbers.
+                    final Double finalWeight = convertStrToDouble(weight);
+                    final Integer finalRep = convertStrToInt(rep);
 
-                // If empty, then just show 0's.
-                if (currentLength == 0) {
-                    onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, 0, 0, finalWeight, finalRep, ((WeightUnits.Unit) spinner.getSelectedItem()).getId());
+                    // Get the minutes and seconds from the time.
+                    final int currentLength = time.length();
+
+                    // If empty, then just show 0's.
+                    if (currentLength == 0) {
+                        onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, 0, 0, finalWeight, finalRep, ((WeightUnitTypes.Unit) spinner.getSelectedItem()).getId());
+                        getDialog().dismiss();
+                        return;
+                    }
+
+                    String seconds;
+                    String minutes;
+                    if (currentLength <= 2) // Only seconds were entered.
+                    {
+                        seconds = time;
+                        minutes = "0";
+                    } else {
+                        seconds = time.substring(time.length() - 2);
+                        minutes = time.substring(0, time.length() - 2);
+                    }
+
+                    onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, Integer.valueOf(minutes), Integer.valueOf(seconds), finalWeight, finalRep, ((WeightUnitTypes.Unit) spinner.getSelectedItem()).getId());
+
                     getDialog().dismiss();
-                    return;
                 }
-
-                String seconds;
-                String minutes;
-                if (currentLength <= 2) // Only seconds were entered.
-                {
-                    seconds = time;
-                    minutes = "0";
-                } else {
-                    seconds = time.substring(time.length() - 2);
-                    minutes = time.substring(0, time.length() - 2);
-                }
-
-                onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, Integer.valueOf(minutes), Integer.valueOf(seconds), finalWeight, finalRep, ((WeightUnits.Unit) spinner.getSelectedItem()).getId());
-
-                getDialog().dismiss();
             });
 
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_cancel).setOnClickListener(view ->
@@ -290,12 +295,15 @@ public class PerformSetDialog extends DialogBase
     private void initializeWeightSelector(View mView) {
         spinner = mView.findViewById(R.id.spinner_perform_exercise_units);
         // Selectable values.
-        WeightUnits units = new WeightUnits(getActivity(), ((ActivityBase) getActivity()).getCurrentLocale()); // Get the weights based on locale.
-        ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.weight_unit_spinner_item, units.getUnitsList());
+        // WeightUnits units = new WeightUnits(getActivity(), ((ActivityBase) getActivity()).getCurrentLocale()); // Get the weights based on locale.
+        //ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.weight_unit_spinner_item, units.getUnitsList());
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.weight_unit_spinner_item, (new WeightUnitTypes()).getWeightOptions(Locale.US)); // [TODO] Use user's locale instead of "US".
         // Specify the layout to use when the list appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner.
         spinner.setAdapter(adapter);
+
+        spinner.setSelection(getArguments().getInt("weightUnit", WeightUnitTypes.getDefault()));
     }
 
     private void numberClicked(int num) {

@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 
 import com.longlife.workoutlogger.enums.SetType;
 import com.longlife.workoutlogger.enums.SetTypeConverter;
+import com.longlife.workoutlogger.enums.WeightUnitTypes;
 
 
 /**
@@ -53,7 +54,7 @@ public class SessionExerciseSet
     private SetType type = SetType.REGULAR;
 
     // The type of a unit.
-    private int weightUnit = 1;
+    private int weightUnit = WeightUnitTypes.getDefault();
 
     public int getWeightUnit() {
         return weightUnit;

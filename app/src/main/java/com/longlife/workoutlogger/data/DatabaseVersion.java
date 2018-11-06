@@ -37,7 +37,8 @@ public class DatabaseVersion {
     private static final int V5 = 28; // Removing exercise history. Instead, history should be applied to session exercise.
     private static final int V5_1 = 29; // recreating data.
     private static final int V5_2 = 30; // Add weight unit to set object.
+    private static final int V5_3 = 31; // Change how weight unit type is defined. No longer using xml, in case the weight was not translated. It will all come from a class object now.
 
-    public static final int CURRENT = V5_2;
+    public static final int CURRENT = V5_3;
 }
 
