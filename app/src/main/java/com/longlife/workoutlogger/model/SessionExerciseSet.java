@@ -56,6 +56,17 @@ public class SessionExerciseSet
     // The type of a unit.
     private int weightUnit = WeightUnitTypes.getDefault();
 
+    // Indicate whether the set was performed.
+    private boolean performed = false;
+
+    public boolean isPerformed() {
+        return performed;
+    }
+
+    public void setPerformed(boolean performed) {
+        this.performed = performed;
+    }
+
     public int getWeightUnit() {
         return weightUnit;
     }

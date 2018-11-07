@@ -38,7 +38,8 @@ public class DatabaseVersion {
     private static final int V5_1 = 29; // recreating data.
     private static final int V5_2 = 30; // Add weight unit to set object.
     private static final int V5_3 = 31; // Change how weight unit type is defined. No longer using xml, in case the weight was not translated. It will all come from a class object now.
+    private static final int V5_4 = 32; // Added was performed status to performing a set, and changed icon.
 
-    public static final int CURRENT = V5_3;
+    public static final int CURRENT = V5_4;
 }
 

@@ -19,9 +19,6 @@ public class PerformRoutineAdapter
 
     private IOnSetClick onSetClickListener;
 
-    private static Integer performingHeaderIndex;
-    private static Integer performingSetIndexWithinHeader;
-
     public PerformRoutineAdapter(Context context, IOnSetClick onSetClickListener) {
         super(context);
 
@@ -49,6 +46,13 @@ public class PerformRoutineAdapter
             performHolder.getRepsTextView().setText(String.valueOf(set.getReps()));
         else performHolder.getRepsTextView().setText(R.string.zeroInt);
 
+        // Set checkbox.
+        if (set.isPerformed()) {
+            performHolder.getStartRestView().setImageResource(R.drawable.ic_check_black_24dp);//R.drawable.ic_pause_black_24dp);//.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+        } else {
+            performHolder.getStartRestView().setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);//R.drawable.ic_pause_black_24dp);//.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+        }
+
         performHolder.getWeightsTextView().setOnClickListener(view ->
         {
             int clickedPos = holder.getAdapterPosition();
@@ -67,34 +71,27 @@ public class PerformRoutineAdapter
             onSetClickListener.onSetClick(getIdSessionExerciseAtPosition(clickedPos), PerformSetDialog.EditingType.REST);
         });
 
-        // Change "start rest" timer button if needed.
-        final int headerIndex = getHeaderIndex(pos);
-        final int setIndexWithinHeader = getSetIndexWithinHeader(pos);
-        if (performingHeaderIndex != null && performingSetIndexWithinHeader != null
-                && headerIndex == performingHeaderIndex && setIndexWithinHeader == performingSetIndexWithinHeader) {
-            performHolder.getStartRestView().setImageResource(R.drawable.ic_pause_black_24dp);//.setBackgroundResource(R.drawable.ic_pause_black_24dp);//.setImageResource(R.drawable.ic_pause_black_24dp);// [TODO] not working properly
-        }
-
         performHolder.getStartRestView().setOnClickListener(view ->
         {
             final int clickedPos = holder.getAdapterPosition();
             final SessionExerciseSet clickedSet = getSetAtPosition(clickedPos);
             if (clickedSet != null) {
-                performingHeaderIndex = getHeaderIndex(clickedPos);
-                performingSetIndexWithinHeader = getSetIndexWithinHeader(clickedPos);
+                // Visually change the checkbox.
+                clickedSet.setPerformed(!clickedSet.isPerformed());
+                if (clickedSet.isPerformed()) {
+                    // Set checkbox as TRUE.
+                    performHolder.getStartRestView().setImageResource(R.drawable.ic_check_black_24dp);//R.drawable.ic_pause_black_24dp);//.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                    // Start the rest timer.
+                    final int performingHeaderIndex = getHeaderIndex(clickedPos);
+                    final int performingSetIndexWithinHeader = getSetIndexWithinHeader(clickedPos);
+                    onSetClickListener.startRestTimer(view, performingHeaderIndex, performingSetIndexWithinHeader, clickedSet.getRestMinutes(), clickedSet.getRestSeconds());
+                } else {
+                    // Set checkbox as FALSE.
+                    performHolder.getStartRestView().setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);//R.drawable.ic_pause_black_24dp);//.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                }
 
-                performHolder.getStartRestView().setImageResource(R.drawable.ic_pause_black_24dp);//.setBackgroundResource(R.drawable.ic_pause_black_24dp);
-                onSetClickListener.startRestTimer(view, performingHeaderIndex, performingSetIndexWithinHeader, clickedSet.getRestMinutes(), clickedSet.getRestSeconds());
             }
         });
-
-        // [TODO] When rest timer finished, need to set performingHeaderIndex and performingSetIndexWithinHeader to null
-
-        /*performHolder.getView().setOnClickListener(view ->
-        {
-            int clickedPos = holder.getAdapterPosition();
-            onSetClickListener.onSetClick(getIdSessionExerciseAtPosition(clickedPos), PerformSetDialog.EditingType.WEIGHT);
-        });*/
     }
 
     @Override
