@@ -37,7 +37,7 @@ import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.AndroidUtils.StringArrayAdapter;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseShort;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.utils.Response;
@@ -251,7 +251,7 @@ public class RoutineCreateFragment
     }
 
     // Process list of exercises that were selected in the searchbox fragment.
-    private void processSelectedExercisesResponse(Response<List<Exercise>> response) {
+    private void processSelectedExercisesResponse(Response<List<ExerciseShort>> response) {
         switch (response.getStatus()) {
             case LOADING:
                 renderSelectedExercisesState();
@@ -283,7 +283,7 @@ public class RoutineCreateFragment
     private void renderSelectedExercisesState() {
     }
 
-    private void renderSelectedExercisesSuccessState(List<Exercise> ex) {
+    private void renderSelectedExercisesSuccessState(List<ExerciseShort> ex) {
         adapter.addExercises(ex);
     }
 

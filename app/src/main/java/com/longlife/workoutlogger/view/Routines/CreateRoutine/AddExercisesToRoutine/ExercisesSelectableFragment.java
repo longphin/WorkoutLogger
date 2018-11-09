@@ -2,6 +2,7 @@ package com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRou
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -40,9 +41,15 @@ public class ExercisesSelectableFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setAdapter(new ExercisesSelectableAdapter(getActivity(), this, this));
+        initializeAdapter(getActivity());
 
         exercisesSelectableViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesSelectableViewModel.class);
+    }
+
+    @Override
+    protected void initializeAdapter(Context context) {
+        if (adapter == null)
+            adapter = new ExercisesSelectableAdapter(getActivity(), this, this);
     }
 
     @Override

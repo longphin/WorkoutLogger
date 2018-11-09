@@ -10,6 +10,7 @@ import android.arch.persistence.room.Update;
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.ExerciseShort;
+import com.longlife.workoutlogger.model.ExerciseUpdated;
 import com.longlife.workoutlogger.model.SessionExercise;
 
 import java.util.List;
@@ -29,6 +30,10 @@ public abstract class ExerciseDao {
     // Get a list of exercises that are not hidden.
     @Query("SELECT * FROM Exercise WHERE hidden = 0")
     public abstract Single<List<Exercise>> getExercises();
+
+    // Get a list of exercises (short) that are not hidden.
+    @Query("SELECT idExercise, name, note, locked FROM Exercise WHERE hidden=0")
+    public abstract Single<List<ExerciseShort>> getExerciseShort();
 
     // Get the name of exercises that are not hidden.
     @Query("SELECT Name FROM Exercise WHERE hidden = 0")
@@ -50,9 +55,17 @@ public abstract class ExerciseDao {
     @Query("SELECT * FROM Exercise WHERE idExercise=:id")
     public abstract Single<Exercise> getExerciseFromId(Long id);
 
-    // Get a subset of columns from exercise give the id.
+    // Get a subset of columns from exercise that can be edited.
     @Query("SELECT idExercise, name, note FROM Exercise WHERE idExercise=:id")
+    public abstract Single<ExerciseUpdated> getExerciseUpdatableFromId(Long id);
+
+    // Get a subset of columns from exercise that is minimal.
+    @Query("SELECT idExercise, name, note, locked FROM Exercise WHERE idExercise=:id")
     public abstract Single<ExerciseShort> getExerciseShortFromId(Long id);
+
+    // Get a subset of columns from exercise that is minimal.
+    @Query("SELECT idExercise, name, note, locked FROM Exercise WHERE idExercise IN (:ids)")
+    public abstract Single<List<ExerciseShort>> getExerciseShortFromId(Set<Long> ids);
 
     // Update the lock status of an exercise.
     @Query("UPDATE Exercise SET locked = :lockedStatus WHERE idExercise = :idExercise")
@@ -89,7 +102,7 @@ public abstract class ExerciseDao {
     }
 
     // Insert an exercise. Do not use directly. Instead, use insertExerciseFull(exercise) to insert a source exercise and a leaf copy.
-    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)//OnConflictStrategy.ROLLBACK)
     public abstract Long insertExercise(Exercise ex);
 
     // Delete an exercise. Currently, we do not use this because exercises will only be hidden/unhidden.
@@ -104,5 +117,5 @@ public abstract class ExerciseDao {
             "SET name = :name " +
             ", note = :note " +
             "WHERE idExercise = :idExercise")
-    public abstract void updateExerciseShort(Long idExercise, String name, String note);
+    public abstract void updateExercise(Long idExercise, String name, String note);
 }

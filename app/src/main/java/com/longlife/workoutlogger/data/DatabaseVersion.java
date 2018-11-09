@@ -34,12 +34,16 @@ public class DatabaseVersion {
     private static final int V4_4c = 25; // Removed routine history.
     private static final int V4_4d = 26; // Added type for set.
     private static final int V4_4e = 27; // Fixed null annotation for sets.
+    // V5 will remove history recording from exercises.
     private static final int V5 = 28; // Removing exercise history. Instead, history should be applied to session exercise.
     private static final int V5_1 = 29; // recreating data.
     private static final int V5_2 = 30; // Add weight unit to set object.
     private static final int V5_3 = 31; // Change how weight unit type is defined. No longer using xml, in case the weight was not translated. It will all come from a class object now.
     private static final int V5_4 = 32; // Added was performed status to performing a set, and changed icon.
+    // V6 will replace Exercise with ExerciseShort objects where necessary, to reduce the amount of memory used.
+    private static final int V6_0 = 33; // Changing exercise lists to use ExerciseShort object instead.
+    private static final int V6_1 = 34; // Removed indices from Exercise table.
 
-    public static final int CURRENT = V5_4;
+    public static final int CURRENT = V6_1;
 }
 

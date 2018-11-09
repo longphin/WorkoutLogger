@@ -110,8 +110,6 @@ public class PerformSetDialog extends DialogBase
         // Set the initial focus item.
         final int initialFocus = getArguments().getInt("initialFocus");
         currentFocus = EditingType.fromInt(initialFocus);
-
-        // [TODO] Need to get the set's weight unit as well.
     }
 
     @Override

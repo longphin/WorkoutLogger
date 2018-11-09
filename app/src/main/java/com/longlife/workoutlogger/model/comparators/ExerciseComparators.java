@@ -20,9 +20,9 @@ public class ExerciseComparators {
         @Override
         public int compare(Exercise e1, Exercise e2) {
             // Order by favorites.
-            if ((e1.getLocked() ? 1 : 0) > (e2.getLocked() ? 1 : 0))
+            if ((e1.isLocked() ? 1 : 0) > (e2.isLocked() ? 1 : 0))
                 return -1;
-            else if ((e1.getLocked() ? 1 : 0) < (e2.getLocked() ? 1 : 0))
+            else if ((e1.isLocked() ? 1 : 0) < (e2.isLocked() ? 1 : 0))
                 return 1;
 
             // Order by name.

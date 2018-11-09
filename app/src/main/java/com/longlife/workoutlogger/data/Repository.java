@@ -2,6 +2,8 @@ package com.longlife.workoutlogger.data;
 
 import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
+import com.longlife.workoutlogger.model.ExerciseShort;
+import com.longlife.workoutlogger.model.ExerciseUpdated;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.SessionExercise;
@@ -30,6 +32,10 @@ public class Repository {
 
     public Single<List<Exercise>> getExercises() {
         return (exerciseDao.getExercises());
+    }
+
+    public Single<List<ExerciseShort>> getExerciseShort() {
+        return (exerciseDao.getExerciseShort());
     }
 
     public Single<List<String>> getExercisesNames() {
@@ -82,17 +88,9 @@ public class Repository {
     }
 
     // Update the history for an exercise.
-/*    public Single<Exercise> updateExercise(Exercise ex) {
-        return Single.fromCallable(() -> exerciseDao.updateExerciseFull(ex));
-    }*/
-    // [TODO] Does not seem to work?
-    public void updateExercise(Exercise ex) {
-        exerciseDao.updateExercise(ex);
-    }
-
-    public void updateExerciseShort(Exercise ex) // [TODO] use ExerciseShort object instead.
+    public void updateExercise(ExerciseUpdated ex)
     {
-        exerciseDao.updateExerciseShort(ex.getIdExercise(), ex.getName(), ex.getNote());
+        exerciseDao.updateExercise(ex.getIdExercise(), ex.getName(), ex.getNote());
     }
 
     // Insert history for an exercise. This creates a new history value and updates the exercise.
@@ -120,5 +118,13 @@ public class Repository {
 
     public Single<SessionExercise> insertNewSessionForExercise(Long idExercise, String note) {
         return Single.fromCallable(() -> routineDao.insertNewSessionForExercise(idExercise, note));
+    }
+
+    public Single<ExerciseUpdated> getExerciseUpdatableFromId(Long idExercise) {
+        return exerciseDao.getExerciseUpdatableFromId(idExercise);
+    }
+
+    public Single<List<ExerciseShort>> getExerciseShortFromId(Set<Long> idExercise) {
+        return exerciseDao.getExerciseShortFromId(idExercise);
     }
 }

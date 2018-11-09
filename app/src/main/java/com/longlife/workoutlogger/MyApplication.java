@@ -17,7 +17,6 @@ import com.longlife.workoutlogger.data.RoomModule;
 
 /*
 [TODO] Allow different type of exercises.
-[TODO] Change exercise lists to use a ShortExercise object instead. We do not need the entire exercise details, just the id, name, type, etc.
 [TODO] Put cached objects in repository.
 [TODO] Separate groups in the recycler views better. stackoverflow.com/questions/31273203
 [TODO] Make recyclerview header "stick" to the top when scrolling (optional, for routines / performing) stackoverflow.com/questions/32949971

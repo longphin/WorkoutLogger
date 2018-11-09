@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseUpdated;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
@@ -26,8 +26,6 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-// [TODO] This does not seem to be saving the edit properly. The exercise details are not updated from viewmodel, either.
-// [TODO] Instead of using Exercise object, we only need to use ExerciseShort object because only a subset of fields should be updated.
 public class ExerciseEditFragment
         extends FragmentBase
         implements AddNoteDialog.OnInputListener {
@@ -36,7 +34,7 @@ public class ExerciseEditFragment
     public ViewModelProvider.Factory viewModelFactory;
     private Long idExercise;
     private ExercisesViewModel viewModel;
-    private Exercise exercise;
+    private ExerciseUpdated exercise; // [TODO] Move this to the view model.
     private EditText name;
     private ImageView note;
     private View mView;
@@ -88,11 +86,8 @@ public class ExerciseEditFragment
                     getActivity().onBackPressed()
             );
 
-            //initializeSaveButton();
-            //initializeNoteButton();
-
             // Observer to get exercise data. This might not be needed because we are passed the parcelable Exercise. If the parcel does not contain fields that we want, then we only need the idExercise.
-            addDisposable(viewModel.getExerciseFromId(idExercise)
+            addDisposable(viewModel.getExerciseUpdatableFromId(idExercise)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -119,7 +114,7 @@ public class ExerciseEditFragment
         ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_ExerciseEdit, exerciseName));
     }
 
-    private void setExercise(Exercise ex) {
+    private void setExercise(ExerciseUpdated ex) {
         this.exercise = ex;
         this.name.setText(ex.getName());
         updateToolbarTitle(ex.getName());

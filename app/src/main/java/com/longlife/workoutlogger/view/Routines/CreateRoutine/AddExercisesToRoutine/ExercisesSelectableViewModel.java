@@ -2,25 +2,27 @@ package com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRou
 
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
+
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.enums.Status;
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseShort;
 import com.longlife.workoutlogger.utils.Response;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ExercisesSelectableViewModel
         extends ViewModel {
 
     private final static String TAG = ExercisesSelectableViewModel.class.getSimpleName();
 
-    private final Response<List<Exercise>> addExercisesToRoutine = new Response<>();
+    private final Response<List<ExerciseShort>> addExercisesToRoutine = new Response<>(); //[TODO] No need to make this a Response<>
     private final CompositeDisposable disposables = new CompositeDisposable();
     private Set<Long> selectedIdExercises = new HashSet<>();
     private Repository repo;
@@ -30,7 +32,7 @@ public class ExercisesSelectableViewModel
     }
 
 
-    public Observable<Response<List<Exercise>>> getAddExercisesToRoutineResponse() {
+    public Observable<Response<List<ExerciseShort>>> getAddExercisesToRoutineResponse() {
         return addExercisesToRoutine.getObservable();
     }
 
@@ -55,11 +57,11 @@ public class ExercisesSelectableViewModel
         if (addExercisesToRoutine.getStatus() == Status.LOADING)
             return;
         Log.d(TAG, "addExercisesToRoutine() continued");
-        disposables.add(repo.getExerciseFromId(selectedIdExercises)
+        disposables.add(repo.getExerciseShortFromId(selectedIdExercises)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(__ -> addExercisesToRoutine.setLoading())
-                .subscribe((List<Exercise> exercises) ->
+                .subscribe(exercises ->
                         {
                             addExercisesToRoutine.setSuccess(exercises);
                         },

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseShort;
 import com.longlife.workoutlogger.view.Exercises.ExercisesAdapter;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewHolder;
 
@@ -32,7 +32,7 @@ public class ExercisesSelectableAdapter
     @Override
     protected void bindMyViewHolder(ExercisesViewHolder holder, int pos) {
         final int position = holder.getAdapterPosition();
-        final Exercise ex = exercises.get(position);
+        final ExerciseShort ex = exercises.get(position);
 
         // Get the checkbox
         CheckBox selectedCheckBox = holder.getSelectedCheckBox();

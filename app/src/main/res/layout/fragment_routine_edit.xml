@@ -5,8 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".view.Routines.EditRoutine.RoutineEditFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"

@@ -30,6 +30,8 @@ import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseShort;
+import com.longlife.workoutlogger.model.ExerciseUpdated;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
@@ -66,7 +68,6 @@ public class ExercisesFragment
 
     public static ExercisesFragment newInstance(int activityRoot, int exerciseItemLayout) {
         ExercisesFragment fragment = new ExercisesFragment();
-        //fragment.setAdapter(new ExercisesAdapter(getActivity(), fragment));
 
         Bundle bundle = new Bundle();
         bundle.putInt("activityRoot", activityRoot);
@@ -89,10 +90,10 @@ public class ExercisesFragment
         this.rootId = getArguments().getInt("activityRoot");
         this.layoutId = getArguments().getInt("exerciseItemLayout");
 
-        setAdapter(new ExercisesAdapter(getActivity(), this));
+        initializeAdapter(getActivity());
 
         addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadRoutineResponse(response)));
-        addDisposable(viewModel.getExerciseInsertedResponse().subscribe(response -> processInsertExerciseResponse(response)));
+        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(exercise -> processExerciseInserted(exercise)));
         addDisposable(viewModel.getExerciseEditedObservable().subscribe(exercise -> processExerciseEdited(exercise)));
         addDisposable(viewModel.getExerciseLockedObservable().subscribe(exerciseLocked -> processExerciseLocked(exerciseLocked)));
         addDisposable(viewModel.getExerciseRestoredObservable().subscribe(exerciseDeleted -> {
@@ -142,12 +143,6 @@ public class ExercisesFragment
             fragment = ExerciseCreateFragment.newInstance();
         }
 
-/*		manager.beginTransaction()
-			.replace(R.id.frameLayout_main_activity,//rootId,
-				fragment, ExerciseCreateFragment.TAG
-			)
-			.addToBackStack(ExerciseCreateFragment.TAG)
-			.commit();*/
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
@@ -155,7 +150,6 @@ public class ExercisesFragment
 
     public void initializeRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        //adapter = new ExercisesAdapter();
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
@@ -164,12 +158,12 @@ public class ExercisesFragment
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
 
-
-    public void setAdapter(ExercisesAdapter adapter) {
-        this.adapter = adapter;
+    protected void initializeAdapter(Context context) {
+        if (adapter == null)
+            adapter = new ExercisesAdapter(context, this);
     }
 
-    private void processLoadRoutineResponse(Response<List<Exercise>> response) {
+    private void processLoadRoutineResponse(Response<List<ExerciseShort>> response) {
         //if(!isAdded()) return;
         switch (response.getStatus()) {
             case LOADING:
@@ -185,22 +179,8 @@ public class ExercisesFragment
         }
     }
 
-    private void processInsertExerciseResponse(Response<Exercise> response) {
-        if (!isAdded())
-            return;
-        switch (response.getStatus()) {
-            case LOADING:
-                break;
-            case SUCCESS:
-                renderInsertExerciseSuccess(response.getValue());
-                break;
-            case ERROR:
-                break;
-        }
-    }
-
-    private void processExerciseEdited(Exercise exercise) {
-        adapter.exerciseUpdated(exercise);
+    private void processExerciseInserted(Exercise ex) {
+        adapter.addExercise(new ExerciseShort(ex));
     }
 
     // Methods
@@ -212,7 +192,16 @@ public class ExercisesFragment
         Log.d(TAG, "loading exercises");
     }
 
-    private void renderLoadRoutineSuccessState(List<Exercise> exercises) {
+    private void processExerciseEdited(ExerciseUpdated exercise) {
+        adapter.exerciseUpdated(new ExerciseShort(exercise));
+    }
+
+    private void renderLoadRoutineErrorState(@NonNull Throwable throwable) {
+        // change anything if loading data had an error.
+        Log.d(TAG, throwable.getMessage());
+    }
+
+    private void renderLoadRoutineSuccessState(List<ExerciseShort> exercises) {
         StringBuilder sb = new StringBuilder();
         if (isAdded())
             sb.append("attached) ");
@@ -227,15 +216,6 @@ public class ExercisesFragment
             return;
 
         adapter.setExercises(exercises);
-    }
-
-    private void renderLoadRoutineErrorState(@NonNull Throwable throwable) {
-        // change anything if loading data had an error.
-        Log.d(TAG, throwable.getMessage());
-    }
-
-    private void renderInsertExerciseSuccess(Exercise ex) {
-        adapter.addExercise(ex);
     }
 
     @Override
@@ -289,7 +269,7 @@ public class ExercisesFragment
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int pos) {
         if (viewHolder instanceof RecyclerViewHolderSwipeable) {
             int position = viewHolder.getAdapterPosition();
-            final Exercise deletedItem = adapter.getExercise(position);
+            final ExerciseShort deletedItem = adapter.getExercise(position);
 
             // Start the deleting process. It is only removed in the adapter, but it saved in the viewModel.
             // While the snackbar to undo the delete is available, the viewModel will keep the reference.
@@ -331,18 +311,5 @@ public class ExercisesFragment
     @Override
     public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         return adapter.getSwipeDirs(viewHolder.getAdapterPosition());
-    }
-
-    private void processExerciseEditedResponse(Response<Exercise> response) {
-        //if(!isAdded()) return;
-        switch (response.getStatus()) {
-            case LOADING:
-                break;
-            case SUCCESS:
-                adapter.exerciseUpdated(response.getValue());
-                break;
-            case ERROR:
-                break;
-        }
     }
 }

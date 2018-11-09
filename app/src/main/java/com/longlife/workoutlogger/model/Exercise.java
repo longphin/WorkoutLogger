@@ -2,7 +2,6 @@ package com.longlife.workoutlogger.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
@@ -23,10 +22,12 @@ import java.util.GregorianCalendar;
  * This will be the Exercise object.
  */
 
-@Entity(indices = {
+@Entity(
+        /*indices = {
         @Index(value = {"locked"}),
         @Index(value = {"hidden"})
 }
+*/
 )
 public class Exercise implements Parcelable {
     @Ignore
@@ -72,7 +73,7 @@ public class Exercise implements Parcelable {
     public Exercise(Exercise ex) {
         name = ex.getName();
         note = ex.getNote();
-        locked = ex.getLocked(); // This is not used by leaf nodes.
+        locked = ex.isLocked(); // This is not used by leaf nodes.
         hidden = ex.isHidden(); // This is not used by leaf nodes.
         exerciseType = ex.getExerciseType();
         measurementType = ex.getMeasurementType();
@@ -147,7 +148,7 @@ public class Exercise implements Parcelable {
         idExercise = val;
     }
 
-    public boolean getLocked() {
+    public boolean isLocked() {
         return locked;
     }
 

@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseShort;
 import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseLocked;
 
 import java.util.ArrayList;
@@ -17,11 +17,7 @@ import java.util.List;
 
 public abstract class ExercisesListAdapter
         extends RecyclerView.Adapter<ExercisesViewHolder> {
-
-    private static final String TAG = ExercisesListAdapter.class.getSimpleName();
-    protected static int lockedIconEnabled = R.drawable.ic_lock_black_24dp;
-    protected static int lockedIconDisabled = R.drawable.ic_lock_open_black_24dp;
-    protected List<Exercise> exercises = new ArrayList<>();
+    protected List<ExerciseShort> exercises = new ArrayList<>();
     protected IClickExercise exerciseClickCallback;
     protected Context context;
 
@@ -48,27 +44,27 @@ public abstract class ExercisesListAdapter
 
     private void bindMyViewHolderCommon(ExercisesViewHolder holder, int pos) {
         final int position = holder.getAdapterPosition();
-        Exercise ex = exercises.get(position);
+        ExerciseShort ex = exercises.get(position);
         // Name
         holder.setNameText(ex.getName() + " (" + String.valueOf(ex.getIdExercise()) + ")");
         // Description
         holder.setDescripText(ex.getNote());
         // Lock icon
-        if (ex.getLocked()) {
-            holder.setLockedIcon(ExercisesAdapter.lockedIconEnabled);
+        if (ex.isLocked()) {
+            holder.setLockedIcon(R.drawable.ic_lock_black_24dp);
         } else {
-            holder.setLockedIcon(ExercisesAdapter.lockedIconDisabled);
+            holder.setLockedIcon(R.drawable.ic_lock_open_black_24dp);
         }
 
         holder.getLockedIcon().setOnClickListener(view ->
                 {
-                    final boolean newLockStatus = !ex.getLocked();
+                    final boolean newLockStatus = !ex.isLocked();
                     exerciseClickCallback.exerciseLocked(ex.getIdExercise(), newLockStatus);
 
                     if (newLockStatus) {
-                        holder.setLockedIcon(ExercisesAdapter.lockedIconEnabled);
+                        holder.setLockedIcon(R.drawable.ic_lock_black_24dp);
                     } else {
-                        holder.setLockedIcon(ExercisesAdapter.lockedIconDisabled);
+                        holder.setLockedIcon(R.drawable.ic_lock_open_black_24dp);
                     }
                 }
         );
@@ -112,12 +108,12 @@ public abstract class ExercisesListAdapter
     }
 
 
-    public void setExercises(List<Exercise> exercises) {
+    public void setExercises(List<ExerciseShort> exercises) {
         this.exercises = exercises;
         notifyDataSetChanged();
     }
 
-    public void exerciseUpdated(Exercise updatedExercise) {
+    public void exerciseUpdated(ExerciseShort updatedExercise) {
         final Long idExerciseEdited = updatedExercise.getIdExercise();
         // Find where in the adapter this exercise is and notify the change.
         for (int i = 0; i < exercises.size(); i++) {
@@ -141,7 +137,7 @@ public abstract class ExercisesListAdapter
         }
     }
 
-    public Exercise getExercise(int position) {
+    public ExerciseShort getExercise(int position) {
         return exercises.get(position);
     }
 
@@ -150,18 +146,18 @@ public abstract class ExercisesListAdapter
         notifyItemRemoved(position);
     }
 
-    public void restoreExercise(Exercise restoredItem, int restoredPosition) {
+    public void restoreExercise(ExerciseShort restoredItem, int restoredPosition) {
         exercises.add(restoredPosition, restoredItem);
         notifyItemInserted(restoredPosition);
     }
 
-    public void addExercise(Exercise ex) {
+    public void addExercise(ExerciseShort ex) {
         exercises.add(ex);
         notifyItemInserted(exercises.size() - 1);
     }
 
     public int getSwipeDirs(int adapterPosition) {
-        if (exercises.get(adapterPosition).getLocked())
+        if (exercises.get(adapterPosition).isLocked())
             return 0;
         else
             return ItemTouchHelper.RIGHT;

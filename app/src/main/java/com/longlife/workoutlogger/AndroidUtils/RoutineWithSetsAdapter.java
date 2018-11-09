@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.ExerciseShort;
+import com.longlife.workoutlogger.model.ExerciseUpdated;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateAddSetViewHolder;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateSetViewHolder;
@@ -187,7 +188,7 @@ public abstract class RoutineWithSetsAdapter
             throw new ArrayIndexOutOfBoundsException("Header index " + String.valueOf(headerIndex) + " not valid.");
         }
 
-        final Exercise exercise = headerItem.getExercise();
+        final ExerciseShort exercise = headerItem.getExercise();
 
         holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + ")");
     }
@@ -314,10 +315,10 @@ public abstract class RoutineWithSetsAdapter
     }
 
     // Insert a list of exercises.
-    public void addExercises(List<Exercise> ex) {
+    public void addExercises(List<ExerciseShort> ex) {
         final int currentSize = getItemCount(); // This is the recyclerview position that the items will be inserted after.
 
-        for (Exercise e : ex) {
+        for (ExerciseShort e : ex) {
             exercisesToInclude.add(
                     new RoutineExerciseHelper(e,
                             //sets,
@@ -452,12 +453,13 @@ public abstract class RoutineWithSetsAdapter
     }
 
     // An exercise was updated, so go through the exercises and update them.
-    public void exerciseUpdated(Exercise exercise) {
-        final Long idExercise = exercise.getIdExercise();
+    public void exerciseUpdated(ExerciseUpdated updatedExercise) {
+        final Long idExercise = updatedExercise.getIdExercise();
 
         for (int i = 0; i < exercisesToInclude.size(); i++) {
-            if (exercisesToInclude.get(i).getExercise().getIdExercise().equals(idExercise)) {
-                exercisesToInclude.get(i).setExercise(exercise);
+            RoutineExerciseHelper exerciseToUpdate = exercisesToInclude.get(i);
+            if (exerciseToUpdate.getExercise().getIdExercise().equals(idExercise)) {
+                exerciseToUpdate.getExercise().update(updatedExercise);
                 notifyItemChanged(getHeaderPosition(i));
             }
         }

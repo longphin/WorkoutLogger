@@ -141,7 +141,6 @@ public class ExerciseCreateFragment
                 this.name.startAnimation(Animation.shakeError());
                 Toast.makeText(context,
                         getResources().getString(R.string.requiredFieldsMissing),
-                        //MyApplication.getStringResource(MyApplication.requiredFieldsMissing),
                         Toast.LENGTH_SHORT
                 )
                         .show();
@@ -160,10 +159,5 @@ public class ExerciseCreateFragment
     public void sendInput(String descrip) {
         this.descrip = descrip;
     }
-	
-	/*public static void hideKeyboardFrom(Context context, View view) {
-		InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-	}*/
 }
 

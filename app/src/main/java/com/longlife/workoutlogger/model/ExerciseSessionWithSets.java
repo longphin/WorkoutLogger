@@ -12,7 +12,7 @@ public class ExerciseSessionWithSets {
 
     // Need to add Exercise object POJO that goes through Exercise. Or change RoutineExerciseHelper to a POJO (may be easier).
     @Relation(parentColumn = "idExercise", entityColumn = "idExercise", entity = Exercise.class)
-    public List<Exercise> exercise;
+    public List<ExerciseShort> exercise;
 
     @Relation(parentColumn = "idSessionExercise", entityColumn = "idSessionExercise", entity = SessionExerciseSet.class)
     public List<SessionExerciseSet> sets;
@@ -21,7 +21,7 @@ public class ExerciseSessionWithSets {
         return sessionExercise;
     }
 
-    public Exercise getExercise() {
+    public ExerciseShort getExercise() {
         return exercise.get(0);
     }
 

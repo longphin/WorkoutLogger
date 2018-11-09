@@ -1,7 +1,7 @@
 package com.longlife.workoutlogger.view.Routines.Helper;
 
-import com.longlife.workoutlogger.model.Exercise;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
+import com.longlife.workoutlogger.model.ExerciseShort;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 
 import java.util.List;
@@ -9,11 +9,11 @@ import java.util.List;
 // This is a simple object that contains the exercise and the details for associated sets.
 // This is used when creating a routine.
 public class RoutineExerciseHelper {
-    private Exercise exercise;
+    private ExerciseShort exercise;
     private List<SessionExerciseSet> sets;
     private boolean isExpanded;
 
-    public RoutineExerciseHelper(Exercise ex, List<SessionExerciseSet> sets, boolean isExpanded) {
+    public RoutineExerciseHelper(ExerciseShort ex, List<SessionExerciseSet> sets, boolean isExpanded) {
         this.exercise = ex;
         this.sets = sets;
         this.isExpanded = isExpanded;
@@ -25,12 +25,12 @@ public class RoutineExerciseHelper {
         this.isExpanded = true;
     }
 
-    public Exercise getExercise() {
+    public ExerciseShort getExercise() {
         return exercise;
     }
 
 
-    public void setExercise(Exercise exercise) {
+    public void setExercise(ExerciseShort exercise) {
         this.exercise = exercise;
     }
 
