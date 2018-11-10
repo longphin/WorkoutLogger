@@ -37,7 +37,7 @@ import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.AndroidUtils.StringArrayAdapter;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.ExerciseShort;
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.utils.Response;

@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.model;
+package com.longlife.workoutlogger.model.Exercise;
 
 public class ExerciseUpdated {
     private Long idExercise;

@@ -6,6 +6,8 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.longlife.workoutlogger.model.Exercise.Exercise;
+
 import io.reactivex.annotations.NonNull;
 
 /**

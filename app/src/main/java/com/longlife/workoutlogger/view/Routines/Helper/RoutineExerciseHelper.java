@@ -1,7 +1,7 @@
 package com.longlife.workoutlogger.view.Routines.Helper;
 
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
-import com.longlife.workoutlogger.model.ExerciseShort;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 
 import java.util.List;

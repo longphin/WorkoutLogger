@@ -8,8 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 
 import java.util.ArrayList;

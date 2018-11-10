@@ -29,14 +29,14 @@ import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.Exercise;
-import com.longlife.workoutlogger.model.ExerciseShort;
-import com.longlife.workoutlogger.model.ExerciseUpdated;
+import com.longlife.workoutlogger.model.Exercise.Exercise;
+import com.longlife.workoutlogger.model.Exercise.ExerciseLocked;
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
+import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
-import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseLocked;
 import com.longlife.workoutlogger.view.Exercises.PerformExercise.PerformExerciseFragment;
 import com.longlife.workoutlogger.view.MainActivity;
 

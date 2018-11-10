@@ -20,7 +20,7 @@ import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.RequiredFieldEx
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Validator;
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;

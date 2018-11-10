@@ -1,9 +1,9 @@
 package com.longlife.workoutlogger.data;
 
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.Exercise.Exercise;
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
+import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
-import com.longlife.workoutlogger.model.ExerciseShort;
-import com.longlife.workoutlogger.model.ExerciseUpdated;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.SessionExercise;

@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.ExerciseShort;
-import com.longlife.workoutlogger.view.Exercises.Helper.ExerciseLocked;
+import com.longlife.workoutlogger.model.Exercise.ExerciseLocked;
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 
 import java.util.ArrayList;
 import java.util.List;

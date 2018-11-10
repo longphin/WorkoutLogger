@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.ExerciseShort;
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.view.Exercises.ExercisesAdapter;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewHolder;
 

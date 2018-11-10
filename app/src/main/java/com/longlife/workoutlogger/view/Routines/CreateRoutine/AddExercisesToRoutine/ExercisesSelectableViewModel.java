@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.enums.Status;
-import com.longlife.workoutlogger.model.ExerciseShort;
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.utils.Response;
 
 import java.util.HashSet;

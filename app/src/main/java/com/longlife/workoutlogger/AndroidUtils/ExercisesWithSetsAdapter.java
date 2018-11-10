@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
+import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
-import com.longlife.workoutlogger.model.ExerciseShort;
-import com.longlife.workoutlogger.model.ExerciseUpdated;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets.RoutineCreateAddSetViewHolder;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateAdapter;

@@ -7,10 +7,10 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.Update;
 
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.Exercise.Exercise;
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
+import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
-import com.longlife.workoutlogger.model.ExerciseShort;
-import com.longlife.workoutlogger.model.ExerciseUpdated;
 import com.longlife.workoutlogger.model.SessionExercise;
 
 import java.util.List;

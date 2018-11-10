@@ -1,6 +1,6 @@
-package com.longlife.workoutlogger.view.Exercises.Helper;
+package com.longlife.workoutlogger.model.Exercise;
 
-// Helper class for when an exercise is favorited.
+// Helper class for when an exercise's lock status is changed.
 public class ExerciseLocked {
     private Long idExercise;
     private boolean isLocked;

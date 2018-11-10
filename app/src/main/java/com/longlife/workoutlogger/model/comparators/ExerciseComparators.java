@@ -1,6 +1,6 @@
 package com.longlife.workoutlogger.model.comparators;
 
-import com.longlife.workoutlogger.model.Exercise;
+import com.longlife.workoutlogger.model.Exercise.Exercise;
 
 import java.util.Comparator;
 import java.util.Locale;

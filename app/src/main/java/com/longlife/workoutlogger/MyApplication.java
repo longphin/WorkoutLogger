@@ -16,9 +16,11 @@ import android.view.View;
 import com.longlife.workoutlogger.data.RoomModule;
 
 /*
+[TODO] Separate groups in the recycler views better. stackoverflow.com/questions/31273203
+[TODO] Improve searching for indexes for exercise with sets lists (creating a routine, performing an exercise).
+
 [TODO] Allow different type of exercises.
 [TODO] Put cached objects in repository.
-[TODO] Separate groups in the recycler views better. stackoverflow.com/questions/31273203
 [TODO] Make recyclerview header "stick" to the top when scrolling (optional, for routines / performing) stackoverflow.com/questions/32949971
 [TODO] Allow search for exercises by name, category, muscle groups.
 [TODO] Allow rest timer to be stopped, reset, continued.

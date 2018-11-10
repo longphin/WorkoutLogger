@@ -1,4 +1,4 @@
-package com.longlife.workoutlogger.model;
+package com.longlife.workoutlogger.model.Exercise;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
