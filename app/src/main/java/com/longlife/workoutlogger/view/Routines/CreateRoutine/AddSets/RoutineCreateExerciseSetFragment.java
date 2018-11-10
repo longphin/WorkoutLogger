@@ -22,12 +22,15 @@ public class RoutineCreateExerciseSetFragment
     private Exercise exercise;
     private List<SessionExerciseSet> sets;
     private View mView;
+    // Input constants.
+    private static final String INPUT_EXERCISE = "exercise";
+    private static final String INPUT_EXERCISE_SET = "exerciseSets";
 
     public static RoutineCreateExerciseSetFragment newInstance(Exercise exercise, ArrayList<SessionExerciseSet> sets) {
         RoutineCreateExerciseSetFragment fragment = new RoutineCreateExerciseSetFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("exercise", exercise);
-        bundle.putParcelableArrayList("exerciseSets", sets);
+        bundle.putParcelable(RoutineCreateExerciseSetFragment.INPUT_EXERCISE, exercise);
+        bundle.putParcelableArrayList(RoutineCreateExerciseSetFragment.INPUT_EXERCISE_SET, sets);
         fragment.setArguments(bundle);
 
         return fragment;
@@ -38,8 +41,8 @@ public class RoutineCreateExerciseSetFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        exercise = getArguments().getParcelable("exercise");
-        sets = getArguments().getParcelableArrayList("exerciseSets");
+        exercise = getArguments().getParcelable(RoutineCreateExerciseSetFragment.INPUT_EXERCISE);
+        sets = getArguments().getParcelableArrayList(RoutineCreateExerciseSetFragment.INPUT_EXERCISE_SET);
     }
 
     @Override

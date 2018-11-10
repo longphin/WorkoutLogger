@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.view.MainActivity;
@@ -14,6 +15,8 @@ import com.longlife.workoutlogger.view.MainActivity;
 public class RoutineEditFragment
         extends FragmentBase {
     public static final String TAG = RoutineEditFragment.class.getSimpleName();
+    // Input Constants
+    private static final String INPUT_ID_ROUTINE = "idRoutine";
 
     private Long idRoutine;
     private View mView;
@@ -24,7 +27,7 @@ public class RoutineEditFragment
 
     public static RoutineEditFragment newInstance(Long idRoutine) {
         Bundle bundle = new Bundle();
-        bundle.putLong("idRoutine", idRoutine);
+        bundle.putLong(RoutineEditFragment.INPUT_ID_ROUTINE, idRoutine);
 
         RoutineEditFragment fragment = new RoutineEditFragment();
         fragment.setArguments(bundle);
@@ -37,7 +40,7 @@ public class RoutineEditFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        idRoutine = getArguments().getLong("idRoutine");
+        idRoutine = getArguments().getLong(RoutineEditFragment.INPUT_ID_ROUTINE);
     }
 
     @Override

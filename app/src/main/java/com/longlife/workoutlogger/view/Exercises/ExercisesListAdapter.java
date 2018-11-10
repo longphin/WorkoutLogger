@@ -88,7 +88,7 @@ public abstract class ExercisesListAdapter
                     switch (item.getItemId()) {
                         case R.id.menu_exercise_options:
                             //handle menu1 click
-                            exerciseClickCallback.exercisePerform(ex.getIdExercise(), ex.getName());
+                            exerciseClickCallback.exercisePerform(ex);//ex.getIdExercise(), ex.getName());
                             return true;
                         default:
                             return false;
@@ -170,6 +170,6 @@ public abstract class ExercisesListAdapter
 
         void exerciseLocked(Long idExercise, boolean lockStatus);
 
-        void exercisePerform(Long idExercise, String exerciseName);
+        void exercisePerform(ExerciseShort ex);//Long idExercise, String exerciseName);
     }
 }

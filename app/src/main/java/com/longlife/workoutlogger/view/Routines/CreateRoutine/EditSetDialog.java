@@ -24,6 +24,12 @@ public class EditSetDialog
     private String time = "";
     private View mView;
     private IOnSave onSaveListener;
+    // Input constants.
+    private static final String INPUT_EXERCISE_INDEX = "exerciseIndex";
+    private static final String INPUT_SET_INDEX_WITHIN_EXERCISE_INDEX = "setIndexWithinExerciseIndex";
+    private static final String INPUT_REST_MINUTES = "restMinutes";
+    private static final String INPUT_REST_SECONDS = "restSeconds";
+    private static final String INPUT_EXERCISE_NAME = "exerciseName";
 
     public EditSetDialog() {
         // Required empty public constructor
@@ -32,11 +38,11 @@ public class EditSetDialog
     public static EditSetDialog newInstance(RoutineCreateAdapter.RoutineExerciseSetPositions positionHelper)//int exerciseIndex, int setIndexWithinExerciseIndex, int restMinutes, int restSeconds, String exerciseName)
     {
         Bundle bundle = new Bundle();
-        bundle.putInt("exerciseIndex", positionHelper.getExerciseIndex());//exerciseIndex);
-        bundle.putInt("setIndexWithinExerciseIndex", positionHelper.getSetIndexWithinExerciseIndex());//setIndexWithinExerciseIndex);
-        bundle.putInt("restMinutes", positionHelper.getRestMinutes());//restMinutes);
-        bundle.putInt("restSeconds", positionHelper.getRestSeconds());//restSeconds);
-        bundle.putString("exerciseName", positionHelper.getExerciseName());//exerciseName);
+        bundle.putInt(EditSetDialog.INPUT_EXERCISE_INDEX, positionHelper.getExerciseIndex());
+        bundle.putInt(EditSetDialog.INPUT_SET_INDEX_WITHIN_EXERCISE_INDEX, positionHelper.getSetIndexWithinExerciseIndex());
+        bundle.putInt(EditSetDialog.INPUT_REST_MINUTES, positionHelper.getRestMinutes());
+        bundle.putInt(EditSetDialog.INPUT_REST_SECONDS, positionHelper.getRestSeconds());
+        bundle.putString(EditSetDialog.INPUT_EXERCISE_NAME, positionHelper.getExerciseName());
 
         EditSetDialog dialog = new EditSetDialog();
         dialog.setArguments(bundle);
@@ -212,7 +218,7 @@ public class EditSetDialog
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.setTitle(getArguments().getString("exerciseName") + " - Set #" + String.valueOf(getArguments().getInt("setIndexWithinExerciseIndex") + 1));
+        dialog.setTitle(getArguments().getString(EditSetDialog.INPUT_EXERCISE_NAME) + " - Set #" + String.valueOf(getArguments().getInt(EditSetDialog.INPUT_SET_INDEX_WITHIN_EXERCISE_INDEX) + 1));
         return dialog;
     }
 
@@ -221,9 +227,12 @@ public class EditSetDialog
         super.onCreate(savedInstanceState);
 
         // Get arguments.
-        exerciseIndex = getArguments().getInt("exerciseIndex");
-        setIndexWithinExerciseIndex = getArguments().getInt("setIndexWithinExerciseIndex");
-        time = Format.ltrimCharacter(getString(R.string.Time_timeStringUnformatted, getArguments().getInt("restMinutes"), getArguments().getInt("restSeconds")), '0');
+        exerciseIndex = getArguments().getInt(EditSetDialog.INPUT_EXERCISE_INDEX);
+        setIndexWithinExerciseIndex = getArguments().getInt(EditSetDialog.INPUT_SET_INDEX_WITHIN_EXERCISE_INDEX);
+        time = Format.ltrimCharacter(getString(R.string.Time_timeStringUnformatted,
+                getArguments().getInt(EditSetDialog.INPUT_REST_MINUTES),
+                getArguments().getInt(EditSetDialog.INPUT_REST_SECONDS)),
+                '0');
     }
 
     public interface IOnSave {

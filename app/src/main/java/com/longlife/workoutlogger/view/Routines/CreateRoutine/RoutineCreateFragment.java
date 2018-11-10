@@ -416,7 +416,7 @@ public class RoutineCreateFragment
     }
 
     @Override
-    public void exercisePerform(Long idExercise, String exerciseName) {
+    public void exercisePerform(ExerciseShort ex) {//Long idExercise, String exerciseName) {
         // [TODO] Routines does not need to implement this. May want to separate this interface so this routine does not need to be overridden.
     }
 

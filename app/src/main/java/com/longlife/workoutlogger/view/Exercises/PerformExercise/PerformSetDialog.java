@@ -57,28 +57,39 @@ public class PerformSetDialog extends DialogBase
     private static final int weightsDigitLimit = 4;
     private static final int repsDigitLimit = 3;
 
+    // Input constants.
+    private static final String INPUT_EXERCISE_INDEX = "exerciseIndex";
+    private static final String INPUT_SET_INDEX_WITHIN_EXERCISE_INDEX = "setIndexWithinExerciseIndex";
+    private static final String INPUT_REST_MINUTES = "restMinutes";
+    private static final String INPUT_REST_SECONDS = "restSeconds";
+    private static final String INPUT_EXERCISE_NAME = "exerciseName";
+    private static final String INPUT_INITIAL_FOCUS = "initialFocus";
+    private static final String INPUT_WEIGHT_UNIT = "weightUnit";
+    private static final String INPUT_WEIGHT = "weight";
+    private static final String INPUT_REPS = "reps";
+
     public PerformSetDialog() {
         // Required empty public constructor
     }
 
     public static PerformSetDialog newInstance(PerformRoutineAdapter.RoutineExerciseSetPositions positionHelper, EditingType initialFocus) {
         Bundle bundle = new Bundle();
-        bundle.putInt("exerciseIndex", positionHelper.getExerciseIndex());//exerciseIndex);
-        bundle.putInt("setIndexWithinExerciseIndex", positionHelper.getSetIndexWithinExerciseIndex());//setIndexWithinExerciseIndex);
-        bundle.putInt("restMinutes", positionHelper.getRestMinutes());//restMinutes);
-        bundle.putInt("restSeconds", positionHelper.getRestSeconds());//restSeconds);
-        bundle.putString("exerciseName", positionHelper.getExerciseName());//exerciseName);
-        bundle.putInt("initialFocus", initialFocus.asInt());
-        bundle.putInt("weightUnit", positionHelper.getWeightUnit());
+        bundle.putInt(PerformSetDialog.INPUT_EXERCISE_INDEX, positionHelper.getExerciseIndex());
+        bundle.putInt(PerformSetDialog.INPUT_SET_INDEX_WITHIN_EXERCISE_INDEX, positionHelper.getSetIndexWithinExerciseIndex());
+        bundle.putInt(PerformSetDialog.INPUT_REST_MINUTES, positionHelper.getRestMinutes());
+        bundle.putInt(PerformSetDialog.INPUT_REST_SECONDS, positionHelper.getRestSeconds());
+        bundle.putString(PerformSetDialog.INPUT_EXERCISE_NAME, positionHelper.getExerciseName());
+        bundle.putInt(PerformSetDialog.INPUT_INITIAL_FOCUS, initialFocus.asInt());
+        bundle.putInt(PerformSetDialog.INPUT_WEIGHT_UNIT, positionHelper.getWeightUnit());
 
         // Get set stats that are optional.
         final Double weight = positionHelper.getWeight();
         if (weight != null)
-            bundle.putDouble("weight", positionHelper.getWeight());
+            bundle.putDouble(PerformSetDialog.INPUT_WEIGHT, positionHelper.getWeight());
 
         final Integer reps = positionHelper.getReps();
         if (reps != null)
-            bundle.putInt("reps", positionHelper.getReps());
+            bundle.putInt(PerformSetDialog.INPUT_REPS, positionHelper.getReps());
 
         PerformSetDialog dialog = new PerformSetDialog();
         dialog.setArguments(bundle);
@@ -91,24 +102,27 @@ public class PerformSetDialog extends DialogBase
         super.onCreate(savedInstanceState);
 
         // Get arguments.
-        exerciseIndex = getArguments().getInt("exerciseIndex");
-        setIndexWithinExerciseIndex = getArguments().getInt("setIndexWithinExerciseIndex");
-        time = Format.ltrimCharacter(getString(R.string.Time_timeStringUnformatted, getArguments().getInt("restMinutes"), getArguments().getInt("restSeconds")), '0');
+        exerciseIndex = getArguments().getInt(PerformSetDialog.INPUT_EXERCISE_INDEX);
+        setIndexWithinExerciseIndex = getArguments().getInt(PerformSetDialog.INPUT_SET_INDEX_WITHIN_EXERCISE_INDEX);
+        time = Format.ltrimCharacter(getString(R.string.Time_timeStringUnformatted,
+                getArguments().getInt(PerformSetDialog.INPUT_REST_MINUTES),
+                getArguments().getInt(PerformSetDialog.INPUT_REST_SECONDS)),
+                '0');
 
-        final Double weight = getArguments().getDouble("weight");
+        final Double weight = getArguments().getDouble(PerformSetDialog.INPUT_WEIGHT);
         if (weight.equals(0d))
             this.weight = "";
         else
             this.weight = convertDoubleToStrWithoutZeroes(weight);
 
-        final Integer rep = getArguments().getInt("reps");
+        final Integer rep = getArguments().getInt(PerformSetDialog.INPUT_REPS);
         if (rep.equals(0))
             this.rep = "";
         else
             this.rep = String.valueOf(rep);
 
         // Set the initial focus item.
-        final int initialFocus = getArguments().getInt("initialFocus");
+        final int initialFocus = getArguments().getInt(PerformSetDialog.INPUT_INITIAL_FOCUS);
         currentFocus = EditingType.fromInt(initialFocus);
     }
 
@@ -301,7 +315,7 @@ public class PerformSetDialog extends DialogBase
         // Apply the adapter to the spinner.
         spinner.setAdapter(adapter);
 
-        spinner.setSelection(getArguments().getInt("weightUnit", WeightUnitTypes.getDefault()));
+        spinner.setSelection(getArguments().getInt(PerformSetDialog.INPUT_WEIGHT_UNIT, WeightUnitTypes.getDefault()));
     }
 
     private void numberClicked(int num) {

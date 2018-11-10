@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,6 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
 import com.longlife.workoutlogger.view.MainActivity;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ExercisesSelectableFragment
         extends ExercisesFragment
         implements ExercisesSelectableAdapter.IExercisesSelectableAdapterCallback {
@@ -29,8 +25,8 @@ public class ExercisesSelectableFragment
         ExercisesSelectableFragment fragment = new ExercisesSelectableFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putInt("activityRoot", activityRoot);
-        bundle.putInt("exerciseItemLayout", exerciseItemLayout);
+        bundle.putInt(ExercisesFragment.INPUT_ACTIVITY_ROOT, activityRoot);
+        bundle.putInt(ExercisesFragment.INPUT_EXERCISE_ITEM_LAYOUT, exerciseItemLayout);
         fragment.setArguments(bundle);
 
         return fragment;

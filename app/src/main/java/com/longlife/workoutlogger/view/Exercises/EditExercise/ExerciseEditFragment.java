@@ -38,6 +38,8 @@ public class ExerciseEditFragment
     private EditText name;
     private ImageView note;
     private View mView;
+    // Input constants.
+    private static final String INPUT_ID_EXERCISE = "idExercise";
 
     public ExerciseEditFragment() {
         // Required empty public constructor
@@ -47,7 +49,7 @@ public class ExerciseEditFragment
         Bundle bundle = new Bundle();
         // We bundle up only the idExercise instead of a Parcelable Exercise because we want all of the exercise details,
         // but a parcelable only contains specified fields. An observable is created to obtain the exercise using this idExercise.
-        bundle.putLong("idExercise", idExercise);
+        bundle.putLong(ExerciseEditFragment.INPUT_ID_EXERCISE, idExercise);
 
         ExerciseEditFragment fragment = new ExerciseEditFragment();
         fragment.setArguments(bundle);
@@ -67,7 +69,7 @@ public class ExerciseEditFragment
         viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
 
         // Unbundle arguments.
-        this.idExercise = getArguments().getLong("idExercise");
+        this.idExercise = getArguments().getLong(ExerciseEditFragment.INPUT_ID_EXERCISE);
     }
 
     private Button saveButton;

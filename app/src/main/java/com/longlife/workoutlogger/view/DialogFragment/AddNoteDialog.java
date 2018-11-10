@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
 
@@ -24,12 +25,14 @@ public class AddNoteDialog
     Button saveButton;
     Button cancelButton;
     private EditText descrip;
+    // Input constants.
+    private static final String INPUT_DESCRIP = "descrip";
 
     public static AddNoteDialog newInstance(String descrip) {
         AddNoteDialog dialog = new AddNoteDialog();
 
         Bundle bundle = new Bundle();
-        bundle.putString("descrip", descrip);
+        bundle.putString(INPUT_DESCRIP, descrip);
         dialog.setArguments(bundle);
 
         return dialog;
@@ -106,7 +109,7 @@ public class AddNoteDialog
         super.onCreate(savedInstanceState);
 
         // Unbundle arguments.
-        this.descripText = getArguments().getString("descrip");
+        this.descripText = getArguments().getString(AddNoteDialog.INPUT_DESCRIP);
     }
 
     // Interface to callback to parent fragment the entered values. Parent must implement this to get back the value.

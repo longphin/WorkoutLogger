@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -21,6 +20,7 @@ import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
@@ -33,9 +33,6 @@ import javax.inject.Inject;
 
 import io.reactivex.observers.DisposableMaybeObserver;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PerformExerciseFragment
         extends FragmentBase
         implements PerformRoutineAdapter.IOnSetClick,
@@ -48,6 +45,10 @@ public class PerformExerciseFragment
     private Long idSessionExercise;
     private String note;
     private ExercisesViewModel exercisesViewModel;
+    // Input Constants
+    private static final String INPUT_ID_EXERCISE = "idExercise";
+    private static final String INPUT_EXERCISE_NAME = "exerciseName";
+    private static final String INPUT_NOTE = "note";
 
     public PerformExerciseFragment() {
         // Required empty public constructor
@@ -59,10 +60,11 @@ public class PerformExerciseFragment
     private PerformRoutineAdapter adapter;
     private ConstraintLayout coordinatorLayout; // layout for recycler view
 
-    public static PerformExerciseFragment newInstance(Long idExercise, String exerciseName) {
+    public static PerformExerciseFragment newInstance(ExerciseShort ex) {
         Bundle bundle = new Bundle();
-        bundle.putLong("idExercise", idExercise);
-        bundle.putString("exerciseName", exerciseName);
+        bundle.putLong(PerformExerciseFragment.INPUT_ID_EXERCISE, ex.getIdExercise());
+        bundle.putString(PerformExerciseFragment.INPUT_EXERCISE_NAME, ex.getName());
+        bundle.putString(PerformExerciseFragment.INPUT_NOTE, ex.getNote());
 
         PerformExerciseFragment fragment = new PerformExerciseFragment();
         fragment.setArguments(bundle);
@@ -74,8 +76,8 @@ public class PerformExerciseFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        idExercise = getArguments().getLong("idExercise");
-        note = getArguments().getString("note");
+        idExercise = getArguments().getLong(PerformExerciseFragment.INPUT_ID_EXERCISE);
+        note = getArguments().getString(PerformExerciseFragment.INPUT_NOTE);
 
         exercisesViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
 
@@ -126,7 +128,7 @@ public class PerformExerciseFragment
             initializeRecyclerView();
         }
 
-        ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_PerformExercise, getArguments().getString("exerciseName")));
+        ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_PerformExercise, getArguments().getString(PerformExerciseFragment.INPUT_EXERCISE_NAME)));
 
         // Inflate the layout for this fragment
         return mView;

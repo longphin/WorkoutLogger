@@ -65,13 +65,16 @@ public class ExercisesFragment
     private int layoutId;
     private RecyclerView recyclerView;
     private ConstraintLayout viewRootLayout; // layout for recycler view
+    // Input constants.
+    protected static final String INPUT_ACTIVITY_ROOT = "activityRoot";
+    protected static final String INPUT_EXERCISE_ITEM_LAYOUT = "exerciseItemLayout";
 
     public static ExercisesFragment newInstance(int activityRoot, int exerciseItemLayout) {
         ExercisesFragment fragment = new ExercisesFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putInt("activityRoot", activityRoot);
-        bundle.putInt("exerciseItemLayout", exerciseItemLayout);
+        bundle.putInt(ExercisesFragment.INPUT_ACTIVITY_ROOT, activityRoot);
+        bundle.putInt(ExercisesFragment.INPUT_EXERCISE_ITEM_LAYOUT, exerciseItemLayout);
         fragment.setArguments(bundle);
 
         return fragment;
@@ -87,8 +90,8 @@ public class ExercisesFragment
 
         viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
 
-        this.rootId = getArguments().getInt("activityRoot");
-        this.layoutId = getArguments().getInt("exerciseItemLayout");
+        this.rootId = getArguments().getInt(ExercisesFragment.INPUT_ACTIVITY_ROOT);
+        this.layoutId = getArguments().getInt(ExercisesFragment.INPUT_EXERCISE_ITEM_LAYOUT);
 
         initializeAdapter(getActivity());
 
@@ -229,12 +232,12 @@ public class ExercisesFragment
     }
 
     @Override
-    public void exercisePerform(Long idExercise, String exerciseName) {
+    public void exercisePerform(ExerciseShort ex) {//Long idExercise, String exerciseName) {
         FragmentManager manager = getActivity().getSupportFragmentManager();
 
         PerformExerciseFragment fragment = (PerformExerciseFragment) manager.findFragmentByTag(PerformExerciseFragment.TAG);
         if (fragment == null) {
-            fragment = PerformExerciseFragment.newInstance(idExercise, exerciseName);
+            fragment = PerformExerciseFragment.newInstance(ex);//idExercise, exerciseName);
         }
 
         if (fragmentNavigation != null) {
