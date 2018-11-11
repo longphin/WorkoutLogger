@@ -16,8 +16,6 @@ import android.view.View;
 import com.longlife.workoutlogger.data.RoomModule;
 
 /*
-[TODO] Separate groups in the recycler views better. stackoverflow.com/questions/31273203
-
 [TODO] Allow different type of exercises.
 [TODO] Put cached objects in repository.
 [TODO] Make recyclerview header "stick" to the top when scrolling (optional, for routines / performing) stackoverflow.com/questions/32949971

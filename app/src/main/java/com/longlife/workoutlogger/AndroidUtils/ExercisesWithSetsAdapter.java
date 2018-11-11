@@ -151,7 +151,7 @@ public abstract class ExercisesWithSetsAdapter
 
     // Get the header position given the recyclerview position.
     // Since some sub items take up adapter positions, this needs to iterate to see if headers are expanded.
-    public int getHeaderIndex(int position) {
+    public int getHeaderIndex(int position) { //[TODO] Causing an error when moving an exercise up or down.
         for (int i = 0; i < exercisesToInclude.size(); i++) {
             if (isPositionInThisHeader(i, position)) {
                 //if(exercisesToInclude.get(i).getHeaderPosition() == position)

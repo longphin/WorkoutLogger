@@ -7,4 +7,6 @@
 
     <color name="item_background">#fa315b</color>
     <color name="colorLightGrey">#8b9296</color>
+
+    <color name="headerBackground">#3a6fc4</color>
 </resources>
