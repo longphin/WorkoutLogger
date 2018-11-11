@@ -17,7 +17,6 @@ import com.longlife.workoutlogger.data.RoomModule;
 
 /*
 [TODO] Separate groups in the recycler views better. stackoverflow.com/questions/31273203
-[TODO] Improve searching for indexes for exercise with sets lists (creating a routine, performing an exercise).
 
 [TODO] Allow different type of exercises.
 [TODO] Put cached objects in repository.
