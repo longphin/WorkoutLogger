@@ -34,8 +34,6 @@ public abstract class ExercisesWithSetsAdapter
     private static final int SET_TYPE = 2;
     protected Context context;
     protected List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
-    //private List<Integer> itemTypes = new ArrayList<>(); // Each element is the type for visible items in the adapter. e.g. [HEADER_TYPE, SET_TYPE, SET_TYPE, HEADER_TYPE, SET_TYPE]
-    //private List<Integer> headerItemPosition = new ArrayList<>();
 
     // Other
     public ExercisesWithSetsAdapter(Context context) {
@@ -88,15 +86,11 @@ public abstract class ExercisesWithSetsAdapter
     public abstract int getSetLayout();
 
     public abstract RecyclerView.ViewHolder createSetViewHolder(View v);
-    /*{
-        return R.layout.item_routine_create_exercise_set;
-    }
-    */
+
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int pos) {
         int position = holder.getAdapterPosition();
-        //ViewType viewType = viewTypes.get(position);
 
         if (holder instanceof RoutineCreateViewHolder) {
             bindHeaderViewHolder((RoutineCreateViewHolder) holder, position);
@@ -149,37 +143,11 @@ public abstract class ExercisesWithSetsAdapter
         });
     }
 
-    // Get the header position given the recyclerview position.
-    // Since some sub items take up adapter positions, this needs to iterate to see if headers are expanded.
-    public int getHeaderIndex(int position) { //[TODO] Causing an error when moving an exercise up or down.
-        for (int i = 0; i < exercisesToInclude.size(); i++) {
-            if (isPositionInThisHeader(i, position)) {
-                //if(exercisesToInclude.get(i).getHeaderPosition() == position)
-                return i;
-            }
-
-        }
-        /*
-        int count = 0; // Keeps track of the iterator count for visible items.
-        int headerCount = 0; // Keeps track of the header position.
-
-        for (RoutineExerciseHelper reh : exercisesToInclude) {
-            if (count >= position)
-                return headerCount;
-
-            if (reh.IsExpanded()) {
-
-                count += reh.getSets().size() + 1; // The +1 is for the "add set" button view.
-                if (count >= position)
-                    return headerCount;
-            }
-            count += 1; // go to next header
-
-            headerCount += 1;
-        }
-        */
-
-        throw new IndexOutOfBoundsException("Header not found for " + String.valueOf(position));
+    protected SessionExerciseSet getSetAtPosition(int position) {
+        int headerIndex = getHeaderIndex(position);
+        int setIndex = getSetIndexWithinHeader(position);
+        Log.d(TAG, "getSetAtPosition(" + String.valueOf(position) + ") -> " + String.valueOf(headerIndex) + " : " + String.valueOf(setIndex));
+        return exercisesToInclude.get(headerIndex).getSets().get(setIndex);
     }
 
     private void bindHeaderViewHolder(@NonNull RoutineCreateViewHolder holder, int position) {
@@ -226,26 +194,17 @@ public abstract class ExercisesWithSetsAdapter
         holder.setNameText(exercise.getName() + " (" + String.valueOf(exercise.getIdExercise()) + ")");
     }
 
-    // Update header positions starting at a certain index.
-    private void updateHeaderPositionsStartingAtIndex(int minIndex) {
-        if (minIndex >= exercisesToInclude.size()) return;
-
-        int visibleHeaderPosition = 0;
-        if (minIndex < 0) {
-            minIndex = 0;
-        } else {
-            visibleHeaderPosition = exercisesToInclude.get(minIndex).getHeaderPosition();
-        }
-
-        for (int i = minIndex; i < exercisesToInclude.size(); i++) {
-            RoutineExerciseHelper headerItem = exercisesToInclude.get(i);
-            headerItem.setHeaderPosition(visibleHeaderPosition);
-            if (headerItem.IsExpanded()) {
-                visibleHeaderPosition += headerItem.getSets().size() + 2;
-            } else {
-                visibleHeaderPosition += 1;
+    // Get the header position given the recyclerview position.
+    // Since some sub items take up adapter positions, this needs to iterate to see if headers are expanded.
+    public int getHeaderIndex(int position) {
+        for (int i = 0; i < exercisesToInclude.size(); i++) {
+            if (isPositionInThisHeader(i, position)) {
+                return i;
             }
+
         }
+
+        throw new IndexOutOfBoundsException("Header not found for " + String.valueOf(position));
     }
 
     // Move header up.
@@ -265,19 +224,6 @@ public abstract class ExercisesWithSetsAdapter
     }
 
     public abstract void bindSetViewHolder(@NonNull RecyclerView.ViewHolder holder, int position);
-    /*
-    protected void bindSetViewHolder(@NonNull RoutineCreateSetViewHolder holder, int position) {
-        final int pos = holder.getAdapterPosition();
-        final SessionExerciseSet set = getSetAtPosition(pos);
-        holder.getRestTextView().setText(context.getString(R.string.set_header, set.getRestMinutes(), set.getRestSeconds()));
-
-        holder.getView().setOnClickListener(view ->
-        {
-            int clickedPos = holder.getAdapterPosition();
-            onSetClickListener.onSetClick(getIdSessionExerciseAtPosition(clickedPos));
-        });
-    }
-    */
 
     private void printPositions() {
         Log.d(TAG, "----------------");
@@ -316,34 +262,27 @@ public abstract class ExercisesWithSetsAdapter
         printPositions();
     }
 
-    protected SessionExerciseSet getSetAtPosition(int position) {
-        int headerIndex = getHeaderIndex(position);
-        int setIndex = getSetIndexWithinHeader(position);
-        return exercisesToInclude.get(headerIndex).getSets().get(setIndex);
-        /*
-        int count = 0;
+    // Helper for moving header up or down.
+    // topHeaderIndex is the item higher in the recyclerview (lower adapter position),
+    // bottomHeaderIndex is the item lower in the recyclerview (higher adapter position).
+    private void moveHeader(int topHeaderIndex, int bottomHeaderIndex) {
+        final int topHeaderPos = getHeaderPosition(topHeaderIndex);
+        final int bottomHeaderPos = getHeaderPosition(bottomHeaderIndex);
+        final int bottomChildren = exercisesToInclude.get(bottomHeaderIndex).getSets().size();
+        Collections.swap(exercisesToInclude, topHeaderIndex, bottomHeaderIndex);
 
-        for (int i = 0; i < exercisesToInclude.size(); i++) {//RoutineExerciseHelper reh : exercisesToInclude){
-            final RoutineExerciseHelper reh = exercisesToInclude.get(i);
+        final int rangeAffected = bottomHeaderPos - topHeaderPos
+                + (exercisesToInclude.get(bottomHeaderIndex).IsExpanded() ? bottomChildren : 0) // If the bottom is expanded, we need to include the children as the bottom-most item affected.
+                + 1; // Include the bottom-most "add set" button view.
+        notifyItemRangeChanged(topHeaderPos, rangeAffected);
 
-            if (reh.IsExpanded()) {
-                List<SessionExerciseSet> sets = reh.getSets();
-                count += sets.size();
-                if (count >= position) // This means the selected set is in this parent exercise, so find the exact set and return that id.
-                {
-                    count -= sets.size();
+        // The header that is swapped to the top position will inherit the other's position. Headers after that will need their positions updated.
+        final int minimumIndex = Math.min(topHeaderIndex, bottomHeaderIndex);
+        final int maximumIndex = Math.max(topHeaderIndex, bottomHeaderIndex);
+        exercisesToInclude.get(minimumIndex).setHeaderPosition(exercisesToInclude.get(maximumIndex).getHeaderPosition());
+        updateHeaderPositionsStartingAtIndex(minimumIndex);//Math.min(topHeaderIndex, bottomHeaderIndex)-1);
 
-                    final int setIndex = position - count - 1;
-                    return sets.get(setIndex);
-                }
-
-                count += 1; // Add 1 for the "Add set" view.
-            }
-            count += 1; // Iterate to next header.
-        }
-
-        return null;
-        */
+        printPositions();
     }
 
     // Get the index of a set within a header.
@@ -354,19 +293,6 @@ public abstract class ExercisesWithSetsAdapter
                 return position - exercisesToInclude.get(i).getHeaderPosition() - 1;
             }
         }
-        /*
-        int count = 0; // Keeps track of the iterator count for visible items.
-
-        for (RoutineExerciseHelper reh : exercisesToInclude) {
-            if (reh.IsExpanded()) {
-                if (count + reh.getSets().size() >= position) {
-                    return position - count - 1;
-                }
-                count += reh.getSets().size() + 1; // The +1 is for the "add set" button view.
-            }
-            count += 1; // go to next header
-        }
-        */
 
         throw new IndexOutOfBoundsException("Set index not found for " + String.valueOf(position));
     }
@@ -381,46 +307,31 @@ public abstract class ExercisesWithSetsAdapter
         );
     }
 
-    // Helper for moving header up or down.
-    // topHeaderIndex is the item higher in the recyclerview (lower adapter position),
-    // bottomHeaderIndex is the item lower in the recyclerview (higher adapter position).
-    private void moveHeader(int topHeaderIndex, int bottomHeaderIndex) {
-        final int topHeaderPos = getHeaderPosition(topHeaderIndex);
-        final int bottomHeaderPos = getHeaderPosition(bottomHeaderIndex);
-        final int bottomChildren = exercisesToInclude.get(bottomHeaderIndex).getSets().size();
-        Collections.swap(exercisesToInclude, topHeaderIndex, bottomHeaderIndex);
+    // Update header positions starting at a certain index. If the index < 0, then it will default to the first element.
+    private void updateHeaderPositionsStartingAtIndex(int minIndex) {
+        if (minIndex >= exercisesToInclude.size()) return;
 
-        final int rangeAffected = bottomHeaderPos - topHeaderPos
-                + (exercisesToInclude.get(bottomHeaderIndex).IsExpanded() ? bottomChildren : 0) // If the bottom is expanded, we need to include the children as the bottom-most item affected.
-                + 1; // Include the bottom-most "add set" button view.
-        notifyItemRangeChanged(topHeaderPos, rangeAffected);
-        updateHeaderPositionsStartingAtIndex(Math.min(topHeaderIndex, bottomHeaderIndex));
+        int visibleHeaderPosition = 0;
+        if (minIndex < 0) { // Default to first element.
+            minIndex = 0;
+        } else {
+            visibleHeaderPosition = exercisesToInclude.get(minIndex).getHeaderPosition();
+        }
 
-        printPositions();
+        for (int i = minIndex; i < exercisesToInclude.size(); i++) {
+            RoutineExerciseHelper headerItem = exercisesToInclude.get(i);
+            headerItem.setHeaderPosition(visibleHeaderPosition);
+            if (headerItem.IsExpanded()) {
+                visibleHeaderPosition += headerItem.getSets().size() + 2;
+            } else {
+                visibleHeaderPosition += 1;
+            }
+        }
     }
 
     // Methods
     private int getHeaderPosition(int headerIndex) {
         return exercisesToInclude.get(headerIndex).getHeaderPosition();
-        /*
-        if (headerIndex == 0)
-            return 0; // If this is the first header item, then its position is 0.
-
-        int count = 0;
-        if (exercisesToInclude != null) {
-            for (int i = 0; i < headerIndex; i++) {
-                RoutineExerciseHelper headerItem = exercisesToInclude.get(i);
-                if (headerItem.IsExpanded()) {
-
-                    count += headerItem.getSets().size();
-
-                    count += 1; // add 1 for "add" view
-                }
-                count += 1;
-            }
-        }
-        return count;
-        */
     }
 
     @Nullable
@@ -430,32 +341,6 @@ public abstract class ExercisesWithSetsAdapter
 
         SessionExerciseSet set = exercisesToInclude.get(headerIndex).getSets().get(setIndex);
         return new RoutineExerciseSetPositions(headerIndex, setIndex, set, exercisesToInclude.get(headerIndex).getExercise().getName());
-
-        /*
-        int count = 0;
-
-        for (int i = 0; i < exercisesToInclude.size(); i++) {
-            final RoutineExerciseHelper reh = exercisesToInclude.get(i);
-
-            if (reh.IsExpanded()) {
-                List<SessionExerciseSet> sets = reh.getSets();
-                count += sets.size();
-                if (count >= position) // This means the selected set is in this parent exercise, so find the exact set and return that id.
-                {
-                    count -= sets.size();
-
-                    final int setIndex = position - count - 1;
-                    final SessionExerciseSet set = sets.get(setIndex);
-                    return new RoutineExerciseSetPositions(i, setIndex, set.getRestMinutes(), set.getRestSeconds(), reh.getExercise().getName(), set.getWeights(), set.getReps(), set.getWeightUnit());
-                }
-
-                count += 1; // Add 1 for the "Add set" view.
-            }
-            count += 1; // Iterate to next header.
-        }
-
-        return null;
-        */
     }
 
     // Insert a list of exercises.
@@ -464,13 +349,7 @@ public abstract class ExercisesWithSetsAdapter
             exercisesToInclude = new ArrayList<>();
 
         final int currentSize = getItemCount(); // This is the recyclerview position that the items will be inserted after.
-        final int currentLastIndex = exercisesToInclude.size() - 1;
-
         int visibleHeaderPosition = currentSize;
-        if (exercisesToInclude.size() > 0) {
-            RoutineExerciseHelper lastHeaderItem = exercisesToInclude.get(currentLastIndex);
-            visibleHeaderPosition = lastHeaderItem.getHeaderPosition() + lastHeaderItem.getSets().size() + 2;
-        }
 
         for (ExerciseShort e : ex) {
             exercisesToInclude.add(
@@ -485,7 +364,7 @@ public abstract class ExercisesWithSetsAdapter
             visibleHeaderPosition += 3; // header + 1 default set + add set button
         }
         notifyItemRangeInserted(currentSize, 3 * ex.size()); // 3*ex.size() because each exercise gets a header, a set, and a "add set" button.
-        //updateHeaderPositionsStartingAtIndex(currentLastIndex); // No need to update, because the added exercises are added to the end.
+        //updateHeaderPositionsStartingAtIndex(currentLastIndex); // No need to update, because the positions are given when inserted already.
         printPositions();
     }
 
@@ -497,7 +376,7 @@ public abstract class ExercisesWithSetsAdapter
                 ? ex.getSets().size() + 2 // +2 for the header and for the "add set" button view.
                 : 1; // else, only 1 for the header
         notifyItemRangeInserted(getHeaderPosition(headerIndex), itemsRestored);
-        updateHeaderPositionsStartingAtIndex(headerIndex);
+        updateHeaderPositionsStartingAtIndex(headerIndex - 1);
         printPositions();
     }
 
@@ -519,9 +398,11 @@ public abstract class ExercisesWithSetsAdapter
         // Swap the header positions.
         Collections.swap(exercisesToInclude, oldHeaderIndex, newHeaderIndex);
 
-        // Update visible positions after the swap.
-        // Get the first header's visible position.
-        updateHeaderPositionsStartingAtIndex(Math.min(oldHeaderIndex, newHeaderIndex));
+        // Update visible positions after the swap. The top-most item will inherit the other's header position. The rest of the headers will need their positions updated.
+        final int minimumIndex = Math.min(oldHeaderIndex, newHeaderIndex);
+        final int maximumIndex = Math.max(oldHeaderIndex, newHeaderIndex);
+        exercisesToInclude.get(minimumIndex).setHeaderPosition(exercisesToInclude.get(maximumIndex).getHeaderPosition());
+        updateHeaderPositionsStartingAtIndex(minimumIndex);
 
         return true;
     }
@@ -566,30 +447,6 @@ public abstract class ExercisesWithSetsAdapter
                 return;
             }
         }
-        /*
-        int count = 0;
-        for (RoutineExerciseHelper reh : exercisesToInclude) {
-            // Check if the deleted item was a header item, so we need to remove the entire exercise.
-            if (count == position) {
-                removeExerciseAtPosition(position);
-                return;
-            }
-
-            // Check if the deleted item may be a set item, which is only visible while expanded.
-            if (reh.IsExpanded()) {
-                for (int j = 0; j < reh.getSets().size(); j++) {
-                    count += 1;
-                    if (count == position) {
-                        notifyItemRemoved(position);
-                        reh.getSets().remove(j);
-                        return;
-                    }
-                }
-                count += 1; // Add 1 for the "add set" button view.
-            }
-            count += 1; // Iterate to next header.
-        }
-        */
     }
 
     private void removeExerciseAtIndex(int headerIndex) {
@@ -630,18 +487,6 @@ public abstract class ExercisesWithSetsAdapter
     // Remove exercise given the recyclerview position.
     public void removeExerciseAtPosition(int position) {
         final int headerIndex = getHeaderIndex(position);
-        /*
-        final RoutineExerciseHelper headerItem = exercisesToInclude.get(headerIndex);
-        final int childSize = headerItem.getSets().size();
-
-        if (headerItem.IsExpanded()) {
-            notifyItemRangeRemoved(position, childSize + 1 + 1); // +1 for removing the header, +1 for removing the "add set" button view.
-        } else {
-            notifyItemRemoved(position); // Only the header needs to be removed.
-        }
-        */
-        // Remove the header item.
-        //exercisesToInclude.remove(headerIndex);
         removeExerciseAtIndex(headerIndex);
     }
 
