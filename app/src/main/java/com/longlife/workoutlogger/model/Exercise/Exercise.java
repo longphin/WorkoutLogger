@@ -7,6 +7,7 @@ import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
 import com.longlife.workoutlogger.enums.ExerciseType;
@@ -14,6 +15,10 @@ import com.longlife.workoutlogger.enums.ExerciseTypeConverter;
 import com.longlife.workoutlogger.enums.MeasurementType;
 import com.longlife.workoutlogger.enums.MeasurementTypeConverter;
 import com.longlife.workoutlogger.utils.DateConverter;
+import com.longlife.workoutlogger.utils.JSONParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -29,7 +34,7 @@ import java.util.GregorianCalendar;
 }
 */
 )
-public class Exercise implements Parcelable {
+public class Exercise implements Parcelable, JSONParser.JSON {
     @Ignore
     public static final Parcelable.Creator<Exercise> CREATOR = new Parcelable.Creator<Exercise>() {
 
@@ -48,12 +53,16 @@ public class Exercise implements Parcelable {
     // Name of the exercise.
     @Required
     private String name;
+    @Ignore
+    private static final String JSON_NAME = "name";
     // This is the idExercise for the exercise.
     @PrimaryKey
     private Long idExercise;
 
     // Note for the exercise.
     private String note;
+    @Ignore
+    private static final String JSON_NOTE = "note";
     // Flag to indicate whether exercise is locked.
     private boolean locked;
     // Flag to indicate whether exercise is hidden.
@@ -67,17 +76,30 @@ public class Exercise implements Parcelable {
     @TypeConverters({DateConverter.class})
     @NonNull
     private Date lastUpdateDate = (new GregorianCalendar()).getTime();
+    @Nullable
+    private Boolean isPreloaded = false;
 
-    // Copy constructor. Does not copy idExercise.
+    // Constructor that builds an exercise from a JSON object.
     @Ignore
-    public Exercise(Exercise ex) {
-        name = ex.getName();
-        note = ex.getNote();
-        locked = ex.isLocked(); // This is not used by leaf nodes.
-        hidden = ex.isHidden(); // This is not used by leaf nodes.
-        exerciseType = ex.getExerciseType();
-        measurementType = ex.getMeasurementType();
-        lastUpdateDate = (new GregorianCalendar()).getTime();
+    public Exercise(JSONObject json) {
+        this.name = json.optString(Exercise.JSON_NAME, "");
+        this.note = json.optString(Exercise.JSON_NOTE, "");
+
+        if (json.has("isPreloaded"))
+            this.isPreloaded = json.optBoolean("isPreloaded", false);
+        else
+            this.isPreloaded = null;
+
+        //this.isPreloaded = json.optBoolean("isPreloaded");
+    }
+
+    @Nullable
+    public Boolean getPreloaded() {
+        return isPreloaded;
+    }
+
+    public void setPreloaded(@Nullable Boolean preloaded) {
+        isPreloaded = preloaded;
     }
 
     public Exercise() {
@@ -182,6 +204,20 @@ public class Exercise implements Parcelable {
 
     public void setUpdateDateAsNow() {
         lastUpdateDate = (new GregorianCalendar()).getTime();
+    }
+
+    @Ignore
+    @Override
+    public String toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(Exercise.JSON_NAME, name);
+            jsonObject.put(Exercise.JSON_NOTE, note);
+            return jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 

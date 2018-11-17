@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
+import com.longlife.workoutlogger.AndroidUtils.ExercisesWithSetsAdapter;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
@@ -337,7 +338,7 @@ public class RoutineCreateFragment
 
             int swipedItemType = adapter.getItemViewType(position);
 
-            if (swipedItemType == RoutineCreateAdapter.getHeaderTypeEnum()) {
+            if (swipedItemType == ExercisesWithSetsAdapter.HEADER_TYPE) {
                 // get the removed item name to display it in snack bar
 
                 // backup of removed item for undo purpose

@@ -14,8 +14,17 @@ import android.util.Log;
 import android.view.View;
 
 import com.longlife.workoutlogger.data.RoomModule;
+import com.longlife.workoutlogger.model.Exercise.Exercise;
+import com.longlife.workoutlogger.utils.JSONParser;
+
+import java.io.File;
 
 /*
+[TODO] Preload dummy data. https://medium.com/@johann.pardanaud/ship-an-android-app-with-a-pre-populated-database-cd2b3aa3311f
+        https://stackoverflow.com/questions/513084/ship-an-application-with-a-database
+[TODO] Fix notification for phone. (it works in emulator API 22, but not my phone).
+[TODO] Change how exercises are selected when creating a routine. Instead of opening another fragment, just have two recyclerviews side by side. Left side is for exercises in routine, right side is for entire list of exercises. Items from the right can be clicked on or dragged to the left side.
+
 [TODO] Allow different type of exercises.
 [TODO] Put cached objects in repository.
 [TODO] Make recyclerview header "stick" to the top when scrolling (optional, for routines / performing) stackoverflow.com/questions/32949971
@@ -68,6 +77,7 @@ public class MyApplication
         }
     };
 
+    private static final String PRELOAD_FILE_1 = "preloadedFile1.json";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -78,6 +88,20 @@ public class MyApplication
                 .build();
 
         createNotificationChannel();
+
+        //preloadData();
+    }
+
+    private void preloadData() {
+        File file1 = new File(PRELOAD_FILE_1);
+        if (!file1.exists()) {
+            JSONParser.writeToFile(this, PRELOAD_FILE_1, (new Exercise("dummy1", "note1")).toJSON()); // [TODO] need to write an array of exercises. Can use GSON for this?
+        }
+
+        // [TODO] create a service to regularly insert preloaded data. When an exercise is inserted, then remember to change exercise.isPreloaded = true and insert the "isPreloaded":"true" in the dummy.json for the exercise.
+        //List<Exercise> preloadedExercises = JSONParser.getExercisesToPreload(this, "dummy.json");
+        String res = JSONParser.readFromFile(this, PRELOAD_FILE_1);
+        //Exercise ex = gson.fromJson(res, Exercise.class);
     }
 
     @Override

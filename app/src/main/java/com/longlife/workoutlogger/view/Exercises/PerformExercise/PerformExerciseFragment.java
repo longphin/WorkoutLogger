@@ -26,7 +26,6 @@ import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Perform.PerformFragment;
-import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateAdapter;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import javax.inject.Inject;
@@ -173,7 +172,7 @@ public class PerformExerciseFragment
 
             int swipedItemType = adapter.getItemViewType(position);
 
-            if (swipedItemType == RoutineCreateAdapter.getHeaderTypeEnum()) {
+            if (swipedItemType == ExercisesWithSetsAdapter.HEADER_TYPE) {
                 // get the removed item name to display it in snack bar
 
                 // backup of removed item for undo purpose

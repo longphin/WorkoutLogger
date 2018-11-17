@@ -1,0 +1,12 @@
+{
+  "exercises": [
+    {
+      "name": "dummy1",
+      "note": "note1"
+    },
+    {
+      "name": "dummy2",
+      "note": "note2"
+    }
+  ]
+}
