@@ -29,8 +29,10 @@ public class TimerNotificationService
     public static final String EXTRA_SECONDS = "restSeconds";
     private static int NOTIFICATION_ID = 49; // This can be anything, I believe.
 
+    private NotificationCompat.Builder notificationBuilder;
     private CountDownTimer timer;
     private boolean timerInProgress;
+    private int totalRestTime; // This is minutes*60+seconds
     private int minutes; // Rest time minutes.
     private int seconds; // Rest time seconds.
     private int headerIndex; // Index for the header that a set is a part of. RoutineExerciseHelper.get(headerIndex)
@@ -38,24 +40,21 @@ public class TimerNotificationService
 
     private NotificationManagerCompat notificationManager;
 
-    // Starts up a timer to update the notification channel.
-    private void startTimer(long durationInMillis) {
-        timer = new CountDownTimer(durationInMillis, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                TimeHolder timeUntilFinished = Format.getMinutesFromMillis(millisUntilFinished);
-                updateNotification(createNotificationBuilder(timeUntilFinished.getMinutes(), timeUntilFinished.getSeconds()));//notificationBuilder);
-            }
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        stopTimer();
 
-            @Override
-            public void onFinish() {
-                stopTimer();
-                broadcastTimerEnded();
-                stopSelf(); // Stop the service when the timer is finished.
-            }
-        }.start();
+        headerIndex = intent.getIntExtra(EXTRA_HEADERINDEX, -1);
+        setIndex = intent.getIntExtra(EXTRA_SETINDEX, -1);
+        minutes = intent.getIntExtra(EXTRA_MINUTES, 0);
+        seconds = intent.getIntExtra(EXTRA_SECONDS, 0);
+        totalRestTime = minutes * 60 + seconds;
 
-        timerInProgress = true;
+        startForeground(NOTIFICATION_ID, createNotificationBuilder(minutes, seconds).build());
+
+        startTimer(Format.convertToMilliseconds(minutes, seconds));
+
+        return START_NOT_STICKY; // [TODO] Need to learn about the different types and make sure what happens when the system destroys our notification.
     }
 
     // Creates the rest notification given the rest times.
@@ -64,14 +63,43 @@ public class TimerNotificationService
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-        return new NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID)
+        notificationBuilder = new NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle("Timer (" + String.valueOf(headerIndex) + " -> " + String.valueOf(setIndex) + ")")
                 .setContentText(getString(R.string.notificationChannelDescription, minutes, seconds))
                 .setSmallIcon(R.mipmap.temp_ic_pause_asset)//R.drawable.notification_icon_24dp) //[TODO] This temporarily uses a mipmap instead of a drawable/vector image because the android emulator errors in API 23 and below. Google should fix this later, so wait for that.
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setVibrate(null)
                 .setSound(null)
+                .setProgress(totalRestTime, totalRestTime - (minutes * 60 + seconds), false)
+                .setOnlyAlertOnce(true)
                 .setContentIntent(pendingIntent);
+
+        return notificationBuilder;
+    }
+
+    // Starts up a timer to update the notification channel.
+    private void startTimer(long durationInMillis) {
+        timer = new CountDownTimer(durationInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                TimeHolder timeUntilFinished = Format.getMinutesFromMillis(millisUntilFinished);
+                updateNotification(
+                        updateNotificationBuilder(timeUntilFinished.getMinutes(), timeUntilFinished.getSeconds())
+                );
+            }
+
+            @Override
+            public void onFinish() {
+                updateNotification(
+                        updateNotificationBuilder(0, 0)
+                );
+                stopTimer();
+                broadcastTimerEnded();
+                stopSelf(); // Stop the service when the timer is finished.
+            }
+        }.start();
+
+        timerInProgress = true;
     }
 
     // Stops timer and resets some values.
@@ -85,20 +113,12 @@ public class TimerNotificationService
         stopForeground(true);
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        stopTimer();
+    // Update notification builder.
+    private NotificationCompat.Builder updateNotificationBuilder(int minutes, int seconds) {
+        notificationBuilder.setProgress(totalRestTime, totalRestTime - (minutes * 60 + seconds), false)
+                .setContentText(getString(R.string.notificationChannelDescription, minutes, seconds));
 
-        headerIndex = intent.getIntExtra(EXTRA_HEADERINDEX, -1);
-        setIndex = intent.getIntExtra(EXTRA_SETINDEX, -1);
-        minutes = intent.getIntExtra(EXTRA_MINUTES, 0);
-        seconds = intent.getIntExtra(EXTRA_SECONDS, 0);
-
-        startForeground(NOTIFICATION_ID, createNotificationBuilder(minutes, seconds).build());
-
-        startTimer(Format.convertToMilliseconds(minutes, seconds));
-
-        return START_NOT_STICKY; // [TODO] Need to learn about the different types and make sure what happens when the system destroys our notification.
+        return notificationBuilder;
     }
 
     public void broadcastTimerEnded() {
