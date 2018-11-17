@@ -133,10 +133,13 @@ public class MyApplication
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
             notificationChannel.setDescription(NOTIFICATION_CHANNEL_DESCRIPTION);
+            notificationChannel.enableVibration(false);
+            notificationChannel.setSound(null, null);
 
             NotificationManager manager = getSystemService(NotificationManager.class);
+            //manager.deleteNotificationChannel(NOTIFICATION_CHANNEL_ID);
             manager.createNotificationChannel(notificationChannel);
         }
     }

@@ -36,6 +36,8 @@ public class TimerNotificationService
     private int headerIndex; // Index for the header that a set is a part of. RoutineExerciseHelper.get(headerIndex)
     private int setIndex; // Index for the set within the header index. RoutineExerciseHelper.get(headerIndex).getSets().get(setIndex)
 
+    private NotificationManagerCompat notificationManager;
+
     // Starts up a timer to update the notification channel.
     private void startTimer(long durationInMillis) {
         timer = new CountDownTimer(durationInMillis, 1000) {
@@ -62,11 +64,13 @@ public class TimerNotificationService
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-        return new NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_NAME)
+        return new NotificationCompat.Builder(this, MyApplication.NOTIFICATION_CHANNEL_ID)
                 .setContentTitle("Timer (" + String.valueOf(headerIndex) + " -> " + String.valueOf(setIndex) + ")")
                 .setContentText(getString(R.string.notificationChannelDescription, minutes, seconds))
                 .setSmallIcon(R.mipmap.temp_ic_pause_asset)//R.drawable.notification_icon_24dp) //[TODO] This temporarily uses a mipmap instead of a drawable/vector image because the android emulator errors in API 23 and below. Google should fix this later, so wait for that.
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setVibrate(null)
+                .setSound(null)
                 .setContentIntent(pendingIntent);
     }
 
@@ -109,11 +113,11 @@ public class TimerNotificationService
         super.onCreate();
 
         broadcastManager = LocalBroadcastManager.getInstance(this);
+        notificationManager = NotificationManagerCompat.from(this);
     }
 
     // Destroy notification.
     private void destroyNotification() {
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.cancel(NOTIFICATION_ID);
         notificationManager.cancelAll();
     }
@@ -131,7 +135,6 @@ public class TimerNotificationService
     }
 
     private void updateNotification(NotificationCompat.Builder builder) {
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
