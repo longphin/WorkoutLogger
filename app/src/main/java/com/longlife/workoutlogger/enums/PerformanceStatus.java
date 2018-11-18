@@ -16,9 +16,9 @@ public enum PerformanceStatus {
         if (i == null)
             return (null);
 
-        for (PerformanceStatus ps : PerformanceStatus.values()) {
-            if (ps.asInt() == i) {
-                return (ps);
+        for (PerformanceStatus val : PerformanceStatus.values()) {
+            if (val.asInt() == i) {
+                return (val);
             }
         }
         return (null);

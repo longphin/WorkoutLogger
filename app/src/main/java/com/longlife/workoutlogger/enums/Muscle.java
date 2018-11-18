@@ -1,20 +1,23 @@
 package com.longlife.workoutlogger.enums;
 
-public enum MeasurementType {
-    REP(0),
-    DURATION(1);
+public enum Muscle {
+    BICEP(0),
+    TRICEP(1),
+    LATS(2),
+    QUADS(3),
+    ROTATOR_CUFF(4);
 
     private Integer _value;
 
-    MeasurementType(Integer val) {
+    Muscle(Integer val) {
         this._value = val;
     }
 
-    public static MeasurementType fromInt(Integer i) {
+    public static Muscle fromInt(Integer i) {
         if (i == null)
             return (null);
 
-        for (MeasurementType val : MeasurementType.values()) {
+        for (Muscle val : Muscle.values()) {
             if (val.asInt().equals(i)) {
                 return (val);
             }

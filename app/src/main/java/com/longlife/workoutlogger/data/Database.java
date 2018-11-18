@@ -3,6 +3,7 @@ package com.longlife.workoutlogger.data;
 import android.arch.persistence.room.RoomDatabase;
 
 import com.longlife.workoutlogger.model.Exercise.Exercise;
+import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
@@ -21,7 +22,8 @@ import com.longlife.workoutlogger.model.SessionExerciseSet;
                         Routine.class,
                         RoutineSession.class,
                         SessionExercise.class,
-                        SessionExerciseSet.class
+                        SessionExerciseSet.class,
+                        ExerciseMuscle.class
                 },
         version = DatabaseVersion.CURRENT
 )

@@ -15,9 +15,9 @@ public enum SetType {
         if (i == null)
             return (null);
 
-        for (SetType st : SetType.values()) {
-            if (st.asInt() == i) {
-                return (st);
+        for (SetType val : SetType.values()) {
+            if (val.asInt() == i) {
+                return (val);
             }
         }
         return (null);

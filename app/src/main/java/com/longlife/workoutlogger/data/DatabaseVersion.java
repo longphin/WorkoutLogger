@@ -43,14 +43,16 @@ public class DatabaseVersion {
     // V6 will replace Exercise with ExerciseShort objects where necessary, to reduce the amount of memory used.
     private static final int V6_0 = 33; // Changing exercise lists to use ExerciseShort object instead.
     private static final int V6_1 = 34; // Removed indices from Exercise table.
-    // V7 Will add preloaded dummy data.
+    // V7 Will add preloaded dummy data. -- [TODO] ON HOLD
     private static final int V7_0 = 35; // test Room callback.
     private static final int V7_0b = 36; // Adding a data.
     private static final int V7_0c = 37; // test
     private static final int V7_0d = 38;
     private static final int V7_0e = 39;
     private static final int V7_1 = 40; // Preloaded data is now written in a json file.
+    // V8 Will add related muscles to exercises.
+    private static final int V8_0 = 41; // Added Muscles and Muscle Groups, and related muscles to exercises.
 
-    public static final int CURRENT = V7_1;
+    public static final int CURRENT = V8_0;
 }
 
