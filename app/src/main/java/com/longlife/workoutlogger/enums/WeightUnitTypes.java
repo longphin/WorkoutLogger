@@ -16,7 +16,7 @@ public class WeightUnitTypes {
         return LBS;
     }
 
-    public List<Unit> getWeightOptions(Locale locale) {
+    public static List<Unit> getOptions(Locale locale) {
         List<Unit> options = new ArrayList<>();
 
         options.add(getUnit(LBS, locale));
@@ -25,7 +25,7 @@ public class WeightUnitTypes {
         return options;
     }
 
-    private Unit getUnit(int weightType, Locale locale) {
+    private static Unit getUnit(int weightType, Locale locale) {
         if (weightType == LBS) {
             if (locale == Locale.US
                     || locale == Locale.ENGLISH) {
@@ -47,7 +47,7 @@ public class WeightUnitTypes {
         return new Unit(-1, "error");
     }
 
-    public class Unit {
+    public static class Unit {
         int id;
         String label;
 

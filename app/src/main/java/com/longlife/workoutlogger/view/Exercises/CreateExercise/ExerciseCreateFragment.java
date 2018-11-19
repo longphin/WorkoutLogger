@@ -11,20 +11,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.RequiredFieldException;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Validator;
+import com.longlife.workoutlogger.enums.ExerciseType;
+import com.longlife.workoutlogger.enums.Muscle;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
+
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -47,6 +53,8 @@ public class ExerciseCreateFragment
     private CompositeDisposable composite = new CompositeDisposable();
     private View mView;
     private ImageView addNoteImage;
+    private Spinner exerciseTypeSelector;
+    private Spinner musclesSelector;
 
     public static ExerciseCreateFragment newInstance() {
         return (new ExerciseCreateFragment());
@@ -77,6 +85,8 @@ public class ExerciseCreateFragment
             this.addNoteImage = mView.findViewById(R.id.imv_exercise_create_add_note);
             this.cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
             this.saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
+            initializeExerciseTypeSelector();
+            initializeMusclesSelector();
 
             // On click listener for when canceling the exercise creation.
             cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
@@ -94,6 +104,24 @@ public class ExerciseCreateFragment
 
         ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_ExerciseCreate));
         return (mView);
+    }
+
+    private void initializeExerciseTypeSelector() {
+        exerciseTypeSelector = mView.findViewById(R.id.spinner_exercise_create_exercise_type);
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getActivity(), R.layout.weight_unit_spinner_item, ExerciseType.getOptions(Locale.US));
+        // Specify the layout to use when the list appears.
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Attach the adapter.
+        exerciseTypeSelector.setAdapter(adapter);
+    }
+
+    private void initializeMusclesSelector() {
+        musclesSelector = mView.findViewById(R.id.spinner_exercise_create_muscles);
+        MuscleTypeAdapter adapter = new MuscleTypeAdapter(getActivity(), R.layout.exercise_type_spinner_item, Muscle.getOptionLabels(), Muscle.getMuscleOptions());
+        // Specify the layout to use when the list appears.
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Attach the adapter.
+        musclesSelector.setAdapter(adapter);
     }
 
     @Override
@@ -128,6 +156,7 @@ public class ExerciseCreateFragment
         Exercise newExercise = new Exercise();
         newExercise.setName(name.getText().toString());
         newExercise.setNote(descrip);
+        newExercise.setExerciseType(((ExerciseType.Type) exerciseTypeSelector.getSelectedItem()).getId());
 
         // Check if required fields were set.
         try {

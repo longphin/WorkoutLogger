@@ -1,29 +1,72 @@
 package com.longlife.workoutlogger.enums;
 
-public enum ExerciseType {
-    WEIGHT(0),
-    BODYWEIGHT(1),
-    DISTANCE(2);
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-    private Integer _value;
+public class ExerciseType {
+    private static final int WEIGHT_AND_REP = 0;
+    private static final int BODYWEIGHT = 1;
 
-    ExerciseType(Integer val) {
-        this._value = val;
+    public ExerciseType() {
+
     }
 
-    public static ExerciseType fromInt(Integer i) {
-        if (i == null)
-            return (null);
+    public static int getDefault() {
+        return WEIGHT_AND_REP;
+    }
 
-        for (ExerciseType et : ExerciseType.values()) {
-            if (et.asInt() == i) {
-                return (et);
+    public static List<Type> getOptions(Locale locale) {
+        List<Type> options = new ArrayList<>();
+
+        options.add(getUnit(WEIGHT_AND_REP, locale));
+        options.add(getUnit(BODYWEIGHT, locale));
+
+        return options;
+    }
+
+    private static Type getUnit(int weightType, Locale locale) {
+        if (weightType == WEIGHT_AND_REP) {
+            if (locale == Locale.US
+                    || locale == Locale.ENGLISH) {
+                return new Type(WEIGHT_AND_REP, "Weight + Reps");
             }
+
+            return new Type(WEIGHT_AND_REP, "Weight + Reps");
         }
-        return (null);
+
+        if (weightType == BODYWEIGHT) {
+            if (locale == Locale.US
+                    || locale == Locale.ENGLISH) {
+                return new Type(BODYWEIGHT, "Bodyweight");
+            }
+
+            return new Type(BODYWEIGHT, "Bodyweight");
+        }
+
+        return new Type(-1, "error");
     }
 
-    public int asInt() {
-        return _value;
+    public static class Type {
+        int id;
+        String label;
+
+        private Type(int id, String label) {
+            this.id = id;
+            this.label = label;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
     }
 }

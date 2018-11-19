@@ -10,8 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
-import com.longlife.workoutlogger.enums.ExerciseType;
-import com.longlife.workoutlogger.enums.ExerciseTypeConverter;
 import com.longlife.workoutlogger.enums.MeasurementType;
 import com.longlife.workoutlogger.enums.MeasurementTypeConverter;
 import com.longlife.workoutlogger.utils.DateConverter;
@@ -49,27 +47,36 @@ public class Exercise implements Parcelable, JSONParser.JSON {
             return new Exercise[i];
         }
     };
-
+    @Ignore
+    private static final String JSON_NAME = "name";
+    @Ignore
+    private static final String JSON_NOTE = "note";
     // Name of the exercise.
     @Required
     private String name;
-    @Ignore
-    private static final String JSON_NAME = "name";
     // This is the idExercise for the exercise.
     @PrimaryKey
     private Long idExercise;
-
     // Note for the exercise.
     private String note;
-    @Ignore
-    private static final String JSON_NOTE = "note";
     // Flag to indicate whether exercise is locked.
     private boolean locked;
     // Flag to indicate whether exercise is hidden.
     private boolean hidden = false;
     // Type of exercise, used to determine how the exercise should be recorded.
-    @TypeConverters({ExerciseTypeConverter.class})
-    private ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
+    //@TypeConverters({ExerciseTypeConverter.class})
+    //private ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
+    private int exerciseType;
+
+    public Exercise() {
+
+    }
+
+    @Ignore
+    private Exercise(Parcel parcel) {
+        idExercise = parcel.readLong();
+        name = parcel.readString();
+    }
     @TypeConverters({MeasurementTypeConverter.class})
     private MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
     // That that this instance was created.
@@ -93,6 +100,20 @@ public class Exercise implements Parcelable, JSONParser.JSON {
         //this.isPreloaded = json.optBoolean("isPreloaded");
     }
 
+    @Ignore
+    public Exercise(String name, String descrip) {
+        this.name = name;
+        this.note = descrip;
+    }
+
+    public int getExerciseType() {
+        return exerciseType;
+    }
+
+    public void setExerciseType(int exerciseType) {
+        this.exerciseType = exerciseType;
+    }
+
     @Nullable
     public Boolean getPreloaded() {
         return isPreloaded;
@@ -100,20 +121,6 @@ public class Exercise implements Parcelable, JSONParser.JSON {
 
     public void setPreloaded(@Nullable Boolean preloaded) {
         isPreloaded = preloaded;
-    }
-
-    public Exercise() {
-
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Ignore
-    private Exercise(Parcel parcel) {
-        idExercise = parcel.readLong();
-        name = parcel.readString();
     }
 
     @Ignore
@@ -127,16 +134,6 @@ public class Exercise implements Parcelable, JSONParser.JSON {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeLong(idExercise);
         parcel.writeString(name);
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Ignore
-    public Exercise(String name, String descrip) {
-        this.name = name;
-        this.note = descrip;
     }
 
     @NonNull
@@ -153,13 +150,20 @@ public class Exercise implements Parcelable, JSONParser.JSON {
         return getName();
     }
 
-    public ExerciseType getExerciseType() {
-        return exerciseType;
+    public String getName() {
+        return name;
     }
 
-    public void setExerciseType(ExerciseType exerciseType) {
-        this.exerciseType = exerciseType;
+    public void setName(String name) {
+        this.name = name;
     }
+
+    /*public ExerciseType getExerciseType() {
+        return exerciseType;
+    }*/
+    /*public void setExerciseType(ExerciseType exerciseType) {
+        this.exerciseType = exerciseType;
+    }*/
 
     public Long getIdExercise() {
 

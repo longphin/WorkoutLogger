@@ -309,7 +309,7 @@ public class PerformSetDialog extends DialogBase
         // Selectable values.
         // WeightUnits units = new WeightUnits(getActivity(), ((ActivityBase) getActivity()).getCurrentLocale()); // Get the weights based on locale.
         //ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.weight_unit_spinner_item, units.getUnitsList());
-        ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.weight_unit_spinner_item, (new WeightUnitTypes()).getWeightOptions(Locale.US)); // [TODO] Use user's locale instead of "US".
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.weight_unit_spinner_item, WeightUnitTypes.getOptions(Locale.US)); // [TODO] Use user's locale instead of "US".
         // Specify the layout to use when the list appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner.
