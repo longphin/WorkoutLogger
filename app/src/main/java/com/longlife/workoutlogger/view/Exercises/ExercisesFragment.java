@@ -57,7 +57,7 @@ public class ExercisesFragment
     @Inject
     public Context context;
     protected View mView;
-    protected ExercisesAdapter adapter;
+    protected ExercisesListAdapter adapter;
     @Required
     private int rootId; //This is the root of the layout from the parent activity. This is needed to determine how to attach the child ExercisesCreateFragment when opened to create a new exercise.
     private ExercisesViewModel viewModel;

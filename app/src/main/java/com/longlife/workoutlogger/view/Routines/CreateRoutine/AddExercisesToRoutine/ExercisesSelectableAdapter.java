@@ -9,11 +9,11 @@ import android.widget.CheckBox;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
-import com.longlife.workoutlogger.view.Exercises.ExercisesAdapter;
+import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapter;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewHolder;
 
 public class ExercisesSelectableAdapter
-        extends ExercisesAdapter {
+        extends ExercisesListAdapter {
     private final static String TAG = ExercisesSelectableAdapter.class.getSimpleName();
     private IExercisesSelectableAdapterCallback exercisesSelectableCallback;
 
