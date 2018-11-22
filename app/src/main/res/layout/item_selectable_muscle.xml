@@ -12,12 +12,11 @@
         android:id="@+id/txt_selectable_muscle_name"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:padding="2sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/icon_selectable_muscle"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/icon_selectable_muscle"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,8 +24,8 @@
 
     <ImageView
         android:id="@+id/icon_selectable_muscle"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
@@ -44,4 +43,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

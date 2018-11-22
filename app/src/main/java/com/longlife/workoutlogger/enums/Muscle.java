@@ -43,8 +43,8 @@ public enum Muscle {
     public static MuscleOption[] getMuscleOptions() {
         /*
         List<MuscleOption> options = new ArrayList<>();
-        options.add(new MuscleOption(BICEP, "Bicep", 1));
-        options.add(new MuscleOption(TRICEP, "Tricep", 1));
+        options.add(new MuscleOption(BICEPS, "Bicep", 1));
+        options.add(new MuscleOption(TRICEPS, "Tricep", 1));
         options.add(new MuscleOption(LATS, "Lats", 1));
         options.add(new MuscleOption(QUADS, "Quads", 1));
         */

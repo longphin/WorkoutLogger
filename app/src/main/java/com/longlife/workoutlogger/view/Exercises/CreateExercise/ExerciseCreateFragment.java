@@ -7,7 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +25,6 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Validator;
 import com.longlife.workoutlogger.enums.ExerciseType;
-import com.longlife.workoutlogger.enums.Muscle;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
@@ -56,7 +55,6 @@ public class ExerciseCreateFragment
     private View mView;
     private ImageView addNoteImage;
     private Spinner exerciseTypeSelector;
-    private Spinner musclesSelector; // [TODO] remove
     private RecyclerView musclesList;
 
     public static ExerciseCreateFragment newInstance() {
@@ -89,7 +87,6 @@ public class ExerciseCreateFragment
             this.cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
             this.saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
             initializeExerciseTypeSelector();
-            //initializeMusclesSelector();
             initializeMusclesList();
 
             // On click listener for when canceling the exercise creation.
@@ -121,20 +118,13 @@ public class ExerciseCreateFragment
 
     private void initializeMusclesList() {
         musclesList = mView.findViewById(R.id.rv_exercise_create_muscles);
-        musclesList.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        musclesList.setLayoutManager(//new LinearLayoutManager(this.getActivity()));
+                new GridLayoutManager(this.getActivity(), MuscleListAdapter.NUMBER_OF_COLUMNS));
         // Adapter
         MuscleListAdapter adapter = new MuscleListAdapter();
         musclesList.setAdapter(adapter);
     }
 
-    private void initializeMusclesSelector() {
-        musclesSelector = mView.findViewById(R.id.spinner_exercise_create_muscles);
-        ExerciseTypeAdapter adapter = new ExerciseTypeAdapter(getActivity(), R.layout.exercise_type_spinner_item, Muscle.getOptionLabels(), Muscle.getMuscleOptions());
-        // Specify the layout to use when the list appears.
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Attach the adapter.
-        musclesSelector.setAdapter(adapter);
-    }
 
     @Override
     public void onDestroyView() {
