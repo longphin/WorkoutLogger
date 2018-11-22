@@ -7,6 +7,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +56,8 @@ public class ExerciseCreateFragment
     private View mView;
     private ImageView addNoteImage;
     private Spinner exerciseTypeSelector;
-    private Spinner musclesSelector;
+    private Spinner musclesSelector; // [TODO] remove
+    private RecyclerView musclesList;
 
     public static ExerciseCreateFragment newInstance() {
         return (new ExerciseCreateFragment());
@@ -86,7 +89,8 @@ public class ExerciseCreateFragment
             this.cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
             this.saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
             initializeExerciseTypeSelector();
-            initializeMusclesSelector();
+            //initializeMusclesSelector();
+            initializeMusclesList();
 
             // On click listener for when canceling the exercise creation.
             cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
@@ -115,9 +119,17 @@ public class ExerciseCreateFragment
         exerciseTypeSelector.setAdapter(adapter);
     }
 
+    private void initializeMusclesList() {
+        musclesList = mView.findViewById(R.id.rv_exercise_create_muscles);
+        musclesList.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        // Adapter
+        MuscleListAdapter adapter = new MuscleListAdapter();
+        musclesList.setAdapter(adapter);
+    }
+
     private void initializeMusclesSelector() {
         musclesSelector = mView.findViewById(R.id.spinner_exercise_create_muscles);
-        MuscleTypeAdapter adapter = new MuscleTypeAdapter(getActivity(), R.layout.exercise_type_spinner_item, Muscle.getOptionLabels(), Muscle.getMuscleOptions());
+        ExerciseTypeAdapter adapter = new ExerciseTypeAdapter(getActivity(), R.layout.exercise_type_spinner_item, Muscle.getOptionLabels(), Muscle.getMuscleOptions());
         // Specify the layout to use when the list appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Attach the adapter.

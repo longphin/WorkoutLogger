@@ -13,11 +13,11 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.enums.Muscle;
 
-public class MuscleTypeAdapter extends ArrayAdapter<String> {
+public class ExerciseTypeAdapter extends ArrayAdapter<String> {
     private Context context;
     private Muscle.MuscleOption[] options;
 
-    public MuscleTypeAdapter(Context context, int resource, String[] labels, Muscle.MuscleOption[] options) {
+    public ExerciseTypeAdapter(Context context, int resource, String[] labels, Muscle.MuscleOption[] options) {
         super(context, resource, labels);
 
         this.context = context;
