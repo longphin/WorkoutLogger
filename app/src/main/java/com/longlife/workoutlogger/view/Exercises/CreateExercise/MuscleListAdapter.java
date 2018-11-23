@@ -1,25 +1,24 @@
 package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.enums.MuscleGroupWithMuscles;
+import com.longlife.workoutlogger.enums.MuscleGroup;
 
 import java.util.List;
 
 public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    //private static final Map<MuscleGroup, List<Muscle>> data = MuscleGroup.getMuscleGroups();
     private static final int HEADER_TYPE = 0;
     private static final int SET_TYPE = 1;
     // Number of columns for the recyclerview to show.
     public static final int NUMBER_OF_COLUMNS = 2; // [TODO] This should be based on device's screen size, not a static number.
     private static final int FOOTER_PADDING_TYPE = 2;
     private static final int HEADER_PADDING_TYPE = 3;
-    //private List<MuscleClass> data = MuscleGroupWithMuscles.getMusclesWithGroupHeaders();
-    private List<MuscleListHelper> data = MuscleGroupWithMuscles.getAllMuscleGroups();
+    private static final String TAG = MuscleListAdapter.class.getSimpleName();
     private int itemCount;
 
     public MuscleListAdapter() {
@@ -29,9 +28,6 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private void updateHeaderPositions() {
-        /*MuscleListHelper lastItem = data.get(data.size()-1);
-        return lastItem.getVisiblePosition()
-                + (lastItem.isExpanded() ? lastItem.getMuscles().size() + lastItem.getFooterPadding() : 0);*/
         int pos = 0;
         for (MuscleListHelper item : data) {
             item.setVisiblePosition(pos);
@@ -65,6 +61,12 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    private List<MuscleListHelper> data = MuscleGroup.getAllMuscleGroups();
+
+    private void bindHeaderViewHolder(MuscleGroupListViewHolder holder, int position) {
+        holder.setName(getNameAtPosition(position));
+    }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int pos) {
         int position = holder.getAdapterPosition();
@@ -74,7 +76,7 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
         if (holder instanceof MuscleListViewHolder) {
-            bindSetViewHolder((MuscleListViewHolder) holder, position);
+            bindMuscleViewHolder((MuscleListViewHolder) holder, position);
             return;
         }
         if (holder instanceof MusclePaddingListViewHolder) {
@@ -83,12 +85,53 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void bindHeaderViewHolder(MuscleGroupListViewHolder holder, int position) {
-        holder.setName(getNameAtPosition(position));
+    private void bindMuscleViewHolder(MuscleListViewHolder holder, int position) {
+        int pos = holder.getAdapterPosition();
+        String name = getNameAtPosition(pos);
+        holder.setName(name);
+        boolean isItemSelected = isItemSelected(pos);
+        holder.getCheckboxView().setChecked(isItemSelected);
+        if (isItemSelected)
+            Log.d(TAG, name + " is " + (isItemSelected ? "currently selected" : "currently not selected"));
+        holder.getCheckboxView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int clickedPos = holder.getAdapterPosition();
+                changeItemSelectedStatus(clickedPos);
+            }
+        });
     }
 
-    private void bindSetViewHolder(MuscleListViewHolder holder, int position) {
-        holder.setName(getNameAtPosition(position));
+    private boolean isItemSelected(int position) {
+        for (MuscleListHelper item : data) {
+            int headerPosition = item.getVisiblePosition();
+            int headerPadding = item.getHeaderPadding();
+
+            if (headerPosition == position)
+                return false; // We do not change selection status for header items.
+            if (item.isExpanded() && position > headerPosition && position <= headerPosition + headerPadding + item.getMuscles().size()) {
+                return item.getMuscles().get(position - headerPosition - headerPadding - 1).isSelected();
+            }
+        }
+
+        return false;
+    }
+
+    private void changeItemSelectedStatus(int position) {
+        for (MuscleListHelper item : data) {
+            int headerPosition = item.getVisiblePosition();
+            int headerPadding = item.getHeaderPadding();
+
+            if (headerPosition == position)
+                return; // We do not change selection status for header items.
+            if (item.isExpanded() && position > headerPosition && position <= headerPosition + headerPadding + item.getMuscles().size()) {
+                item.getMuscles().get(position - headerPosition - headerPadding - 1).changeSelectedStatus();
+                Log.d(TAG, item.getMuscles().get(position - headerPosition - headerPadding - 1).getName() + " was " +
+                        (item.getMuscles().get(position - headerPosition - headerPadding - 1).isSelected() ? "selected" : "unselected"));
+
+                return;
+            }
+        }
     }
 
     private void bindPaddingViewHolder(MusclePaddingListViewHolder holder, int position) {
@@ -128,9 +171,6 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-/*        MuscleListHelper lastItem = data.get(data.size()-1);
-        return lastItem.getVisiblePosition()
-                + (lastItem.isExpanded() ? lastItem.getMuscles().size() + lastItem.getFooterPadding() : 0);*/
         return itemCount;
     }
 }

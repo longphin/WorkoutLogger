@@ -1,88 +1,130 @@
 package com.longlife.workoutlogger.enums;
 
-import com.longlife.workoutlogger.R;
+import java.util.Locale;
 
-public enum Muscle {
-    BICEP(0),
-    TRICEP(1),
-    LATS(2),
-    QUADS(3),
-    ROTATOR_CUFF(4);
+public class Muscle {
+    // Back
+    public static final int TRAPS = 0;
+    public static final int RHOMBOIDS = 1;
+    public static final int LATS = 2;
+    public static final int LOWER_BACK = 3;
+    // Arms
+    public static final int BICEPS = 4;
+    public static final int BICEP_BRACHIALIS = 5;
+    public static final int TRICEPS = 6;
+    public static final int FOREARMS = 7;
+    // Shoulders
+    public static final int DELTOID_ANTERIOR = 8;
+    public static final int DELTOID_LATERAL = 9;
+    public static final int DELTOID_POSTERIOR = 10;
+    // Legs
+    public static final int QUADS = 11;
+    public static final int HAMSTRINGS = 12;
+    public static final int GLUTES = 13;
+    public static final int CALVES = 14;
+    public static final int HIP_ADDUCTORS = 15;
+    public static final int HIP_ABDUCTORS = 16;
+    // Core
+    public static final int ABS = 17; // [TODO] break up abs into lower, middle, and upper?
+    public static final int OBLIQUES = 18;
+    // Chest
+    public static final int PEC_MAJOR = 19; // [TODO] add the other pecs?
 
-    private Integer _value;
+    private int idMuscleGroup;
+    private Integer idMuscle;
+    private String name;
 
-    Muscle(Integer val) {
-        this._value = val;
+    private boolean isSelected = false; // Determines if the muscle was selected to be a part of an exercise.
+
+    // Constructor for a muscle.
+    public Muscle(int idMuscleGroup, int idMuscle, String name) {
+        this.idMuscleGroup = idMuscleGroup;
+        this.idMuscle = idMuscle;
+        this.name = name;
     }
 
-    public static Muscle fromInt(Integer i) {
-        if (i == null)
-            return (null);
-
-        for (Muscle val : Muscle.values()) {
-            if (val.asInt().equals(i)) {
-                return (val);
-            }
-        }
-        return (null);
+    // Constructor for muscle group only, i.e. this is the header item for the muscle group, not an actual muscle.
+    public Muscle(int idMuscleGroup, String name) {
+        this.idMuscleGroup = idMuscleGroup;
+        this.name = name;
     }
 
-    public static String[] getOptionLabels() {
-        MuscleOption[] options = getMuscleOptions();
-        String[] names = new String[options.length];
-        for (int i = 0; i < options.length; i++) {
-            names[i] = options[i].getName();
+    private static String defaultMuscleName(int idMuscle) {
+        switch (idMuscle) {
+            case TRAPS:
+                return "Traps";
+            case RHOMBOIDS:
+                return "Rhomboids";
+            case LATS:
+                return "Lats";
+            case LOWER_BACK:
+                return "Lower Back";
+            case BICEPS:
+                return "Biceps";
+            case BICEP_BRACHIALIS:
+                return "Bicep Brachialis";
+            case TRICEPS:
+                return "Triceps";
+            case FOREARMS:
+                return "Forearms";
+            case DELTOID_ANTERIOR:
+                return "Anterior Deltoid";
+            case DELTOID_LATERAL:
+                return "Lateral Deltoid";
+            case DELTOID_POSTERIOR:
+                return "Posterior Deltoid";
+            case QUADS:
+                return "Quads";
+            case HAMSTRINGS:
+                return "Hamstrings";
+            case GLUTES:
+                return "Glutes";
+            case CALVES:
+                return "Calves";
+            case HIP_ADDUCTORS:
+                return "Hip Adductors";
+            case HIP_ABDUCTORS:
+                return "Hip Abductors";
+            case ABS:
+                return "Abs";
+            case OBLIQUES:
+                return "Obliques";
+            case PEC_MAJOR:
+                return "Pecs";
+            default:
+                return "Muscle not named";
         }
-        return names;
     }
 
-    public Integer asInt() {
-        return _value;
+    public boolean isSelected() {
+        return isSelected;
     }
 
-    public static MuscleOption[] getMuscleOptions() {
-        /*
-        List<MuscleOption> options = new ArrayList<>();
-        options.add(new MuscleOption(BICEPS, "Bicep", 1));
-        options.add(new MuscleOption(TRICEPS, "Tricep", 1));
-        options.add(new MuscleOption(LATS, "Lats", 1));
-        options.add(new MuscleOption(QUADS, "Quads", 1));
-        */
-        MuscleOption[] options = {
-                new MuscleOption(BICEP, "Bicep", R.drawable.ic_person_black_24dp),
-                new MuscleOption(TRICEP, "Tricep", R.drawable.ic_weightlifting),
-                new MuscleOption(LATS, "Lats", R.drawable.ic_delete_black_24dp),
-                new MuscleOption(QUADS, "Quads", R.drawable.ic_note_add_black_24dp)
-        };
-        return options;
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
-    public static class MuscleOption {
-        private int id;
-        private String name;
-        private int icon;
-
-        public MuscleOption(Muscle muscle, String name, int icon) {
-            this.id = muscle.asInt();
-            this.name = name;
-            this.icon = icon;
+    public static String getName(int idMuscle, Locale locale) {
+        if (locale == Locale.US || locale == Locale.ENGLISH) {
+            return defaultMuscleName(idMuscle);
         }
 
-        public int getId() {
-            return id;
-        }
+        return defaultMuscleName(idMuscle);
+    }
 
-        public String getName() {
-            return name;
-        }
+    public int getIdMuscle() {
+        return idMuscle;
+    }
 
-        public int getIcon() {
-            return icon;
-        }
+    public String getName() {
+        return name;
+    }
 
-        @Override
-        public String toString() {
-            return name;
-        }
+    public int getIdMuscleGroup() {
+        return idMuscleGroup;
+    }
+
+    public void changeSelectedStatus() {
+        isSelected = !isSelected;
     }
 }

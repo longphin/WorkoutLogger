@@ -3,18 +3,22 @@ package com.longlife.workoutlogger.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
 
-import com.longlife.workoutlogger.enums.Muscle;
-import com.longlife.workoutlogger.enums.MuscleConverter;
-
-@Entity(indices = @Index(value = {"idExercise", "muscle"}))
+@Entity(indices = @Index(value = {"idExercise", "idMuscle"}))
 public class ExerciseMuscle {
     @PrimaryKey
     private Long idExerciseMuscle;
     private Long idExercise;
-    @TypeConverters({MuscleConverter.class})
-    private Muscle muscle;
+
+    private Long idMuscle;
+
+    public Long getIdMuscle() {
+        return idMuscle;
+    }
+
+    public void setIdMuscle(Long idMuscle) {
+        this.idMuscle = idMuscle;
+    }
     private double contribution; // as a percentage between 0.0 and 1.0
 
     public Long getIdExerciseMuscle() {
@@ -31,14 +35,6 @@ public class ExerciseMuscle {
 
     public void setIdExercise(Long idExercise) {
         this.idExercise = idExercise;
-    }
-
-    public Muscle getMuscle() {
-        return muscle;
-    }
-
-    public void setMuscle(Muscle muscle) {
-        this.muscle = muscle;
     }
 
     public double getContribution() {

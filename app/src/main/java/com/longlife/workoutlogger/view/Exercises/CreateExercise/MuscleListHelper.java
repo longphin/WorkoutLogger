@@ -1,19 +1,19 @@
 package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 
-import com.longlife.workoutlogger.enums.MuscleClass;
+import com.longlife.workoutlogger.enums.Muscle;
 
 import java.util.List;
 
 public class MuscleListHelper {
     private int idMuscleGroup;
     private String muscleGroupName;
-    private List<MuscleClass> muscles;
+    private List<Muscle> muscles;
     private int headerPadding;
     private int footerPadding;
     private int visiblePosition;
     private boolean isExpanded = true;
 
-    public MuscleListHelper(int idMuscleGroup, String muscleGroupName, List<MuscleClass> muscles, int numberOfColumns) {
+    public MuscleListHelper(int idMuscleGroup, String muscleGroupName, List<Muscle> muscles, int numberOfColumns) {
         this.idMuscleGroup = idMuscleGroup;
         this.muscleGroupName = muscleGroupName;
         this.muscles = muscles;
@@ -61,7 +61,7 @@ public class MuscleListHelper {
         return muscleGroupName;
     }
 
-    public List<MuscleClass> getMuscles() {
+    public List<Muscle> getMuscles() {
         return muscles;
     }
 

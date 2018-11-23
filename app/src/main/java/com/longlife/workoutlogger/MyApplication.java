@@ -20,8 +20,6 @@ import com.longlife.workoutlogger.utils.JSONParser;
 import java.io.File;
 
 /*
-[TODO] Initialize the MuscleGroup table and the Muscle table with values. Can try doing this on start-up for now, instead of shipping it with the app. Eventually, it should be shipped with the app.
-
 [TODO] Preload dummy data. May want to see if Room eventually pprovides a better way to do this.
     https://medium.com/@johann.pardanaud/ship-an-android-app-with-a-pre-populated-database-cd2b3aa3311f
     https://stackoverflow.com/questions/513084/ship-an-application-with-a-database
