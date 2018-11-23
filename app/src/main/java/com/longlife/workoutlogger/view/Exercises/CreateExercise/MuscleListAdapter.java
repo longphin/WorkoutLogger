@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.enums.MuscleGroup;
 
 import java.util.List;
 
@@ -21,11 +20,7 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final String TAG = MuscleListAdapter.class.getSimpleName();
     private int itemCount;
 
-    public MuscleListAdapter() {
-        super();
-
-        updateHeaderPositions();
-    }
+    private List<MuscleListHelper> data;
 
     private void updateHeaderPositions() {
         int pos = 0;
@@ -61,7 +56,12 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private List<MuscleListHelper> data = MuscleGroup.getAllMuscleGroups();
+    public MuscleListAdapter(List<MuscleListHelper> data) {
+        super();
+
+        this.data = data;
+        updateHeaderPositions();
+    }
 
     private void bindHeaderViewHolder(MuscleGroupListViewHolder holder, int position) {
         holder.setName(getNameAtPosition(position));

@@ -1,7 +1,5 @@
 package com.longlife.workoutlogger.enums;
 
-import java.util.Locale;
-
 public class Muscle {
     // Back
     public static final int TRAPS = 0;
@@ -34,7 +32,7 @@ public class Muscle {
     private Integer idMuscle;
     private String name;
 
-    private boolean isSelected = false; // Determines if the muscle was selected to be a part of an exercise.
+    private boolean isSelected = false; // Determines if the muscle was selected to be a part of an exercise. Only used when creating an exercise.
 
     // Constructor for a muscle.
     public Muscle(int idMuscleGroup, int idMuscle, String name) {
@@ -43,73 +41,12 @@ public class Muscle {
         this.name = name;
     }
 
-    // Constructor for muscle group only, i.e. this is the header item for the muscle group, not an actual muscle.
-    public Muscle(int idMuscleGroup, String name) {
-        this.idMuscleGroup = idMuscleGroup;
-        this.name = name;
-    }
-
-    private static String defaultMuscleName(int idMuscle) {
-        switch (idMuscle) {
-            case TRAPS:
-                return "Traps";
-            case RHOMBOIDS:
-                return "Rhomboids";
-            case LATS:
-                return "Lats";
-            case LOWER_BACK:
-                return "Lower Back";
-            case BICEPS:
-                return "Biceps";
-            case BICEP_BRACHIALIS:
-                return "Bicep Brachialis";
-            case TRICEPS:
-                return "Triceps";
-            case FOREARMS:
-                return "Forearms";
-            case DELTOID_ANTERIOR:
-                return "Anterior Deltoid";
-            case DELTOID_LATERAL:
-                return "Lateral Deltoid";
-            case DELTOID_POSTERIOR:
-                return "Posterior Deltoid";
-            case QUADS:
-                return "Quads";
-            case HAMSTRINGS:
-                return "Hamstrings";
-            case GLUTES:
-                return "Glutes";
-            case CALVES:
-                return "Calves";
-            case HIP_ADDUCTORS:
-                return "Hip Adductors";
-            case HIP_ABDUCTORS:
-                return "Hip Abductors";
-            case ABS:
-                return "Abs";
-            case OBLIQUES:
-                return "Obliques";
-            case PEC_MAJOR:
-                return "Pecs";
-            default:
-                return "Muscle not named";
-        }
-    }
-
     public boolean isSelected() {
         return isSelected;
     }
 
     public void setSelected(boolean selected) {
         isSelected = selected;
-    }
-
-    public static String getName(int idMuscle, Locale locale) {
-        if (locale == Locale.US || locale == Locale.ENGLISH) {
-            return defaultMuscleName(idMuscle);
-        }
-
-        return defaultMuscleName(idMuscle);
     }
 
     public int getIdMuscle() {

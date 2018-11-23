@@ -25,6 +25,7 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Validator;
 import com.longlife.workoutlogger.enums.ExerciseType;
+import com.longlife.workoutlogger.enums.MuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
@@ -121,7 +122,7 @@ public class ExerciseCreateFragment
         musclesList.setLayoutManager(//new LinearLayoutManager(this.getActivity()));
                 new GridLayoutManager(this.getActivity(), MuscleListAdapter.NUMBER_OF_COLUMNS));
         // Adapter
-        MuscleListAdapter adapter = new MuscleListAdapter();
+        MuscleListAdapter adapter = new MuscleListAdapter(MuscleGroup.getAllMuscleGroups(getActivity()));
         musclesList.setAdapter(adapter);
     }
 

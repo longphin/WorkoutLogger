@@ -54,6 +54,36 @@
     <!-- Notification title when rest timer is up -->
     <string name="notificationChannelDescription">Rest for %1$01d:%2$02d</string>
 
+    <!-- Names for muscle groups -->
+    <string name="MUSCLEGROUP_chest">Chest</string>
+    <string name="MUSCLEGROUP_back">Back</string>
+    <string name="MUSCLEGROUP_arms">Arms</string>
+    <string name="MUSCLEGROUP_shoulders">Shoulders</string>
+    <string name="MUSCLEGROUP_legs">Legs</string>
+    <string name="MUSCLEGROUP_core">Core</string>
+
+    <!-- Names for muscles -->
+    <string name="MUSCLE_traps">Traps</string>
+    <string name="MUSCLE_rhomboids">Rhomboids</string>
+    <string name="MUSCLE_lats">Lats</string>
+    <string name="MUSCLE_lower_back">Lower Back</string>
+    <string name="MUSCLE_biceps">Biceps</string>
+    <string name="MUSCLE_bicep_brachialis">Bicep Brachialis</string>
+    <string name="MUSCLE_triceps">Triceps</string>
+    <string name="MUSCLE_forearms">Forearms</string>
+    <string name="MUSCLE_deltoid_anterior">Anterior Deltoid</string>
+    <string name="MUSCLE_deltoid_lateral">Lateral Deltoid</string>
+    <string name="MUSCLE_deltoid_posterior">Posterior Deltoid</string>
+    <string name="MUSCLE_quads">Quads</string>
+    <string name="MUSCLE_hamstrings">Hamstrings</string>
+    <string name="MUSCLE_glutes">Glutes</string>
+    <string name="MUSCLE_calves">Calves</string>
+    <string name="MUSCLE_hip_adductors">Hip Adductors</string>
+    <string name="MUSCLE_hip_abductors">Hip Abductors</string>
+    <string name="MUSCLE_abs">Abs</string>
+    <string name="MUSCLE_obliques">Obliques</string>
+    <string name="MUSCLE_pec_major">Pecs</string>
+
     <!-- List of weight unit options -->
     <string-array name="units_array">
         <item>lbs</item>
