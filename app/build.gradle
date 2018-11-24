@@ -63,7 +63,7 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:1.1.1"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
     // Debugger to examine Room data.
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
+    //debugImplementation 'com.amitshekhar.android:debug-db:1.0.4' // https://github.com/amitshekhariitbhu/Android-Debug-Database // adb forward tcp:8080 tcp:8080
 
     // RxJava2
     implementation "android.arch.persistence.room:rxjava2:1.1.1"

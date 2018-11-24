@@ -10,7 +10,6 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.enums.Muscle;
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +36,21 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             pos += 1 + item.getHeaderPadding();
             itemCount = pos;
         }
+    }
+
+    // Set a list of muscles as selected.
+    public void setDataAsSelected(Set<ExerciseMuscle> selectedMuscles) {
+        for (MuscleListHelper muscleListItem : data) {
+            for (Muscle muscleItem : muscleListItem.getMuscles()) {
+                for (ExerciseMuscle selectedMuscle : selectedMuscles) {
+                    if (muscleItem.getIdMuscle() == selectedMuscle.getIdMuscle()) {
+                        selectedIdMuscle.add(muscleItem.getIdMuscle());
+                        muscleItem.setSelected(true);
+                    }
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -217,8 +231,8 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return itemCount;
     }
 
-    public List<ExerciseMuscle> getExerciseMuscles() {
-        List<ExerciseMuscle> muscles = new ArrayList<>();
+    public Set<ExerciseMuscle> getExerciseMuscles() {
+        Set<ExerciseMuscle> muscles = new HashSet<>();
         for (Integer idMuscle : selectedIdMuscle) {
             muscles.add(new ExerciseMuscle(Long.valueOf(idMuscle)));
         }

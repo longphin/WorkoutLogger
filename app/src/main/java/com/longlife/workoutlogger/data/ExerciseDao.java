@@ -58,7 +58,7 @@ public abstract class ExerciseDao {
 
     // Get a subset of columns from exercise that can be edited.
     @Transaction
-    @Query("SELECT idExercise, name, note FROM Exercise WHERE idExercise=:id")
+    @Query("SELECT idExercise, name, note, exerciseType FROM Exercise WHERE idExercise=:id")
     public abstract Single<ExerciseUpdated> getExerciseUpdatableFromId(Long id);
 
     // Get a subset of columns from exercise that is minimal.
@@ -95,7 +95,7 @@ public abstract class ExerciseDao {
 
     // Inserts an exercise. Returns the exercise with provided id.
     @Transaction
-    public Exercise insertExerciseFull(Exercise ex, List<ExerciseMuscle> relatedMuscles) {
+    public Exercise insertExerciseFull(Exercise ex, Set<ExerciseMuscle> relatedMuscles) {
         Long idExercise = insertExercise(ex);
         ex.setIdExercise(idExercise);
 
@@ -108,7 +108,7 @@ public abstract class ExerciseDao {
     }
 
     @Insert
-    public abstract List<Long> insertExerciseMuscles(List<ExerciseMuscle> muscles);
+    public abstract List<Long> insertExerciseMuscles(Set<ExerciseMuscle> muscles);
 
     // Insert an exercise. Do not use directly. Instead, use insertExerciseFull(exercise) to insert a source exercise and a leaf copy.
     @Insert(onConflict = OnConflictStrategy.REPLACE)//OnConflictStrategy.ROLLBACK)
@@ -122,9 +122,21 @@ public abstract class ExerciseDao {
     @Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
     public abstract void setExerciseHiddenStatus(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
 
+    @Transaction
+    public void updateExercise(ExerciseUpdated ex, Set<ExerciseMuscle> relatedMuscles, Set<ExerciseMuscle> musclesToDelete) {
+        updateExercise(ex.getIdExercise(), ex.getName(), ex.getNote(), ex.getExerciseType());
+
+        deleteExerciseMuscles(musclesToDelete);
+        insertExerciseMuscles(relatedMuscles);
+    }
+
     @Query("UPDATE Exercise " +
             "SET name = :name " +
             ", note = :note " +
+            ", exerciseType = :exerciseType " +
             "WHERE idExercise = :idExercise")
-    public abstract void updateExercise(Long idExercise, String name, String note);
+    public abstract void updateExercise(Long idExercise, String name, String note, int exerciseType);
+
+    @Delete
+    abstract void deleteExerciseMuscles(Set<ExerciseMuscle> musclesToDelete);
 }

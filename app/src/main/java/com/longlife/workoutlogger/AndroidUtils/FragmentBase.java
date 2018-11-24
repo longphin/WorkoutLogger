@@ -2,6 +2,7 @@ package com.longlife.workoutlogger.AndroidUtils;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
+
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -25,9 +26,8 @@ public class FragmentBase
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        // Clear disposables.
         clearDisposables();
+        super.onDestroy();
     }
 
     // Clear disposables.

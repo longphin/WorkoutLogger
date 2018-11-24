@@ -19,6 +19,7 @@ import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -165,7 +166,7 @@ public class ExercisesViewModel
                 });
     }
 
-    public void insertExercise(Exercise exercise, List<ExerciseMuscle> muscles) {
+    public void insertExercise(Exercise exercise, Set<ExerciseMuscle> muscles) {
         repo.insertExercise(exercise, muscles)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -220,8 +221,8 @@ public class ExercisesViewModel
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void updateExerciseShort(ExerciseUpdated exercise) {
-        Completable.fromAction(() -> repo.updateExercise(exercise))
+    public void updateExerciseShort(ExerciseUpdated exercise, Set<ExerciseMuscle> relatedMuscles, Set<ExerciseMuscle> musclesToDelete) {
+        Completable.fromAction(() -> repo.updateExercise(exercise, relatedMuscles, musclesToDelete))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {

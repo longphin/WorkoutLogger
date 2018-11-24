@@ -22,22 +22,45 @@ public class ExerciseType {
     public static List<Type> getOptions(Context context) {
         List<Type> options = new ArrayList<>();
 
-        options.add(new Type(WEIGHT_AND_REP, GetResource.getStringResource(context, R.string.EXERCISETYPE_weight_and_rep)));
-        options.add(new Type(REPS, GetResource.getStringResource(context, R.string.EXERCISETYPE_reps)));
-        options.add(new Type(DISTANCE_AND_TIME, GetResource.getStringResource(context, R.string.EXERCISETYPE_distance_and_time)));
-        options.add(new Type(DURATION, GetResource.getStringResource(context, R.string.EXERCISETYPE_duration)));
-        options.add(new Type(COUNTDOWN, GetResource.getStringResource(context, R.string.EXERCISETYPE_countdown)));
+        options.add(new Type(context, WEIGHT_AND_REP));
+        options.add(new Type(context, REPS));
+        options.add(new Type(context, DISTANCE_AND_TIME));
+        options.add(new Type(context, DURATION));
+        options.add(new Type(context, COUNTDOWN));
 
         return options;
+    }
+
+    public static List<Type> getOptionsListWithOneItemOnly(Context context, int idExerciseType) {
+        List<Type> res = new ArrayList<>();
+        res.add(new Type(context, idExerciseType));
+        return res;
     }
 
     public static class Type {
         int id;
         String label;
 
-        private Type(int id, String label) {
+        private Type(Context context, int id) {
             this.id = id;
-            this.label = label;
+            this.label = getName(context, id);
+        }
+
+        private String getName(Context context, int id) {
+            switch (id) {
+                case WEIGHT_AND_REP:
+                    return GetResource.getStringResource(context, R.string.EXERCISETYPE_weight_and_rep);
+                case REPS:
+                    return GetResource.getStringResource(context, R.string.EXERCISETYPE_reps);
+                case DISTANCE_AND_TIME:
+                    return GetResource.getStringResource(context, R.string.EXERCISETYPE_distance_and_time);
+                case DURATION:
+                    return GetResource.getStringResource(context, R.string.EXERCISETYPE_duration);
+                case COUNTDOWN:
+                    return GetResource.getStringResource(context, R.string.EXERCISETYPE_countdown);
+                default:
+                    return "Exercise type is not named.";
+            }
         }
 
         public int getId() {

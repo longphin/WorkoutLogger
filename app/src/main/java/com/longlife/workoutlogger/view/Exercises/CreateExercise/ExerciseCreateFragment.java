@@ -5,10 +5,8 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.RequiredFieldException;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
@@ -32,33 +31,33 @@ import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 public class ExerciseCreateFragment
-        extends Fragment
+        extends FragmentBase
         implements AddNoteDialog.OnInputListener {
     public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
+
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
-    private ExercisesViewModel viewModel;
-    private EditText name;
+    protected ExercisesViewModel viewModel;
+    protected EditText name;
     //private TextView descrip;
     private String descrip;
     private Button cancelButton;
     private Button saveButton;
-    private CompositeDisposable composite = new CompositeDisposable();
-    private View mView;
+    protected Spinner exerciseTypeSelector;
     private ImageView addNoteImage;
-    private Spinner exerciseTypeSelector;
+    protected MuscleListAdapter adapter;
     private RecyclerView musclesList;
-    private MuscleListAdapter adapter;
+    protected boolean saveButtonEnabled = true;
+    //private CompositeDisposable composite = new CompositeDisposable();
+    private View mView;
 
     public static ExerciseCreateFragment newInstance() {
-        return (new ExerciseCreateFragment());
+        return new ExerciseCreateFragment();
     }
 
     @Override
@@ -71,7 +70,6 @@ public class ExerciseCreateFragment
 
         viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
     }
-
 
     @Nullable
     @Override
@@ -90,30 +88,33 @@ public class ExerciseCreateFragment
             cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
 
             // On click listener for when to save the exercise. It first checks for valid fields.
-            saveButton.setOnClickListener(view -> checkFieldsBeforeInsert());
+            saveButton.setOnClickListener(view ->
+            {
+                if (saveButtonEnabled)
+                    checkFieldsBeforeInsert();
+            });
 
             // On click listener for changing the exercise name and description. Opens up a dialog fragment for user to change the values.
             this.addNoteImage.setOnClickListener(view ->
             {
-                AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);
-                dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
+                if (saveButtonEnabled) {
+                    AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);
+                    dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
+                }
             });
         }
 
-        ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_ExerciseCreate));
+        initialToolbarTitle();
         return (mView);
     }
 
     private void initializeExerciseTypeSelector() {
         exerciseTypeSelector = mView.findViewById(R.id.spinner_exercise_create_exercise_type);
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getContext(), R.layout.weight_unit_spinner_item, ExerciseType.getOptions(getContext()));
-        // Specify the layout to use when the list appears.
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Attach the adapter.
-        exerciseTypeSelector.setAdapter(adapter);
+
+        setExerciseTypeSelectorAdapter();
     }
 
-    private void initializeMusclesList() {
+    protected void initializeMusclesList() {
         musclesList = mView.findViewById(R.id.rv_exercise_create_muscles);
         musclesList.setLayoutManager(//new LinearLayoutManager(this.getActivity()));
                 new GridLayoutManager(this.getActivity(), MuscleListAdapter.NUMBER_OF_COLUMNS));
@@ -122,35 +123,6 @@ public class ExerciseCreateFragment
         musclesList.setAdapter(adapter);
     }
 
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d(TAG, "onDestroyView()");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        clearDisposables();
-        Log.d(TAG, "onDestroy()");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d(TAG, "onDetach()");
-    }
-
-    public void clearDisposables() {
-        composite.clear();
-    }
-
-    // Methods
-
-    ///
-    /// INSERT EXERCISE RENDERING
-    ///
     private void checkFieldsBeforeInsert() {
         Exercise newExercise = new Exercise();
         newExercise.setName(name.getText().toString());
@@ -175,13 +147,34 @@ public class ExerciseCreateFragment
             return;
         }
 
-        List<ExerciseMuscle> muscles = adapter.getExerciseMuscles();
+        Set<ExerciseMuscle> muscles = adapter.getExerciseMuscles();
 
         //viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
-        // Insert the new exercise into Exercise.
-        viewModel.insertExercise(newExercise, muscles);
+        exerciseSaved(newExercise, muscles);
 
         getActivity().onBackPressed();
+    }
+
+    protected void initialToolbarTitle() {
+        updateToolbarTitle(getString(R.string.Toolbar_ExerciseCreate));
+    }
+
+    protected void setExerciseTypeSelectorAdapter() {
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getContext(), R.layout.weight_unit_spinner_item, ExerciseType.getOptions(getContext()));
+        // Specify the layout to use when the list appears.
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Attach the adapter.
+        exerciseTypeSelector.setAdapter(adapter);
+    }
+
+    // By default, inserts a new record of the exercise.
+    protected void exerciseSaved(Exercise newExercise, Set<ExerciseMuscle> relatedMuscles) {
+        viewModel.insertExercise(newExercise, relatedMuscles);
+    }
+
+    // By default, displays the exercise create title.
+    protected void updateToolbarTitle(String s) {
+        ((MainActivity) getActivity()).updateToolbarTitle(s);
     }
 
     @Override

@@ -53,4 +53,23 @@ public class ExerciseMuscle {
     public void setContribution(double contribution) {
         this.contribution = contribution;
     }
+
+    @Override
+    public int hashCode() {
+        return (int) ((idExercise == null ? 0L : idExercise * 30L) + idMuscle);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+
+        ExerciseMuscle other = (ExerciseMuscle) obj;
+        return (idExercise == null && other.getIdExercise() == null) || (idExercise.equals(other.getIdExercise()))
+                && idMuscle.equals(other.getIdMuscle());
+    }
 }

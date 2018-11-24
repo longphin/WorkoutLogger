@@ -402,10 +402,6 @@ public class RoutineCreateFragment
             fragment = ExerciseEditFragment.newInstance(idExercise);
         }
 
-/*		addFragmentToActivity(manager, fragment,
-			R.id.frameLayout_main_activity,//R.id.root_main_activity,
-			ExerciseEditFragment.TAG, ExerciseEditFragment.TAG
-		);*/
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
@@ -442,13 +438,12 @@ public class RoutineCreateFragment
 
         ExercisesSelectableFragment fragment = (ExercisesSelectableFragment) manager.findFragmentByTag(ExercisesSelectableFragment.TAG);
         if (fragment == null) {
-            fragment = ExercisesSelectableFragment.newInstance(exercisesSelectedViewModel, R.id.root_main_activity, R.layout.fragment_routine_exercises);
+            fragment = ExercisesSelectableFragment.newInstance(R.id.root_main_activity, R.layout.fragment_routine_exercises);
         }
 
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
-        //addFragmentToActivity(manager, fragment, R.id.root_main_activity, ExercisesSelectableFragment.TAG, ExercisesSelectableFragment.TAG);
     }
 }
 

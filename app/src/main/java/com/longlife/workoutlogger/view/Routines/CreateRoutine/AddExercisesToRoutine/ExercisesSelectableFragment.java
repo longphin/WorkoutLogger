@@ -20,8 +20,7 @@ public class ExercisesSelectableFragment
     public static final String TAG = ExercisesFragment.class.getSimpleName(); // The tag will be the same as the base class. //ExercisesSelectableFragment.class.getSimpleName();
     private ExercisesSelectableViewModel exercisesSelectableViewModel;
 
-    public static ExercisesSelectableFragment newInstance(ExercisesSelectableViewModel exercisesSelectableViewModel, // [TODO] this is obtained in onCreate() instead. Is this needed and it is better to pass the viewmodel in this function?
-                                                          int activityRoot, int exerciseItemLayout) {
+    public static ExercisesSelectableFragment newInstance(int activityRoot, int exerciseItemLayout) {
         ExercisesSelectableFragment fragment = new ExercisesSelectableFragment();
 
         Bundle bundle = new Bundle();

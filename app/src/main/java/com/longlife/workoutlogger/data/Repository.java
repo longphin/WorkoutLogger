@@ -89,13 +89,13 @@ public class Repository {
     }
 
     // Update the history for an exercise.
-    public void updateExercise(ExerciseUpdated ex)
+    public void updateExercise(ExerciseUpdated ex, Set<ExerciseMuscle> relatedMuscles, Set<ExerciseMuscle> musclesToDelete)
     {
-        exerciseDao.updateExercise(ex.getIdExercise(), ex.getName(), ex.getNote());
+        exerciseDao.updateExercise(ex, relatedMuscles, musclesToDelete);//ex.getIdExercise(), ex.getName(), ex.getNote());
     }
 
     // Insert an exercise.
-    public Single<Exercise> insertExercise(Exercise exercise, List<ExerciseMuscle> muscles) {
+    public Single<Exercise> insertExercise(Exercise exercise, Set<ExerciseMuscle> muscles) {
         return Single.fromCallable(() -> exerciseDao.insertExerciseFull(exercise, muscles));
     }
 

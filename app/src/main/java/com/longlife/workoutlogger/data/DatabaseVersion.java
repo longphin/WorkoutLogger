@@ -53,7 +53,8 @@ public class DatabaseVersion {
     // V8 Will add related muscles to exercises.
     private static final int V8_0 = 41; // Added Muscles and Muscle Groups, and related muscles to exercises.
     private static final int V8_1 = 42; // Changed ExerciseMuscle to use idMuscle instead. When inserting an exercise, it will also insert ExerciseMuscle records.
+    private static final int V8_2 = 43; // Changed Exercise update process to use same fragment as Exercise create. Added muscles when updating the exercise.
 
-    static final int CURRENT = V8_1;
+    static final int CURRENT = V8_2;
 }
 
