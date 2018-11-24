@@ -3,6 +3,7 @@ package com.longlife.workoutlogger.data;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
+import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
@@ -93,9 +94,9 @@ public class Repository {
         exerciseDao.updateExercise(ex.getIdExercise(), ex.getName(), ex.getNote());
     }
 
-    // Insert history for an exercise. This creates a new history value and updates the exercise.
-    public Single<Exercise> insertExercise(Exercise exercise) {
-        return Single.fromCallable(() -> exerciseDao.insertExerciseFull(exercise));
+    // Insert an exercise.
+    public Single<Exercise> insertExercise(Exercise exercise, List<ExerciseMuscle> muscles) {
+        return Single.fromCallable(() -> exerciseDao.insertExerciseFull(exercise, muscles));
     }
 
     // Insert profile.

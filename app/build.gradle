@@ -62,8 +62,8 @@ dependencies {
     // Room database
     implementation "android.arch.persistence.room:runtime:1.1.1"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
-    // To debug room datatbase view.
-    //debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
+    // Debugger to examine Room data.
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 
     // RxJava2
     implementation "android.arch.persistence.room:rxjava2:1.1.1"

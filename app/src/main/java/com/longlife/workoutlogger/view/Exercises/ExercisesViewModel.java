@@ -10,6 +10,7 @@ import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseLocked;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
+import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.utils.Response;
@@ -164,8 +165,8 @@ public class ExercisesViewModel
                 });
     }
 
-    public void insertExercise(Exercise exercise) {
-        repo.insertExercise(exercise)
+    public void insertExercise(Exercise exercise, List<ExerciseMuscle> muscles) {
+        repo.insertExercise(exercise, muscles)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Exercise>() {

@@ -20,7 +20,7 @@ import com.longlife.workoutlogger.utils.JSONParser;
 import java.io.File;
 
 /*
-[TODO] Preload dummy data. May want to see if Room eventually pprovides a better way to do this.
+[TODO] Preload dummy data. May want to see if Room eventually provides a better way to do this.
     https://medium.com/@johann.pardanaud/ship-an-android-app-with-a-pre-populated-database-cd2b3aa3311f
     https://stackoverflow.com/questions/513084/ship-an-application-with-a-database
 [TODO] Change how exercises are selected when creating a routine. Instead of opening another fragment, just have two recyclerviews side by side. Left side is for exercises in routine, right side is for entire list of exercises. Items from the right can be clicked on or dragged to the left side.

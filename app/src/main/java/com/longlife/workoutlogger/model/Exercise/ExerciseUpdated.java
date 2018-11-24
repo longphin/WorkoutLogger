@@ -1,9 +1,26 @@
 package com.longlife.workoutlogger.model.Exercise;
 
+import android.arch.persistence.room.Relation;
+
+import com.longlife.workoutlogger.model.ExerciseMuscle;
+
+import java.util.List;
+
 public class ExerciseUpdated {
     private Long idExercise;
     private String name;
     private String note;
+
+    @Relation(parentColumn = "idExercise", entityColumn = "idExercise", entity = ExerciseMuscle.class)
+    private List<ExerciseMuscle> muscles;
+
+    public List<ExerciseMuscle> getMuscles() {
+        return muscles;
+    }
+
+    public void setMuscles(List<ExerciseMuscle> muscles) {
+        this.muscles = muscles;
+    }
 
     public Long getIdExercise() {
         return idExercise;

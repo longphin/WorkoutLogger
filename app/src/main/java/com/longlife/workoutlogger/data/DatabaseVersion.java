@@ -52,7 +52,8 @@ public class DatabaseVersion {
     private static final int V7_1 = 40; // Preloaded data is now written in a json file.
     // V8 Will add related muscles to exercises.
     private static final int V8_0 = 41; // Added Muscles and Muscle Groups, and related muscles to exercises.
+    private static final int V8_1 = 42; // Changed ExerciseMuscle to use idMuscle instead. When inserting an exercise, it will also insert ExerciseMuscle records.
 
-    public static final int CURRENT = V8_0;
+    static final int CURRENT = V8_1;
 }
 

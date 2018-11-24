@@ -1,18 +1,10 @@
 package com.longlife.workoutlogger.model.Exercise;
 
-import android.arch.persistence.room.Relation;
-
-import com.longlife.workoutlogger.model.ExerciseMuscle;
-
-import java.util.List;
-
 public class ExerciseShort {
     public Long idExercise;
     public String name;
     public String note;
     private boolean locked; // Flag to indicate whether exercise is locked.
-    @Relation(parentColumn = "idExercise", entityColumn = "idExercise", entity = ExerciseMuscle.class)
-    private List<ExerciseMuscle> muscles;
 
     public ExerciseShort(Long idExercise, String name, String note, boolean locked) {
         this.idExercise = idExercise;
@@ -38,14 +30,6 @@ public class ExerciseShort {
         this.idExercise = updatedExercise.getIdExercise();
         this.name = updatedExercise.getName();
         this.note = updatedExercise.getNote();
-    }
-
-    public List<ExerciseMuscle> getMuscles() {
-        return muscles;
-    }
-
-    public void setMuscles(List<ExerciseMuscle> muscles) {
-        this.muscles = muscles;
     }
 
     public boolean isLocked() {

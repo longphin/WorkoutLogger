@@ -7,8 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.enums.Muscle;
+import com.longlife.workoutlogger.model.ExerciseMuscle;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int HEADER_TYPE = 0;
@@ -21,6 +26,7 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private int itemCount;
 
     private List<MuscleListHelper> data;
+    private Set<Integer> selectedIdMuscle = new HashSet<>(); // List of idMuscle for each muscle that is selected to be a part of the exercise.
 
     private void updateHeaderPositions() {
         int pos = 0;
@@ -91,8 +97,9 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.setName(name);
         boolean isItemSelected = isItemSelected(pos);
         holder.getCheckboxView().setChecked(isItemSelected);
-        if (isItemSelected)
-            Log.d(TAG, name + " is " + (isItemSelected ? "currently selected" : "currently not selected"));
+        Integer selected_idMuscle = getMuscleIdForPosition(pos);
+        if (isItemSelected) includeMuscle(selected_idMuscle);
+        //Log.d(TAG, name + " is " + (isItemSelected ? "currently selected" : "currently not selected"));
         holder.getCheckboxView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,6 +107,53 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 changeItemSelectedStatus(clickedPos);
             }
         });
+    }
+
+    private Integer getMuscleIdForPosition(int position) {
+        for (MuscleListHelper item : data) {
+            int headerPosition = item.getVisiblePosition();
+            int headerPadding = item.getHeaderPadding();
+
+            if (headerPosition == position)
+                return null; // We do not change selection status for header items.
+            if (item.isExpanded() && position > headerPosition && position <= headerPosition + headerPadding + item.getMuscles().size()) {
+                return item.getMuscles().get(position - headerPosition - headerPadding - 1).getIdMuscle();
+            }
+        }
+
+        return null;
+    }
+
+    private void includeMuscle(Integer idMuscle) {
+        if (idMuscle != null) {
+            selectedIdMuscle.add(idMuscle);
+        }
+    }
+
+    private void changeItemSelectedStatus(int position) {
+        for (MuscleListHelper item : data) {
+            int headerPosition = item.getVisiblePosition();
+            int headerPadding = item.getHeaderPadding();
+
+            if (headerPosition == position)
+                return; // We do not change selection status for header items.
+            if (item.isExpanded() && position > headerPosition && position <= headerPosition + headerPadding + item.getMuscles().size()) {
+                Muscle muscle = item.getMuscles().get(position - headerPosition - headerPadding - 1);
+                boolean isSelected = muscle.isSelected();
+                int idMuscle = muscle.getIdMuscle();
+                if (isSelected) {
+                    // Remove muscle.
+                    removeMuscle(idMuscle);
+                } else {
+                    // Add muscle.
+                    includeMuscle(idMuscle);
+                }
+                muscle.setSelected(!isSelected);
+                Log.d(TAG, muscle.getName() + " was " + (isSelected ? "selected" : "unselected"));
+
+                return;
+            }
+        }
     }
 
     private boolean isItemSelected(int position) {
@@ -117,20 +171,9 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return false;
     }
 
-    private void changeItemSelectedStatus(int position) {
-        for (MuscleListHelper item : data) {
-            int headerPosition = item.getVisiblePosition();
-            int headerPadding = item.getHeaderPadding();
-
-            if (headerPosition == position)
-                return; // We do not change selection status for header items.
-            if (item.isExpanded() && position > headerPosition && position <= headerPosition + headerPadding + item.getMuscles().size()) {
-                item.getMuscles().get(position - headerPosition - headerPadding - 1).changeSelectedStatus();
-                Log.d(TAG, item.getMuscles().get(position - headerPosition - headerPadding - 1).getName() + " was " +
-                        (item.getMuscles().get(position - headerPosition - headerPadding - 1).isSelected() ? "selected" : "unselected"));
-
-                return;
-            }
+    private void removeMuscle(Integer idMuscle) {
+        if (idMuscle != null) {
+            selectedIdMuscle.remove(idMuscle);
         }
     }
 
@@ -172,5 +215,14 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemCount() {
         return itemCount;
+    }
+
+    public List<ExerciseMuscle> getExerciseMuscles() {
+        List<ExerciseMuscle> muscles = new ArrayList<>();
+        for (Integer idMuscle : selectedIdMuscle) {
+            muscles.add(new ExerciseMuscle(Long.valueOf(idMuscle)));
+        }
+
+        return muscles;
     }
 }

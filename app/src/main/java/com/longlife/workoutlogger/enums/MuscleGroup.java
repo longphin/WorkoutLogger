@@ -30,42 +30,42 @@ public class MuscleGroup {
         return groups;
     }
 
-    public static MuscleListHelper getMuscleGroup(Context context, int idMuscleGroup)
+    private static MuscleListHelper getMuscleGroup(Context context, int idMuscleGroup)
     {
         List<Muscle> muscles = new ArrayList<>();
 
         switch (idMuscleGroup) {
             case CHEST:
-                muscles.add(new Muscle(idMuscleGroup, Muscle.PEC_MAJOR, GetResource.getStringResource(context, R.string.MUSCLE_pec_major)));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.PEC_MAJOR));
                 break;
             case BACK:
-                muscles.add(new Muscle(idMuscleGroup, Muscle.TRAPS, GetResource.getStringResource(context, R.string.MUSCLE_traps)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.RHOMBOIDS, GetResource.getStringResource(context, R.string.MUSCLE_rhomboids)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.LATS, GetResource.getStringResource(context, R.string.MUSCLE_lats)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.LOWER_BACK, GetResource.getStringResource(context, R.string.MUSCLE_lower_back)));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.TRAPS));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.RHOMBOIDS));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.LATS));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.LOWER_BACK));
                 break;
             case ARMS:
-                muscles.add(new Muscle(idMuscleGroup, Muscle.BICEPS, GetResource.getStringResource(context, R.string.MUSCLE_biceps)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.BICEP_BRACHIALIS, GetResource.getStringResource(context, R.string.MUSCLE_bicep_brachialis)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.TRICEPS, GetResource.getStringResource(context, R.string.MUSCLE_triceps)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.FOREARMS, GetResource.getStringResource(context, R.string.MUSCLE_forearms)));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.BICEPS));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.BICEP_BRACHIALIS));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.TRICEPS));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.FOREARMS));
                 break;
             case SHOULDERS:
-                muscles.add(new Muscle(idMuscleGroup, Muscle.DELTOID_ANTERIOR, GetResource.getStringResource(context, R.string.MUSCLE_deltoid_anterior)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.DELTOID_LATERAL, GetResource.getStringResource(context, R.string.MUSCLE_deltoid_lateral)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.DELTOID_POSTERIOR, GetResource.getStringResource(context, R.string.MUSCLE_deltoid_posterior)));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.DELTOID_ANTERIOR));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.DELTOID_LATERAL));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.DELTOID_POSTERIOR));
                 break;
             case LEGS:
-                muscles.add(new Muscle(idMuscleGroup, Muscle.QUADS, GetResource.getStringResource(context, R.string.MUSCLE_quads)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.HAMSTRINGS, GetResource.getStringResource(context, R.string.MUSCLE_hamstrings)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.CALVES, GetResource.getStringResource(context, R.string.MUSCLE_calves)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.GLUTES, GetResource.getStringResource(context, R.string.MUSCLE_glutes)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.HIP_ABDUCTORS, GetResource.getStringResource(context, R.string.MUSCLE_hip_abductors)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.HIP_ADDUCTORS, GetResource.getStringResource(context, R.string.MUSCLE_hip_adductors)));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.QUADS));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.HAMSTRINGS));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.CALVES));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.GLUTES));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.HIP_ABDUCTORS));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.HIP_ADDUCTORS));
                 break;
             case CORE:
-                muscles.add(new Muscle(idMuscleGroup, Muscle.ABS, GetResource.getStringResource(context, R.string.MUSCLE_abs)));
-                muscles.add(new Muscle(idMuscleGroup, Muscle.OBLIQUES, GetResource.getStringResource(context, R.string.MUSCLE_obliques)));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.ABS));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.OBLIQUES));
                 break;
             default:
                 break;

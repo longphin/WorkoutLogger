@@ -10,6 +10,7 @@ import android.arch.persistence.room.Update;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
+import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
 
@@ -56,6 +57,7 @@ public abstract class ExerciseDao {
     public abstract Single<Exercise> getExerciseFromId(Long id);
 
     // Get a subset of columns from exercise that can be edited.
+    @Transaction
     @Query("SELECT idExercise, name, note FROM Exercise WHERE idExercise=:id")
     public abstract Single<ExerciseUpdated> getExerciseUpdatableFromId(Long id);
 
@@ -91,15 +93,22 @@ public abstract class ExerciseDao {
     @Update
     public abstract void updateExercise(Exercise ex);
 
-    // When inserting an exercise, save it into history and update it in the Exercise table. Returns the exercise with updated ids.
+    // Inserts an exercise. Returns the exercise with provided id.
     @Transaction
-    public Exercise insertExerciseFull(Exercise source) {
-        // Insert exercise
-        Long idSource = insertExercise(source);
-        source.setIdExercise(idSource);
+    public Exercise insertExerciseFull(Exercise ex, List<ExerciseMuscle> relatedMuscles) {
+        Long idExercise = insertExercise(ex);
+        ex.setIdExercise(idExercise);
 
-        return source;
+        for (ExerciseMuscle muscle : relatedMuscles) {
+            muscle.setIdExercise(idExercise);
+        }
+        insertExerciseMuscles(relatedMuscles);
+
+        return ex;
     }
+
+    @Insert
+    public abstract List<Long> insertExerciseMuscles(List<ExerciseMuscle> muscles);
 
     // Insert an exercise. Do not use directly. Instead, use insertExerciseFull(exercise) to insert a source exercise and a leaf copy.
     @Insert(onConflict = OnConflictStrategy.REPLACE)//OnConflictStrategy.ROLLBACK)

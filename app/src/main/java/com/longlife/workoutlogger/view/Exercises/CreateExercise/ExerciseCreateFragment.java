@@ -3,7 +3,6 @@ package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,10 +26,13 @@ import com.longlife.workoutlogger.data.Validator;
 import com.longlife.workoutlogger.enums.ExerciseType;
 import com.longlife.workoutlogger.enums.MuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
+import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.utils.Animation;
 import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -40,8 +42,6 @@ public class ExerciseCreateFragment
         extends Fragment
         implements AddNoteDialog.OnInputListener {
     public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
-    @Inject
-    public Context context; // application context
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     private ExercisesViewModel viewModel;
@@ -55,6 +55,7 @@ public class ExerciseCreateFragment
     private ImageView addNoteImage;
     private Spinner exerciseTypeSelector;
     private RecyclerView musclesList;
+    private MuscleListAdapter adapter;
 
     public static ExerciseCreateFragment newInstance() {
         return (new ExerciseCreateFragment());
@@ -69,9 +70,6 @@ public class ExerciseCreateFragment
                 .inject(this);
 
         viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
-
-        //viewModel.insertResponse().observe(this, response -> processInsertResponse(response));
-        //composite.add(viewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
     }
 
 
@@ -120,7 +118,7 @@ public class ExerciseCreateFragment
         musclesList.setLayoutManager(//new LinearLayoutManager(this.getActivity()));
                 new GridLayoutManager(this.getActivity(), MuscleListAdapter.NUMBER_OF_COLUMNS));
         // Adapter
-        MuscleListAdapter adapter = new MuscleListAdapter(MuscleGroup.getAllMuscleGroups(getActivity()));
+        adapter = new MuscleListAdapter(MuscleGroup.getAllMuscleGroups(getActivity()));
         musclesList.setAdapter(adapter);
     }
 
@@ -169,18 +167,19 @@ public class ExerciseCreateFragment
 
             if (isAdded()) {
                 this.name.startAnimation(Animation.shakeError());
-                Toast.makeText(context,
+                Toast.makeText(getContext(),
                         getResources().getString(R.string.requiredFieldsMissing),
                         Toast.LENGTH_SHORT
-                )
-                        .show();
+                ).show();
             }
             return;
         }
 
+        List<ExerciseMuscle> muscles = adapter.getExerciseMuscles();
+
         //viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
         // Insert the new exercise into Exercise.
-        viewModel.insertExercise(newExercise);
+        viewModel.insertExercise(newExercise, muscles);
 
         getActivity().onBackPressed();
     }
