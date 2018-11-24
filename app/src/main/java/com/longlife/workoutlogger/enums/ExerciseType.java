@@ -1,50 +1,34 @@
 package com.longlife.workoutlogger.enums;
 
+import android.content.Context;
+
+import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.utils.GetResource;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class ExerciseType {
     private static final int WEIGHT_AND_REP = 0;
-    private static final int BODYWEIGHT = 1;
+    private static final int REPS = 1;
+    private static final int DISTANCE_AND_TIME = 2;
+    private static final int DURATION = 3;
+    private static final int COUNTDOWN = 4;
 
     public ExerciseType() {
 
     }
 
-    public static int getDefault() {
-        return WEIGHT_AND_REP;
-    }
-
-    public static List<Type> getOptions(Locale locale) {
+    public static List<Type> getOptions(Context context) {
         List<Type> options = new ArrayList<>();
 
-        options.add(getUnit(WEIGHT_AND_REP, locale));
-        options.add(getUnit(BODYWEIGHT, locale));
+        options.add(new Type(WEIGHT_AND_REP, GetResource.getStringResource(context, R.string.EXERCISETYPE_weight_and_rep)));
+        options.add(new Type(REPS, GetResource.getStringResource(context, R.string.EXERCISETYPE_reps)));
+        options.add(new Type(DISTANCE_AND_TIME, GetResource.getStringResource(context, R.string.EXERCISETYPE_distance_and_time)));
+        options.add(new Type(DURATION, GetResource.getStringResource(context, R.string.EXERCISETYPE_duration)));
+        options.add(new Type(COUNTDOWN, GetResource.getStringResource(context, R.string.EXERCISETYPE_countdown)));
 
         return options;
-    }
-
-    private static Type getUnit(int weightType, Locale locale) {
-        if (weightType == WEIGHT_AND_REP) {
-            if (locale == Locale.US
-                    || locale == Locale.ENGLISH) {
-                return new Type(WEIGHT_AND_REP, "Weight + Reps");
-            }
-
-            return new Type(WEIGHT_AND_REP, "Weight + Reps");
-        }
-
-        if (weightType == BODYWEIGHT) {
-            if (locale == Locale.US
-                    || locale == Locale.ENGLISH) {
-                return new Type(BODYWEIGHT, "Bodyweight");
-            }
-
-            return new Type(BODYWEIGHT, "Bodyweight");
-        }
-
-        return new Type(-1, "error");
     }
 
     public static class Type {

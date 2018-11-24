@@ -32,8 +32,6 @@ import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
 
-import java.util.Locale;
-
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -110,7 +108,7 @@ public class ExerciseCreateFragment
 
     private void initializeExerciseTypeSelector() {
         exerciseTypeSelector = mView.findViewById(R.id.spinner_exercise_create_exercise_type);
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getActivity(), R.layout.weight_unit_spinner_item, ExerciseType.getOptions(Locale.US));
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getContext(), R.layout.weight_unit_spinner_item, ExerciseType.getOptions(getContext()));
         // Specify the layout to use when the list appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Attach the adapter.

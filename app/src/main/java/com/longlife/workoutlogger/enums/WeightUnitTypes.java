@@ -1,8 +1,12 @@
 package com.longlife.workoutlogger.enums;
 
+import android.content.Context;
+
+import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.utils.GetResource;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class WeightUnitTypes {
     private static final int LBS = 0;
@@ -16,35 +20,13 @@ public class WeightUnitTypes {
         return LBS;
     }
 
-    public static List<Unit> getOptions(Locale locale) {
+    public static List<Unit> getOptions(Context context) {
         List<Unit> options = new ArrayList<>();
 
-        options.add(getUnit(LBS, locale));
-        options.add(getUnit(KGS, locale));
+        options.add(new Unit(LBS, GetResource.getStringResource(context, R.string.WEIGHTUNIT_lbs)));
+        options.add(new Unit(KGS, GetResource.getStringResource(context, R.string.WEIGHTUNIT_kbs)));
 
         return options;
-    }
-
-    private static Unit getUnit(int weightType, Locale locale) {
-        if (weightType == LBS) {
-            if (locale == Locale.US
-                    || locale == Locale.ENGLISH) {
-                return new Unit(LBS, "lbs");
-            }
-
-            return new Unit(LBS, "lbs");
-        }
-
-        if (weightType == KGS) {
-            if (locale == Locale.US
-                    || locale == Locale.ENGLISH) {
-                return new Unit(KGS, "kgs");
-            }
-
-            return new Unit(KGS, "kgs");
-        }
-
-        return new Unit(-1, "error");
     }
 
     public static class Unit {

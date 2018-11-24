@@ -4,12 +4,9 @@ import android.app.Activity;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.os.ConfigurationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -63,19 +60,5 @@ public abstract class ActivityBase
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             view.clearFocus();
         }
-    }
-
-    // Get locale-dependent resources.
-    public Locale getCurrentLocale() {
-        /*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            return context.getResources().getConfiguration().getLocales().get(0);
-            // return LocaleList.getDefault().get(0);
-        } else{
-            //noinspection deprecation
-            return context.getResources().getConfiguration().locale;
-        }
-        */
-        return ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0);
     }
 }
