@@ -402,9 +402,12 @@ public class RoutineCreateFragment
             fragment = ExerciseEditFragment.newInstance(idExercise);
         }
 
+        /*
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
+        */
+        pushFragment(fragment);
     }
 
     @Override
@@ -441,9 +444,12 @@ public class RoutineCreateFragment
             fragment = ExercisesSelectableFragment.newInstance(R.id.root_main_activity, R.layout.fragment_routine_exercises);
         }
 
+        /*
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
+        */
+        pushFragment(fragment);
     }
 }
 

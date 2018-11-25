@@ -5,32 +5,29 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
-import com.longlife.workoutlogger.AndroidUtils.FragmentHistory;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.TimerNotificationService;
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
-import com.longlife.workoutlogger.view.Perform.PerformFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
-import com.ncapdevi.fragnav.FragNavController;
 
 import javax.inject.Inject;
 
@@ -38,9 +35,11 @@ import io.reactivex.observers.DisposableMaybeObserver;
 
 public class MainActivity
         extends ActivityBase
-        implements FragNavController.RootFragmentListener,
-        FragmentBase.FragmentNavigation,
-        FragNavController.TransactionListener {
+        implements
+        //FragNavController.RootFragmentListener,
+        FragmentBase.FragmentNavigation
+        //FragNavController.TransactionListener
+{
 
     private static final String TAG = MainActivity.class.getSimpleName();
     @Inject
@@ -50,9 +49,9 @@ public class MainActivity
     BroadcastReceiver restTimerReceiver;
 
     private ProfileViewModel profileViewModel;
-    private AHBottomNavigation bottomTabLayout;
-    private FragNavController mNavController;
-    private FragmentHistory fragmentHistory;
+    //private AHBottomNavigation bottomTabLayout;
+    //private FragNavController mNavController;
+    //private FragmentHistory fragmentHistory;
     private boolean enableBottomNavClick = true;
     private FrameLayout contentFrame;
     private Toolbar toolbar;
@@ -72,14 +71,15 @@ public class MainActivity
 
         // Get UI.
         contentFrame = findViewById(R.id.frameLayout_main_activity);
-        bottomTabLayout = findViewById(R.id.bottomNav_main_activity);
+        //bottomTabLayout = findViewById(R.id.bottomNav_main_activity);
 
         initToolbar();
 
         initBottomNavigation();
 
-        fragmentHistory = new FragmentHistory();
+        //fragmentHistory = new FragmentHistory();
 
+        /*
         mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.frameLayout_main_activity)
                 .transactionListener(this)
                 .rootFragmentListener(this, TABS.length)
@@ -88,6 +88,7 @@ public class MainActivity
         switchTab(0);
 
         setOnTabSelectedListener();
+        */
 
         restTimerReceiver = new BroadcastReceiver() {
             @Override
@@ -102,6 +103,7 @@ public class MainActivity
         };
     }
 
+    /*
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -109,6 +111,7 @@ public class MainActivity
             mNavController.onSaveInstanceState(outState);
         }
     }
+    */
 
     // Initialize user profile. If one does not exist in database, then one will be inserted.
     private void getProfile() {
@@ -145,6 +148,43 @@ public class MainActivity
     }
 
     private void initBottomNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNav_main_activity);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        Fragment selectedFragment = null;
+                        switch (item.getItemId()) {
+                            case R.id.bottom_nav_profile:
+                                selectedFragment = ProfileFragment.newInstance();
+                                break;
+                            case R.id.bottom_nav_routines:
+                                selectedFragment = RoutinesFragment.newInstance();
+                                break;
+                            case R.id.bottom_nav_exercises:
+                                selectedFragment = ExercisesFragment.newInstance(R.id.frameLayout_main_activity, R.layout.fragment_exercises);
+                                break;
+                            default:
+                                return false;
+                        }
+
+                        openFragment(selectedFragment);
+                        return true;
+                    }
+                }
+        );
+
+        // Default fragment when opening the app.
+        openFragment(ProfileFragment.newInstance());
+    }
+
+    private void openFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frameLayout_main_activity, fragment);
+        transaction.commit();
+    }
+    /*
+    private void initBottomNavigation() {
         if (bottomTabLayout == null)
             return;
 
@@ -165,7 +205,9 @@ public class MainActivity
         bottomTabLayout.setAccentColor(Color.BLACK);
         bottomTabLayout.setInactiveColor(Color.GRAY);
     }
+    */
 
+    /*
     private void switchTab(int position) {
         mNavController.switchTab(position);
         bottomTabLayout.enableItemAtPosition(position);
@@ -196,12 +238,14 @@ public class MainActivity
                 }
         );
     }
+    */
 
     // Methods
     private void processProfile(@NonNull Profile profile) {
         profileViewModel.setCachedProfile(profile);
     }
 
+    /*
     @Override
     public void onBackPressed() {
         if (!mNavController.isRootFragment()) {
@@ -223,10 +267,6 @@ public class MainActivity
 
                     hideKeyboard(this);
                 } else {
-					/*// When backtracking is finished, exit app.
-					super.onBackPressed();
-					*/
-
                     // Alternatively, we may want to go to the Home tab
                     switchTab(0);
 
@@ -239,14 +279,19 @@ public class MainActivity
             }
         }
     }
+    */
 
+    /*
     private void updateTabSelection(int currentTab) {
 
         enableBottomNavClick = false;
         bottomTabLayout.setCurrentItem(currentTab);
         enableBottomNavClick = true;
     }
+    */
 
+
+    /*
     @Override
     public Fragment getRootFragment(int index) {
         switch (index) {
@@ -261,14 +306,23 @@ public class MainActivity
         }
         throw new IllegalStateException("Need to send an index that we know");
     }
+    */
 
+    @Override
+    public void pushFragment(Fragment fragment) {
+        openFragment(fragment);
+    }
+
+    /*
     @Override
     public void pushFragment(Fragment fragment) {
         if (mNavController != null) {
             mNavController.pushFragment(fragment);
         }
     }
+    */
 
+    /*
     @Override
     public void onTabTransaction(Fragment fragment, int index) {
         // If we have a backstack, show the back button
@@ -276,7 +330,9 @@ public class MainActivity
             updateToolbar();
         }
     }
+    */
 
+    /*
     @Override
     public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
         //do fragmentty stuff. Maybe change title, I'm not going to tell you how to live your life
@@ -285,19 +341,22 @@ public class MainActivity
             updateToolbar();
         }
     }
+    */
 
+    /*
     private void updateToolbar() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(!mNavController.isRootFragment());
         getSupportActionBar().setDisplayShowHomeEnabled(!mNavController.isRootFragment());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
     }
+    */
 
-
-    //    private void updateToolbarTitle(int position){
-    //
     //
     //        getSupportActionBar().setTitle(TABS[position]);
     //
+    //
+    //    private void updateToolbarTitle(int position){
+
     //    }
 
     public void updateToolbarTitle(String title) {

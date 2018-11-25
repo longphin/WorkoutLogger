@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
@@ -32,8 +33,9 @@ import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragm
 import com.longlife.workoutlogger.view.Routines.EditRoutine.RoutineEditFragment;
 import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
 
-import javax.inject.Inject;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class RoutinesFragment
         extends FragmentBase
@@ -113,9 +115,12 @@ public class RoutinesFragment
 			.addToBackStack(RoutineCreateFragment.TAG)
 			.commit();*/
 
+        /*
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
+        */
+        pushFragment(fragment);
     }
 
     private void initializeRecyclerView() {
@@ -253,9 +258,12 @@ public class RoutinesFragment
             fragment = RoutineEditFragment.newInstance(idRoutine);
         }
 
+        /*
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
+        */
+        pushFragment(fragment);
     }
 }
 

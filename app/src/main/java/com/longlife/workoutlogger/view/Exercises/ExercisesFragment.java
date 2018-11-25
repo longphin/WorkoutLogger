@@ -91,7 +91,7 @@ public class ExercisesFragment
 
         initializeAdapter(getActivity());
 
-        addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadRoutineResponse(response)));
+        addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadExerciseResponse(response)));
         addDisposable(viewModel.getExerciseInsertedObservable().subscribe(exercise -> processExerciseInserted(exercise)));
         addDisposable(viewModel.getExerciseEditedObservable().subscribe(exercise -> processExerciseEdited(exercise)));
         addDisposable(viewModel.getExerciseLockedObservable().subscribe(exerciseLocked -> processExerciseLocked(exerciseLocked)));
@@ -134,16 +134,18 @@ public class ExercisesFragment
         super.onResume();
     }
 
-    protected void startCreateFragment() {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-
-        ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
-        if (fragment == null) {
-            fragment = ExerciseCreateFragment.newInstance();
-        }
-
-        if (fragmentNavigation != null) {
-            fragmentNavigation.pushFragment(fragment);
+    private void processLoadExerciseResponse(Response<List<ExerciseShort>> response) {
+        switch (response.getStatus()) {
+            case LOADING:
+                renderLoadExerciseState();
+                break;
+            case SUCCESS:
+                renderLoadExerciseSuccessState(response.getValue());
+                break;
+            case ERROR:
+                if (response.getError() != null)
+                    renderLoadExerciseErrorState(response.getError());
+                break;
         }
     }
 
@@ -162,20 +164,8 @@ public class ExercisesFragment
             adapter = new ExercisesAdapter(context, this);
     }
 
-    private void processLoadRoutineResponse(Response<List<ExerciseShort>> response) {
-        //if(!isAdded()) return;
-        switch (response.getStatus()) {
-            case LOADING:
-                renderLoadRoutineLoadState();
-                break;
-            case SUCCESS:
-                renderLoadRoutineSuccessState(response.getValue());
-                break;
-            case ERROR:
-                if (response.getError() != null)
-                    renderLoadRoutineErrorState(response.getError());
-                break;
-        }
+    private void renderLoadExerciseState() {
+        Log.d(TAG, "loading exercises");
     }
 
     private void processExerciseInserted(Exercise ex) {
@@ -187,34 +177,36 @@ public class ExercisesFragment
         adapter.exerciseLocked(exerciseLocked);
     }
 
-    private void renderLoadRoutineLoadState() {
-        Log.d(TAG, "loading exercises");
+    private void renderLoadExerciseSuccessState(List<ExerciseShort> exercises) {
+        Log.d(TAG, (isAdded() ? "attached) " : "detached) ") + String.valueOf(exercises == null ? 0 : exercises.size()));
+
+        if (exercises == null) return;
+        adapter.setExercises(exercises);
     }
 
     private void processExerciseEdited(ExerciseUpdated exercise) {
         adapter.exerciseUpdated(new ExerciseShort(exercise));
     }
 
-    private void renderLoadRoutineErrorState(@NonNull Throwable throwable) {
+    private void renderLoadExerciseErrorState(@NonNull Throwable throwable) {
         // change anything if loading data had an error.
         Log.d(TAG, throwable.getMessage());
     }
 
-    private void renderLoadRoutineSuccessState(List<ExerciseShort> exercises) {
-        StringBuilder sb = new StringBuilder();
-        if (isAdded())
-            sb.append("attached) ");
-        else
-            sb.append("detached) ");
-        sb.append(exercises == null ? 0 : exercises.size());
-        sb.append(" exercises obtained");
+    protected void startCreateFragment() {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
 
-        Log.d(TAG, sb.toString());
+        ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
+        if (fragment == null) {
+            fragment = ExerciseCreateFragment.newInstance();
+        }
 
-        if (exercises == null)
-            return;
-
-        adapter.setExercises(exercises);
+        /*
+        if (fragmentNavigation != null) {
+            fragmentNavigation.pushFragment(fragment);
+        }
+        */
+        pushFragment(fragment);
     }
 
     @Override
@@ -228,7 +220,7 @@ public class ExercisesFragment
     }
 
     @Override
-    public void exercisePerform(ExerciseShort ex) {//Long idExercise, String exerciseName) {
+    public void exercisePerform(ExerciseShort ex) {
         FragmentManager manager = getActivity().getSupportFragmentManager();
 
         PerformExerciseFragment fragment = (PerformExerciseFragment) manager.findFragmentByTag(PerformExerciseFragment.TAG);
@@ -236,9 +228,12 @@ public class ExercisesFragment
             fragment = PerformExerciseFragment.newInstance(ex);//idExercise, exerciseName);
         }
 
+        /*
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
+        */
+        pushFragment(fragment);
     }
 
     private void startEditFragment(Long idExercise) {
@@ -249,9 +244,12 @@ public class ExercisesFragment
             fragment = ExerciseEditFragment.newInstance(idExercise);
         }
 
+        /*
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
+        */
+        pushFragment(fragment);
     }
 
     @Override

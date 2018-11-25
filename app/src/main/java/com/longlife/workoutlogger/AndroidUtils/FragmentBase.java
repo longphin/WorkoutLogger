@@ -10,7 +10,7 @@ import io.reactivex.disposables.Disposable;
 public class FragmentBase
         extends Fragment {
     // Helps keep track of how many sub-fragments this fragment has.
-    protected FragmentNavigation fragmentNavigation;
+    //protected FragmentNavigation fragmentNavigation;
     // Holds onto observables until cleared.
     private CompositeDisposable composite = new CompositeDisposable();
 
@@ -19,9 +19,11 @@ public class FragmentBase
         super.onAttach(context);
 
         // Attach to an activity/fragment with navigation manager.
+        /*
         if (context instanceof FragmentNavigation) {
             fragmentNavigation = (FragmentNavigation) context;
         }
+        */
     }
 
     @Override
@@ -38,6 +40,12 @@ public class FragmentBase
     // Add disposable.
     public void addDisposable(Disposable d) {
         composite.add(d);
+    }
+
+    protected void pushFragment(Fragment fragment) {
+        if (getActivity() instanceof FragmentNavigation) {
+            ((FragmentNavigation) getActivity()).pushFragment(fragment);
+        }
     }
 
     // Interface to communicate from fragment to activity, so activity can add the fragment to the navigation manager.

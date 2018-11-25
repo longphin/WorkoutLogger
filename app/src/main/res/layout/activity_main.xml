@@ -34,12 +34,13 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+    <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNav_main_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:background="?android:attr/windowBackground"
-        app:layout_anchorGravity="bottom" />
+        app:layout_anchorGravity="bottom"
+        app:menu="@menu/bottom_nav_menu" />
 </RelativeLayout>

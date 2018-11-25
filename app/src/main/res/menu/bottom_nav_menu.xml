@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottom_nav_profile"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="@string/NavBar_Profile" />
+    <item
+        android:id="@+id/bottom_nav_exercises"
+        android:icon="@drawable/ic_weightlifting"
+        android:title="@string/NavBar_Exercises" />
+    <item
+        android:id="@+id/bottom_nav_routines"
+        android:icon="@drawable/ic_storage_black_24dp"
+        android:title="@string/NavBar_Routines" />
+</menu>
