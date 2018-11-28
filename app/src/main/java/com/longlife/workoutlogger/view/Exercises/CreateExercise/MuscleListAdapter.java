@@ -15,14 +15,21 @@ import java.util.List;
 import java.util.Set;
 
 public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int HEADER_TYPE = 0;
-    private static final int SET_TYPE = 1;
+    private static final int MUSCLE_GROUP_TYPE = 0;
+    private static final int MUSCLE_TYPE = 1;
     // Number of columns for the recyclerview to show.
     public static final int NUMBER_OF_COLUMNS = 2; // [TODO] This should be based on device's screen size, not a static number.
     private static final int FOOTER_PADDING_TYPE = 2;
     private static final int HEADER_PADDING_TYPE = 3;
     private static final String TAG = MuscleListAdapter.class.getSimpleName();
     private int itemCount;
+
+    public void onStop() {
+        data.clear();
+        data = null;
+        selectedIdMuscle.clear();
+        selectedIdMuscle = null;
+    }
 
     private List<MuscleListHelper> data;
     private Set<Integer> selectedIdMuscle = new HashSet<>(); // List of idMuscle for each muscle that is selected to be a part of the exercise.
@@ -58,10 +65,10 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         View v;
 
         switch (viewType) {
-            case HEADER_TYPE:
+            case MUSCLE_GROUP_TYPE:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_muscle_group, parent, false);
                 return new MuscleGroupListViewHolder(v);
-            case SET_TYPE:
+            case MUSCLE_TYPE:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_selectable_muscle, parent, false);
                 return new MuscleListViewHolder(v);
             case FOOTER_PADDING_TYPE:
@@ -214,11 +221,11 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             int headerPosition = item.getVisiblePosition();
             int headerPadding = item.getHeaderPadding();
 
-            if (headerPosition == position) return HEADER_TYPE;
+            if (headerPosition == position) return MUSCLE_GROUP_TYPE;
             if (item.isExpanded() && position > headerPosition) {
                 if (position <= headerPosition + headerPadding) return HEADER_PADDING_TYPE;
                 if (position <= headerPosition + headerPadding + item.getMuscles().size())
-                    return SET_TYPE;
+                    return MUSCLE_TYPE;
                 if (position <= headerPosition + headerPadding + item.getMuscles().size() + item.getFooterPadding())
                     return FOOTER_PADDING_TYPE;
             }

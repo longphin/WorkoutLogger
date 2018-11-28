@@ -12,6 +12,7 @@ import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
+import com.longlife.workoutlogger.model.WorkoutProgram;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public abstract class RoutineDao {
         Long idRoutine = insertRoutine(r);
         r.setIdRoutine(idRoutine);
 
-        // Insert routine session using the new routine history id.
+        // Insert routine session using the new routine id.
         RoutineSession routineSessionToAdd = new RoutineSession();
         routineSessionToAdd.setIdRoutine(idRoutine);
         Long idRoutineSession = insertRoutineSession(routineSessionToAdd);
@@ -77,7 +78,7 @@ public abstract class RoutineDao {
         return r;
     }
 
-    // Insert a session for an exercise.
+    // Insert a session for an exercise. i.e. performing an exercise outside of a routine.
     @Transaction
     public SessionExercise insertNewSessionForExercise(Long idExercise, String note) {
         // Insert new routine session.
@@ -97,6 +98,10 @@ public abstract class RoutineDao {
 
         return newSessionExercise;
     }
+
+    // Insert a workout plan.
+    @Insert(onConflict = OnConflictStrategy.FAIL)
+    public abstract Long insertWorkoutProgram(WorkoutProgram program);
 
     // Insert a session.
     @Insert(onConflict = OnConflictStrategy.REPLACE)

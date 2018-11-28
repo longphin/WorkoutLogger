@@ -96,6 +96,13 @@ public class AddNoteDialog
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        onInputListener = null;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

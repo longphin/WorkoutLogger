@@ -9,6 +9,7 @@ import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
+import com.longlife.workoutlogger.model.WorkoutProgram;
 
 /**
  * Created by Longphi on 1/5/2018.
@@ -23,7 +24,8 @@ import com.longlife.workoutlogger.model.SessionExerciseSet;
                         RoutineSession.class,
                         SessionExercise.class,
                         SessionExerciseSet.class,
-                        ExerciseMuscle.class
+                        ExerciseMuscle.class,
+                        WorkoutProgram.class
                 },
         version = DatabaseVersion.CURRENT
 )

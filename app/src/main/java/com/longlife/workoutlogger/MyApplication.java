@@ -16,18 +16,24 @@ import android.view.View;
 import com.longlife.workoutlogger.data.RoomModule;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.utils.JSONParser;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.io.File;
 
 /*
+[TODO] Allow users to create Workouts, which schedule routines by day or every "x" days.
+    [TODO] Allow users to activate/deactivate Workouts.
+    {TODO] Create planner and calendar to see upcoming routines. The listed routines will be based on the active Workouts.
+
 [TODO] Change how exercises are selected when creating a routine. Instead of opening another fragment, just have two recyclerviews side by side. Left side is for exercises in routine, right side is for entire list of exercises. Items from the right can be clicked on or dragged to the left side.
 [TODO] Allow search for exercises by name, category, muscle groups.
 
 [TODO] Allow rest timer to be stopped, reset, continued.
-[TODO] Allow users to create Workouts, which schedule routines by day or every "x" days.
-    [TODO] Allow users to activate/deactivate Workouts.
-    {TODO] Create planner and calendar to see upcoming routines. The listed routines will be based on the active Workouts.
 [TODO] Allow user to set target goals for each exercise.
+[TODO] optimize recyclerviews (including muscle list) by using a SparseIntArray headerExpandedTracker and SparseArray<ViewType> viewType
+    headerExpandedTracker.size() = data.size() and keeps track of which headers are expanded
+    viewType.size() = total number of views and keeps track of what view is in position i. ViewType{int headerIndex, int setIndex, int type (HEADER or SET or PADDING, etc)} where headerIndex = data[headerIndex] for the parent item and setIndex = data[headerIndex][setIndex] for the set item.
+[TODO] optimize images once thumbnails/images are added to the exercise. https://medium.freecodecamp.org/how-we-reduced-memory-footprint-by-50-in-our-android-app-49efa5c93ad8
 
 [TODO] Add user preference settings. - PreferenceFragments etc.
 [TODO] Create variations for exercises that users can swap in and out.
@@ -83,6 +89,13 @@ public class MyApplication
     @Override
     public void onCreate() {
         super.onCreate();
+        // install Canary to help detect memory leaks.
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
 
         component = DaggerMyApplicationComponent.builder()
                 .myApplicationModule(new MyApplicationModule(this))

@@ -40,6 +40,18 @@ public class ExerciseCreateFragment
         implements AddNoteDialog.OnInputListener {
     public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
 
+    @Override
+    public void onStop() {
+        musclesList.setAdapter(null);
+        adapter.onStop();
+        adapter = null;
+        mView = null;
+        cancelButton.setOnClickListener(null);
+        saveButton.setOnClickListener(null);
+        addNoteImage.setOnClickListener(null);
+        super.onStop();
+    }
+
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     protected ExercisesViewModel viewModel;

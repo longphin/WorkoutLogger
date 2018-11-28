@@ -206,6 +206,31 @@ public class MainActivity
     public void onBackPressed() {
         if (!mNavController.isRootFragment()) {
             mNavController.popFragment();
+
+            if (fragmentHistory.getStackSize() > 1) {
+
+                int position = fragmentHistory.popPrevious();
+
+                switchTab(position);
+
+                updateTabSelection(position);
+
+                hideKeyboard(this);
+            } else {
+					/*// When backtracking is finished, exit app.
+					super.onBackPressed();
+					*/
+
+                // Alternatively, we may want to go to the Home tab
+                switchTab(0);
+
+                updateTabSelection(0);
+
+                fragmentHistory.emptyStack();
+
+                hideKeyboard(this);
+            }
+
             hideKeyboard(this);
         } else {
 

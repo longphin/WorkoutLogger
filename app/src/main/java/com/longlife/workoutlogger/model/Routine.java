@@ -24,6 +24,16 @@ public class Routine {
     @NonNull
     private boolean hidden = false;
 
+    private Long idWorkoutProgram;
+
+    public Long getIdWorkoutProgram() {
+        return idWorkoutProgram;
+    }
+
+    public void setIdWorkoutProgram(Long idWorkoutProgram) {
+        this.idWorkoutProgram = idWorkoutProgram;
+    }
+
     public Routine() {
 
     }
