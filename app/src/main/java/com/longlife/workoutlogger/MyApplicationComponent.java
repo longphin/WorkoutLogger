@@ -7,6 +7,7 @@ import com.longlife.workoutlogger.data.RoomModule;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
+import com.longlife.workoutlogger.view.Exercises.ExercisesListFragment;
 import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableFragment;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragment;
@@ -40,7 +41,7 @@ public interface MyApplicationComponent {
 
     void inject(ExerciseEditFragment eef);
 
-    // [TODO] Can we just do void inject(FragmentBase fb)?
+    void inject(ExercisesListFragment elf);
 
     Repository repository();
 

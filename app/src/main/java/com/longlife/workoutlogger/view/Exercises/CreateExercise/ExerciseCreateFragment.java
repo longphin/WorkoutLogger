@@ -40,32 +40,52 @@ public class ExerciseCreateFragment
         implements AddNoteDialog.OnInputListener {
     public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
 
+    @Nullable
     @Override
-    public void onStop() {
-        musclesList.setAdapter(null);
-        adapter.onStop();
-        adapter = null;
-        mView = null;
-        cancelButton.setOnClickListener(null);
-        saveButton.setOnClickListener(null);
-        addNoteImage.setOnClickListener(null);
-        super.onStop();
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_exercise_create, container, false);
+
+            this.name = mView.findViewById(R.id.txt_exercise_create_name);
+            ImageView addNoteImage = mView.findViewById(R.id.imv_exercise_create_add_note);
+            Button cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
+            Button saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
+            initializeExerciseTypeSelector();
+            initializeMusclesList();
+
+            // On click listener for when canceling the exercise creation.
+            cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
+
+            // On click listener for when to save the exercise. It first checks for valid fields.
+            saveButton.setOnClickListener(view ->
+            {
+                if (saveButtonEnabled)
+                    checkFieldsBeforeInsert();
+            });
+
+            // On click listener for changing the exercise name and description. Opens up a dialog fragment for user to change the values.
+            addNoteImage.setOnClickListener(view ->
+            {
+                if (saveButtonEnabled) {
+                    AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);
+                    dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
+                }
+            });
+        }
+
+        initialToolbarTitle();
+        return (mView);
     }
 
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     protected ExercisesViewModel viewModel;
     protected EditText name;
-    //private TextView descrip;
     private String descrip;
-    private Button cancelButton;
-    private Button saveButton;
     protected Spinner exerciseTypeSelector;
-    private ImageView addNoteImage;
     protected MuscleListAdapter adapter;
     private RecyclerView musclesList;
     protected boolean saveButtonEnabled = true;
-    //private CompositeDisposable composite = new CompositeDisposable();
     private View mView;
 
     public static ExerciseCreateFragment newInstance() {
@@ -83,41 +103,20 @@ public class ExerciseCreateFragment
         viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_exercise_create, container, false);
-
-            this.name = mView.findViewById(R.id.txt_exercise_create_name);
-            this.addNoteImage = mView.findViewById(R.id.imv_exercise_create_add_note);
-            this.cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
-            this.saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
-            initializeExerciseTypeSelector();
-            initializeMusclesList();
-
-            // On click listener for when canceling the exercise creation.
-            cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
-
-            // On click listener for when to save the exercise. It first checks for valid fields.
-            saveButton.setOnClickListener(view ->
-            {
-                if (saveButtonEnabled)
-                    checkFieldsBeforeInsert();
-            });
-
-            // On click listener for changing the exercise name and description. Opens up a dialog fragment for user to change the values.
-            this.addNoteImage.setOnClickListener(view ->
-            {
-                if (saveButtonEnabled) {
-                    AddNoteDialog dialog = AddNoteDialog.newInstance(this.descrip);
-                    dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
-                }
-            });
+    public void onDestroyView() {
+        if (adapter != null) {
+            adapter = null;
         }
 
-        initialToolbarTitle();
-        return (mView);
+        if (musclesList != null) {
+            musclesList.setAdapter(null);
+            musclesList = null;
+        }
+        name = null;
+        exerciseTypeSelector = null;
+        mView = null;
+        super.onDestroyView();
     }
 
     private void initializeExerciseTypeSelector() {
@@ -172,7 +171,7 @@ public class ExerciseCreateFragment
     }
 
     protected void setExerciseTypeSelectorAdapter() {
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getContext(), R.layout.weight_unit_spinner_item, ExerciseType.getOptions(getContext()));
+        ArrayAdapter<ExerciseType.Type> adapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseType.getOptions(getContext()));
         // Specify the layout to use when the list appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Attach the adapter.

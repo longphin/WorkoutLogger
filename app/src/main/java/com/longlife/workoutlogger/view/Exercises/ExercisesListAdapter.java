@@ -18,12 +18,14 @@ import java.util.List;
 public abstract class ExercisesListAdapter
         extends RecyclerView.Adapter<ExercisesViewHolder> {
     protected List<ExerciseShort> exercises = new ArrayList<>();
-    protected IClickExercise exerciseClickCallback;
-    protected Context context;
+    private IClickExercise adapterCallback;
 
-    public ExercisesListAdapter(Context context, IClickExercise exerciseClickCallback) {
-        this.context = context;
-        this.exerciseClickCallback = exerciseClickCallback;
+    public ExercisesListAdapter(IClickExercise adapterCallback) {
+        setAdapterCallback(adapterCallback);
+    }
+
+    private void setAdapterCallback(IClickExercise adapterCallback) {
+        this.adapterCallback = adapterCallback;
     }
 
     @Override
@@ -59,7 +61,7 @@ public abstract class ExercisesListAdapter
         holder.getLockedIcon().setOnClickListener(view ->
                 {
                     final boolean newLockStatus = !ex.isLocked();
-                    exerciseClickCallback.exerciseLocked(ex.getIdExercise(), newLockStatus);
+                    adapterCallback.exerciseLocked(ex.getIdExercise(), newLockStatus);
 
                     if (newLockStatus) {
                         holder.setLockedIcon(R.drawable.ic_lock_black_24dp);
@@ -73,14 +75,14 @@ public abstract class ExercisesListAdapter
         holder.getNameTextView()
                 .setOnClickListener(view ->
                 {
-                    exerciseClickCallback.exerciseClicked(ex.getIdExercise());
+                    adapterCallback.exerciseClicked(ex.getIdExercise());
                 });
 
         // Create listener for the "more options" button. credit: Shaba Aafreen @https://stackoverflow.com/questions/37601346/create-options-menu-for-recyclerview-item
         if (holder.getMoreOptionsView() != null) {
             holder.getMoreOptionsView().setOnClickListener(view -> {
                 //creating a popup menu
-                PopupMenu popup = new PopupMenu(context, holder.getMoreOptionsView());
+                PopupMenu popup = new PopupMenu(adapterCallback.getContext(), holder.getMoreOptionsView());
                 //inflating menu from xml resource
                 popup.inflate(R.menu.exercise_options_menu);
                 //adding click listener
@@ -88,7 +90,7 @@ public abstract class ExercisesListAdapter
                     switch (item.getItemId()) {
                         case R.id.menu_exercise_options:
                             //handle menu1 click
-                            exerciseClickCallback.exercisePerform(ex);//ex.getIdExercise(), ex.getName());
+                            adapterCallback.exercisePerform(ex);//ex.getIdExercise(), ex.getName());
                             return true;
                         default:
                             return false;
@@ -113,7 +115,7 @@ public abstract class ExercisesListAdapter
         notifyDataSetChanged();
     }
 
-    public void exerciseUpdated(ExerciseShort updatedExercise) {
+    void exerciseUpdated(ExerciseShort updatedExercise) {
         final Long idExerciseEdited = updatedExercise.getIdExercise();
         // Find where in the adapter this exercise is and notify the change.
         for (int i = 0; i < exercises.size(); i++) {
@@ -125,7 +127,7 @@ public abstract class ExercisesListAdapter
         }
     }
 
-    public void exerciseLocked(ExerciseLocked exerciseLocked) {
+    void exerciseLocked(ExerciseLocked exerciseLocked) {
         final Long idExercise = exerciseLocked.getIdExercise();
         final boolean lockStatus = exerciseLocked.isLocked();
 
@@ -141,26 +143,31 @@ public abstract class ExercisesListAdapter
         return exercises.get(position);
     }
 
-    public void removeExercise(int position) {
+    void removeExercise(int position) {
         exercises.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void restoreExercise(ExerciseShort restoredItem, int restoredPosition) {
+    void restoreExercise(ExerciseShort restoredItem, int restoredPosition) {
         exercises.add(restoredPosition, restoredItem);
         notifyItemInserted(restoredPosition);
     }
 
-    public void addExercise(ExerciseShort ex) {
+    void addExercise(ExerciseShort ex) {
         exercises.add(ex);
         notifyItemInserted(exercises.size() - 1);
     }
 
-    public int getSwipeDirs(int adapterPosition) {
+    int getSwipeDirs(int adapterPosition) {
         if (exercises.get(adapterPosition).isLocked())
             return 0;
         else
             return ItemTouchHelper.RIGHT;
+    }
+
+    public void clearObjects() {
+        adapterCallback = null;
+        exercises = null;
     }
 
     // Interface for when an item is clicked. Should be implemented by the Activity/Fragment to start an edit fragment.
@@ -171,5 +178,7 @@ public abstract class ExercisesListAdapter
         void exerciseLocked(Long idExercise, boolean lockStatus);
 
         void exercisePerform(ExerciseShort ex);//Long idExercise, String exerciseName);
+
+        Context getContext();
     }
 }

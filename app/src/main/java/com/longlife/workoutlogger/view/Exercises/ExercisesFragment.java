@@ -3,12 +3,10 @@ package com.longlife.workoutlogger.view.Exercises;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -25,7 +23,6 @@ import android.view.ViewGroup;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
-import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
@@ -50,30 +47,16 @@ public class ExercisesFragment
     public static final String TAG = ExercisesFragment.class.getSimpleName();
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
-    @Inject
-    public Context context;
     protected View mView;
     protected ExercisesListAdapter adapter;
-    @Required
-    private int rootId; //This is the root of the layout from the parent activity. This is needed to determine how to attach the child ExercisesCreateFragment when opened to create a new exercise.
     private ExercisesViewModel viewModel;
-    @Required
-    private int layoutId;
     private RecyclerView recyclerView;
-    private ConstraintLayout viewRootLayout; // layout for recycler view
     // Input constants.
     protected static final String INPUT_ACTIVITY_ROOT = "activityRoot";
     protected static final String INPUT_EXERCISE_ITEM_LAYOUT = "exerciseItemLayout";
 
-    public static ExercisesFragment newInstance(int activityRoot, int exerciseItemLayout) {
-        ExercisesFragment fragment = new ExercisesFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(ExercisesFragment.INPUT_ACTIVITY_ROOT, activityRoot);
-        bundle.putInt(ExercisesFragment.INPUT_EXERCISE_ITEM_LAYOUT, exerciseItemLayout);
-        fragment.setArguments(bundle);
-
-        return fragment;
+    public static ExercisesFragment newInstance() {
+        return (new ExercisesFragment());
     }
 
     @Override
@@ -85,23 +68,23 @@ public class ExercisesFragment
                 .inject(this);
 
         viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
-
-        this.rootId = getArguments().getInt(ExercisesFragment.INPUT_ACTIVITY_ROOT);
-        this.layoutId = getArguments().getInt(ExercisesFragment.INPUT_EXERCISE_ITEM_LAYOUT);
-
-        initializeAdapter(getActivity());
-
-        addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadRoutineResponse(response)));
+        initializeAdapter();
+        //addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadExercises(response)));
         addDisposable(viewModel.getExerciseInsertedObservable().subscribe(exercise -> processExerciseInserted(exercise)));
         addDisposable(viewModel.getExerciseEditedObservable().subscribe(exercise -> processExerciseEdited(exercise)));
         addDisposable(viewModel.getExerciseLockedObservable().subscribe(exerciseLocked -> processExerciseLocked(exerciseLocked)));
         addDisposable(viewModel.getExerciseRestoredObservable().subscribe(exerciseDeleted -> {
-            if (isAdded())
+            if (isAdded()) {
                 // If this fragment is currently active, then the adapter needs to re-add the exercise and notify the insert.
-                adapter.restoreExercise(exerciseDeleted.getExercise(), exerciseDeleted.getPosition());
-            else
+                if (adapter != null) {
+                    adapter.restoreExercise(exerciseDeleted.getExercise(), exerciseDeleted.getPosition());
+                }
+            } else {
                 // If this fragment is not currently active but is listening, then the adapter just needs to notify that the item was changed.
-                adapter.notifyItemChanged(exerciseDeleted.getPosition());
+                if (adapter != null) {
+                    adapter.notifyItemChanged(exerciseDeleted.getPosition());
+                }
+            }
         }));
 
         Log.d(TAG, "OnCreate: loadExercises()");
@@ -112,13 +95,12 @@ public class ExercisesFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(layoutId, container, false);
+            mView = inflater.inflate(getLayoutId(), container, false);
 
             recyclerView = mView.findViewById(R.id.rv_exercises);
-            viewRootLayout = mView.findViewById(R.id.exercises_overview_layout);
 
-            FloatingActionButton btn_addRoutine = mView.findViewById(R.id.btn_addExercise);
-            btn_addRoutine.setOnClickListener(view -> startCreateFragment());
+            FloatingActionButton btn_addExercise = mView.findViewById(R.id.btn_addExercise);
+            btn_addExercise.setOnClickListener(view -> startCreateFragment());
 
             initializeRecyclerView();
         }
@@ -128,10 +110,26 @@ public class ExercisesFragment
         return mView;
     }
 
-
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onDestroyView() {
+        viewModelFactory = null;
+        viewModel = null;
+        if (recyclerView != null) {
+            recyclerView.setAdapter(null);
+            recyclerView.removeAllViews();
+            recyclerView = null;
+        }
+
+        if (adapter != null) {
+            adapter.clearObjects();
+            adapter = null;
+        }
+        mView = null;
+        super.onDestroyView();
+    }
+
+    protected int getLayoutId() {
+        return R.layout.fragment_exercises;
     }
 
     protected void startCreateFragment() {
@@ -148,21 +146,23 @@ public class ExercisesFragment
     }
 
     public void initializeRecyclerView() {
+        initializeAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
     }
 
-    protected void initializeAdapter(Context context) {
-        if (adapter == null)
-            adapter = new ExercisesAdapter(context, this);
+    protected void initializeAdapter() {
+        if (adapter == null) {
+            adapter = new ExercisesAdapter(this);
+        }
     }
 
-    private void processLoadRoutineResponse(Response<List<ExerciseShort>> response) {
+    private void processLoadExercises(Response<List<ExerciseShort>> response) {
         //if(!isAdded()) return;
         switch (response.getStatus()) {
             case LOADING:
@@ -279,7 +279,8 @@ public class ExercisesFragment
                 adapter.removeExercise(position);
 
             Snackbar snackbar = Snackbar
-                    .make(viewRootLayout, deletedItem.getName() + " deleted.", Snackbar.LENGTH_LONG);
+                    .make(mView.findViewById(R.id.exercises_overview_layout)//viewRootLayout
+                            , deletedItem.getName() + " deleted.", Snackbar.LENGTH_LONG);
             snackbar.setAction("UNDO", view -> {
             });
             snackbar.addCallback(new Snackbar.Callback() {

@@ -305,7 +305,7 @@ public class PerformSetDialog extends DialogBase
     private void initializeWeightSelector(View mView) {
         spinner = mView.findViewById(R.id.spinner_perform_exercise_units);
         // Selectable values.
-        ArrayAdapter adapter = new ArrayAdapter(getContext(), R.layout.weight_unit_spinner_item, WeightUnitTypes.getOptions(getContext()));
+        ArrayAdapter<WeightUnitTypes.Unit> adapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, WeightUnitTypes.getOptions(getContext()));
         // Specify the layout to use when the list appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner.

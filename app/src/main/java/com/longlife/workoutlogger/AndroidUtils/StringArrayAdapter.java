@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.TextView;
+
 import com.longlife.workoutlogger.R;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
 
 // String Adapter for a list of strings. The search functionality is not case-sensitive.
 public class StringArrayAdapter
-        extends ArrayAdapter {
+        extends ArrayAdapter<String> {
     // List of strings to search through, which will be filtered.
     private List<String> dataList;
     // Context.

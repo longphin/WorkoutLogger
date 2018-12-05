@@ -6,6 +6,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.R;
 
@@ -41,21 +42,20 @@ public class ExercisesViewHolder
         return viewForeground;
     }
 
-
-    public ImageView getLockedIcon() {
+    ImageView getLockedIcon() {
         return lockedIcon;
     }
 
 
-    public void setLockedIcon(int icon) {
+    void setLockedIcon(int icon) {
         lockedIcon.setImageResource(icon);
     }
 
-    public View getMoreOptionsView() {
+    View getMoreOptionsView() {
         return moreOptions;
     }
 
-    public TextView getNameTextView() {
+    TextView getNameTextView() {
         return name;
     }
 
@@ -67,11 +67,11 @@ public class ExercisesViewHolder
         this.selectedCheckBox.setChecked(b);
     }
 
-    public void setNameText(String s) {
+    void setNameText(String s) {
         this.name.setText(s);
     }
 
-    public void setDescripText(String s) {
+    void setDescripText(String s) {
         this.descrip.setText(s);
     }
 }

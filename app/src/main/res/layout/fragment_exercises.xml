@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/exercises_overview_layout"
-    tools:context=".view.Exercises.ExercisesFragment">
+    tools:context=".view.Exercises.ExercisesListFragment">
 
     <!--
     <include

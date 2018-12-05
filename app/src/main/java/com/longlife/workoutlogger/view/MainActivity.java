@@ -26,7 +26,7 @@ import com.longlife.workoutlogger.TimerNotificationService;
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
-import com.longlife.workoutlogger.view.Perform.PerformFragment;
+import com.longlife.workoutlogger.view.Exercises.ExercisesListFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
@@ -206,31 +206,6 @@ public class MainActivity
     public void onBackPressed() {
         if (!mNavController.isRootFragment()) {
             mNavController.popFragment();
-
-            if (fragmentHistory.getStackSize() > 1) {
-
-                int position = fragmentHistory.popPrevious();
-
-                switchTab(position);
-
-                updateTabSelection(position);
-
-                hideKeyboard(this);
-            } else {
-					/*// When backtracking is finished, exit app.
-					super.onBackPressed();
-					*/
-
-                // Alternatively, we may want to go to the Home tab
-                switchTab(0);
-
-                updateTabSelection(0);
-
-                fragmentHistory.emptyStack();
-
-                hideKeyboard(this);
-            }
-
             hideKeyboard(this);
         } else {
 
@@ -280,9 +255,11 @@ public class MainActivity
             case FragNavController.TAB2:
                 return RoutinesFragment.newInstance();
             case FragNavController.TAB3:
-                return ExercisesFragment.newInstance(R.id.frameLayout_main_activity, R.layout.fragment_exercises);
+                return ExercisesListFragment.newInstance();
+            //return ExercisesFragment.newInstance();//R.id.frameLayout_main_activity, R.layout.fragment_exercises);
             case FragNavController.TAB4:
-                return PerformFragment.newInstance();
+                //return PerformFragment.newInstance();
+                return ExercisesFragment.newInstance();
         }
         throw new IllegalStateException("Need to send an index that we know");
     }

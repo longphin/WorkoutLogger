@@ -2,10 +2,8 @@ package com.longlife.workoutlogger.view.Exercises;
 
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.longlife.workoutlogger.data.Repository;
-import com.longlife.workoutlogger.enums.Status;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseLocked;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
@@ -13,9 +11,9 @@ import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
-import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Exercises.Helper.DeletedExercise;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -24,11 +22,9 @@ import java.util.Set;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
@@ -38,17 +34,18 @@ public class ExercisesViewModel
 
     private final static String TAG = ExercisesViewModel.class.getSimpleName();
 
+    // Observable for when list of all exercises is obtained.
+    private final PublishSubject<List<ExerciseShort>> exerciseListObservable = PublishSubject.create();
     // Observable for when an exercise is inserted.
     private final PublishSubject<Exercise> exerciseInsertedObservable = PublishSubject.create();
     // Observable for when requesting list of all exercises.
-    private final Response<List<ExerciseShort>> loadExercisesResponse = new Response<>();
+    //private final Response<List<ExerciseShort>> loadExercisesResponse = new Response<>();
     // Observable for when an exercise was locked.
     private final PublishSubject<ExerciseLocked> exerciseLockedObservable = PublishSubject.create();
     // Observable for when an exercise is edited.
     private final PublishSubject<ExerciseUpdated> exerciseEditedObservable = PublishSubject.create();
     // Observable for when an exercise is unhidden.
     private final PublishSubject<DeletedExercise> exerciseRestoredObservable = PublishSubject.create();
-    private final CompositeDisposable disposables = new CompositeDisposable();
     private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
     private Repository repo;
 
@@ -57,18 +54,13 @@ public class ExercisesViewModel
         this.repo = repo;
     }
 
-
-    @Override
-    public void onCleared() {
-        super.onCleared();
-        disposables.clear();
-    }
-
     public Maybe<SessionExercise> getLatestExerciseSession(Long idExercise) {
         return repo.getLatestExerciseSession(idExercise)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    private ExercisesCache cachedExercises;
 
     public PublishSubject<ExerciseUpdated> getExerciseEditedObservable() {
         return exerciseEditedObservable;
@@ -90,9 +82,9 @@ public class ExercisesViewModel
         return exercisesToDelete.poll();
     }
 
-    public Observable<Response<List<ExerciseShort>>> getLoadExercisesResponse() {
+ /*   public Observable<Response<List<ExerciseShort>>> getLoadExercisesResponse() {
         return loadExercisesResponse.getObservable();
-    }
+    }*/
 
     public Single<ExerciseSessionWithSets> getSessionExerciseWithSets(Long idSessionExercise) {
         return repo.getSessionExerciseWithSets(idSessionExercise)
@@ -119,29 +111,37 @@ public class ExercisesViewModel
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void loadExercises() {
-        Log.d(TAG, "loadExercises()");
-        if (loadExercisesResponse.getStatus() == Status.LOADING)
-            return;
+    public PublishSubject<List<ExerciseShort>> getExerciseListObservable() {
+        return exerciseListObservable;
+    }
 
-        disposables.add(repo.getExerciseShort()
+    public void loadExercises() {
+        if (cachedExercises == null) cachedExercises = new ExercisesCache();
+        if (!cachedExercises.needsUpdating()) {
+            exerciseListObservable.onNext(cachedExercises.getExercises());
+            return;
+        }
+
+        repo.getExerciseShort()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(__ -> {
-                    Log.d(TAG, "loading exercises: loading... ");
-                    loadExercisesResponse.setLoading();
-                })
-                .subscribe((List<ExerciseShort> ex) -> {
-                            Log.d(TAG, "loading exercises: success... ");
-                            loadExercisesResponse.setSuccess(ex);
-                        },
-                        throwable ->
-                        {
-                            Log.d(TAG, "loading exercises: error... ");
-                            loadExercisesResponse.setError(throwable);
-                        }
-                )
-        );
+                .subscribe(new SingleObserver<List<ExerciseShort>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<ExerciseShort> exercises) {
+                        cachedExercises.setExercises(exercises);
+                        exerciseListObservable.onNext(exercises);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     public void updateLockedStatus(Long idExercise, boolean lockedStatus) {
@@ -156,6 +156,7 @@ public class ExercisesViewModel
 
                     @Override
                     public void onComplete() {
+                        cachedExercises.updateLockStatus(idExercise, lockedStatus);
                         exerciseLockedObservable.onNext(new ExerciseLocked(idExercise, lockedStatus));
                     }
 
@@ -178,6 +179,7 @@ public class ExercisesViewModel
 
                                @Override
                                public void onSuccess(Exercise exercise) {
+                                   cachedExercises.needsUpdating(true);
                                    exerciseInsertedObservable.onNext(exercise);
                                }
 
@@ -187,6 +189,29 @@ public class ExercisesViewModel
                                }
                            }
                 );
+    }
+
+    public void updateExerciseShort(ExerciseUpdated exercise, Set<ExerciseMuscle> relatedMuscles, Set<ExerciseMuscle> musclesToDelete) {
+        Completable.fromAction(() -> repo.updateExercise(exercise, relatedMuscles, musclesToDelete))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        cachedExercises.updateExercise(exercise);
+                        exerciseEditedObservable.onNext(exercise);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     public void restoreExercise(DeletedExercise deletedExercise) {
@@ -221,25 +246,50 @@ public class ExercisesViewModel
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void updateExerciseShort(ExerciseUpdated exercise, Set<ExerciseMuscle> relatedMuscles, Set<ExerciseMuscle> musclesToDelete) {
-        Completable.fromAction(() -> repo.updateExercise(exercise, relatedMuscles, musclesToDelete))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+    private class ExercisesCache {
+        private List<ExerciseShort> exercises = new ArrayList<>();
+        private boolean needsUpdating = true;
 
-                    }
+        public ExercisesCache() {
+        }
 
-                    @Override
-                    public void onComplete() {
-                        exerciseEditedObservable.onNext(exercise);
-                    }
+        public ExercisesCache(List<ExerciseShort> exercises) {
+            this.exercises = exercises;
+            needsUpdating = false;
+        }
 
-                    @Override
-                    public void onError(Throwable e) {
+        public List<ExerciseShort> getExercises() {
+            return exercises;
+        }
 
-                    }
-                });
+        public void setExercises(List<ExerciseShort> exercises) {
+            this.exercises = exercises;
+            needsUpdating = false;
+        }
+
+        public boolean needsUpdating() {
+            return needsUpdating;
+        }
+
+        public void needsUpdating(boolean needsUpdating) {
+            this.needsUpdating = needsUpdating;
+        }
+
+        public void updateExercise(ExerciseUpdated updatedExercise) {
+            final Long id = updatedExercise.getIdExercise();
+            for (ExerciseShort ex : exercises) {
+                if (ex.getIdExercise().equals(id)) {
+                    ex.update(updatedExercise);
+                }
+            }
+        }
+
+        public void updateLockStatus(Long idExercise, boolean lockedStatus) {
+            for (ExerciseShort ex : exercises) {
+                if (ex.getIdExercise().equals(idExercise)) {
+                    ex.setLocked(lockedStatus);
+                }
+            }
+        }
     }
 }

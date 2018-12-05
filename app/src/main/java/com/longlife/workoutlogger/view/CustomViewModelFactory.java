@@ -3,6 +3,7 @@ package com.longlife.workoutlogger.view;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
+
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
@@ -20,7 +21,6 @@ public class CustomViewModelFactory
     public CustomViewModelFactory(Repository repo) {
         this.repo = repo;
     }
-
 
     @NonNull
     @Override

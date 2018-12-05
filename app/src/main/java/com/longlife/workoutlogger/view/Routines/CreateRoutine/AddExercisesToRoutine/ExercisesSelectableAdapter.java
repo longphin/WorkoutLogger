@@ -1,6 +1,5 @@
 package com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +16,8 @@ public class ExercisesSelectableAdapter
     private final static String TAG = ExercisesSelectableAdapter.class.getSimpleName();
     private IExercisesSelectableAdapterCallback exercisesSelectableCallback;
 
-    public ExercisesSelectableAdapter(Context context, IClickExercise clickExerciseCallback, IExercisesSelectableAdapterCallback selectableAdapterCallback) {
-        super(context, clickExerciseCallback);
+    public ExercisesSelectableAdapter(IClickExercise clickExerciseCallback, IExercisesSelectableAdapterCallback selectableAdapterCallback) {
+        super(clickExerciseCallback);
         this.exercisesSelectableCallback = selectableAdapterCallback;
     }
 

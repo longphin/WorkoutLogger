@@ -80,7 +80,7 @@ public class ExerciseEditFragment extends ExerciseCreateFragment {
     private void setExerciseTypeSelectorAdapterAfterDataProcessed() {
         // Because the editting exercise cannot have its exercise type edited, we only need to get a single item for the adapter.
         // Also, disable selection.
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getContext(), R.layout.weight_unit_spinner_item, ExerciseType.getOptionsListWithOneItemOnly(getContext(), exercise.getExerciseType()));//ExerciseType.getOptions(getContext()));
+        ArrayAdapter<ExerciseType.Type> adapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseType.getOptionsListWithOneItemOnly(getContext(), exercise.getExerciseType()));//ExerciseType.getOptions(getContext()));
         // Specify the layout to use when the list appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         exerciseTypeSelector.setEnabled(false);

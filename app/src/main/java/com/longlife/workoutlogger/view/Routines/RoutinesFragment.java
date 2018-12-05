@@ -3,7 +3,6 @@ package com.longlife.workoutlogger.view.Routines;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
@@ -32,8 +32,9 @@ import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragm
 import com.longlife.workoutlogger.view.Routines.EditRoutine.RoutineEditFragment;
 import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
 
-import javax.inject.Inject;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class RoutinesFragment
         extends FragmentBase
@@ -41,14 +42,18 @@ public class RoutinesFragment
         RoutinesAdapter.IClickRoutine {
     public static final String TAG = RoutinesFragment.class.getSimpleName();
     @Inject
-    public Context context;
-    @Inject
     public ViewModelProvider.Factory viewModelFactory;
     private RoutinesViewModel viewModel;
     private RecyclerView recyclerView;
     private RoutinesAdapter adapter;
     private View mView;
     private ConstraintLayout viewRootLayout; // layout for recycler view
+
+    @Override
+    public void onDestroyView() {
+        recyclerView.removeAllViews();
+        super.onDestroyView();
+    }
 
     public RoutinesFragment() {
 
@@ -123,7 +128,7 @@ public class RoutinesFragment
         adapter = new RoutinesAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
