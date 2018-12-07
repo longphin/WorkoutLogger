@@ -11,8 +11,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,6 +26,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
+import com.longlife.workoutlogger.view.MainActivity;
 
 import java.util.List;
 
@@ -40,6 +45,68 @@ public class ExercisesListFragment extends FragmentBase {
         // Required empty public constructor
     }
 
+    private SearchView searchView;
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+
+        if (inflater != null) {
+            inflater.inflate(R.menu.exercises_search_menu, menu);
+            MenuItem item = menu.findItem(R.id.exercises_list_searchview);
+            searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            item.setActionView(searchView);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    if (adapter != null) {
+                        adapter.filter(ExercisesListRemakeAdapter.FILTER_BY_NAME, query);
+                        return true;
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (adapter != null) {
+                        adapter.filter(ExercisesListRemakeAdapter.FILTER_BY_NAME, newText);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            searchView.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+
+                                              }
+                                          }
+            );
+        }
+    }
+
+
+
+    /* [TODO] if we want to add more items to action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    */
+
     public static ExercisesListFragment newInstance() {
         return new ExercisesListFragment();
     }
@@ -55,6 +122,7 @@ public class ExercisesListFragment extends FragmentBase {
         addDisposable(viewModel.getExerciseInsertedObservable().subscribe(exercise -> processExerciseInserted(exercise)));
 
         initializeObservers();
+        setHasOptionsMenu(true);
     }
 
     private void processExerciseInserted(Exercise ex) {
@@ -102,8 +170,15 @@ public class ExercisesListFragment extends FragmentBase {
             recyclerView = null;
         }
 
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(null);
+            searchView.setOnClickListener(null);
+            searchView = null;
+        }
+
         needsToLoadData = true;
         //clearDisposables();
+
         super.onDestroyView();
     }
 

@@ -30,9 +30,7 @@ import java.io.File;
 
 [TODO] Allow rest timer to be stopped, reset, continued.
 [TODO] Allow user to set target goals for each exercise.
-[TODO] optimize recyclerviews (including muscle list) by using a SparseIntArray headerExpandedTracker and SparseArray<ViewType> viewType
-    headerExpandedTracker.size() = data.size() and keeps track of which headers are expanded
-    viewType.size() = total number of views and keeps track of what view is in position i. ViewType{int headerIndex, int setIndex, int type (HEADER or SET or PADDING, etc)} where headerIndex = data[headerIndex] for the parent item and setIndex = data[headerIndex][setIndex] for the set item.
+[TODO] optimize recyclerviews
 [TODO] optimize images once thumbnails/images are added to the exercise. https://medium.freecodecamp.org/how-we-reduced-memory-footprint-by-50-in-our-android-app-49efa5c93ad8
 
 [TODO] Add user preference settings. - PreferenceFragments etc.

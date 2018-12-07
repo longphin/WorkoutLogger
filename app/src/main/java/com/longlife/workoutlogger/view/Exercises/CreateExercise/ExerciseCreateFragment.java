@@ -40,6 +40,8 @@ public class ExerciseCreateFragment
         implements AddNoteDialog.OnInputListener {
     public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
 
+    private Button saveButton;
+    private ImageView addNoteImage;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,9 +49,9 @@ public class ExerciseCreateFragment
             mView = inflater.inflate(R.layout.fragment_exercise_create, container, false);
 
             this.name = mView.findViewById(R.id.txt_exercise_create_name);
-            ImageView addNoteImage = mView.findViewById(R.id.imv_exercise_create_add_note);
+            addNoteImage = mView.findViewById(R.id.imv_exercise_create_add_note);
             Button cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
-            Button saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
+            saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
             initializeExerciseTypeSelector();
             initializeMusclesList();
 
@@ -113,9 +115,18 @@ public class ExerciseCreateFragment
             musclesList.setAdapter(null);
             musclesList = null;
         }
+
+        if (exerciseTypeSelector != null) {
+            exerciseTypeSelector.setAdapter(null);
+            exerciseTypeSelector = null;
+        }
+
         name = null;
-        exerciseTypeSelector = null;
         mView = null;
+        saveButton.setOnClickListener(null);
+        saveButton = null;
+        addNoteImage.setOnClickListener(null);
+        addNoteImage = null;
         super.onDestroyView();
     }
 

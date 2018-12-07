@@ -19,9 +19,18 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
     private static final int HEADER_TYPE = 0;
     private static final int EXERCISE_TYPE = 1;
     private List<IViewItem> data = new ArrayList<>();
+    static final int FILTER_BY_NAME = 0;
     private Set<String> headers = new HashSet<>();
+    private List<ExerciseShort> originalData;
 
     public ExercisesListRemakeAdapter(List<ExerciseShort> exercises) {
+        originalData = exercises;
+        setData(exercises);
+    }
+
+    private void setData(List<ExerciseShort> exercises) {
+        data.clear();
+        headers.clear();
         //Set<String> headers = new HashSet<>(); // A temporary set to keep track of which headers to create.
         for (int i = 0; i < exercises.size(); i++) // [TODO] Make this an async task.
         {
@@ -30,22 +39,32 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
             String name = ex.getName();
             String headerCategory = name.substring(0, Math.min(1, name.length()));
             headers.add(headerCategory);//new headerItem(headerCategory, headerCategory));
-            data.add(new exerciseItem(headerCategory, i, ex));
+            //data.add(new exerciseItem(headerCategory, ex));
+            addItem(new exerciseItem(headerCategory, ex));
         }
         // Include headers
         for (String s : headers) {
-            data.add(new headerItem(s, s));
+            //data.add(new headerItem(s, s));
+            addItem(new headerItem(s, s));
         }
 
         // Sort data.
         Collections.sort(data);
     }
 
+    private void addItem(IViewItem item) {
+        data.add(item);
+    }
+
     // When inserting an exercise, split the data into two to see which chunk the new exercise should be inserted.
-    public void addExercise(ExerciseShort exerciseShort) { // [TODO] not yet correct.
+    public void addExercise(ExerciseShort exerciseShort) {
+        // Add the exercise to the data list.
+        originalData.add(exerciseShort);
+
+        // Add the item to the view list.
         String name = exerciseShort.getName();
         String category = name.substring(0, Math.min(1, name.length()));
-        IViewItem itemToAdd = new exerciseItem(category, 0, exerciseShort);
+        IViewItem itemToAdd = new exerciseItem(category, exerciseShort);
 
         //Set<String> headers = new HashSet<>(); // A temporary set to keep track of which headers to create.
         int lowerbound = 0;
@@ -68,32 +87,41 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         if (itemToAdd.compareTo(lowerItem) < 0) {
             if (!headers.contains(category)) {
                 headers.add(category);
-                data.add(lowerbound, new headerItem(category, category));
-                data.add(lowerbound + 1, new exerciseItem(category, lowerbound, exerciseShort));
+                //data.add(lowerbound, new headerItem(category, category));
+                //data.add(lowerbound + 1, new exerciseItem(category, exerciseShort));
+                addItem(lowerbound, new headerItem(category, category));
+                addItem(lowerbound + 1, new exerciseItem(category, exerciseShort));
                 notifyItemRangeInserted(lowerbound, 2);
             } else {
-                data.add(lowerbound, new exerciseItem(category, lowerbound, exerciseShort));
+                //data.add(lowerbound, new exerciseItem(category, exerciseShort));
+                addItem(lowerbound, new exerciseItem(category, exerciseShort));
                 notifyItemInserted(lowerbound);
             }
             //} else if (category.compareTo(upperItem.category()) >= 0 && name.compareTo(upperItem.toString()) > 0){ // THe item is the highest item.
         } else if (itemToAdd.compareTo(upperItem) > 0) {
             if (!headers.contains(category)) {
                 headers.add(category);
-                data.add(upperbound + 1, new headerItem(category, category));
-                data.add(upperbound + 2, new exerciseItem(category, upperbound + 2, exerciseShort));
+                //data.add(upperbound + 1, new headerItem(category, category));
+                //data.add(upperbound + 2, new exerciseItem(category, exerciseShort));
+                addItem(upperbound + 1, new headerItem(category, category));
+                addItem(upperbound + 2, new exerciseItem(category, exerciseShort));
                 notifyItemRangeInserted(upperbound + 1, 2);
             } else {
-                data.add(upperbound + 1, new exerciseItem(category, upperbound + 1, exerciseShort));
+                //data.add(upperbound + 1, new exerciseItem(category, exerciseShort));
+                addItem(upperbound + 1, new exerciseItem(category, exerciseShort));
                 notifyItemInserted(upperbound + 1);
             }
         } else { // The item is the middle.
             if (!headers.contains(category)) {
                 headers.add(category);
-                data.add(center, new headerItem(category, category));
-                data.add(center + 1, new exerciseItem(category, center + 1, exerciseShort));
+                //data.add(center, new headerItem(category, category));
+                //data.add(center + 1, new exerciseItem(category, exerciseShort));
+                addItem(center, new headerItem(category, category));
+                addItem(center + 1, new exerciseItem(category, exerciseShort));
                 notifyItemRangeInserted(center, 2);
             } else {
-                data.add(center, new exerciseItem(category, center, exerciseShort));
+                //data.add(center, new exerciseItem(category, exerciseShort));
+                addItem(center, new exerciseItem(category, exerciseShort));
                 notifyItemInserted(center);
             }
         }
@@ -149,6 +177,30 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    private void addItem(int pos, IViewItem item) {
+        data.add(pos, item);
+    }
+
+    public void filter(int filterType, String query) {
+        List<ExerciseShort> filteredData = new ArrayList<>();
+        if (query == null || query.isEmpty()) {
+            filteredData = originalData;
+        } else {
+            query = query.toLowerCase();
+
+            if (filterType == FILTER_BY_NAME) {
+                for (ExerciseShort ex : originalData) {
+                    if (ex.getName().toLowerCase().contains(query)) {
+                        filteredData.add(ex);
+                    }
+                }
+            }
+        }
+
+        setData(filteredData); // [TODO] Re-initializing the whole data set will probably be slow. Better alternative is to remove exercises, and check if the category still has remaining exercises. If category does not have child exercises, then remove the header as well.
+        notifyDataSetChanged();
+    }
+
     private abstract class IViewItem implements Comparable<IViewItem> {
         @Override
         public int compareTo(@NonNull IViewItem other) {
@@ -161,14 +213,12 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
             else if (this.itemType() < other.itemType())
                 return -1;
             else // Else, the items are of the same type, so we compare the names.
-                switch (this.toString().compareTo(other.toString())) {
-                    case -1:
-                        return -1;
-                    case 1:
-                        return 1;
-                    default:
-                        return this.id().compareTo(other.id()); // Else, if they have the same name, then compare the ids.
-                }
+            {
+                int nameComparison = this.toString().compareToIgnoreCase(other.toString());
+                if (nameComparison > 0) return 1;
+                else if (nameComparison < 0) return -1;
+                return this.id().compareTo(other.id()); // Else, if they have the same name, then compare the ids.
+            }
         }
 
         abstract String category();
@@ -211,11 +261,9 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
     private class exerciseItem extends IViewItem {
         private String category;
         private ExerciseShort exercise;
-        private int headerIndex;
 
-        exerciseItem(String category, int headerIndex, ExerciseShort exercise) {
+        exerciseItem(String category, ExerciseShort exercise) {
             this.exercise = exercise;
-            this.headerIndex = headerIndex;
             this.category = category;
         }
 

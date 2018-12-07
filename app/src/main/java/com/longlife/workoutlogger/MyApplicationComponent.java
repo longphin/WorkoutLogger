@@ -8,6 +8,7 @@ import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFr
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListFragment;
+import com.longlife.workoutlogger.view.InitializeActivity;
 import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableFragment;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragment;
@@ -27,7 +28,9 @@ import dagger.android.AndroidInjectionModule;
         }
 )
 public interface MyApplicationComponent {
-    void inject(MainActivity mainActivity);
+    void inject(InitializeActivity a);
+
+    void inject(MainActivity a);
 
     void inject(RoutinesFragment rof);
 
