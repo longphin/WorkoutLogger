@@ -30,8 +30,11 @@ public class Muscle {
     // Core
     static final int ABS = 17; // [TODO] break up abs into lower, middle, and upper?
     static final int OBLIQUES = 18;
+    static final int SERRATUS = 19;
     // Chest
-    static final int PEC_MAJOR = 19; // [TODO] add the other pecs?
+    static final int UPPER_PEC = 20; // [TODO] add the other pecs?
+    static final int MIDDLE_PEC = 21;
+    static final int LOWER_PEC = 22;
 
     private int idMuscleGroup;
     private Integer idMuscle;
@@ -103,9 +106,18 @@ public class Muscle {
             case OBLIQUES:
                 name = GetResource.getStringResource(context, R.string.MUSCLE_obliques);
                 break;
+            case SERRATUS:
+                name = GetResource.getStringResource(context, R.string.MUSCLE_serratus_anterior);
+                break;
             // Chest
-            case PEC_MAJOR:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_pec_major);
+            case UPPER_PEC:
+                name = GetResource.getStringResource(context, R.string.MUSCLE_pec_upper);
+                break;
+            case MIDDLE_PEC:
+                name = GetResource.getStringResource(context, R.string.MUSCLE_pec_middle);
+                break;
+            case LOWER_PEC:
+                name = GetResource.getStringResource(context, R.string.MUSCLE_pec_lower);
                 break;
             default:
                 name = "Muscle is missing a name."; // Should never appear.

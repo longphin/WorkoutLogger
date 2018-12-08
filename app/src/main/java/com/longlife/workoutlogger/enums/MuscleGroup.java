@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MuscleGroup {
-    private static final int CHEST = 0;
-    private static final int BACK = 1;
-    private static final int ARMS = 2;
-    private static final int SHOULDERS = 3;
-    private static final int LEGS = 4;
-    private static final int CORE = 5;
+    public static final int CHEST = 0;
+    public static final int BACK = 1;
+    public static final int ARMS = 2;
+    public static final int SHOULDERS = 3;
+    public static final int LEGS = 4;
+    public static final int CORE = 5;
 
     public static List<MuscleListHelper> getAllMuscleGroups(Context context) {
         List<MuscleListHelper> groups = new ArrayList<>();
@@ -36,7 +36,7 @@ public class MuscleGroup {
 
         switch (idMuscleGroup) {
             case CHEST:
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.PEC_MAJOR));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.UPPER_PEC));
                 break;
             case BACK:
                 muscles.add(new Muscle(context, idMuscleGroup, Muscle.TRAPS));
@@ -66,6 +66,7 @@ public class MuscleGroup {
             case CORE:
                 muscles.add(new Muscle(context, idMuscleGroup, Muscle.ABS));
                 muscles.add(new Muscle(context, idMuscleGroup, Muscle.OBLIQUES));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.SERRATUS));
                 break;
             default:
                 break;
@@ -74,7 +75,7 @@ public class MuscleGroup {
         return new MuscleListHelper(idMuscleGroup, getMuscleGroupName(context, idMuscleGroup), muscles, MuscleListAdapter.NUMBER_OF_COLUMNS);
     }
 
-    private static String getMuscleGroupName(Context context, int idMuscleGroup) {
+    public static String getMuscleGroupName(Context context, int idMuscleGroup) {
         switch (idMuscleGroup) {
             case CHEST:
                 return GetResource.getStringResource(context, R.string.MUSCLEGROUP_chest);

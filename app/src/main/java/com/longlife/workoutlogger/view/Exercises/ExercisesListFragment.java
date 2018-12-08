@@ -19,10 +19,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
@@ -40,53 +44,13 @@ public class ExercisesListFragment extends FragmentBase {
     private RecyclerView recyclerView;
     private ExercisesListRemakeAdapter adapter;
     private boolean needsToLoadData = true;
+    private SearchView searchView;
 
     public ExercisesListFragment() {
         // Required empty public constructor
     }
 
-    private SearchView searchView;
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-
-        if (inflater != null) {
-            inflater.inflate(R.menu.exercises_search_menu, menu);
-            MenuItem item = menu.findItem(R.id.exercises_list_searchview);
-            searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
-
-            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            item.setActionView(searchView);
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    if (adapter != null) {
-                        adapter.filter(ExercisesListRemakeAdapter.FILTER_BY_NAME, query);
-                        return true;
-                    }
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    if (adapter != null) {
-                        adapter.filter(ExercisesListRemakeAdapter.FILTER_BY_NAME, newText);
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            searchView.setOnClickListener(new View.OnClickListener() {
-                                              @Override
-                                              public void onClick(View v) {
-
-                                              }
-                                          }
-            );
-        }
-    }
+    private Spinner groupBySelector;
 
 
 
@@ -139,6 +103,47 @@ public class ExercisesListFragment extends FragmentBase {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+
+        if (inflater != null) {
+            inflater.inflate(R.menu.exercises_search_menu, menu);
+            MenuItem item = menu.findItem(R.id.exercises_list_searchview);
+            searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+
+            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            item.setActionView(searchView);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    if (adapter != null) {
+                        adapter.filter(((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId(), query);
+                        return true;
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (adapter != null) {
+                        adapter.filter(((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId(), newText);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            searchView.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+
+                                              }
+                                          }
+            );
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -149,19 +154,39 @@ public class ExercisesListFragment extends FragmentBase {
 
         initializeObservers();
         initializeRecyclerView(v);
+        initializeGroupByOptions(v);
         return v;
+    }
+
+    private void initializeGroupByOptions(View v) {
+        groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
+        ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
+        // Specify the layout to use when the list appears.
+        groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Attach the adapter.
+        groupBySelector.setAdapter(groupByAdapter);
+
+        groupBySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                // When the group by is changed, execute the filter on the new group by.
+                adapter.filter(((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId(), searchView.getQuery().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //setAdapterForRecyclerView();//[TODO] need to recreate the adapter and recyclerview.
     }
 
     @Override
     public void onDestroyView() {
-
-        //viewModelFactory = null;
         if (adapter != null) {
             adapter = null;
         }
@@ -174,6 +199,11 @@ public class ExercisesListFragment extends FragmentBase {
             searchView.setOnQueryTextListener(null);
             searchView.setOnClickListener(null);
             searchView = null;
+        }
+
+        if (groupBySelector != null) {
+            groupBySelector.setAdapter(null);
+            groupBySelector = null;
         }
 
         needsToLoadData = true;
@@ -197,16 +227,6 @@ public class ExercisesListFragment extends FragmentBase {
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
-/*        FragmentManager manager = getActivity().getSupportFragmentManager();
-
-        ExerciseCreateRemakeFragment fragment = (ExerciseCreateRemakeFragment) manager.findFragmentByTag(ExerciseCreateRemakeFragment.TAG);
-        if (fragment == null) {
-            fragment = ExerciseCreateRemakeFragment.newInstance();
-        }
-
-        if (fragmentNavigation != null) {
-            fragmentNavigation.pushFragment(fragment);
-        }*/
     }
 
     private void initializeRecyclerView(View v) {
@@ -223,6 +243,13 @@ public class ExercisesListFragment extends FragmentBase {
         setAdapterForRecyclerView();
     }
 
+    private void setAdapterForRecyclerView() {
+        if (recyclerView != null && adapter != null) {
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
     // Data was loaded, so now attach the adapter to the recyclerview.
     private void loadData(List<ExerciseShort> exercises) {
         if (adapter == null)
@@ -230,13 +257,6 @@ public class ExercisesListFragment extends FragmentBase {
         Log.d(TAG, String.valueOf(exercises.size()) + " exercises obtained");
 
         setAdapterForRecyclerView();
-    }
-
-    private void setAdapterForRecyclerView() {
-        if (recyclerView != null && adapter != null) {
-            recyclerView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-        }
     }
 
 }

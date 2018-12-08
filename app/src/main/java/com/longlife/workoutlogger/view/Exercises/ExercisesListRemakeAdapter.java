@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 
 import java.util.ArrayList;
@@ -19,11 +20,10 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
     private static final int HEADER_TYPE = 0;
     private static final int EXERCISE_TYPE = 1;
     private List<IViewItem> data = new ArrayList<>();
-    static final int FILTER_BY_NAME = 0;
     private Set<String> headers = new HashSet<>();
     private List<ExerciseShort> originalData;
 
-    public ExercisesListRemakeAdapter(List<ExerciseShort> exercises) {
+    ExercisesListRemakeAdapter(List<ExerciseShort> exercises) {
         originalData = exercises;
         setData(exercises);
     }
@@ -127,6 +127,10 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
+    private void addItem(int pos, IViewItem item) {
+        data.add(pos, item);
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == EXERCISE_TYPE) return exerciseViewHolder(parent);
@@ -177,18 +181,14 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private void addItem(int pos, IViewItem item) {
-        data.add(pos, item);
-    }
-
-    public void filter(int filterType, String query) {
+    void filter(int filterType, String query) {
         List<ExerciseShort> filteredData = new ArrayList<>();
         if (query == null || query.isEmpty()) {
             filteredData = originalData;
         } else {
             query = query.toLowerCase();
 
-            if (filterType == FILTER_BY_NAME) {
+            if (filterType == ExerciseListGroupBy.GROUP_BY_NAME) {
                 for (ExerciseShort ex : originalData) {
                     if (ex.getName().toLowerCase().contains(query)) {
                         filteredData.add(ex);
@@ -260,16 +260,18 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private class exerciseItem extends IViewItem {
         private String category;
-        private ExerciseShort exercise;
+        private String exerciseName;
+        private Long idExercise;
 
         exerciseItem(String category, ExerciseShort exercise) {
-            this.exercise = exercise;
+            this.idExercise = exercise.getIdExercise();
+            this.exerciseName = exercise.getName();
             this.category = category;
         }
 
         @Override
         public String toString() {
-            return exercise.getName();
+            return exerciseName;
         }
 
 
@@ -280,7 +282,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
 
         @Override
         Long id() {
-            return exercise.getIdExercise();
+            return idExercise;
         }
 
         @Override
