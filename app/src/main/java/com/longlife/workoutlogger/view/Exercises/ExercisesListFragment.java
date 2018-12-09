@@ -169,8 +169,9 @@ public class ExercisesListFragment extends FragmentBase {
         groupBySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
                 // When the group by is changed, execute the filter on the new group by.
-                adapter.filter(((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId(), searchView.getQuery().toString());
+                adapter.filter(selectedGroupBy, searchView.getQuery().toString());
             }
 
             @Override

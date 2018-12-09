@@ -1,19 +1,23 @@
 package com.longlife.workoutlogger.view;
 
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
+import com.longlife.workoutlogger.enums.Muscle;
+import com.longlife.workoutlogger.enums.MuscleGroup;
+import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 
 import javax.inject.Inject;
 
 public class InitializeActivity extends AppCompatActivity {
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
-    private ExercisesViewModel exercisesViewModel;
+    private ProfileViewModel profileViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,14 @@ public class InitializeActivity extends AppCompatActivity {
         observable([muscle : muscles -> profileViewModel.insertMuscle(muscle)])
             .onComplete(()->goToMainActivity()
          */
+
+        ((MyApplication) this.getApplication())
+                .getApplicationComponent()
+                .inject(this);
+        profileViewModel = ViewModelProviders.of(this, viewModelFactory).get(ProfileViewModel.class);
+
+        profileViewModel.insertMuscles(Muscle.getAllMuscleEntities());
+        profileViewModel.insertMuscleGroups(MuscleGroup.getAllMuscleGroupEntities());
 
         goToMainActivity();
     }

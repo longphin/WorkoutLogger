@@ -1,8 +1,10 @@
 package com.longlife.workoutlogger.enums;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.utils.GetResource;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.MuscleListAdapter;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.MuscleListHelper;
@@ -18,16 +20,70 @@ public class MuscleGroup {
     public static final int LEGS = 4;
     public static final int CORE = 5;
 
+    private static final String TAG = MuscleGroup.class.getSimpleName();
+
     public static List<MuscleListHelper> getAllMuscleGroups(Context context) {
         List<MuscleListHelper> groups = new ArrayList<>();
-        groups.add(getMuscleGroup(context, ARMS));
-        groups.add(getMuscleGroup(context, BACK));
-        groups.add(getMuscleGroup(context, CHEST));
-        groups.add(getMuscleGroup(context, CORE));
-        groups.add(getMuscleGroup(context, LEGS));
-        groups.add(getMuscleGroup(context, SHOULDERS));
+        for (Integer idMuscleGroup : MuscleGroup.getAllMuscleGroupsIds()) {
+            groups.add(getMuscleGroup(context, idMuscleGroup));
+        }
 
         return groups;
+    }
+
+    private static List<Integer> getAllMuscleGroupsIds() {
+        List<Integer> idMuscleGroups = new ArrayList<>();
+        idMuscleGroups.add(CHEST);
+        idMuscleGroups.add(BACK);
+        idMuscleGroups.add(ARMS);
+        idMuscleGroups.add(SHOULDERS);
+        idMuscleGroups.add(LEGS);
+        idMuscleGroups.add(CORE);
+
+        return idMuscleGroups;
+    }
+
+    // Return the MuscleGroup id given an idMuscle. Used to determine what group a muscle is a part of.
+    public static int getMuscleGroupForMuscle(int idMuscle) {
+        switch (idMuscle) {
+            case Muscle.UPPER_PEC:
+            case Muscle.MIDDLE_PEC:
+            case Muscle.LOWER_PEC:
+                return CHEST;
+
+            case Muscle.TRAPS:
+            case Muscle.RHOMBOIDS:
+            case Muscle.LATS:
+            case Muscle.LOWER_BACK:
+                return BACK;
+
+            case Muscle.BICEPS:
+            case Muscle.BICEP_BRACHIALIS:
+            case Muscle.TRICEPS:
+            case Muscle.FOREARMS:
+                return ARMS;
+
+            case Muscle.DELTOID_ANTERIOR:
+            case Muscle.DELTOID_LATERAL:
+            case Muscle.DELTOID_POSTERIOR:
+                return SHOULDERS;
+
+            case Muscle.QUADS:
+            case Muscle.HAMSTRINGS:
+            case Muscle.CALVES:
+            case Muscle.GLUTES:
+            case Muscle.HIP_ABDUCTORS:
+            case Muscle.HIP_ADDUCTORS:
+                return LEGS;
+
+            case Muscle.ABS:
+            case Muscle.OBLIQUES:
+            case Muscle.SERRATUS:
+                return CORE;
+        }
+
+        Log.d(TAG, "Could not find muscle group by " + String.valueOf(idMuscle));
+        return -1;
     }
 
     private static MuscleListHelper getMuscleGroup(Context context, int idMuscleGroup)
@@ -68,8 +124,6 @@ public class MuscleGroup {
                 muscles.add(new Muscle(context, idMuscleGroup, Muscle.OBLIQUES));
                 muscles.add(new Muscle(context, idMuscleGroup, Muscle.SERRATUS));
                 break;
-            default:
-                break;
         }
 
         return new MuscleListHelper(idMuscleGroup, getMuscleGroupName(context, idMuscleGroup), muscles, MuscleListAdapter.NUMBER_OF_COLUMNS);
@@ -92,5 +146,14 @@ public class MuscleGroup {
             default:
                 return "Muscle group not named";
         }
+    }
+
+    public static List<MuscleGroupEntity> getAllMuscleGroupEntities() {
+        List<MuscleGroupEntity> muscleGroups = new ArrayList<>();
+        for (Integer idMuscleGroup : MuscleGroup.getAllMuscleGroupsIds()) {
+            muscleGroups.add(new MuscleGroupEntity(idMuscleGroup));
+        }
+
+        return muscleGroups;
     }
 }

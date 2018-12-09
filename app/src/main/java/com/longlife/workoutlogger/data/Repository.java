@@ -5,6 +5,8 @@ import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
+import com.longlife.workoutlogger.model.MuscleEntity;
+import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.SessionExercise;
@@ -127,5 +129,13 @@ public class Repository {
 
     public Single<List<ExerciseShort>> getExerciseShortFromId(Set<Long> idExercise) {
         return exerciseDao.getExerciseShortFromId(idExercise);
+    }
+
+    public Single<List<Long>> insertMuscles(List<MuscleEntity> muscles) {
+        return Single.fromCallable(() -> profileDao.insertMuscles(muscles));
+    }
+
+    public Single<List<Long>> insertMuscleGroups(List<MuscleGroupEntity> groups) {
+        return Single.fromCallable(() -> profileDao.insertMuscleGroups(groups));
     }
 }

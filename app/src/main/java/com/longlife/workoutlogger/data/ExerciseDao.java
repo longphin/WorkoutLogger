@@ -10,6 +10,7 @@ import android.arch.persistence.room.Update;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
+import com.longlife.workoutlogger.model.Exercise.ExerciseWithMuscles;
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
@@ -35,6 +36,19 @@ public abstract class ExerciseDao {
     // Get a list of exercises (short) that are not hidden.
     @Query("SELECT idExercise, name, note, locked FROM Exercise WHERE hidden=0")
     public abstract Single<List<ExerciseShort>> getExerciseShort();
+
+    // Get a list of exercises, with the related muscles split up (1 row per muscle).
+    // If an exercise is related to 2 muscles, the exercise is listed 2 times.
+    /*
+    [TODO] Need to LEFT JOIN Muscle (idMuscle, idMuscleGroup)
+    and add a WHERE clause to only select certain muscle groups.
+     */
+    @Query("SELECT e.idExercise, e.name, e.note, e.locked, em.idMuscle, me.idMuscleGroup " +
+            "FROM Exercise as e " +
+            "   LEFT JOIN ExerciseMuscle as em on e.idExercise=em.idExercise " +
+            "   LEFT JOIN MuscleEntity as me on em.idMuscle=me.idMuscle " +
+            "WHERE hidden=0 AND me.idMuscleGroup=0")
+    public abstract Single<List<ExerciseWithMuscles>> getExerciseByMuscle();
 
     // Get the name of exercises that are not hidden.
     @Query("SELECT Name FROM Exercise WHERE hidden = 0")

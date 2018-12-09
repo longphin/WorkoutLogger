@@ -56,7 +56,9 @@ public class DatabaseVersion {
     private static final int V8_2 = 43; // Changed Exercise update process to use same fragment as Exercise create. Added muscles when updating the exercise.
     // V9 will add workout program.
     private static final int V9_0 = 44;
+    private static final int V9_1 = 45; // Adding Muscle Entity and Muscle Group Entity tables.
+    private static final int V9_1b = 46; // Ooops. Muscle Entity was initialized incorrectly.
 
-    static final int CURRENT = V9_0;
+    static final int CURRENT = V9_1b;
 }
 

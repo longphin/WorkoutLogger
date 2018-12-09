@@ -2,11 +2,19 @@ package com.longlife.workoutlogger.view.Profile;
 
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
+
 import com.longlife.workoutlogger.data.Repository;
+import com.longlife.workoutlogger.model.MuscleEntity;
+import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.model.Profile;
+
+import java.util.List;
+
 import io.reactivex.Maybe;
 import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProfileViewModel
@@ -36,4 +44,47 @@ public class ProfileViewModel
         return repo.insertProfile(profileToInsert).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
+    public void insertMuscles(List<MuscleEntity> muscles) {
+        repo.insertMuscles(muscles)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Long>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Long> longs) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    public void insertMuscleGroups(List<MuscleGroupEntity> groups) {
+        repo.insertMuscleGroups(groups)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Long>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Long> longs) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
 }
