@@ -1,20 +1,24 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/9/18 11:05 AM.
+ */
+
 package com.longlife.workoutlogger.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 
 @Entity
 public class MuscleEntity {
     @PrimaryKey
     private Integer idMuscle;
-    @NonNull
     private Integer idMuscleGroup;
 
     public MuscleEntity() {
     }
 
-    public MuscleEntity(Integer idMuscle, @NonNull Integer idMuscleGroup) {
+    public MuscleEntity(Integer idMuscle, Integer idMuscleGroup) {
         this.idMuscle = idMuscle;
         this.idMuscleGroup = idMuscleGroup;
     }
@@ -27,12 +31,11 @@ public class MuscleEntity {
         this.idMuscle = idMuscle;
     }
 
-    @NonNull
     public Integer getIdMuscleGroup() {
         return idMuscleGroup;
     }
 
-    public void setIdMuscleGroup(@NonNull Integer idMuscleGroup) {
+    public void setIdMuscleGroup(Integer idMuscleGroup) {
         this.idMuscleGroup = idMuscleGroup;
     }
 }

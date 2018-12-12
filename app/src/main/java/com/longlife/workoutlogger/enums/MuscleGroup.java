@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/11/18 7:36 PM.
+ */
+
 package com.longlife.workoutlogger.enums;
 
 import android.content.Context;
@@ -13,12 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MuscleGroup {
-    public static final int CHEST = 0;
-    public static final int BACK = 1;
-    public static final int ARMS = 2;
-    public static final int SHOULDERS = 3;
-    public static final int LEGS = 4;
-    public static final int CORE = 5;
+    static final int CHEST = 0;
+    static final int BACK = 1;
+    static final int ARMS = 2;
+    static final int SHOULDERS = 3;
+    static final int LEGS = 4;
+    static final int CORE = 5;
 
     private static final String TAG = MuscleGroup.class.getSimpleName();
 
@@ -43,8 +49,20 @@ public class MuscleGroup {
         return idMuscleGroups;
     }
 
+    private static MuscleListHelper getMuscleGroup(Context context, int idMuscleGroup) {
+        List<Muscle> muscles = new ArrayList<>();
+
+        for (Integer idMuscle : Muscle.getAllMuscles()) {
+            if (getMuscleGroupForMuscle(idMuscle) == idMuscleGroup) {
+                muscles.add(new Muscle(context, idMuscleGroup, idMuscle));
+            }
+        }
+
+        return new MuscleListHelper(idMuscleGroup, getMuscleGroupName(context, idMuscleGroup), muscles, MuscleListAdapter.NUMBER_OF_COLUMNS);
+    }
+
     // Return the MuscleGroup id given an idMuscle. Used to determine what group a muscle is a part of.
-    public static int getMuscleGroupForMuscle(int idMuscle) {
+    static int getMuscleGroupForMuscle(int idMuscle) {
         switch (idMuscle) {
             case Muscle.UPPER_PEC:
             case Muscle.MIDDLE_PEC:
@@ -86,61 +104,7 @@ public class MuscleGroup {
         return -1;
     }
 
-    private static MuscleListHelper getMuscleGroup(Context context, int idMuscleGroup)
-    {
-        List<Muscle> muscles = new ArrayList<>();
-
-        for (Integer idMuscle : Muscle.getAllMuscles())//getAllMuscleGroupsIds())
-        {
-            if (getMuscleGroupForMuscle(idMuscle) == idMuscleGroup) {
-                muscles.add(new Muscle(context, idMuscleGroup, idMuscle));
-            }
-        }
-
-        /*
-        switch (idMuscleGroup) {
-            case CHEST:
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.UPPER_PEC));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.MIDDLE_PEC));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.LOWER_PEC));
-                break;
-            case BACK:
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.TRAPS));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.RHOMBOIDS));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.LATS));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.LOWER_BACK));
-                break;
-            case ARMS:
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.BICEPS));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.BICEP_BRACHIALIS));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.TRICEPS));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.FOREARMS));
-                break;
-            case SHOULDERS:
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.DELTOID_ANTERIOR));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.DELTOID_LATERAL));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.DELTOID_POSTERIOR));
-                break;
-            case LEGS:
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.QUADS));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.HAMSTRINGS));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.CALVES));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.GLUTES));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.HIP_ABDUCTORS));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.HIP_ADDUCTORS));
-                break;
-            case CORE:
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.ABS));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.OBLIQUES));
-                muscles.add(new Muscle(context, idMuscleGroup, Muscle.SERRATUS));
-                break;
-        }
-        */
-
-        return new MuscleListHelper(idMuscleGroup, getMuscleGroupName(context, idMuscleGroup), muscles, MuscleListAdapter.NUMBER_OF_COLUMNS);
-    }
-
-    public static String getMuscleGroupName(Context context, int idMuscleGroup) {
+    static String getMuscleGroupName(Context context, int idMuscleGroup) {
         switch (idMuscleGroup) {
             case CHEST:
                 return GetResource.getStringResource(context, R.string.MUSCLEGROUP_chest);

@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/22/18 10:16 PM.
+ */
+
 package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 
 import com.longlife.workoutlogger.enums.Muscle;
@@ -29,7 +35,7 @@ public class MuscleListHelper {
         footerPadding = muscles.size() % numberOfColumns;
     }
 
-    public int getHeaderPadding() {
+    int getHeaderPadding() {
         return headerPadding;
     }
 
@@ -37,11 +43,11 @@ public class MuscleListHelper {
         this.headerPadding = headerPadding;
     }
 
-    public int getVisiblePosition() {
+    int getVisiblePosition() {
         return visiblePosition;
     }
 
-    public void setVisiblePosition(int visiblePosition) {
+    void setVisiblePosition(int visiblePosition) {
         this.visiblePosition = visiblePosition;
     }
 
@@ -57,7 +63,7 @@ public class MuscleListHelper {
         return idMuscleGroup;
     }
 
-    public String getMuscleGroupName() {
+    String getMuscleGroupName() {
         return muscleGroupName;
     }
 
@@ -65,7 +71,7 @@ public class MuscleListHelper {
         return muscles;
     }
 
-    public int getFooterPadding() {
+    int getFooterPadding() {
         return footerPadding;
     }
 }

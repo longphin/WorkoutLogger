@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/11/18 8:02 PM.
+ */
+
 package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 
 
@@ -41,7 +47,9 @@ public class ExerciseCreateFragment
     public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
 
     private Button saveButton;
+    private Button cancelButton;
     private ImageView addNoteImage;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,7 +58,7 @@ public class ExerciseCreateFragment
 
             this.name = mView.findViewById(R.id.txt_exercise_create_name);
             addNoteImage = mView.findViewById(R.id.imv_exercise_create_add_note);
-            Button cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
+            cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
             saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
             initializeExerciseTypeSelector();
             initializeMusclesList();
@@ -122,11 +130,13 @@ public class ExerciseCreateFragment
         }
 
         name = null;
-        mView = null;
         saveButton.setOnClickListener(null);
         saveButton = null;
         addNoteImage.setOnClickListener(null);
         addNoteImage = null;
+        cancelButton.setOnClickListener(null);
+        cancelButton = null;
+        mView = null;
         super.onDestroyView();
     }
 

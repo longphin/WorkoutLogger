@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:26 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/28/18 6:52 PM.
+ */
+
 package com.longlife.workoutlogger.AndroidUtils;
 
 import android.support.constraint.ConstraintLayout;

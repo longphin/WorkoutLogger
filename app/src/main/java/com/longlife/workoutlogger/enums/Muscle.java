@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/11/18 8:08 PM.
+ */
+
 package com.longlife.workoutlogger.enums;
 
 import android.content.Context;
@@ -11,34 +17,34 @@ import java.util.List;
 
 public class Muscle {
     // Back
-    public static final int TRAPS = 0;
-    public static final int RHOMBOIDS = 1;
-    public static final int LATS = 2;
-    public static final int LOWER_BACK = 3;
+    static final int TRAPS = 0;
+    static final int RHOMBOIDS = 1;
+    static final int LATS = 2;
+    static final int LOWER_BACK = 3;
     // Arms
-    public static final int BICEPS = 4;
-    public static final int BICEP_BRACHIALIS = 5;
-    public static final int TRICEPS = 6;
-    public static final int FOREARMS = 7;
+    static final int BICEPS = 4;
+    static final int BICEP_BRACHIALIS = 5;
+    static final int TRICEPS = 6;
+    static final int FOREARMS = 7;
     // Shoulders
-    public static final int DELTOID_ANTERIOR = 8;
-    public static final int DELTOID_LATERAL = 9;
-    public static final int DELTOID_POSTERIOR = 10;
+    static final int DELTOID_ANTERIOR = 8;
+    static final int DELTOID_LATERAL = 9;
+    static final int DELTOID_POSTERIOR = 10;
     // Legs
-    public static final int QUADS = 11;
-    public static final int HAMSTRINGS = 12;
-    public static final int GLUTES = 13;
-    public static final int CALVES = 14;
-    public static final int HIP_ADDUCTORS = 15;
-    public static final int HIP_ABDUCTORS = 16;
+    static final int QUADS = 11;
+    static final int HAMSTRINGS = 12;
+    static final int GLUTES = 13;
+    static final int CALVES = 14;
+    static final int HIP_ADDUCTORS = 15;
+    static final int HIP_ABDUCTORS = 16;
     // Core
-    public static final int ABS = 17; // [TODO] break up abs into lower, middle, and upper?
-    public static final int OBLIQUES = 18;
-    public static final int SERRATUS = 19;
+    static final int ABS = 17; // [TODO] break up abs into lower, middle, and upper?
+    static final int OBLIQUES = 18;
+    static final int SERRATUS = 19;
     // Chest
-    public static final int UPPER_PEC = 20;
-    public static final int MIDDLE_PEC = 21;
-    public static final int LOWER_PEC = 22;
+    static final int UPPER_PEC = 20;
+    static final int MIDDLE_PEC = 21;
+    static final int LOWER_PEC = 22;
 
     private int idMuscleGroup;
     private Integer idMuscle;
@@ -52,92 +58,72 @@ public class Muscle {
 
         return muscles;
     }
+
     private boolean isSelected = false; // Determines if the muscle was selected to be a part of an exercise. Only used when creating an exercise.
 
-    public Muscle(Context context, int idMuscleGroup, int idMuscle) {
+    Muscle(Context context, int idMuscleGroup, int idMuscle) {
+        this.name = getMuscleName(context, idMuscle);
+        this.idMuscleGroup = idMuscleGroup;
+        this.idMuscle = idMuscle;
+    }
+
+    public static String getMuscleName(Context context, int idMuscle) {
         switch (idMuscle) {
             // Back
             case TRAPS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_traps);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_traps);
             case RHOMBOIDS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_rhomboids);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_rhomboids);
             case LATS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_lats);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_lats);
             case LOWER_BACK:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_lower_back);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_lower_back);
             // Arms
             case BICEPS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_biceps);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_biceps);
             case BICEP_BRACHIALIS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_bicep_brachialis);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_bicep_brachialis);
             case TRICEPS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_triceps);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_triceps);
             case FOREARMS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_forearms);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_forearms);
             // Shoulders
             case DELTOID_ANTERIOR:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_deltoid_anterior);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_deltoid_anterior);
             case DELTOID_LATERAL:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_deltoid_lateral);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_deltoid_lateral);
             case DELTOID_POSTERIOR:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_deltoid_posterior);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_deltoid_posterior);
             // Legs
             case QUADS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_quads);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_quads);
             case HAMSTRINGS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_hamstrings);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_hamstrings);
             case GLUTES:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_glutes);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_glutes);
             case CALVES:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_calves);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_calves);
             case HIP_ABDUCTORS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_hip_abductors);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_hip_abductors);
             case HIP_ADDUCTORS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_hip_adductors);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_hip_adductors);
             // Core
             case ABS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_abs);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_abs);
             case OBLIQUES:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_obliques);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_obliques);
             case SERRATUS:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_serratus_anterior);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_serratus_anterior);
             // Chest
             case UPPER_PEC:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_pec_upper);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_pec_upper);
             case MIDDLE_PEC:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_pec_middle);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_pec_middle);
             case LOWER_PEC:
-                name = GetResource.getStringResource(context, R.string.MUSCLE_pec_lower);
-                break;
+                return GetResource.getStringResource(context, R.string.MUSCLE_pec_lower);
             default:
-                name = "Muscle is missing a name."; // Should never appear.
-                break;
+                return "Muscle is missing a name."; // Should never appear.
         }
-
-        this.idMuscleGroup = idMuscleGroup;
-        this.idMuscle = idMuscle;
     }
 
     // Constructor for a muscle.
@@ -171,7 +157,7 @@ public class Muscle {
         isSelected = !isSelected;
     }
 
-    public static List<Integer> getAllMuscles() {
+    static List<Integer> getAllMuscles() {
         List<Integer> idMuscles = new ArrayList<>();
         idMuscles.add(TRAPS);
         idMuscles.add(RHOMBOIDS);

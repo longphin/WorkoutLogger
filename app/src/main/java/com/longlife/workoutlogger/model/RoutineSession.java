@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 10/3/18 9:17 PM.
+ */
+
 package com.longlife.workoutlogger.model;
 
 import android.arch.persistence.room.Entity;
@@ -23,7 +29,6 @@ import java.util.GregorianCalendar;
         indices = {@Index(value = {"idRoutine"})})
 public class RoutineSession {
     @PrimaryKey
-    @NonNull
     private Long idRoutineSession;
     @Nullable
     private Long idRoutine;
@@ -39,7 +44,7 @@ public class RoutineSession {
 
     }
 
-
+    @Nullable
     public Long getIdRoutine() {
         return idRoutine;
     }
@@ -56,12 +61,13 @@ public class RoutineSession {
         idRoutineSession = i;
     }
 
+    @NonNull
     public PerformanceStatus getPerformanceStatus() {
         return performanceStatus;
     }
 
 
-    public void setPerformanceStatus(PerformanceStatus performanceStatus) {
+    public void setPerformanceStatus(@NonNull PerformanceStatus performanceStatus) {
         this.performanceStatus = performanceStatus;
     }
 

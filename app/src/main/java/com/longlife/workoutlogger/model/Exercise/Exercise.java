@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/24/18 1:46 PM.
+ */
+
 package com.longlife.workoutlogger.model.Exercise;
 
 import android.arch.persistence.room.Entity;
@@ -77,6 +83,7 @@ public class Exercise implements Parcelable, JSONParser.JSON {
         idExercise = parcel.readLong();
         name = parcel.readString();
     }
+
     @TypeConverters({MeasurementTypeConverter.class})
     private MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
     // That that this instance was created.

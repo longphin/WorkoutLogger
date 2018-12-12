@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/24/18 1:46 PM.
+ */
+
 package com.longlife.workoutlogger.view.Exercises.PerformExercise;
 
 import android.content.Context;
@@ -19,7 +25,7 @@ public class PerformRoutineAdapter
 
     private IOnSetClick onSetClickListener;
 
-    public PerformRoutineAdapter(Context context, IOnSetClick onSetClickListener) {
+    PerformRoutineAdapter(Context context, IOnSetClick onSetClickListener) {
         super(context);
 
         this.onSetClickListener = onSetClickListener;

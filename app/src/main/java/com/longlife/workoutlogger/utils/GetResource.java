@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/23/18 5:59 PM.
+ */
+
 package com.longlife.workoutlogger.utils;
 
 import android.content.Context;

@@ -1,3 +1,9 @@
+<!--
+  ~ Created by Longphi Nguyen on 12/11/18 8:25 PM.
+  ~ Copyright (c) 2018. All rights reserved.
+  ~ Last modified 8/26/18 8:21 AM.
+  -->
+
 <resources>
     <dimen name="padding_10">10dp</dimen>
     <dimen name="ic_delete_item">30dp</dimen>

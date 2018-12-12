@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/4/18 6:25 PM.
+ */
+
 package com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine;
 
 import android.util.Log;
@@ -16,7 +22,7 @@ public class ExercisesSelectableAdapter
     private final static String TAG = ExercisesSelectableAdapter.class.getSimpleName();
     private IExercisesSelectableAdapterCallback exercisesSelectableCallback;
 
-    public ExercisesSelectableAdapter(IClickExercise clickExerciseCallback, IExercisesSelectableAdapterCallback selectableAdapterCallback) {
+    ExercisesSelectableAdapter(IClickExercise clickExerciseCallback, IExercisesSelectableAdapterCallback selectableAdapterCallback) {
         super(clickExerciseCallback);
         this.exercisesSelectableCallback = selectableAdapterCallback;
     }

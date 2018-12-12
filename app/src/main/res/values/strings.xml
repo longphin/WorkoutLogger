@@ -1,3 +1,9 @@
+<!--
+  ~ Created by Longphi Nguyen on 12/11/18 8:25 PM.
+  ~ Copyright (c) 2018. All rights reserved.
+  ~ Last modified 12/8/18 10:30 AM.
+  -->
+
 <resources>
     <string name="app_name">Workout Logger</string>
     <string name="text_save">Save</string>

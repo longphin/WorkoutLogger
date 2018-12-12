@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Longphi Nguyen on 12/11/18 8:25 PM.
+  ~ Copyright (c) 2018. All rights reserved.
+  ~ Last modified 11/22/18 10:16 PM.
+  -->
+
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"

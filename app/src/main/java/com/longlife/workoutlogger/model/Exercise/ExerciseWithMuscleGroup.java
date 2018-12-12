@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/11/18 8:06 PM.
+ */
+
 package com.longlife.workoutlogger.model.Exercise;
 
 import android.arch.persistence.room.Ignore;
@@ -7,22 +13,32 @@ public class ExerciseWithMuscleGroup implements IExerciseListable {
     public String name;
     public String note;
     private boolean locked; // Flag to indicate whether exercise is locked.
-    private int idMuscleGroup;
 
-    @Ignore
-    private String muscleGroupName;
+    private String muscleName;
+    private int idMuscle;
 
-    public ExerciseWithMuscleGroup(Long idExercise, String name, String note, boolean locked, int idMuscleGroup) {
+    public ExerciseWithMuscleGroup(Long idExercise, String name, String note, boolean locked, int idMuscle) {
         this.idExercise = idExercise;
         this.name = name;
         this.note = note;
         this.locked = locked;
-        this.idMuscleGroup = idMuscleGroup;
+        this.idMuscle = idMuscle;
     }
 
-    @Ignore
-    public void setMuscleGroupName(String muscleGroupName) {
-        this.muscleGroupName = muscleGroupName;
+    public String getMuscleName() {
+        return muscleName;
+    }
+
+    public void setMuscleName(String muscleName) {
+        this.muscleName = muscleName;
+    }
+
+    public int getIdMuscle() {
+        return idMuscle;
+    }
+
+    public void setIdMuscle(int idMuscle) {
+        this.idMuscle = idMuscle;
     }
 
     @Override
@@ -63,14 +79,6 @@ public class ExerciseWithMuscleGroup implements IExerciseListable {
         this.note = updatedExercise.getNote();
     }
 
-    public int getIdMuscleGroup() {
-        return idMuscleGroup;
-    }
-
-    public void setIdMuscleGroup(int idMuscleGroup) {
-        this.idMuscleGroup = idMuscleGroup;
-    }
-
     @Override
     public void setLocked(boolean locked) {
         this.locked = locked;
@@ -79,6 +87,6 @@ public class ExerciseWithMuscleGroup implements IExerciseListable {
     @Override
     @Ignore
     public String getCategory() {
-        return muscleGroupName;
+        return muscleName;
     }
 }

@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/11/18 7:36 PM.
+ */
+
 package com.longlife.workoutlogger.view.Exercises;
 
 import android.arch.lifecycle.ViewModel;
@@ -68,19 +74,19 @@ public class ExercisesViewModel
         return exerciseEditedObservable;
     }
 
-    public PublishSubject<Exercise> getExerciseInsertedObservable() {
+    PublishSubject<Exercise> getExerciseInsertedObservable() {
         return exerciseInsertedObservable;
     }
 
-    public PublishSubject<ExerciseLocked> getExerciseLockedObservable() {
+    PublishSubject<ExerciseLocked> getExerciseLockedObservable() {
         return exerciseLockedObservable;
     }
 
-    public PublishSubject<DeletedExercise> getExerciseRestoredObservable() {
+    PublishSubject<DeletedExercise> getExerciseRestoredObservable() {
         return exerciseRestoredObservable;
     }
 
-    public DeletedExercise getFirstDeletedExercise() {
+    DeletedExercise getFirstDeletedExercise() {
         return exercisesToDelete.poll();
     }
 
@@ -102,7 +108,7 @@ public class ExercisesViewModel
         return repo.getExerciseUpdatableFromId(idExercise);
     }
 
-    public void addDeletedExercise(ExerciseShort ex, int pos) {
+    void addDeletedExercise(ExerciseShort ex, int pos) {
         exercisesToDelete.add(new DeletedExercise(ex, pos));
     }
 
@@ -113,15 +119,15 @@ public class ExercisesViewModel
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public PublishSubject<List<ExerciseShort>> getExerciseListObservable() {
+    PublishSubject<List<ExerciseShort>> getExerciseListObservable() {
         return exerciseListObservable;
     }
 
-    public PublishSubject<List<ExerciseWithMuscleGroup>> getExerciseListByMuscleObservable() {
+    PublishSubject<List<ExerciseWithMuscleGroup>> getExerciseListByMuscleObservable() {
         return exerciseListByMuscleObservable;
     }
 
-    public void loadExercises() {
+    void loadExercises() {
         if (cachedExercises == null) cachedExercises = new ExercisesCache();
         if (!cachedExercises.needsUpdating()) {
             exerciseListObservable.onNext(cachedExercises.getExercises());
@@ -150,7 +156,7 @@ public class ExercisesViewModel
                 });
     }
 
-    public void loadExercisesByMuscleGroup(int idMuscleGroup) {
+    void loadExercisesByMuscleGroup(int idMuscleGroup) {
         repo.getExercisesByMuscleGroup(idMuscleGroup)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -242,12 +248,12 @@ public class ExercisesViewModel
                 });
     }
 
-    public void restoreExercise(DeletedExercise deletedExercise) {
+    void restoreExercise(DeletedExercise deletedExercise) {
         setExerciseHiddenStatus(deletedExercise.getExercise().getIdExercise(), false);
         exerciseRestoredObservable.onNext(deletedExercise);
     }
 
-    public void setExerciseHiddenStatus(Long idExercise, boolean isHidden) {
+    void setExerciseHiddenStatus(Long idExercise, boolean isHidden) {
         Completable.fromAction(() -> repo.setExerciseHiddenStatus(idExercise, isHidden))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -278,7 +284,7 @@ public class ExercisesViewModel
         private List<ExerciseShort> exercises = new ArrayList<>();
         private boolean needsUpdating = true;
 
-        public ExercisesCache() {
+        ExercisesCache() {
         }
 
         public ExercisesCache(List<ExerciseShort> exercises) {
@@ -295,15 +301,15 @@ public class ExercisesViewModel
             needsUpdating = false;
         }
 
-        public boolean needsUpdating() {
+        boolean needsUpdating() {
             return needsUpdating;
         }
 
-        public void needsUpdating(boolean needsUpdating) {
+        void needsUpdating(boolean needsUpdating) {
             this.needsUpdating = needsUpdating;
         }
 
-        public void updateExercise(ExerciseUpdated updatedExercise) {
+        void updateExercise(ExerciseUpdated updatedExercise) {
             final Long id = updatedExercise.getIdExercise();
             for (ExerciseShort ex : exercises) {
                 if (ex.getIdExercise().equals(id)) {
@@ -312,7 +318,7 @@ public class ExercisesViewModel
             }
         }
 
-        public void updateLockStatus(Long idExercise, boolean lockedStatus) {
+        void updateLockStatus(Long idExercise, boolean lockedStatus) {
             for (ExerciseShort ex : exercises) {
                 if (ex.getIdExercise().equals(idExercise)) {
                     ex.setLocked(lockedStatus);

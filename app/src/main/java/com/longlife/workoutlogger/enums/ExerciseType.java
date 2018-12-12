@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/8/18 10:28 AM.
+ */
+
 package com.longlife.workoutlogger.enums;
 
 import android.content.Context;

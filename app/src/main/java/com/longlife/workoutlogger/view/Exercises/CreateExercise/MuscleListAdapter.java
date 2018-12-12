@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/27/18 9:07 PM.
+ */
+
 package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 
 import android.support.v7.widget.RecyclerView;
@@ -83,7 +89,7 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public MuscleListAdapter(List<MuscleListHelper> data) {
+    MuscleListAdapter(List<MuscleListHelper> data) {
         super();
 
         this.data = data;
@@ -238,7 +244,7 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return itemCount;
     }
 
-    public Set<ExerciseMuscle> getExerciseMuscles() {
+    Set<ExerciseMuscle> getExerciseMuscles() {
         Set<ExerciseMuscle> muscles = new HashSet<>();
         for (Integer idMuscle : selectedIdMuscle) {
             muscles.add(new ExerciseMuscle(Long.valueOf(idMuscle)));

@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:26 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 10/3/18 9:17 PM.
+ */
+
 package com.longlife.workoutlogger.CustomAnnotationsAndExceptions;
 
 import android.content.Context;

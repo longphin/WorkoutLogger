@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/11/18 7:46 PM.
+ */
+
 package com.longlife.workoutlogger.data;
 
 import android.arch.persistence.room.Delete;
@@ -22,7 +28,6 @@ import io.reactivex.Maybe;
 import io.reactivex.Single;
 
 
-
 /**
  * Created by Longphi on 1/3/2018.
  */
@@ -38,7 +43,7 @@ public abstract class ExerciseDao {
     public abstract Single<List<ExerciseShort>> getExerciseShort();
 
     // Get a list of exercises, with the related muscles split up (1 row per muscle), for a specified muscle group.
-    @Query("SELECT DISTINCT e.idExercise, e.name, e.note, e.locked, me.idMuscleGroup " +
+    @Query("SELECT e.idExercise, e.name, e.note, e.locked, em.idMuscle " +
             "FROM Exercise as e " +
             "   LEFT JOIN ExerciseMuscle as em on e.idExercise=em.idExercise " +
             "   LEFT JOIN MuscleEntity as me on em.idMuscle=me.idMuscle " +

@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 10/3/18 9:17 PM.
+ */
+
 package com.longlife.workoutlogger.view.Routines;
 
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +25,7 @@ public class RoutinesAdapter
     private List<Routine> routines = new ArrayList<>();
     private IClickRoutine onClickCallback;
 
-    public RoutinesAdapter(IClickRoutine onClickCallback) {
+    RoutinesAdapter(IClickRoutine onClickCallback) {
         this.onClickCallback = onClickCallback;
     }
 
@@ -61,23 +67,23 @@ public class RoutinesAdapter
         notifyDataSetChanged();
     }
 
-    public void addRoutine(Routine routine) {
+    void addRoutine(Routine routine) {
         Log.d(TAG, "inserted routine " + routine.getName() + " " + String.valueOf(routine.getIdRoutine()));
 
         this.routines.add(routine);
         notifyItemInserted(routines.size() - 1);
     }
 
-    public Routine getRoutine(int position) {
+    Routine getRoutine(int position) {
         return routines.get(position);
     }
 
-    public void removeRoutine(int position) {
+    void removeRoutine(int position) {
         routines.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void restoreRoutine(Routine restoredItem, int restoredPosition) {
+    void restoreRoutine(Routine restoredItem, int restoredPosition) {
         routines.add(restoredPosition, restoredItem);
         notifyItemInserted(restoredPosition);
     }

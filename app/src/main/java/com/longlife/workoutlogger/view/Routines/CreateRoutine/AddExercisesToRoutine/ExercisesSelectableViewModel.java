@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/24/18 1:46 PM.
+ */
+
 package com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine;
 
 import android.arch.lifecycle.ViewModel;
@@ -36,23 +42,23 @@ public class ExercisesSelectableViewModel
         return addExercisesToRoutine.getObservable();
     }
 
-    public void clearIdSelectedExercises() {
+    void clearIdSelectedExercises() {
         selectedIdExercises.clear();
     }
 
-    public boolean isIdSelected(Long idExercise) {
+    boolean isIdSelected(Long idExercise) {
         return selectedIdExercises.contains(idExercise);
     }
 
-    public void removeSelectedExercise(Long idExercise) {
+    void removeSelectedExercise(Long idExercise) {
         selectedIdExercises.remove(idExercise);
     }
 
-    public void addSelectedExercise(Long idExercise) {
+    void addSelectedExercise(Long idExercise) {
         selectedIdExercises.add(idExercise);
     }
 
-    public void addExercisesToRoutine() {
+    void addExercisesToRoutine() {
         Log.d(TAG, "addExercisesToRoutine()");
         if (addExercisesToRoutine.getStatus() == Status.LOADING)
             return;

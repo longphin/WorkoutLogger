@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/4/18 4:55 PM.
+ */
+
 package com.longlife.workoutlogger.view.Exercises.PerformExercise;
 
 import android.view.View;
@@ -7,14 +13,14 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.AndroidUtils.ExercisesWithSetsViewHolder;
 import com.longlife.workoutlogger.R;
 
-public class PerformRoutineViewHolder
+class PerformRoutineViewHolder
         extends ExercisesWithSetsViewHolder {
     private TextView weightsTextView;
     private TextView repsTextView;
 
     private ImageView startRestView;
 
-    public PerformRoutineViewHolder(View view) {
+    PerformRoutineViewHolder(View view) {
         super(view);
 
         weightsTextView = view.findViewById(R.id.txt_perform_routine_set_weights);
@@ -22,15 +28,15 @@ public class PerformRoutineViewHolder
         startRestView = view.findViewById(R.id.img_perform_routine_startRest);
     }
 
-    public TextView getWeightsTextView() {
+    TextView getWeightsTextView() {
         return weightsTextView;
     }
 
-    public TextView getRepsTextView() {
+    TextView getRepsTextView() {
         return repsTextView;
     }
 
-    public ImageView getStartRestView() {
+    ImageView getStartRestView() {
         return startRestView;
     }
 }

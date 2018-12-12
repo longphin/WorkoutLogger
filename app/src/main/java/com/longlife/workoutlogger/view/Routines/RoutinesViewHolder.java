@@ -1,9 +1,16 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/28/18 6:53 PM.
+ */
+
 package com.longlife.workoutlogger.view.Routines;
 
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.R;
 
@@ -14,7 +21,7 @@ public class RoutinesViewHolder
     private RelativeLayout background;
     private ConstraintLayout foreground;
 
-    public RoutinesViewHolder(View itemView) {
+    RoutinesViewHolder(View itemView) {
         super(itemView);
 
         this.name = itemView.findViewById(R.id.txt_routineName);
@@ -35,16 +42,16 @@ public class RoutinesViewHolder
     }
 
 
-    public TextView getNameTextView() {
+    TextView getNameTextView() {
         return name;
     }
 
 
-    public void setNameText(String s) {
+    void setNameText(String s) {
         this.name.setText(s);
     }
 
-    public void setDescripText(String s) {
+    void setDescripText(String s) {
         this.descrip.setText(s);
     }
 }

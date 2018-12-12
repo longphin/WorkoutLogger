@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/28/18 6:53 PM.
+ */
+
 package com.longlife.workoutlogger.view.Routines.CreateRoutine;
 
 import android.content.Context;
@@ -19,7 +25,7 @@ public class RoutineCreateAdapter
 
     private IOnSetClick onSetClickListener;
 
-    public RoutineCreateAdapter(Context context, IOnSetClick onSetClickListener) {
+    RoutineCreateAdapter(Context context, IOnSetClick onSetClickListener) {
         super(context);
 
         this.onSetClickListener = onSetClickListener;
@@ -41,8 +47,7 @@ public class RoutineCreateAdapter
 
     @Override
     public void bindSetViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (!(holder instanceof ExercisesWithSetsViewHolder))
-        {
+        if (!(holder instanceof ExercisesWithSetsViewHolder)) {
             Log.e(TAG, "View holder is not of the proper instance.");
             return;
         }

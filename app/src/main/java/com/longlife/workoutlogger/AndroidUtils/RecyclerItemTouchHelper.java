@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:26 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/28/18 6:52 PM.
+ */
+
 package com.longlife.workoutlogger.AndroidUtils;
 
 import android.graphics.Canvas;
@@ -70,7 +76,7 @@ public class RecyclerItemTouchHelper
                             int actionState, boolean isCurrentlyActive) {
         // If swiping, then only move the foreground.
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            if (viewHolder != null && viewHolder instanceof RecyclerViewHolderSwipeable) {
+            if (viewHolder instanceof RecyclerViewHolderSwipeable) {
                 final View foregroundView = ((RecyclerViewHolderSwipeable) viewHolder).getViewForeground();
 
                 getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,

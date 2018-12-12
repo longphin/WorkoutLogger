@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/24/18 1:46 PM.
+ */
+
 package com.longlife.workoutlogger.model;
 
 import android.arch.persistence.room.Entity;
@@ -76,7 +82,7 @@ public class SessionExerciseSet
         return type;
     }
 
-    public void setType(SetType type) {
+    public void setType(@NonNull SetType type) {
         this.type = type;
     }
 
@@ -144,7 +150,7 @@ public class SessionExerciseSet
         return reps;
     }
 
-    public void setReps(Integer reps) {
+    public void setReps(@Nullable Integer reps) {
         this.reps = reps;
     }
 
@@ -170,7 +176,7 @@ public class SessionExerciseSet
         return weights;
     }
 
-    public void setWeights(Double weights) {
+    public void setWeights(@Nullable Double weights) {
         this.weights = weights;
     }
 

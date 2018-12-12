@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/27/18 9:07 PM.
+ */
+
 package com.longlife.workoutlogger.data;
 
 import android.arch.persistence.room.Delete;
@@ -19,7 +25,6 @@ import java.util.List;
 
 import io.reactivex.Maybe;
 import io.reactivex.Single;
-
 
 
 /**

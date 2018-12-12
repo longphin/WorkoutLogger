@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:26 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/4/18 6:41 PM.
+ */
+
 package com.longlife.workoutlogger;
 
 import android.app.Application;
@@ -84,6 +90,7 @@ public class MyApplication
     };
 
     private static final String PRELOAD_FILE_1 = "preloadedFile1.json";
+
     @Override
     public void onCreate() {
         super.onCreate();

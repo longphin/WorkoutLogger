@@ -1,13 +1,26 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/24/18 1:46 PM.
+ */
+
 package com.longlife.workoutlogger.view.Routines;
 
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
+
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.comparators.RoutineComparators;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
@@ -15,11 +28,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 public class RoutinesViewModel
         extends ViewModel {
@@ -53,7 +61,7 @@ public class RoutinesViewModel
     }
 
 
-    public DeletedRoutine getFirstDeletedRoutine() {
+    DeletedRoutine getFirstDeletedRoutine() {
         return routinesToDelete.poll();
     }
 
@@ -61,11 +69,11 @@ public class RoutinesViewModel
         return insertResponse.getObservable();
     }
 
-    public Observable<Response<List<Routine>>> getLoadResponse() {
+    Observable<Response<List<Routine>>> getLoadResponse() {
         return loadResponse.getObservable();
     }
 
-    public void loadRoutines() {
+    void loadRoutines() {
         disposables.add(repo.getRoutines()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -119,11 +127,11 @@ public class RoutinesViewModel
         );
     }
 
-    public void addDeletedRoutine(Routine deletedItem, int position) {
+    void addDeletedRoutine(Routine deletedItem, int position) {
         routinesToDelete.add(new DeletedRoutine(deletedItem, position));
     }
 
-    public void setRoutineHiddenStatus(Long idRoutine, boolean isHidden) {
+    void setRoutineHiddenStatus(Long idRoutine, boolean isHidden) {
         Completable.fromAction(() -> repo.setRoutineAsHidden(idRoutine, isHidden))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

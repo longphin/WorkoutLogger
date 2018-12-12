@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/11/18 7:36 PM.
+ */
+
 package com.longlife.workoutlogger.data;
 
 import com.longlife.workoutlogger.model.Exercise.Exercise;
@@ -96,8 +102,7 @@ public class Repository {
     }
 
     // Update the history for an exercise.
-    public void updateExercise(ExerciseUpdated ex, Set<ExerciseMuscle> relatedMuscles, Set<ExerciseMuscle> musclesToDelete)
-    {
+    public void updateExercise(ExerciseUpdated ex, Set<ExerciseMuscle> relatedMuscles, Set<ExerciseMuscle> musclesToDelete) {
         exerciseDao.updateExercise(ex, relatedMuscles, musclesToDelete);//ex.getIdExercise(), ex.getName(), ex.getNote());
     }
 

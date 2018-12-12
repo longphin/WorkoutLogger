@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:26 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/24/18 1:46 PM.
+ */
+
 package com.longlife.workoutlogger;
 
 import android.app.PendingIntent;
@@ -158,8 +164,8 @@ public class TimerNotificationService
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    public class LocalBinder extends Binder {
-        public TimerNotificationService getService() {
+    class LocalBinder extends Binder {
+        TimerNotificationService getService() {
             return TimerNotificationService.this;
         }
     }

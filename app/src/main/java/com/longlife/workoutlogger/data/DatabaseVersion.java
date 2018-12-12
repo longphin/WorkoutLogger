@@ -1,7 +1,13 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/10/18 6:34 PM.
+ */
+
 package com.longlife.workoutlogger.data;
 
 // A list of database versions.
-public class DatabaseVersion {
+class DatabaseVersion {
 
     // INITIAL mainly works with Exercise DAO
     private static final int INITIAL_A = 1; // base, nothing really new

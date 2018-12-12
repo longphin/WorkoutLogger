@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/11/18 8:13 PM.
+ */
+
 package com.longlife.workoutlogger.view.Exercises;
 
 
@@ -27,6 +33,7 @@ import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
+import com.longlife.workoutlogger.enums.Muscle;
 import com.longlife.workoutlogger.enums.MuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
@@ -86,9 +93,9 @@ public class ExercisesListFragment extends FragmentBase {
                 .getApplicationComponent()
                 .inject(this);
         viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
-        addDisposable(viewModel.getExerciseListObservable().subscribe(exercises -> loadData(exercises)));
-        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(exercise -> processExerciseInserted(exercise)));
-        addDisposable(viewModel.getExerciseListByMuscleObservable().subscribe(exercisesWithMuscles -> loadDataWithMuscles(exercisesWithMuscles)));
+        addDisposable(viewModel.getExerciseListObservable().subscribe(this::loadData));
+        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
+        addDisposable(viewModel.getExerciseListByMuscleObservable().subscribe(this::loadDataWithMuscles));
 
         //initializeObservers();
         setHasOptionsMenu(true);
@@ -228,12 +235,7 @@ public class ExercisesListFragment extends FragmentBase {
 
     // Convert a list of exercises to a list of the underlying interface.
     private List<IExerciseListable> convertExerciseToInferface(List<ExerciseShort> exercises) {
-        List<IExerciseListable> interfaces = new ArrayList<>();
-        for (int i = 0; i < exercises.size(); i++) {
-            interfaces.add((IExerciseListable) exercises.get(i));
-        }
-
-        return interfaces;
+        return new ArrayList<>(exercises);
     }
 
     // Convert a list of exercises with muscles to a list of the underlying interface.
@@ -241,8 +243,8 @@ public class ExercisesListFragment extends FragmentBase {
         List<IExerciseListable> interfaces = new ArrayList<>();
         for (int i = 0; i < exercises.size(); i++) {
             ExerciseWithMuscleGroup ex = exercises.get(i);
-            ex.setMuscleGroupName(MuscleGroup.getMuscleGroupName(getContext(), ex.getIdMuscleGroup()));
-            interfaces.add((IExerciseListable) ex);
+            ex.setMuscleName(Muscle.getMuscleName(getContext(), ex.getIdMuscle()));
+            interfaces.add(ex);
         }
 
         return interfaces;
@@ -279,12 +281,8 @@ public class ExercisesListFragment extends FragmentBase {
                     return false;
                 }
             });
-            searchView.setOnClickListener(new View.OnClickListener() {
-                                              @Override
-                                              public void onClick(View v) {
-
-                                              }
-                                          }
+            searchView.setOnClickListener(view -> {
+                    }
             );
         }
     }

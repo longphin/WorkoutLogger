@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/27/18 9:07 PM.
+ */
+
 package com.longlife.workoutlogger.view.Profile;
 
 
@@ -8,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.R;
 
@@ -24,9 +31,7 @@ public class ProfileFragment
     }
 
     public static Fragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-
-        return fragment;
+        return new ProfileFragment();
     }
 
 

@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/11/18 7:36 PM.
+ */
+
 package com.longlife.workoutlogger.view.Exercises;
 
 import android.support.annotation.NonNull;
@@ -27,7 +33,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         resetData(exercises);
     }
 
-    public void resetData(List<IExerciseListable> exercises) {
+    void resetData(List<IExerciseListable> exercises) {
         originalData = exercises;
         setData(exercises);
     }
@@ -57,7 +63,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     // When inserting an exercise, split the data into two to see which chunk the new exercise should be inserted.
-    public void addExercise(ExerciseShort exerciseShort) {
+    void addExercise(ExerciseShort exerciseShort) {
         // Add the exercise to the data list.
         originalData.add(exerciseShort);
 

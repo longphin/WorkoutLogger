@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/8/18 11:01 AM.
+ */
+
 package com.longlife.workoutlogger.enums;
 
 import android.content.Context;
@@ -9,13 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExerciseListGroupBy {
-    public static final int GROUP_BY_NAME = 0;
-    public static final int GROUP_BY_MUSCLE_GROUP_CHEST = 1;
-    public static final int GROUP_BY_MUSCLE_GROUP_BACK = 2;
-    public static final int GROUP_BY_MUSCLE_GROUP_ARMS = 3;
-    public static final int GROUP_BY_MUSCLE_GROUP_SHOULDERS = 4;
-    public static final int GROUP_BY_MUSCLE_GROUP_LEGS = 5;
-    public static final int GROUP_BY_MUSCLE_GROUP_CORE = 6;
+    private static final int GROUP_BY_NAME = 0;
+    private static final int GROUP_BY_MUSCLE_GROUP_CHEST = 1;
+    private static final int GROUP_BY_MUSCLE_GROUP_BACK = 2;
+    private static final int GROUP_BY_MUSCLE_GROUP_ARMS = 3;
+    private static final int GROUP_BY_MUSCLE_GROUP_SHOULDERS = 4;
+    private static final int GROUP_BY_MUSCLE_GROUP_LEGS = 5;
+    private static final int GROUP_BY_MUSCLE_GROUP_CORE = 6;
 
     public static List<Type> getOptions(Context context) {
         String prefix = GetResource.getStringResource(context, R.string.GROUPBY_PREFIX);

@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:26 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 12/4/18 6:25 PM.
+ */
+
 package com.longlife.workoutlogger.AndroidUtils;
 
 import android.content.Context;
@@ -49,6 +55,7 @@ public class StringArrayAdapter
     }
 
     @Override
+    @NonNull
     public View getView(int position, View view, @NonNull ViewGroup parent) {
         if (view == null) {
             view = LayoutInflater.from(parent.getContext()).inflate(itemLayout, parent, false);

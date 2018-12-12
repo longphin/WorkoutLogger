@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:26 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 11/24/18 1:46 PM.
+ */
+
 package com.longlife.workoutlogger.AndroidUtils;
 
 import android.content.Context;
@@ -34,7 +40,7 @@ public abstract class ExercisesWithSetsAdapter
     private static final int ADD_SET_TYPE = 3;
 
     // Contains a list of exercises in this adapter.
-    protected List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
+    private List<RoutineExerciseHelper> exercisesToInclude = new ArrayList<>();
     protected Context context;
 
     // Constructor.

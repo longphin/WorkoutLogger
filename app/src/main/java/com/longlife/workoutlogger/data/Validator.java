@@ -1,3 +1,9 @@
+/*
+ * Created by Longphi Nguyen on 12/11/18 8:25 PM.
+ * Copyright (c) 2018. All rights reserved.
+ * Last modified 10/3/18 9:17 PM.
+ */
+
 package com.longlife.workoutlogger.data;
 
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
@@ -13,12 +19,10 @@ public class Validator {
     public static boolean validateForNulls(Object objectToValidate)
             throws RequiredFieldException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
 
-        /**
-         *  Get all the fields of the class
-         */
+        //Get all the fields of the class
         Field[] declaredFields = objectToValidate.getClass().getDeclaredFields();
 
-        /**
+        /*
          *  Iterate over each field to check if that field
          *  has the "Required" annotation declared for it or not
          */
@@ -26,24 +30,24 @@ public class Validator {
 
             Annotation annotation = field.getAnnotation(Required.class);
 
-            /**
+            /*
              *  Check if the annotation is present on that field
              */
             if (annotation != null) {
 
                 Required required = (Required) annotation;
 
-                /**
+                /*
                  *  Check if it says this field is required
                  */
                 if (required.value()) {
-                    /**
+                    /*
                      *  Now we make sure we can access the private
                      *  fields also, so we need to call this method also
                      *  other wise we would get a {@link java.lang.IllegalAccessException}
                      */
                     field.setAccessible(true);
-                    /**
+                    /*
                      *  If this field is required, then it should be present
                      *  in the declared fields array, if it is throw the
                      *  {@link RequiredFieldException}
