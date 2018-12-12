@@ -138,7 +138,7 @@ public class ExerciseCreateFragment
 
     protected void initializeMusclesList() {
         musclesList = mView.findViewById(R.id.rv_exercise_create_muscles);
-        musclesList.setLayoutManager(//new LinearLayoutManager(this.getActivity()));
+        musclesList.setLayoutManager(
                 new GridLayoutManager(this.getActivity(), MuscleListAdapter.NUMBER_OF_COLUMNS));
         // Adapter
         adapter = new MuscleListAdapter(MuscleGroup.getAllMuscleGroups(getActivity()));

@@ -36,7 +36,7 @@ public class Muscle {
     public static final int OBLIQUES = 18;
     public static final int SERRATUS = 19;
     // Chest
-    public static final int UPPER_PEC = 20; // [TODO] add the other pecs?
+    public static final int UPPER_PEC = 20;
     public static final int MIDDLE_PEC = 21;
     public static final int LOWER_PEC = 22;
 
@@ -171,7 +171,7 @@ public class Muscle {
         isSelected = !isSelected;
     }
 
-    private static List<Integer> getAllMuscles() {
+    public static List<Integer> getAllMuscles() {
         List<Integer> idMuscles = new ArrayList<>();
         idMuscles.add(TRAPS);
         idMuscles.add(RHOMBOIDS);

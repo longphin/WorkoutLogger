@@ -3,6 +3,7 @@ package com.longlife.workoutlogger.data;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
+import com.longlife.workoutlogger.model.Exercise.ExerciseWithMuscleGroup;
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.MuscleEntity;
@@ -35,6 +36,10 @@ public class Repository {
 
     public Single<List<Exercise>> getExercises() {
         return (exerciseDao.getExercises());
+    }
+
+    public Single<List<ExerciseWithMuscleGroup>> getExercisesByMuscleGroup(int idMuscleGroup) {
+        return exerciseDao.getExerciseByMuscleGroup(idMuscleGroup);
     }
 
     public Single<List<ExerciseShort>> getExerciseShort() {

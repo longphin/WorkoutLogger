@@ -8,6 +8,7 @@ import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseLocked;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
+import com.longlife.workoutlogger.model.Exercise.ExerciseWithMuscleGroup;
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
@@ -46,6 +47,7 @@ public class ExercisesViewModel
     private final PublishSubject<ExerciseUpdated> exerciseEditedObservable = PublishSubject.create();
     // Observable for when an exercise is unhidden.
     private final PublishSubject<DeletedExercise> exerciseRestoredObservable = PublishSubject.create();
+    private final PublishSubject<List<ExerciseWithMuscleGroup>> exerciseListByMuscleObservable = PublishSubject.create();
     private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
     private Repository repo;
 
@@ -115,6 +117,10 @@ public class ExercisesViewModel
         return exerciseListObservable;
     }
 
+    public PublishSubject<List<ExerciseWithMuscleGroup>> getExerciseListByMuscleObservable() {
+        return exerciseListByMuscleObservable;
+    }
+
     public void loadExercises() {
         if (cachedExercises == null) cachedExercises = new ExercisesCache();
         if (!cachedExercises.needsUpdating()) {
@@ -135,6 +141,28 @@ public class ExercisesViewModel
                     public void onSuccess(List<ExerciseShort> exercises) {
                         cachedExercises.setExercises(exercises);
                         exerciseListObservable.onNext(exercises);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    public void loadExercisesByMuscleGroup(int idMuscleGroup) {
+        repo.getExercisesByMuscleGroup(idMuscleGroup)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<ExerciseWithMuscleGroup>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<ExerciseWithMuscleGroup> exerciseWithMuscles) {
+                        exerciseListByMuscleObservable.onNext(exerciseWithMuscles);
                     }
 
                     @Override

@@ -58,7 +58,9 @@ public class DatabaseVersion {
     private static final int V9_0 = 44;
     private static final int V9_1 = 45; // Adding Muscle Entity and Muscle Group Entity tables.
     private static final int V9_1b = 46; // Ooops. Muscle Entity was initialized incorrectly.
+    private static final int V9_1c = 47; // Recreate database to find debug error related to the first exercise being created.
+    private static final int V9_1d = 48; // Recreate database to find debug error related to the first exercise being created.
 
-    static final int CURRENT = V9_1b;
+    static final int CURRENT = V9_1d;
 }
 

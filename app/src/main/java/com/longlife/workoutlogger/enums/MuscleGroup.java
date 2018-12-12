@@ -31,14 +31,14 @@ public class MuscleGroup {
         return groups;
     }
 
-    private static List<Integer> getAllMuscleGroupsIds() {
+    public static List<Integer> getAllMuscleGroupsIds() {
         List<Integer> idMuscleGroups = new ArrayList<>();
-        idMuscleGroups.add(CHEST);
-        idMuscleGroups.add(BACK);
         idMuscleGroups.add(ARMS);
-        idMuscleGroups.add(SHOULDERS);
-        idMuscleGroups.add(LEGS);
+        idMuscleGroups.add(BACK);
+        idMuscleGroups.add(CHEST);
         idMuscleGroups.add(CORE);
+        idMuscleGroups.add(LEGS);
+        idMuscleGroups.add(SHOULDERS);
 
         return idMuscleGroups;
     }
@@ -90,9 +90,19 @@ public class MuscleGroup {
     {
         List<Muscle> muscles = new ArrayList<>();
 
+        for (Integer idMuscle : Muscle.getAllMuscles())//getAllMuscleGroupsIds())
+        {
+            if (getMuscleGroupForMuscle(idMuscle) == idMuscleGroup) {
+                muscles.add(new Muscle(context, idMuscleGroup, idMuscle));
+            }
+        }
+
+        /*
         switch (idMuscleGroup) {
             case CHEST:
                 muscles.add(new Muscle(context, idMuscleGroup, Muscle.UPPER_PEC));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.MIDDLE_PEC));
+                muscles.add(new Muscle(context, idMuscleGroup, Muscle.LOWER_PEC));
                 break;
             case BACK:
                 muscles.add(new Muscle(context, idMuscleGroup, Muscle.TRAPS));
@@ -125,6 +135,7 @@ public class MuscleGroup {
                 muscles.add(new Muscle(context, idMuscleGroup, Muscle.SERRATUS));
                 break;
         }
+        */
 
         return new MuscleListHelper(idMuscleGroup, getMuscleGroupName(context, idMuscleGroup), muscles, MuscleListAdapter.NUMBER_OF_COLUMNS);
     }

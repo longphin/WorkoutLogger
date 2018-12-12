@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
+import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,30 +21,30 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
     private static final int EXERCISE_TYPE = 1;
     private List<IViewItem> data = new ArrayList<>();
     private Set<String> headers = new HashSet<>();
-    private List<ExerciseShort> originalData;
+    private List<IExerciseListable> originalData;
 
-    ExercisesListRemakeAdapter(List<ExerciseShort> exercises) {
+    ExercisesListRemakeAdapter(List<IExerciseListable> exercises) {
+        resetData(exercises);
+    }
+
+    public void resetData(List<IExerciseListable> exercises) {
         originalData = exercises;
         setData(exercises);
     }
 
-    private void setData(List<ExerciseShort> exercises) {
+    public void setData(List<IExerciseListable> exercises) {
         data.clear();
         headers.clear();
-        //Set<String> headers = new HashSet<>(); // A temporary set to keep track of which headers to create.
         for (int i = 0; i < exercises.size(); i++) // [TODO] Make this an async task.
         {
-            ExerciseShort ex = exercises.get(i);
+            IExerciseListable ex = exercises.get(i);
             // Get how the exercise will be grouped by.
-            String name = ex.getName();
-            String headerCategory = name.substring(0, Math.min(1, name.length()));
-            headers.add(headerCategory);//new headerItem(headerCategory, headerCategory));
-            //data.add(new exerciseItem(headerCategory, ex));
+            String headerCategory = ex.getCategory();
+            headers.add(headerCategory);
             addItem(new exerciseItem(headerCategory, ex));
         }
         // Include headers
         for (String s : headers) {
-            //data.add(new headerItem(s, s));
             addItem(new headerItem(s, s));
         }
 
@@ -66,14 +66,24 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         String category = name.substring(0, Math.min(1, name.length()));
         IViewItem itemToAdd = new exerciseItem(category, exerciseShort);
 
-        //Set<String> headers = new HashSet<>(); // A temporary set to keep track of which headers to create.
+        // If this is the first item in the dataset, then we just insert it the first position.
+        if (data.size() == 0) {
+            headers.add(category);
+            addItem(0, new headerItem(category, category));
+            addItem(1, new exerciseItem(category, exerciseShort));
+            notifyItemRangeInserted(0, 2);
+            return;
+        }
+
+        // Determine where to place the new item. Do a binary search, where at each step, it splits the slice into 2 chunks, and then it picks which chunk the new item belongs to.
         int lowerbound = 0;
         int center = (int) Math.floor(data.size() / 2);
         int upperbound = data.size() - 1;
+
         while (center - lowerbound > 0 || upperbound - center > 0) {
             IViewItem centerItem = data.get(center);
-            //if (category.compareTo(centerItem.category()) < 0 && name.compareTo(centerItem.toString()) < 0) // The item belongs in the lower section.
-            if (itemToAdd.compareTo(centerItem) < 0) {
+
+            if (itemToAdd.compareTo(centerItem) < 0) { // The item belongs in the lower section.
                 upperbound = center;
             } else { // The item belongs in the upper section.
                 lowerbound = center + 1;
@@ -83,44 +93,35 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
 
         IViewItem lowerItem = data.get(lowerbound);
         IViewItem upperItem = data.get(upperbound);
-        //if(category.compareTo(lowerItem.category()) <= 0 && name.compareTo(lowerItem.toString()) < 0) // The item is the lowest item.
+        // The item is the lowest item.
         if (itemToAdd.compareTo(lowerItem) < 0) {
             if (!headers.contains(category)) {
                 headers.add(category);
-                //data.add(lowerbound, new headerItem(category, category));
-                //data.add(lowerbound + 1, new exerciseItem(category, exerciseShort));
                 addItem(lowerbound, new headerItem(category, category));
                 addItem(lowerbound + 1, new exerciseItem(category, exerciseShort));
                 notifyItemRangeInserted(lowerbound, 2);
             } else {
-                //data.add(lowerbound, new exerciseItem(category, exerciseShort));
                 addItem(lowerbound, new exerciseItem(category, exerciseShort));
                 notifyItemInserted(lowerbound);
             }
-            //} else if (category.compareTo(upperItem.category()) >= 0 && name.compareTo(upperItem.toString()) > 0){ // THe item is the highest item.
+            // The item is the highest item.
         } else if (itemToAdd.compareTo(upperItem) > 0) {
             if (!headers.contains(category)) {
                 headers.add(category);
-                //data.add(upperbound + 1, new headerItem(category, category));
-                //data.add(upperbound + 2, new exerciseItem(category, exerciseShort));
                 addItem(upperbound + 1, new headerItem(category, category));
                 addItem(upperbound + 2, new exerciseItem(category, exerciseShort));
                 notifyItemRangeInserted(upperbound + 1, 2);
             } else {
-                //data.add(upperbound + 1, new exerciseItem(category, exerciseShort));
                 addItem(upperbound + 1, new exerciseItem(category, exerciseShort));
                 notifyItemInserted(upperbound + 1);
             }
         } else { // The item is the middle.
             if (!headers.contains(category)) {
                 headers.add(category);
-                //data.add(center, new headerItem(category, category));
-                //data.add(center + 1, new exerciseItem(category, exerciseShort));
                 addItem(center, new headerItem(category, category));
                 addItem(center + 1, new exerciseItem(category, exerciseShort));
                 notifyItemRangeInserted(center, 2);
             } else {
-                //data.add(center, new exerciseItem(category, exerciseShort));
                 addItem(center, new exerciseItem(category, exerciseShort));
                 notifyItemInserted(center);
             }
@@ -181,18 +182,16 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    void filter(int filterType, String query) {
-        List<ExerciseShort> filteredData = new ArrayList<>();
+    void filter(String query) {
+        List<IExerciseListable> filteredData = new ArrayList<>();
         if (query == null || query.isEmpty()) {
             filteredData = originalData;
         } else {
             query = query.toLowerCase();
 
-            if (filterType == ExerciseListGroupBy.GROUP_BY_NAME) {
-                for (ExerciseShort ex : originalData) {
-                    if (ex.getName().toLowerCase().contains(query)) {
-                        filteredData.add(ex);
-                    }
+            for (IExerciseListable ex : originalData) {
+                if (ex.getName().toLowerCase().contains(query)) {
+                    filteredData.add(ex);
                 }
             }
         }
@@ -263,7 +262,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         private String exerciseName;
         private Long idExercise;
 
-        exerciseItem(String category, ExerciseShort exercise) {
+        exerciseItem(String category, IExerciseListable exercise) {
             this.idExercise = exercise.getIdExercise();
             this.exerciseName = exercise.getName();
             this.category = category;

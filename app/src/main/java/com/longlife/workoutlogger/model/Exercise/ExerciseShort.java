@@ -1,6 +1,6 @@
 package com.longlife.workoutlogger.model.Exercise;
 
-public class ExerciseShort {
+public class ExerciseShort implements IExerciseListable {
     public Long idExercise;
     public String name;
     public String note;
@@ -26,30 +26,34 @@ public class ExerciseShort {
         update(ex);
     }
 
-    public void update(ExerciseUpdated updatedExercise) {
-        this.idExercise = updatedExercise.getIdExercise();
-        this.name = updatedExercise.getName();
-        this.note = updatedExercise.getNote();
+    @Override
+    public String getName() {
+        return name;
     }
 
     public boolean isLocked() {
         return locked;
     }
 
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
+    @Override
     public Long getIdExercise() {
         return idExercise;
+    }
+
+    @Override
+    public void update(ExerciseUpdated updatedExercise) {
+        this.idExercise = updatedExercise.getIdExercise();
+        this.name = updatedExercise.getName();
+        this.note = updatedExercise.getNote();
     }
 
     public void setIdExercise(Long idExercise) {
         this.idExercise = idExercise;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
     public void setName(String name) {
@@ -64,6 +68,10 @@ public class ExerciseShort {
         this.note = note;
     }
 
+    @Override
+    public String getCategory() {
+        return name.substring(0, Math.min(1, name.length()));
+    }
     /*
     public ExerciseShort update(ExerciseUpdated updatedExercise) {
         updateMe(updatedExercise);
