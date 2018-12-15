@@ -19,6 +19,10 @@ public class GetResource {
         return context.getResources().getString(resourceId);
     }
 
+    public static int getIntResource(Context context, int resourceId) {
+        return context.getResources().getInteger(resourceId);
+    }
+
     @NonNull
     public Resources getLocalizedResources(Context context, Locale desiredLocale) {
         Configuration conf = context.getResources().getConfiguration();

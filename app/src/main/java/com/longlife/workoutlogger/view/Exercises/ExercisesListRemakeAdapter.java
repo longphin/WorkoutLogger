@@ -144,6 +144,15 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         return headerViewHolder(parent);
     }
 
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+
+        if (holder instanceof IViewHolder) {
+            ((IViewHolder) holder).onDestroy();
+        }
+    }
+
     private RecyclerView.ViewHolder exerciseViewHolder(ViewGroup parent) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_exercise, parent, false); // [TODO] create another layout
         return new ExerciseListExerciseViewHolder(v);
@@ -174,6 +183,10 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    interface IViewHolder {
+        void onDestroy();
     }
 
     private void onBindHeaderViewHolder(ExerciseListHeaderViewHolder holder, int position) {

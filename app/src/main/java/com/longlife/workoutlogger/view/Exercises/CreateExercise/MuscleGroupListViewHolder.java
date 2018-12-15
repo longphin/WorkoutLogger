@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
 
-public class MuscleGroupListViewHolder extends RecyclerView.ViewHolder {
+public class MuscleGroupListViewHolder extends RecyclerView.ViewHolder implements MuscleListAdapter.IViewHolder {
     private TextView nameTextView;
 
     MuscleGroupListViewHolder(View itemView) {
@@ -23,5 +23,10 @@ public class MuscleGroupListViewHolder extends RecyclerView.ViewHolder {
 
     public void setName(String name) {
         nameTextView.setText(name);
+    }
+
+    @Override
+    public void onDestroy() {
+        //nameTextView = null;
     }
 }

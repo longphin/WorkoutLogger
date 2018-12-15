@@ -30,21 +30,21 @@ public class MuscleGroup {
 
     public static List<MuscleListHelper> getAllMuscleGroups(Context context) {
         List<MuscleListHelper> groups = new ArrayList<>();
-        for (Integer idMuscleGroup : MuscleGroup.getAllMuscleGroupsIds()) {
+        for (Integer idMuscleGroup : MuscleGroup.getAllMuscleGroupsIds(context)) {
             groups.add(getMuscleGroup(context, idMuscleGroup));
         }
 
         return groups;
     }
 
-    public static List<Integer> getAllMuscleGroupsIds() {
+    public static List<Integer> getAllMuscleGroupsIds(Context context) {
         List<Integer> idMuscleGroups = new ArrayList<>();
-        idMuscleGroups.add(ARMS);
-        idMuscleGroups.add(BACK);
-        idMuscleGroups.add(CHEST);
-        idMuscleGroups.add(CORE);
-        idMuscleGroups.add(LEGS);
-        idMuscleGroups.add(SHOULDERS);
+        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_arms));//ARMS);
+        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_back));//BACK);
+        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_chest));//CHEST);
+        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_core));//CORE);
+        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_legs));//LEGS);
+        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_shoulders));//SHOULDERS);
 
         return idMuscleGroups;
     }
@@ -52,7 +52,7 @@ public class MuscleGroup {
     private static MuscleListHelper getMuscleGroup(Context context, int idMuscleGroup) {
         List<Muscle> muscles = new ArrayList<>();
 
-        for (Integer idMuscle : Muscle.getAllMuscles()) {
+        for (Integer idMuscle : Muscle.getAllMuscles(context)) {
             if (getMuscleGroupForMuscle(idMuscle) == idMuscleGroup) {
                 muscles.add(new Muscle(context, idMuscleGroup, idMuscle));
             }
@@ -123,9 +123,9 @@ public class MuscleGroup {
         }
     }
 
-    public static List<MuscleGroupEntity> getAllMuscleGroupEntities() {
+    public static List<MuscleGroupEntity> getAllMuscleGroupEntities(Context context) {
         List<MuscleGroupEntity> muscleGroups = new ArrayList<>();
-        for (Integer idMuscleGroup : MuscleGroup.getAllMuscleGroupsIds()) {
+        for (Integer idMuscleGroup : MuscleGroup.getAllMuscleGroupsIds(context)) {
             muscleGroups.add(new MuscleGroupEntity(idMuscleGroup));
         }
 

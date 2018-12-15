@@ -91,7 +91,7 @@
     <string name="MUSCLE_pec_upper">Upper Pecs</string>
     <string name="MUSCLE_pec_middle">Middle Pecs</string>
     <string name="MUSCLE_pec_lower">Lower Pecs</string>
-    <string name="MUSCLE_serratus_anterior">Serratus</string>
+    <string name="MUSCLE_serratus">Serratus</string>
 
     <!-- Options for exercise types -->
     <string name="EXERCISETYPE_weight_and_rep">Weight and Reps</string>

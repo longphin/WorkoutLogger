@@ -8,4 +8,44 @@
     <integer name="Exercise_MaxNameLength">40</integer>
     <integer name="Routine_MaxNameLength">40</integer>
     <integer name="Note_MaxLength">100</integer>
+
+    <!-- IDs for muscle groups -->
+    <integer name="MUSCLEGROUP_chest">0</integer>
+    <integer name="MUSCLEGROUP_back">1</integer>
+    <integer name="MUSCLEGROUP_arms">2</integer>
+    <integer name="MUSCLEGROUP_shoulders">3</integer>
+    <integer name="MUSCLEGROUP_legs">4</integer>
+    <integer name="MUSCLEGROUP_core">5</integer>
+
+    <!-- IDs for muscles -->
+    <!-- back muscles -->
+    <integer name="MUSCLE_traps">0</integer>
+    <integer name="MUSCLE_rhomboids">1</integer>
+    <integer name="MUSCLE_lats">2</integer>
+    <integer name="MUSCLE_lower_back">3</integer>
+    <!-- arm muscles -->
+    <integer name="MUSCLE_biceps">4</integer>
+    <integer name="MUSCLE_bicep_brachialis">5</integer>
+    <integer name="MUSCLE_triceps">6</integer>
+    <integer name="MUSCLE_forearms">7</integer>
+    <!-- shoulder muscles -->
+    <integer name="MUSCLE_deltoid_anterior">8</integer>
+    <integer name="MUSCLE_deltoid_lateral">9</integer>
+    <integer name="MUSCLE_deltoid_posterior">10</integer>
+    <!-- leg muscles -->
+    <integer name="MUSCLE_quads">11</integer>
+    <integer name="MUSCLE_hamstrings">12</integer>
+    <integer name="MUSCLE_glutes">13</integer>
+    <integer name="MUSCLE_calves">14</integer>
+    <integer name="MUSCLE_hip_adductors">15</integer>
+    <integer name="MUSCLE_hip_abductors">16</integer>
+    <!-- core muscles -->
+    <integer name="MUSCLE_abs">17</integer>
+    <integer name="MUSCLE_obliques">18</integer>
+    <integer name="MUSCLE_serratus">19</integer>
+    <!-- chest muscles -->
+    <integer name="MUSCLE_pec_upper">20</integer>
+    <integer name="MUSCLE_pec_middle">21</integer>
+    <integer name="MUSCLE_pec_lower">22</integer>
+
 </resources>

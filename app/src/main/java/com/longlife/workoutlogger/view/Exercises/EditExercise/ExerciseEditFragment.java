@@ -77,9 +77,18 @@ public class ExerciseEditFragment extends ExerciseCreateFragment {
         this.exercise = ex;
         this.name.setText(ex.getName());
         updateToolbarTitle(ex.getName());
-        adapter.setDataAsSelected(ex.getMuscles());
+        setSelectedMuscles(ex.getMuscles());//adapter.setDataAsSelected(ex.getMuscles());
         setExerciseTypeSelectorAdapterAfterDataProcessed();
         saveButtonEnabled = true;
+    }
+
+    private void setSelectedMuscles(Set<ExerciseMuscle> muscles) {
+        for (int i = 0; i < selectableMuscleViews.length; i++) {
+            if (muscles.contains(new ExerciseMuscle(Long.valueOf(selectableMuscleViews[i].id)))) {
+                selectableMuscleViews[i].setChecked(true);
+                continue;
+            }
+        }
     }
 
     // The adapter for the exercise type can be set once the exercise is obtained.

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
 
-public class MuscleListViewHolder extends RecyclerView.ViewHolder {
+public class MuscleListViewHolder extends RecyclerView.ViewHolder implements MuscleListAdapter.IViewHolder {
     private TextView nameTextView;
     private CheckBox selectionBox;
 
@@ -30,5 +30,11 @@ public class MuscleListViewHolder extends RecyclerView.ViewHolder {
 
     CheckBox getCheckboxView() {
         return selectionBox;
+    }
+
+    @Override
+    public void onDestroy() {
+        //nameTextView = null;
+        //selectionBox = null;
     }
 }

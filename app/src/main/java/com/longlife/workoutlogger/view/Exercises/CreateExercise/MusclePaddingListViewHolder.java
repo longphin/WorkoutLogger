@@ -9,8 +9,13 @@ package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-class MusclePaddingListViewHolder extends RecyclerView.ViewHolder {
+class MusclePaddingListViewHolder extends RecyclerView.ViewHolder implements MuscleListAdapter.IViewHolder {
     MusclePaddingListViewHolder(View itemView) {
         super(itemView);
+    }
+
+    @Override
+    public void onDestroy() {
+
     }
 }

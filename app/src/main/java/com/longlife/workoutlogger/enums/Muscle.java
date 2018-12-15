@@ -50,9 +50,9 @@ public class Muscle {
     private Integer idMuscle;
     private String name;
 
-    public static List<MuscleEntity> getAllMuscleEntities() {
+    public static List<MuscleEntity> getAllMuscleEntities(Context context) {
         List<MuscleEntity> muscles = new ArrayList<>();
-        for (Integer idMuscle : Muscle.getAllMuscles()) {
+        for (Integer idMuscle : Muscle.getAllMuscles(context)) {
             muscles.add(getMuscleEntity(idMuscle));
         }
 
@@ -65,6 +65,66 @@ public class Muscle {
         this.name = getMuscleName(context, idMuscle);
         this.idMuscleGroup = idMuscleGroup;
         this.idMuscle = idMuscle;
+    }
+
+    static List<Integer> getAllMuscles(Context context) {
+        List<Integer> idMuscles = new ArrayList<>();
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_traps));//TRAPS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_rhomboids));//RHOMBOIDS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_lats));//LATS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_lower_back));//LOWER_BACK);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_biceps));//BICEPS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_bicep_brachialis));//BICEP_BRACHIALIS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_triceps));//TRICEPS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_forearms));//FOREARMS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_deltoid_anterior));//DELTOID_ANTERIOR);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_deltoid_lateral));//DELTOID_LATERAL);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_deltoid_posterior));//DELTOID_POSTERIOR);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_quads));//QUADS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_hamstrings));//HAMSTRINGS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_glutes));//GLUTES);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_calves));//CALVES);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_hip_adductors));//HIP_ADDUCTORS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_hip_abductors));//HIP_ABDUCTORS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_abs));//ABS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_obliques));//OBLIQUES);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_serratus));//SERRATUS);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_pec_upper));//UPPER_PEC);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_pec_middle));//MIDDLE_PEC);
+        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_pec_lower));//LOWER_PEC);
+
+        return idMuscles;
+    }
+
+    // Constructor for a muscle.
+    public Muscle(int idMuscleGroup, int idMuscle, String name) {
+        this.idMuscleGroup = idMuscleGroup;
+        this.idMuscle = idMuscle;
+        this.name = name;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public int getIdMuscle() {
+        return idMuscle;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getIdMuscleGroup() {
+        return idMuscleGroup;
+    }
+
+    public void changeSelectedStatus() {
+        isSelected = !isSelected;
     }
 
     public static String getMuscleName(Context context, int idMuscle) {
@@ -113,7 +173,7 @@ public class Muscle {
             case OBLIQUES:
                 return GetResource.getStringResource(context, R.string.MUSCLE_obliques);
             case SERRATUS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_serratus_anterior);
+                return GetResource.getStringResource(context, R.string.MUSCLE_serratus);
             // Chest
             case UPPER_PEC:
                 return GetResource.getStringResource(context, R.string.MUSCLE_pec_upper);
@@ -124,66 +184,6 @@ public class Muscle {
             default:
                 return "Muscle is missing a name."; // Should never appear.
         }
-    }
-
-    // Constructor for a muscle.
-    public Muscle(int idMuscleGroup, int idMuscle, String name) {
-        this.idMuscleGroup = idMuscleGroup;
-        this.idMuscle = idMuscle;
-        this.name = name;
-    }
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-
-    public int getIdMuscle() {
-        return idMuscle;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getIdMuscleGroup() {
-        return idMuscleGroup;
-    }
-
-    public void changeSelectedStatus() {
-        isSelected = !isSelected;
-    }
-
-    static List<Integer> getAllMuscles() {
-        List<Integer> idMuscles = new ArrayList<>();
-        idMuscles.add(TRAPS);
-        idMuscles.add(RHOMBOIDS);
-        idMuscles.add(LATS);
-        idMuscles.add(LOWER_BACK);
-        idMuscles.add(BICEPS);
-        idMuscles.add(BICEP_BRACHIALIS);
-        idMuscles.add(TRICEPS);
-        idMuscles.add(FOREARMS);
-        idMuscles.add(DELTOID_ANTERIOR);
-        idMuscles.add(DELTOID_LATERAL);
-        idMuscles.add(DELTOID_POSTERIOR);
-        idMuscles.add(QUADS);
-        idMuscles.add(HAMSTRINGS);
-        idMuscles.add(GLUTES);
-        idMuscles.add(CALVES);
-        idMuscles.add(HIP_ADDUCTORS);
-        idMuscles.add(HIP_ABDUCTORS);
-        idMuscles.add(ABS);
-        idMuscles.add(OBLIQUES);
-        idMuscles.add(SERRATUS);
-        idMuscles.add(UPPER_PEC);
-        idMuscles.add(MIDDLE_PEC);
-        idMuscles.add(LOWER_PEC);
-
-        return idMuscles;
     }
 
     private static MuscleEntity getMuscleEntity(int idMuscle) {

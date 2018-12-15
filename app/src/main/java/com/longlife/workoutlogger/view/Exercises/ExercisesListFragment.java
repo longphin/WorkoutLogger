@@ -302,7 +302,7 @@ public class ExercisesListFragment extends FragmentBase {
                 // When the group by is changed, execute the filter on the new group by.
                 if (selectedGroupBy == 0) {
                     viewModel.loadExercises();
-                } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds().size()) {
+                } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
                     viewModel.loadExercisesByMuscleGroup(selectedGroupBy - 1);
                 }
                 //adapter.filter(selectedGroupBy, searchView.getQuery().toString());

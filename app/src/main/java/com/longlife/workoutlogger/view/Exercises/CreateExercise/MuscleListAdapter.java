@@ -67,6 +67,14 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (holder instanceof IViewHolder) {
+            ((IViewHolder) holder).onDestroy();
+        }
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
 
@@ -87,6 +95,10 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_muscle_group, parent, false);
                 return new MuscleGroupListViewHolder(v);
         }
+    }
+
+    interface IViewHolder {
+        void onDestroy();
     }
 
     MuscleListAdapter(List<MuscleListHelper> data) {

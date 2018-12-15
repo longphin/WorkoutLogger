@@ -48,8 +48,8 @@ public class InitializeActivity extends AppCompatActivity {
                 .inject(this);
         profileViewModel = ViewModelProviders.of(this, viewModelFactory).get(ProfileViewModel.class);
 
-        profileViewModel.insertMuscles(Muscle.getAllMuscleEntities());
-        profileViewModel.insertMuscleGroups(MuscleGroup.getAllMuscleGroupEntities());
+        profileViewModel.insertMuscles(Muscle.getAllMuscleEntities(this));
+        profileViewModel.insertMuscleGroups(MuscleGroup.getAllMuscleGroupEntities(this));
 
         goToMainActivity();
     }

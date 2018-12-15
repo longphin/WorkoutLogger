@@ -11,8 +11,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +23,11 @@ import android.widget.Toast;
 
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.RequiredFieldException;
+import com.longlife.workoutlogger.CustomViews.TextViewWithId;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.data.Validator;
 import com.longlife.workoutlogger.enums.ExerciseType;
-import com.longlife.workoutlogger.enums.MuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.utils.Animation;
@@ -37,6 +35,7 @@ import com.longlife.workoutlogger.view.DialogFragment.AddNoteDialog;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -50,6 +49,17 @@ public class ExerciseCreateFragment
     private Button cancelButton;
     private ImageView addNoteImage;
 
+    protected TextViewWithId[] selectableMuscleViews;
+
+    @Inject
+    public ViewModelProvider.Factory viewModelFactory;
+    protected ExercisesViewModel viewModel;
+    protected EditText name;
+    private String descrip;
+    protected Spinner exerciseTypeSelector;
+    protected boolean saveButtonEnabled = true;
+    private View mView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,7 +71,6 @@ public class ExerciseCreateFragment
             cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
             saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
             initializeExerciseTypeSelector();
-            initializeMusclesList();
 
             // On click listener for when canceling the exercise creation.
             cancelButton.setOnClickListener(view -> getActivity().onBackPressed());
@@ -81,22 +90,38 @@ public class ExerciseCreateFragment
                     dialog.show(getChildFragmentManager(), AddNoteDialog.TAG);
                 }
             });
+
+            // Get the views for selectable muscles.
+            selectableMuscleViews = new TextViewWithId[]{
+                    mView.findViewById(R.id.muscle_abs),
+                    mView.findViewById(R.id.muscle_bicep_brachialis),
+                    mView.findViewById(R.id.muscle_biceps),
+                    mView.findViewById(R.id.muscle_calves),
+                    mView.findViewById(R.id.muscle_deltoid_anterior),
+                    mView.findViewById(R.id.muscle_deltoid_lateral),
+                    mView.findViewById(R.id.muscle_deltoid_posterior),
+                    mView.findViewById(R.id.muscle_forearms),
+                    mView.findViewById(R.id.muscle_glutes),
+                    mView.findViewById(R.id.muscle_hamstrings),
+                    mView.findViewById(R.id.muscle_hip_abductors),
+                    mView.findViewById(R.id.muscle_hip_adductors),
+                    mView.findViewById(R.id.muscle_lats),
+                    mView.findViewById(R.id.muscle_lower_back),
+                    mView.findViewById(R.id.muscle_obliques),
+                    mView.findViewById(R.id.muscle_pec_lower),
+                    mView.findViewById(R.id.muscle_pec_middle),
+                    mView.findViewById(R.id.muscle_pec_upper),
+                    mView.findViewById(R.id.muscle_quads),
+                    mView.findViewById(R.id.muscle_rhomboids),
+                    mView.findViewById(R.id.muscle_serratus),
+                    mView.findViewById(R.id.muscle_traps),
+                    mView.findViewById(R.id.muscle_triceps)
+            };
         }
 
         initialToolbarTitle();
         return (mView);
     }
-
-    @Inject
-    public ViewModelProvider.Factory viewModelFactory;
-    protected ExercisesViewModel viewModel;
-    protected EditText name;
-    private String descrip;
-    protected Spinner exerciseTypeSelector;
-    protected MuscleListAdapter adapter;
-    private RecyclerView musclesList;
-    protected boolean saveButtonEnabled = true;
-    private View mView;
 
     public static ExerciseCreateFragment newInstance() {
         return new ExerciseCreateFragment();
@@ -115,15 +140,6 @@ public class ExerciseCreateFragment
 
     @Override
     public void onDestroyView() {
-        if (adapter != null) {
-            adapter = null;
-        }
-
-        if (musclesList != null) {
-            musclesList.setAdapter(null);
-            musclesList = null;
-        }
-
         if (exerciseTypeSelector != null) {
             exerciseTypeSelector.setAdapter(null);
             exerciseTypeSelector = null;
@@ -144,15 +160,6 @@ public class ExerciseCreateFragment
         exerciseTypeSelector = mView.findViewById(R.id.spinner_exercise_create_exercise_type);
 
         setExerciseTypeSelectorAdapter();
-    }
-
-    protected void initializeMusclesList() {
-        musclesList = mView.findViewById(R.id.rv_exercise_create_muscles);
-        musclesList.setLayoutManager(
-                new GridLayoutManager(this.getActivity(), MuscleListAdapter.NUMBER_OF_COLUMNS));
-        // Adapter
-        adapter = new MuscleListAdapter(MuscleGroup.getAllMuscleGroups(getActivity()));
-        musclesList.setAdapter(adapter);
     }
 
     private void checkFieldsBeforeInsert() {
@@ -179,12 +186,21 @@ public class ExerciseCreateFragment
             return;
         }
 
-        Set<ExerciseMuscle> muscles = adapter.getExerciseMuscles();
-
         //viewModel.insertExercise(newExercise); // [TODO] disable the "save button" and replace with a loading image while the insert is going on.
-        exerciseSaved(newExercise, muscles);
+        exerciseSaved(newExercise, getSelectedMuscles());
 
         getActivity().onBackPressed();
+    }
+
+    private Set<ExerciseMuscle> getSelectedMuscles() {
+        Set<ExerciseMuscle> muscles = new HashSet<>();
+        for (int i = 0; i < selectableMuscleViews.length; i++) {
+            if (selectableMuscleViews[i].isChecked()) {
+                muscles.add(new ExerciseMuscle(Long.valueOf(selectableMuscleViews[i].id)));
+            }
+        }
+
+        return muscles;
     }
 
     protected void initialToolbarTitle() {
