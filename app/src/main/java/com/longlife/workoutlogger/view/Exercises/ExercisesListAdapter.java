@@ -94,7 +94,7 @@ public abstract class ExercisesListAdapter
                 //adding click listener
                 popup.setOnMenuItemClickListener(item -> {
                     switch (item.getItemId()) {
-                        case R.id.menu_exercise_options:
+                        case R.id.menu_exercise_perform:
                             //handle menu1 click
                             adapterCallback.exercisePerform(ex);//ex.getIdExercise(), ex.getName());
                             return true;

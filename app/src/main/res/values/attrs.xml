@@ -9,4 +9,8 @@
         <attr name="enum_code" format="integer" />
         <attr name="enum_label" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="CustomTheme">
+        <attr name="customCheckBoxWIthIdStyle" format="reference" />
+    </declare-styleable>
 </resources>

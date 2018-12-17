@@ -29,6 +29,7 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.view.Exercises.ExercisesListRemakeAdapter;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Perform.PerformFragment;
@@ -65,10 +66,22 @@ public class PerformExerciseFragment
     private PerformRoutineAdapter adapter;
     private ConstraintLayout coordinatorLayout; // layout for recycler view
 
+    public static PerformExerciseFragment newInstance(ExercisesListRemakeAdapter.exerciseItem ex) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(PerformExerciseFragment.INPUT_ID_EXERCISE, ex.id());//ex.getIdExercise());
+        bundle.putString(PerformExerciseFragment.INPUT_EXERCISE_NAME, ex.toString());//ex.getName());
+        bundle.putString(PerformExerciseFragment.INPUT_NOTE, ex.getNote());
+
+        PerformExerciseFragment fragment = new PerformExerciseFragment();
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
+
     public static PerformExerciseFragment newInstance(ExerciseShort ex) {
         Bundle bundle = new Bundle();
-        bundle.putLong(PerformExerciseFragment.INPUT_ID_EXERCISE, ex.getIdExercise());
-        bundle.putString(PerformExerciseFragment.INPUT_EXERCISE_NAME, ex.getName());
+        bundle.putLong(PerformExerciseFragment.INPUT_ID_EXERCISE, ex.getIdExercise());//ex.getIdExercise());
+        bundle.putString(PerformExerciseFragment.INPUT_EXERCISE_NAME, ex.toString());//ex.getName());
         bundle.putString(PerformExerciseFragment.INPUT_NOTE, ex.getNote());
 
         PerformExerciseFragment fragment = new PerformExerciseFragment();

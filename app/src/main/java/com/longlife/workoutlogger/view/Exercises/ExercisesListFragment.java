@@ -40,6 +40,8 @@ import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseWithMuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
+import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
+import com.longlife.workoutlogger.view.Exercises.PerformExercise.PerformExerciseFragment;
 import com.longlife.workoutlogger.view.MainActivity;
 
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class ExercisesListFragment extends FragmentBase {
+public class ExercisesListFragment extends FragmentBase implements ExercisesListRemakeAdapter.IClickExercise {
     private static final String TAG = ExercisesListFragment.class.getSimpleName();
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
@@ -117,7 +119,7 @@ public class ExercisesListFragment extends FragmentBase {
     // Data was loaded, so now attach the adapter to the recyclerview.
     private void loadData(List<ExerciseShort> exercises) {
         if (adapter == null) {
-            adapter = new ExercisesListRemakeAdapter(convertExerciseToInferface(exercises));
+            adapter = new ExercisesListRemakeAdapter(this, convertExerciseToInferface(exercises));
         } else {
             adapter.resetData(convertExerciseToInferface(exercises));
         }
@@ -149,7 +151,7 @@ public class ExercisesListFragment extends FragmentBase {
     // Data was loaded as a list of exercises grouped by muscles.
     private void loadDataWithMuscles(List<ExerciseWithMuscleGroup> exercises) {
         if (adapter == null) {
-            adapter = new ExercisesListRemakeAdapter(convertExerciseWithMusclesToInferface(exercises));
+            adapter = new ExercisesListRemakeAdapter(this, convertExerciseWithMusclesToInferface(exercises));
         } else {
             adapter.resetData(convertExerciseWithMusclesToInferface(exercises));
         }
@@ -319,5 +321,33 @@ public class ExercisesListFragment extends FragmentBase {
     private void clearRecyclerView() {
         recyclerView.setAdapter(null);
         adapter = null;
+    }
+
+    @Override
+    public void exerciseEdit(Long idExercise) {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+
+        ExerciseEditFragment fragment = (ExerciseEditFragment) manager.findFragmentByTag(ExerciseEditFragment.TAG);
+        if (fragment == null) {
+            fragment = ExerciseEditFragment.newInstance(idExercise);
+        }
+
+        if (fragmentNavigation != null) {
+            fragmentNavigation.pushFragment(fragment);
+        }
+    }
+
+    @Override
+    public void exercisePerform(ExercisesListRemakeAdapter.exerciseItem ex) {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+
+        PerformExerciseFragment fragment = (PerformExerciseFragment) manager.findFragmentByTag(PerformExerciseFragment.TAG);
+        if (fragment == null) {
+            fragment = PerformExerciseFragment.newInstance(ex);//idExercise, exerciseName);
+        }
+
+        if (fragmentNavigation != null) {
+            fragmentNavigation.pushFragment(fragment);
+        }
     }
 }

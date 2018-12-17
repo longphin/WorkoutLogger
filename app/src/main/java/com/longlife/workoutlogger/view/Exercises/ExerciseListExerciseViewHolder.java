@@ -15,11 +15,7 @@ import com.longlife.workoutlogger.R;
 class ExerciseListExerciseViewHolder extends RecyclerView.ViewHolder implements ExercisesListRemakeAdapter.IViewHolder {
     private TextView nameTextView;
 
-    ExerciseListExerciseViewHolder(View itemView) {
-        super(itemView);
-
-        nameTextView = itemView.findViewById(R.id.txt_exerciseName);
-    }
+    private TextView moreOptions;
 
     TextView getNameTextView() {
         return nameTextView;
@@ -28,5 +24,16 @@ class ExerciseListExerciseViewHolder extends RecyclerView.ViewHolder implements 
     @Override
     public void onDestroy() {
         //nameTextView = null;
+    }
+
+    ExerciseListExerciseViewHolder(View itemView) {
+        super(itemView);
+
+        nameTextView = itemView.findViewById(R.id.txt_exerciseName);
+        moreOptions = itemView.findViewById(R.id.txt_exercise_moreOptions);
+    }
+
+    TextView getMoreOptionsView() {
+        return moreOptions;
     }
 }

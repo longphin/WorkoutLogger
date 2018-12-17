@@ -6,7 +6,9 @@
 
 package com.longlife.workoutlogger.view.Exercises;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +30,10 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
     private List<IViewItem> data = new ArrayList<>();
     private Set<String> headers = new HashSet<>();
     private List<IExerciseListable> originalData;
+    private IClickExercise callback;
 
-    ExercisesListRemakeAdapter(List<IExerciseListable> exercises) {
+    ExercisesListRemakeAdapter(IClickExercise callback, List<IExerciseListable> exercises) {
+        this.callback = callback;
         resetData(exercises);
     }
 
@@ -47,7 +51,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
             // Get how the exercise will be grouped by.
             String headerCategory = ex.getCategory();
             headers.add(headerCategory);
-            addItem(new exerciseItem(headerCategory, ex));
+            addItem(new exerciseItem(headerCategory, ex, ex.getNote()));
         }
         // Include headers
         for (String s : headers) {
@@ -70,13 +74,13 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         // Add the item to the view list.
         String name = exerciseShort.getName();
         String category = name.substring(0, Math.min(1, name.length()));
-        IViewItem itemToAdd = new exerciseItem(category, exerciseShort);
+        IViewItem itemToAdd = new exerciseItem(category, exerciseShort, exerciseShort.getNote());
 
         // If this is the first item in the dataset, then we just insert it the first position.
         if (data.size() == 0) {
             headers.add(category);
             addItem(0, new headerItem(category, category));
-            addItem(1, new exerciseItem(category, exerciseShort));
+            addItem(1, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
             notifyItemRangeInserted(0, 2);
             return;
         }
@@ -104,10 +108,10 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
             if (!headers.contains(category)) {
                 headers.add(category);
                 addItem(lowerbound, new headerItem(category, category));
-                addItem(lowerbound + 1, new exerciseItem(category, exerciseShort));
+                addItem(lowerbound + 1, new exerciseItem(category, exerciseShort, exerciseShort.note));
                 notifyItemRangeInserted(lowerbound, 2);
             } else {
-                addItem(lowerbound, new exerciseItem(category, exerciseShort));
+                addItem(lowerbound, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
                 notifyItemInserted(lowerbound);
             }
             // The item is the highest item.
@@ -115,20 +119,20 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
             if (!headers.contains(category)) {
                 headers.add(category);
                 addItem(upperbound + 1, new headerItem(category, category));
-                addItem(upperbound + 2, new exerciseItem(category, exerciseShort));
+                addItem(upperbound + 2, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
                 notifyItemRangeInserted(upperbound + 1, 2);
             } else {
-                addItem(upperbound + 1, new exerciseItem(category, exerciseShort));
+                addItem(upperbound + 1, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
                 notifyItemInserted(upperbound + 1);
             }
         } else { // The item is the middle.
             if (!headers.contains(category)) {
                 headers.add(category);
                 addItem(center, new headerItem(category, category));
-                addItem(center + 1, new exerciseItem(category, exerciseShort));
+                addItem(center + 1, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
                 notifyItemRangeInserted(center, 2);
             } else {
-                addItem(center, new exerciseItem(category, exerciseShort));
+                addItem(center, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
                 notifyItemInserted(center);
             }
         }
@@ -198,7 +202,43 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
     private void onBindExerciseViewHolder(ExerciseListExerciseViewHolder holder, int position) {
         if (data.get(position) instanceof exerciseItem) {
             holder.getNameTextView().setText((data.get(position)).toString());
+
+            // Create listener for the "more options" button. credit: Shaba Aafreen @https://stackoverflow.com/questions/37601346/create-options-menu-for-recyclerview-item
+            if (holder.getMoreOptionsView() != null) {
+                holder.getMoreOptionsView().setOnClickListener(view -> {
+                    //creating a popup menu
+                    PopupMenu popup = new PopupMenu(callback.getContext(), holder.getMoreOptionsView());
+                    //inflating menu from xml resource
+                    popup.inflate(R.menu.exercise_options_menu);
+                    //adding click listener
+                    popup.setOnMenuItemClickListener(item -> {
+                        switch (item.getItemId()) {
+                            case R.id.menu_exercise_edit:
+                                //handle menu1 click
+                                callback.exerciseEdit(data.get(position).id());
+                                return true;
+                            case R.id.menu_exercise_perform:
+                                //handle menu1 click
+                                callback.exercisePerform((exerciseItem) data.get(position));//ex.getIdExercise(), ex.getName());
+                                return true;
+                            default:
+                                return false;
+                        }
+                    });
+                    //displaying the popup
+                    popup.show();
+                });
+            }
         }
+    }
+
+    public interface IClickExercise {
+        // When an exercise is clicked, send the clicked exercise.
+        void exerciseEdit(Long idExercise);
+
+        void exercisePerform(exerciseItem ex);//Long idExercise, String exerciseName);
+
+        Context getContext();
     }
 
     void filter(String query) {
@@ -219,7 +259,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         notifyDataSetChanged();
     }
 
-    private abstract class IViewItem implements Comparable<IViewItem> {
+    public abstract class IViewItem implements Comparable<IViewItem> {
         @Override
         public int compareTo(@NonNull IViewItem other) {
             // Order by group.
@@ -261,12 +301,12 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         @Override
-        String category() {
+        public String category() {
             return category;
         }
 
         @Override
-        Long id() {
+        public Long id() {
             return Long.valueOf(itemType());
         }
 
@@ -276,15 +316,17 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private class exerciseItem extends IViewItem {
+    public class exerciseItem extends IViewItem {
         private String category;
         private String exerciseName;
         private Long idExercise;
+        private String note;
 
-        exerciseItem(String category, IExerciseListable exercise) {
+        exerciseItem(String category, IExerciseListable exercise, String note) {
             this.idExercise = exercise.getIdExercise();
             this.exerciseName = exercise.getName();
             this.category = category;
+            this.note = note;
         }
 
         @Override
@@ -292,14 +334,17 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
             return exerciseName;
         }
 
+        public String getNote() {
+            return note;
+        }
 
         @Override
-        String category() {
+        public String category() {
             return category;
         }
 
         @Override
-        Long id() {
+        public Long id() {
             return idExercise;
         }
 
@@ -307,5 +352,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         int itemType() {
             return EXERCISE_TYPE;
         }
+
+
     }
 }

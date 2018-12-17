@@ -7,6 +7,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_exercise_options"
+        android:id="@+id/menu_exercise_edit"
+        android:title="@string/Edit" />
+
+    <item
+        android:id="@+id/menu_exercise_perform"
         android:title="@string/Perform" />
+
+    <item
+        android:id="@+id/menu_exercise_delete"
+        android:title="@string/Delete" />
 </menu>

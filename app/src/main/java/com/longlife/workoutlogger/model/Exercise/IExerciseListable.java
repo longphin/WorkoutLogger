@@ -7,6 +7,8 @@
 package com.longlife.workoutlogger.model.Exercise;
 
 public interface IExerciseListable {
+    String getNote();
+
     String getName();
 
     Long getIdExercise();

@@ -19,6 +19,7 @@
         <item name="editTextStyle">@style/DefaultEditTextStyle</item>
         <item name="android:buttonStyle">@style/DefaultButtonStyle</item>
         <item name="buttonStyle">@style/DefaultButtonStyle</item>
+        <item name="customCheckBoxWIthIdStyle">@style/DefaultTextViewWithIdStyle</item>
     </style>
 
     <style name="DialogFragmentStyle" parent="@android:style/Theme.Holo.Light.Dialog">
@@ -35,6 +36,16 @@
 
     <!-- Global font settings. For testing, "asset" is used. Should use "andada" or other.-->
     <style name="DefaultTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">andada</item>
+        <item name="fontFamily">andada</item>
+    </style>
+
+    <style name="DefaultTextViewWithIdStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:fontFamily">andada</item>
+        <item name="fontFamily">andada</item>
+    </style>
+
+    <style name="TextViewWithId" parent="Base.Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:fontFamily">andada</item>
         <item name="fontFamily">andada</item>
     </style>
