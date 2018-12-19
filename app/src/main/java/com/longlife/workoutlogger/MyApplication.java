@@ -27,12 +27,11 @@ import com.squareup.leakcanary.LeakCanary;
 import java.io.File;
 
 /*
+[TODO] Change how exercises are selected when creating a routine. Instead of opening another fragment, just have two recyclerviews side by side. Left side is for exercises in routine, right side is for entire list of exercises. Items from the right can be clicked on or dragged to the left side.
+
 [TODO] Allow users to create Workouts, which schedule routines by day or every "x" days.
     [TODO] Allow users to activate/deactivate Workouts.
     {TODO] Create planner and calendar to see upcoming routines. The listed routines will be based on the active Workouts.
-
-[TODO] Change how exercises are selected when creating a routine. Instead of opening another fragment, just have two recyclerviews side by side. Left side is for exercises in routine, right side is for entire list of exercises. Items from the right can be clicked on or dragged to the left side.
-[TODO] Allow search for exercises by name, category, muscle groups.
 
 [TODO] Allow rest timer to be stopped, reset, continued.
 [TODO] Allow user to set target goals for each exercise.

@@ -10,12 +10,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
+import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
     private Set<String> headers = new HashSet<>();
     private List<IExerciseListable> originalData;
     private IClickExercise callback;
+    private static final String TAG = ExercisesListRemakeAdapter.class.getSimpleName();
 
     ExercisesListRemakeAdapter(IClickExercise callback, List<IExerciseListable> exercises) {
         this.callback = callback;
@@ -38,11 +41,13 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     void resetData(List<IExerciseListable> exercises) {
+        Log.d(TAG, "resetData");
         originalData = exercises;
         setData(exercises);
     }
 
     public void setData(List<IExerciseListable> exercises) {
+        Log.d(TAG, "setData");
         data.clear();
         headers.clear();
         for (int i = 0; i < exercises.size(); i++) // [TODO] Make this an async task.
@@ -60,6 +65,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
 
         // Sort data.
         Collections.sort(data);
+        notifyDataSetChanged();
     }
 
     private void addItem(IViewItem item) {
@@ -68,6 +74,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
 
     // When inserting an exercise, split the data into two to see which chunk the new exercise should be inserted.
     void addExercise(ExerciseShort exerciseShort) {
+        Log.d(TAG, "addExercise");
         // Add the exercise to the data list.
         originalData.add(exerciseShort);
 
@@ -189,6 +196,38 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         return data.size();
     }
 
+    void exerciseUpdated(ExerciseUpdated updated) {
+        Log.d(TAG, "exerciseUpdated");
+        Long idExercise = updated.getIdExercise();
+        boolean wasCategorizationChanged = false; // Will be true if the item any fields that would change the exercise position is updated.  // [TODO] Does not seem to be working.
+        for (int i = 0; i < originalData.size(); i++) {
+            IExerciseListable item = originalData.get(i);
+            if (item.getIdExercise().equals(idExercise)) {
+                if (!wasCategorizationChanged && !item.getName().equals(updated.getName())) {
+                    wasCategorizationChanged = true;
+                }
+                item.update(updated);
+            }
+        }
+
+        setData(originalData);
+        /*
+        if(wasCategorizationChanged) // Need to reset the views because categorization was changed.  // [TODO] Because wasCategorization is not correct, logic to only update views when the category for an exercise changes.
+        {
+        }else{ // else, no items need the order changed, so we only notify what items were updated.
+            for(int i=0; i<data.size(); i++)
+            {
+                IViewItem item = data.get(i);
+                if(item instanceof exerciseItem && item.id().equals(idExercise))
+                {
+                    ((exerciseItem) item).updateNoCategoryChanges(updated);
+                    notifyItemChanged(i);
+                }
+            }
+        }
+        */
+    }
+
     interface IViewHolder {
         void onDestroy();
     }
@@ -221,6 +260,9 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
                                 //handle menu1 click
                                 callback.exercisePerform((exerciseItem) data.get(position));//ex.getIdExercise(), ex.getName());
                                 return true;
+                            case R.id.menu_exercise_delete:
+                                callback.exerciseDelete(data.get(position).id());
+                                return true;
                             default:
                                 return false;
                         }
@@ -232,16 +274,8 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public interface IClickExercise {
-        // When an exercise is clicked, send the clicked exercise.
-        void exerciseEdit(Long idExercise);
-
-        void exercisePerform(exerciseItem ex);//Long idExercise, String exerciseName);
-
-        Context getContext();
-    }
-
     void filter(String query) {
+        Log.d(TAG, "filter");
         List<IExerciseListable> filteredData = new ArrayList<>();
         if (query == null || query.isEmpty()) {
             filteredData = originalData;
@@ -256,7 +290,18 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         }
 
         setData(filteredData); // [TODO] Re-initializing the whole data set will probably be slow. Better alternative is to remove exercises, and check if the category still has remaining exercises. If category does not have child exercises, then remove the header as well.
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
+    }
+
+    public interface IClickExercise {
+        // When an exercise is clicked, send the clicked exercise.
+        void exerciseEdit(Long idExercise);
+
+        void exercisePerform(exerciseItem ex);//Long idExercise, String exerciseName);
+
+        Context getContext();
+
+        void exerciseDelete(IExerciseListable exercise);
     }
 
     public abstract class IViewItem implements Comparable<IViewItem> {
@@ -327,6 +372,12 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
             this.exerciseName = exercise.getName();
             this.category = category;
             this.note = note;
+        }
+
+        // Values that do not require a category change was updated.
+        void updateNoCategoryChanges(ExerciseUpdated ex) {
+            exerciseName = ex.getName();
+            note = ex.getNote();
         }
 
         @Override

@@ -15,6 +15,7 @@ import com.longlife.workoutlogger.model.Exercise.ExerciseLocked;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.Exercise.ExerciseWithMuscleGroup;
+import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
@@ -55,6 +56,7 @@ public class ExercisesViewModel
     private final PublishSubject<DeletedExercise> exerciseRestoredObservable = PublishSubject.create();
     private final PublishSubject<List<ExerciseWithMuscleGroup>> exerciseListByMuscleObservable = PublishSubject.create();
     private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
+    private Queue<IExerciseListable> exercisesDeleteQueue = new LinkedList<>();
     private Repository repo;
 
     // Protected
@@ -110,6 +112,10 @@ public class ExercisesViewModel
 
     void addDeletedExercise(ExerciseShort ex, int pos) {
         exercisesToDelete.add(new DeletedExercise(ex, pos));
+    }
+
+    void deleteExercise(IExerciseListable deletedExercise) {
+        exercisesDeleteQueue.add(deletedExercise);
     }
 
     // Get observable for all exercise names.

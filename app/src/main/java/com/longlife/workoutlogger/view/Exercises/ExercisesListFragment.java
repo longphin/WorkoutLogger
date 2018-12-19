@@ -37,6 +37,7 @@ import com.longlife.workoutlogger.enums.Muscle;
 import com.longlife.workoutlogger.enums.MuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
+import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.Exercise.ExerciseWithMuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
@@ -98,9 +99,14 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         addDisposable(viewModel.getExerciseListObservable().subscribe(this::loadData));
         addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
         addDisposable(viewModel.getExerciseListByMuscleObservable().subscribe(this::loadDataWithMuscles));
+        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
 
         //initializeObservers();
         setHasOptionsMenu(true);
+    }
+
+    private void loadExerciseUpdated(ExerciseUpdated exerciseUpdated) {
+        if (adapter != null) adapter.exerciseUpdated(exerciseUpdated);
     }
 
     private void processExerciseInserted(Exercise ex) {
@@ -349,5 +355,10 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
+    }
+
+    @Override
+    public void exerciseDelete(IExerciseListable deletedExercise) {
+        //viewModel.deleteExercise(deletedExercise);
     }
 }
