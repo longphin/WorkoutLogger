@@ -9,9 +9,11 @@ package com.longlife.workoutlogger.view.Exercises;
 
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -139,19 +141,21 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         }
     }
 
+    View mView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(getLayoutId(), container, false);
+        mView = inflater.inflate(getLayoutId(), container, false);
 
-        FloatingActionButton btn_addExercise = v.findViewById(R.id.btn_addExercise);
+        FloatingActionButton btn_addExercise = mView.findViewById(R.id.btn_addExercise);
         btn_addExercise.setOnClickListener(view -> startCreateFragment());
 
         initializeObservers();
-        initializeRecyclerView(v);
-        initializeGroupByOptions(v);
-        return v;
+        initializeRecyclerView(mView);
+        initializeGroupByOptions(mView);
+        return mView;
     }
 
     // Data was loaded as a list of exercises grouped by muscles.
@@ -200,6 +204,7 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         needsToLoadData = true;
         //clearDisposables();
 
+        mView = null;
         super.onDestroyView();
     }
 
@@ -358,7 +363,27 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
     }
 
     @Override
-    public void exerciseDelete(IExerciseListable deletedExercise) {
-        //viewModel.deleteExercise(deletedExercise);
+    public void exerciseDelete(ExerciseShort exerciseToDelete) {
+        viewModel.deleteExercise(exerciseToDelete);
+
+        Snackbar snackbar = Snackbar
+                .make(mView.findViewById(R.id.exercises_overview_layout)
+                        , exerciseToDelete.getName() + " deleted.", Snackbar.LENGTH_LONG);
+        snackbar.setAction("UNDO", view -> {
+        });
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                // If the snackbar was dismissed via clicking the action (Undo button), then restore the exercise.
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    viewModel.restoreLastExercise();
+                    adapter.restoreExercise(viewModel.getLastDeletedExercise());
+                    return;
+                }
+            }
+        });
+        snackbar.setActionTextColor(Color.YELLOW);
+        snackbar.show();
     }
 }

@@ -134,7 +134,7 @@ public abstract class ExerciseDao {
 
     // Hide/unhide an exercise.
     @Query("UPDATE Exercise SET hidden = :isHidden WHERE idExercise = :idExercise")
-    public abstract void setExerciseHiddenStatus(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
+    public abstract int setExerciseHiddenStatus(Long idExercise, int isHidden); // isHidden = 1 for hidden, 0 for not hidden
 
     @Transaction
     public void updateExercise(ExerciseUpdated ex, Set<ExerciseMuscle> relatedMuscles, Set<ExerciseMuscle> musclesToDelete) {

@@ -49,7 +49,7 @@ public class Repository {
     }
 
     public Single<List<ExerciseShort>> getExerciseShort() {
-        return (exerciseDao.getExerciseShort());
+        return exerciseDao.getExerciseShort();
     }
 
     public Single<List<String>> getExercisesNames() {
@@ -87,8 +87,8 @@ public class Repository {
     }
 
     // Hide/unhide an exercise.
-    public void setExerciseHiddenStatus(Long idExercise, boolean hide) {
-        exerciseDao.setExerciseHiddenStatus(idExercise, hide ? 1 : 0);
+    public Single<Integer> setExerciseHiddenStatus(Long idExercise, boolean hide) {
+        return Single.fromCallable(() -> exerciseDao.setExerciseHiddenStatus(idExercise, hide ? 1 : 0));
     }
 
     // Delete routine.

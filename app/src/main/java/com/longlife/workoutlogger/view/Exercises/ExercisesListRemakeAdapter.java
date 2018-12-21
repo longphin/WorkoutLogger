@@ -7,6 +7,7 @@
 package com.longlife.workoutlogger.view.Exercises;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -228,14 +229,8 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         */
     }
 
-    interface IViewHolder {
-        void onDestroy();
-    }
-
-    private void onBindHeaderViewHolder(ExerciseListHeaderViewHolder holder, int position) {
-        if (data.get(position) instanceof headerItem) {
-            holder.getNameTextView().setText((data.get(position)).toString());
-        }
+    public void restoreExercise(ExerciseShort exerciseToRestore) {
+        addExercise(exerciseToRestore);
     }
 
     private void onBindExerciseViewHolder(ExerciseListExerciseViewHolder holder, int position) {
@@ -261,7 +256,10 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
                                 callback.exercisePerform((exerciseItem) data.get(position));//ex.getIdExercise(), ex.getName());
                                 return true;
                             case R.id.menu_exercise_delete:
-                                callback.exerciseDelete(data.get(position).id());
+                                Long idExerciseToDelete = data.get(position).id();
+                                ExerciseShort exerciseToDelete = getExerciseById(idExerciseToDelete);
+                                deleteExercise(idExerciseToDelete);
+                                callback.exerciseDelete(exerciseToDelete);
                                 return true;
                             default:
                                 return false;
@@ -270,6 +268,53 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
                     //displaying the popup
                     popup.show();
                 });
+            }
+        }
+    }
+
+    interface IViewHolder {
+        void onDestroy();
+    }
+
+    private void onBindHeaderViewHolder(ExerciseListHeaderViewHolder holder, int position) {
+        if (data.get(position) instanceof headerItem) {
+            holder.getNameTextView().setText((data.get(position)).toString());
+        }
+    }
+
+    private ExerciseShort getExerciseById(Long idExerciseToDelete) {
+        for (int i = 0; i < originalData.size(); i++) {
+            if (originalData.get(i).getIdExercise().equals(idExerciseToDelete))
+                return (ExerciseShort) originalData.get(i);
+        }
+
+        throw new Resources.NotFoundException(String.valueOf(idExerciseToDelete) + " not found.");
+    }
+
+    public void deleteExercise(Long idExercise) {
+        String category = "";
+        int itemsInCategory = 0; // count of how many items are within a category. Does not include the header nor items to be removed.
+
+        for (int i = data.size() - 1; i >= 0; i--) // We iterate bottom to top, so we can remove items within the loop.
+        {
+            IViewItem item = data.get(i);
+            if (!item.category().equals(category)) // Reached a new category.
+            {
+                category = item.category();
+                itemsInCategory = 0;
+            }
+            if (item instanceof exerciseItem && item.id().equals(idExercise)) {
+                data.remove(i);
+                notifyItemRemoved(i);
+            } else {
+                itemsInCategory += 1;
+            }
+
+            // If we reached the header and there are no child items being deleted (only the header is in the category), then we also need to remove the header.
+            if (item instanceof headerItem && itemsInCategory == 1) {
+                data.remove(i);
+                headers.remove(category);
+                notifyItemRemoved(i);
             }
         }
     }
@@ -301,7 +346,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
 
         Context getContext();
 
-        void exerciseDelete(IExerciseListable exercise);
+        void exerciseDelete(ExerciseShort exerciseToDelete);
     }
 
     public abstract class IViewItem implements Comparable<IViewItem> {

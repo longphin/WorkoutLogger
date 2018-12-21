@@ -15,7 +15,6 @@ import com.longlife.workoutlogger.model.Exercise.ExerciseLocked;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.Exercise.ExerciseWithMuscleGroup;
-import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.SessionExercise;
@@ -56,7 +55,7 @@ public class ExercisesViewModel
     private final PublishSubject<DeletedExercise> exerciseRestoredObservable = PublishSubject.create();
     private final PublishSubject<List<ExerciseWithMuscleGroup>> exerciseListByMuscleObservable = PublishSubject.create();
     private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
-    private Queue<IExerciseListable> exercisesDeleteQueue = new LinkedList<>();
+    private ExerciseShort lastDeletedExercise;
     private Repository repo;
 
     // Protected
@@ -114,8 +113,27 @@ public class ExercisesViewModel
         exercisesToDelete.add(new DeletedExercise(ex, pos));
     }
 
-    void deleteExercise(IExerciseListable deletedExercise) {
-        exercisesDeleteQueue.add(deletedExercise);
+    void deleteExercise(ExerciseShort exerciseToDelete) {
+        lastDeletedExercise = exerciseToDelete;
+        repo.setExerciseHiddenStatus(exerciseToDelete.getIdExercise(), true)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Integer integer) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     // Get observable for all exercise names.
@@ -284,6 +302,14 @@ public class ExercisesViewModel
         return repo.insertNewSessionForExercise(idExercise, note)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public void restoreLastExercise() {
+        repo.setExerciseHiddenStatus(lastDeletedExercise.getIdExercise(), false);
+    }
+
+    public ExerciseShort getLastDeletedExercise() {
+        return lastDeletedExercise;
     }
 
     private class ExercisesCache {
