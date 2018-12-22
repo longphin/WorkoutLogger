@@ -62,7 +62,7 @@ public class ExerciseMuscle {
 
     @Override
     public int hashCode() {
-        return (int) ((idExercise == null ? 0L : idExercise * 30L) + idMuscle);
+        return (int) (idMuscle == null ? -1L : idMuscle);
     }
 
     @Override
@@ -75,7 +75,8 @@ public class ExerciseMuscle {
             return false;
 
         ExerciseMuscle other = (ExerciseMuscle) obj;
-        return (idExercise == null && other.getIdExercise() == null) || (idExercise.equals(other.getIdExercise()))
-                && idMuscle.equals(other.getIdMuscle());
+/*        return (idExercise == null && other.getIdExercise() == null) || (idExercise.equals(other.getIdExercise()))
+                && idMuscle.equals(other.getIdMuscle());*/
+        return idMuscle.equals(other.getIdMuscle()); // [TODO] not working?
     }
 }
