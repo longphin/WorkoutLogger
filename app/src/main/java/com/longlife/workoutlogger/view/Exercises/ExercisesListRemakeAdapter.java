@@ -73,77 +73,8 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         data.add(item);
     }
 
-    // When inserting an exercise, split the data into two to see which chunk the new exercise should be inserted.
-    void addExercise(ExerciseShort exerciseShort) {
-        Log.d(TAG, "addExercise");
-        // Add the exercise to the data list.
-        originalData.add(exerciseShort);
-
-        // Add the item to the view list.
-        String name = exerciseShort.getName();
-        String category = name.substring(0, Math.min(1, name.length()));
-        IViewItem itemToAdd = new exerciseItem(category, exerciseShort, exerciseShort.getNote());
-
-        // If this is the first item in the dataset, then we just insert it the first position.
-        if (data.size() == 0) {
-            headers.add(category);
-            addItem(0, new headerItem(category, category));
-            addItem(1, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
-            notifyItemRangeInserted(0, 2);
-            return;
-        }
-
-        // Determine where to place the new item. Do a binary search, where at each step, it splits the slice into 2 chunks, and then it picks which chunk the new item belongs to.
-        int lowerbound = 0;
-        int center = (int) Math.floor(data.size() / 2);
-        int upperbound = data.size() - 1;
-
-        while (center - lowerbound > 0 || upperbound - center > 0) {
-            IViewItem centerItem = data.get(center);
-
-            if (itemToAdd.compareTo(centerItem) < 0) { // The item belongs in the lower section.
-                upperbound = center;
-            } else { // The item belongs in the upper section.
-                lowerbound = center + 1;
-            }
-            center = (int) Math.floor((upperbound + lowerbound) / 2);
-        }
-
-        IViewItem lowerItem = data.get(lowerbound);
-        IViewItem upperItem = data.get(upperbound);
-        // The item is the lowest item.
-        if (itemToAdd.compareTo(lowerItem) < 0) {
-            if (!headers.contains(category)) {
-                headers.add(category);
-                addItem(lowerbound, new headerItem(category, category));
-                addItem(lowerbound + 1, new exerciseItem(category, exerciseShort, exerciseShort.note));
-                notifyItemRangeInserted(lowerbound, 2);
-            } else {
-                addItem(lowerbound, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
-                notifyItemInserted(lowerbound);
-            }
-            // The item is the highest item.
-        } else if (itemToAdd.compareTo(upperItem) > 0) {
-            if (!headers.contains(category)) {
-                headers.add(category);
-                addItem(upperbound + 1, new headerItem(category, category));
-                addItem(upperbound + 2, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
-                notifyItemRangeInserted(upperbound + 1, 2);
-            } else {
-                addItem(upperbound + 1, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
-                notifyItemInserted(upperbound + 1);
-            }
-        } else { // The item is the middle.
-            if (!headers.contains(category)) {
-                headers.add(category);
-                addItem(center, new headerItem(category, category));
-                addItem(center + 1, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
-                notifyItemRangeInserted(center, 2);
-            } else {
-                addItem(center, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
-                notifyItemInserted(center);
-            }
-        }
+    void restoreExercise(ExerciseShort exerciseToRestore) {
+        addExercise(exerciseToRestore);
     }
 
     private void addItem(int pos, IViewItem item) {
@@ -229,8 +160,77 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         */
     }
 
-    public void restoreExercise(ExerciseShort exerciseToRestore) {
-        addExercise(exerciseToRestore);
+    // When inserting an exercise, split the data into two to see which chunk the new exercise should be inserted.
+    void addExercise(ExerciseShort exerciseShort) {
+        Log.d(TAG, "addExercise");
+        // Add the exercise to the data list.
+        originalData.add(exerciseShort);
+
+        // Add the item to the view list.
+        //String name = exerciseShort.getName();
+        String category = exerciseShort.getCategory();//name.substring(0, Math.min(1, name.length()));
+        IViewItem itemToAdd = new exerciseItem(category, exerciseShort, exerciseShort.getNote());
+
+        // If this is the first item in the dataset, then we just insert it the first position.
+        if (data.size() == 0) {
+            headers.add(category);
+            addItem(0, new headerItem(category, category));
+            addItem(1, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
+            notifyItemRangeInserted(0, 2);
+            return;
+        }
+
+        // Determine where to place the new item. Do a binary search, where at each step, it splits the slice into 2 chunks, and then it picks which chunk the new item belongs to.
+        int lowerbound = 0;
+        int center = (int) Math.floor(data.size() / 2);
+        int upperbound = data.size() - 1;
+
+        while (center - lowerbound > 0 || upperbound - center > 0) {
+            IViewItem centerItem = data.get(center);
+
+            if (itemToAdd.compareTo(centerItem) < 0) { // The item belongs in the lower section.
+                upperbound = center;
+            } else { // The item belongs in the upper section.
+                lowerbound = center + 1;
+            }
+            center = (int) Math.floor((upperbound + lowerbound) / 2);
+        }
+
+        IViewItem lowerItem = data.get(lowerbound);
+        IViewItem upperItem = data.get(upperbound);
+        // The item is the lowest item.
+        if (itemToAdd.compareTo(lowerItem) < 0) {
+            if (!headers.contains(category)) {
+                headers.add(category);
+                addItem(lowerbound, new headerItem(category, category));
+                addItem(lowerbound + 1, new exerciseItem(category, exerciseShort, exerciseShort.note));
+                notifyItemRangeInserted(lowerbound, 2);
+            } else {
+                addItem(lowerbound, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
+                notifyItemInserted(lowerbound);
+            }
+            // The item is the highest item.
+        } else if (itemToAdd.compareTo(upperItem) > 0) {
+            if (!headers.contains(category)) {
+                headers.add(category);
+                addItem(upperbound + 1, new headerItem(category, category));
+                addItem(upperbound + 2, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
+                notifyItemRangeInserted(upperbound + 1, 2);
+            } else {
+                addItem(upperbound + 1, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
+                notifyItemInserted(upperbound + 1);
+            }
+        } else { // The item is the middle.
+            if (!headers.contains(category)) {
+                headers.add(category);
+                addItem(center, new headerItem(category, category));
+                addItem(center + 1, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
+                notifyItemRangeInserted(center, 2);
+            } else {
+                addItem(center, new exerciseItem(category, exerciseShort, exerciseShort.getNote()));
+                notifyItemInserted(center);
+            }
+        }
     }
 
     private void onBindExerciseViewHolder(ExerciseListExerciseViewHolder holder, int position) {
@@ -246,18 +246,20 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
                     popup.inflate(R.menu.exercise_options_menu);
                     //adding click listener
                     popup.setOnMenuItemClickListener(item -> {
+                        int currentPosition = holder.getAdapterPosition();
+
                         switch (item.getItemId()) {
                             case R.id.menu_exercise_edit:
                                 //handle menu1 click
-                                callback.exerciseEdit(data.get(position).id());
+                                callback.exerciseEdit(data.get(currentPosition).id());
                                 return true;
                             case R.id.menu_exercise_perform:
                                 //handle menu1 click
-                                callback.exercisePerform((exerciseItem) data.get(position));//ex.getIdExercise(), ex.getName());
+                                callback.exercisePerform((exerciseItem) data.get(currentPosition));//ex.getIdExercise(), ex.getName());
                                 return true;
                             case R.id.menu_exercise_delete:
-                                Long idExerciseToDelete = data.get(position).id();
-                                ExerciseShort exerciseToDelete = getExerciseById(idExerciseToDelete);
+                                Long idExerciseToDelete = data.get(currentPosition).id();
+                                ExerciseShort exerciseToDelete = getExerciseById(idExerciseToDelete); // [TODO] This is causing an error if we try to delete multiple exercises too many times.
                                 deleteExercise(idExerciseToDelete);
                                 callback.exerciseDelete(exerciseToDelete);
                                 return true;
@@ -291,7 +293,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         throw new Resources.NotFoundException(String.valueOf(idExerciseToDelete) + " not found.");
     }
 
-    public void deleteExercise(Long idExercise) {
+    private void deleteExercise(Long idExercise) {
         String category = "";
         int itemsInCategory = 0; // count of how many items are within a category. Does not include the header nor items to be removed.
 

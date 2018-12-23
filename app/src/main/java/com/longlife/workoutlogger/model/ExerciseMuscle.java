@@ -77,6 +77,6 @@ public class ExerciseMuscle {
         ExerciseMuscle other = (ExerciseMuscle) obj;
 /*        return (idExercise == null && other.getIdExercise() == null) || (idExercise.equals(other.getIdExercise()))
                 && idMuscle.equals(other.getIdMuscle());*/
-        return idMuscle.equals(other.getIdMuscle()); // [TODO] not working?
+        return idMuscle.equals(other.getIdMuscle());
     }
 }

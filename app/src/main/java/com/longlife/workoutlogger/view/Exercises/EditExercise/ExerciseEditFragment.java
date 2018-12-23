@@ -84,9 +84,8 @@ public class ExerciseEditFragment extends ExerciseCreateFragment {
 
     private void setSelectedMuscles(Set<ExerciseMuscle> muscles) {
         for (int i = 0; i < selectableMuscleViews.length; i++) {
-            if (muscles.contains(new ExerciseMuscle(Long.valueOf(selectableMuscleViews[i].id)))) { // [TODO] Not working. muscles being compared are resulting as false even if the idMuscle are equal.
+            if (muscles.contains(new ExerciseMuscle(Long.valueOf(selectableMuscleViews[i].id)))) {
                 selectableMuscleViews[i].setChecked(true);
-                continue;
             }
         }
     }

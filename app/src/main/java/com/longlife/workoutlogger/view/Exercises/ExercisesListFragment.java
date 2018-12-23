@@ -12,7 +12,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -29,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
@@ -69,23 +69,21 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
     private Spinner groupBySelector;
 
 
-
-    /* [TODO] if we want to add more items to action bar
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mView = inflater.inflate(getLayoutId(), container, false);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        //FloatingActionButton btn_addExercise = mView.findViewById(R.id.btn_addExercise);
+        //btn_addExercise.setOnClickListener(view -> startCreateFragment());
 
-        return super.onOptionsItemSelected(item);
+        initializeObservers();
+        initializeRecyclerView(mView);
+        initializeGroupByOptions(mView);
+        return mView;
     }
-    */
+
 
     public static ExercisesListFragment newInstance() {
         return new ExercisesListFragment();
@@ -144,18 +142,16 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
     View mView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mView = inflater.inflate(getLayoutId(), container, false);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
 
-        FloatingActionButton btn_addExercise = mView.findViewById(R.id.btn_addExercise);
-        btn_addExercise.setOnClickListener(view -> startCreateFragment());
+        if (inflater != null) {
+            inflater.inflate(R.menu.exercises_search_menu, menu);
 
-        initializeObservers();
-        initializeRecyclerView(mView);
-        initializeGroupByOptions(mView);
-        return mView;
+            initializeSearchForExercisesView(menu.findItem(R.id.exercises_list_searchview));
+            initializeAddExerciseMenuItem(menu.findItem(R.id.exercises_list_addExercise));
+        }
     }
 
     // Data was loaded as a list of exercises grouped by muscles.
@@ -212,17 +208,19 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         return R.layout.fragment_exercises;
     }
 
-    protected void startCreateFragment() {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-
-        ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
-        if (fragment == null) {
-            fragment = ExerciseCreateFragment.newInstance();
+    // [TODO] if we want to add more items to action bar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.exercises_list_addExercise:
+                startCreateFragment();
+                return true;
         }
 
-        if (fragmentNavigation != null) {
-            fragmentNavigation.pushFragment(fragment);
-        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initializeRecyclerView(View v) {
@@ -263,41 +261,57 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         return interfaces;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+    protected void startCreateFragment() {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
 
-        if (inflater != null) {
-            inflater.inflate(R.menu.exercises_search_menu, menu);
-            MenuItem item = menu.findItem(R.id.exercises_list_searchview);
-            searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+        ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
+        if (fragment == null) {
+            String currentFilter = "";
+            if (searchView != null) currentFilter = searchView.getQuery().toString();
 
-            item.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            item.setActionView(searchView);
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    if (adapter != null) {
-                        adapter.filter(query);
-                        return true;
-                    }
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    if (adapter != null) {
-                        adapter.filter(newText); //[TODO] Why is this not working when deleting characters from the filter? It seems to trigger, but the adapter.originalData is saving the filtered data?
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            searchView.setOnClickListener(view -> {
-                    }
-            );
+            fragment = ExerciseCreateFragment.newInstance(currentFilter);
         }
+
+        if (fragmentNavigation != null) {
+            fragmentNavigation.pushFragment(fragment);
+        }
+    }
+
+    private void initializeSearchForExercisesView(MenuItem searchForExerciseItem) {
+        searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+
+        searchForExerciseItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        searchForExerciseItem.setActionView(searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (adapter != null) {
+                    adapter.filter(query);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (adapter != null) {
+                    adapter.filter(newText); //[TODO] Why is this not working when deleting characters from the filter? It seems to trigger, but the adapter.originalData is saving the filtered data?
+                    return true;
+                }
+                return false;
+            }
+        });
+        searchView.setOnClickListener(view -> {
+                }
+        );
+    }
+
+    private void initializeAddExerciseMenuItem(MenuItem addExerciseItem) //[TODO] Remove the floating action button. Instead, this menu item will be used to add an exercise. When clicked, set the added exercise's name field to the current search filter text.
+    {
+        Button button = new Button(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+
+        //addExerciseItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        //addExerciseItem.setActionView(button);
     }
 
     private void initializeGroupByOptions(View v) {
@@ -375,10 +389,14 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
 
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
+                ExerciseShort restoredExercise = viewModel.getLastDeletedExercise();
+                if (restoredExercise == null)
+                    return;
+
                 // If the snackbar was dismissed via clicking the action (Undo button), then restore the exercise.
                 if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
                     viewModel.restoreLastExercise();
-                    adapter.restoreExercise(viewModel.getLastDeletedExercise());
+                    if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
                     return;
                 }
             }

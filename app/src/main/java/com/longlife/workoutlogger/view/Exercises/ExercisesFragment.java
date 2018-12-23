@@ -76,9 +76,9 @@ public class ExercisesFragment
         viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
         initializeAdapter();
         //addDisposable(viewModel.getLoadExercisesResponse().subscribe(response -> processLoadExercises(response)));
-        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(exercise -> processExerciseInserted(exercise)));
-        addDisposable(viewModel.getExerciseEditedObservable().subscribe(exercise -> processExerciseEdited(exercise)));
-        addDisposable(viewModel.getExerciseLockedObservable().subscribe(exerciseLocked -> processExerciseLocked(exerciseLocked)));
+        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
+        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::processExerciseEdited));
+        addDisposable(viewModel.getExerciseLockedObservable().subscribe(this::processExerciseLocked));
         addDisposable(viewModel.getExerciseRestoredObservable().subscribe(exerciseDeleted -> {
             if (isAdded()) {
                 // If this fragment is currently active, then the adapter needs to re-add the exercise and notify the insert.
@@ -143,7 +143,7 @@ public class ExercisesFragment
 
         ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
         if (fragment == null) {
-            fragment = ExerciseCreateFragment.newInstance();
+            fragment = ExerciseCreateFragment.newInstance("");
         }
 
         if (fragmentNavigation != null) {

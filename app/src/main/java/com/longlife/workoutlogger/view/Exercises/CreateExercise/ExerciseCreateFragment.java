@@ -60,6 +60,17 @@ public class ExerciseCreateFragment
     protected boolean saveButtonEnabled = true;
     private View mView;
 
+    private static final String INPUT_NAME = "name";
+
+    public static ExerciseCreateFragment newInstance(String name) {
+        ExerciseCreateFragment fragment = new ExerciseCreateFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(INPUT_NAME, name);
+
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,6 +78,7 @@ public class ExerciseCreateFragment
             mView = inflater.inflate(R.layout.fragment_exercise_create, container, false);
 
             this.name = mView.findViewById(R.id.txt_exercise_create_name);
+            this.name.setText(getArguments().getString(INPUT_NAME));
             addNoteImage = mView.findViewById(R.id.imv_exercise_create_add_note);
             cancelButton = mView.findViewById(R.id.btn_exerciseCreateCancel);
             saveButton = mView.findViewById(R.id.btn_exerciseCreateSave);
@@ -121,10 +133,6 @@ public class ExerciseCreateFragment
 
         initialToolbarTitle();
         return (mView);
-    }
-
-    public static ExerciseCreateFragment newInstance() {
-        return new ExerciseCreateFragment();
     }
 
     @Override

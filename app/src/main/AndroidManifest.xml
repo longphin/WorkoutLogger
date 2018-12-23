@@ -23,7 +23,8 @@
         <activity
             android:name=".view.InitializeActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:noHistory="true"
+            android:screenOrientation="portrait"> <!-- When exiting this activity, do not keep it in history, so it does not reopen when back-pressing. -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

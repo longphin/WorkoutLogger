@@ -289,6 +289,7 @@ public class ExercisesViewModel
 
                     @Override
                     public void onComplete() {
+                        cachedExercises.needsUpdating(true);
                     }
 
                     @Override
@@ -304,11 +305,13 @@ public class ExercisesViewModel
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void restoreLastExercise() {
+    void restoreLastExercise() {
         repo.setExerciseHiddenStatus(lastDeletedExercise.getIdExercise(), false);
+        lastDeletedExercise = null;
+        cachedExercises.needsUpdating(true);
     }
 
-    public ExerciseShort getLastDeletedExercise() {
+    ExerciseShort getLastDeletedExercise() {
         return lastDeletedExercise;
     }
 

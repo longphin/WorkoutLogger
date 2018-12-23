@@ -76,7 +76,7 @@ public class ExerciseShort implements IExerciseListable {
 
     @Override
     public String getCategory() {
-        return name.substring(0, Math.min(1, name.length()));
+        return name.substring(0, Math.min(1, name.length())).toUpperCase();
     }
     /*
     public ExerciseShort update(ExerciseUpdated updatedExercise) {
