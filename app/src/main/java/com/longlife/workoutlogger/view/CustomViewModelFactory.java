@@ -6,10 +6,6 @@
 
 package com.longlife.workoutlogger.view;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.support.annotation.NonNull;
-
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
@@ -17,6 +13,10 @@ import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRout
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 
 import javax.inject.Inject;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 public class CustomViewModelFactory
         implements ViewModelProvider.Factory {

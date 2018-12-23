@@ -9,8 +9,6 @@ package com.longlife.workoutlogger.view.DialogFragment;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +20,17 @@ import android.widget.EditText;
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class AddNoteDialog
         extends DialogBase {
     public static final String TAG = AddNoteDialog.class.getSimpleName();
-    public OnInputListener onInputListener;
+    private OnInputListener onInputListener;
     // Other
-    String descripText;
-    Button saveButton;
-    Button cancelButton;
+    private String descripText;
+    private Button saveButton;
+    private Button cancelButton;
     private EditText descrip;
     // Input constants.
     private static final String INPUT_DESCRIP = "descrip";
@@ -80,16 +81,12 @@ public class AddNoteDialog
         super.onResume();
 
         // Open keyboard if box is in focus.
-        descrip.post(new Runnable() {
+        descrip.post(() -> {
+            descrip.requestFocus();
 
-            @Override
-            public void run() {
-                descrip.requestFocus();
-
-                InputMethodManager imm = (InputMethodManager) descrip.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null)
-                    imm.showSoftInput(descrip, InputMethodManager.SHOW_IMPLICIT);
-            }
+            InputMethodManager imm = (InputMethodManager) descrip.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null)
+                imm.showSoftInput(descrip, InputMethodManager.SHOW_IMPLICIT);
         });
     }
 

@@ -6,11 +6,11 @@
 
 package com.longlife.workoutlogger.utils;
 
-import android.arch.persistence.room.TypeConverter;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import androidx.room.TypeConverter;
 
 public class DateConverter {
     //private static DateFormat df = new SimpleDateFormat(Constants.TIME_STAMP_FORMAT, Profile.getLocale());

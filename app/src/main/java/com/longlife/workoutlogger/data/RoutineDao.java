@@ -6,12 +6,6 @@
 
 package com.longlife.workoutlogger.data;
 
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Transaction;
-
 import com.longlife.workoutlogger.enums.PerformanceStatus;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Routine;
@@ -23,6 +17,11 @@ import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.List;
 
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.room.Transaction;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -31,7 +30,7 @@ import io.reactivex.Single;
  * Created by Longphi on 1/3/2018.
  */
 
-@android.arch.persistence.room.Dao
+@androidx.room.Dao
 public abstract class RoutineDao {
     // Get list of routines.
     @Query("SELECT * FROM Routine WHERE hidden = 0")

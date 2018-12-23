@@ -7,9 +7,6 @@
 package com.longlife.workoutlogger.view.Exercises;
 
 import android.content.Context;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +17,10 @@ import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class ExercisesListAdapter
         extends RecyclerView.Adapter<ExercisesViewHolder> {
@@ -80,9 +81,7 @@ public abstract class ExercisesListAdapter
         // Edit exercise
         holder.getNameTextView()
                 .setOnClickListener(view ->
-                {
-                    adapterCallback.exerciseClicked(ex.getIdExercise());
-                });
+                        adapterCallback.exerciseClicked(ex.getIdExercise()));
 
         // Create listener for the "more options" button. credit: Shaba Aafreen @https://stackoverflow.com/questions/37601346/create-options-menu-for-recyclerview-item
         if (holder.getMoreOptionsView() != null) {

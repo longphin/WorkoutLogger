@@ -6,19 +6,18 @@
 
 package com.longlife.workoutlogger.data;
 
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-
 import com.longlife.workoutlogger.model.MuscleEntity;
 import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.model.Profile;
 
 import java.util.List;
 
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 import io.reactivex.Maybe;
 
-@android.arch.persistence.room.Dao
+@androidx.room.Dao
 public abstract class ProfileDao {
     // Get a profile. One may not exist.
     @Query("SELECT * FROM Profile LIMIT 1")

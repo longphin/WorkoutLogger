@@ -6,13 +6,14 @@
 
 package com.longlife.workoutlogger.view.Routines;
 
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.R;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class RoutinesViewHolder
         extends RecyclerViewHolderSwipeable {

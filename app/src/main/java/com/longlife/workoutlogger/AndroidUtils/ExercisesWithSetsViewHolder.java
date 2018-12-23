@@ -6,13 +6,14 @@
 
 package com.longlife.workoutlogger.AndroidUtils;
 
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public abstract class ExercisesWithSetsViewHolder extends RecyclerViewHolderSwipeable {
     private RelativeLayout viewBackground;

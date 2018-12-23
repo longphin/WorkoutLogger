@@ -7,10 +7,7 @@
 package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +36,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
+
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 public class ExerciseCreateFragment
         extends FragmentBase
@@ -202,9 +203,9 @@ public class ExerciseCreateFragment
 
     private Set<ExerciseMuscle> getSelectedMuscles() {
         Set<ExerciseMuscle> muscles = new HashSet<>();
-        for (int i = 0; i < selectableMuscleViews.length; i++) {
-            if (selectableMuscleViews[i].isChecked()) {
-                muscles.add(new ExerciseMuscle(Long.valueOf(selectableMuscleViews[i].id)));
+        for (TextViewWithId selectableMuscleView : selectableMuscleViews) {
+            if (selectableMuscleView.isChecked()) {
+                muscles.add(new ExerciseMuscle(Long.valueOf(selectableMuscleView.id)));
             }
         }
 

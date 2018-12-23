@@ -6,21 +6,21 @@
 
 package com.longlife.workoutlogger.model;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.longlife.workoutlogger.enums.PerformanceStatus;
 import com.longlife.workoutlogger.enums.PerformanceStatusConverter;
 import com.longlife.workoutlogger.utils.DateConverter;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 /**
  * Created by Longphi on 1/7/2018.

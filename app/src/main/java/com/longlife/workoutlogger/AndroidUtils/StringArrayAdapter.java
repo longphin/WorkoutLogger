@@ -8,7 +8,6 @@ package com.longlife.workoutlogger.AndroidUtils;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,8 @@ import com.longlife.workoutlogger.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 // String Adapter for a list of strings. The search functionality is not case-sensitive.
 public class StringArrayAdapter

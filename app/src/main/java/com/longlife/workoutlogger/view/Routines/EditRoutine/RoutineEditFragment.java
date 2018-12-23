@@ -8,7 +8,6 @@ package com.longlife.workoutlogger.view.Routines.EditRoutine;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,8 @@ import android.view.ViewGroup;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.view.MainActivity;
+
+import androidx.annotation.Nullable;
 
 // [TODO] Need to implement for when editing a routine.
 public class RoutineEditFragment

@@ -6,10 +6,9 @@
 
 package com.longlife.workoutlogger.utils;
 
-import android.support.annotation.Nullable;
-
 import com.longlife.workoutlogger.enums.Status;
 
+import androidx.annotation.Nullable;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 

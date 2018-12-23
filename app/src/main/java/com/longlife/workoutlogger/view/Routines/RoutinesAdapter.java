@@ -6,7 +6,6 @@
 
 package com.longlife.workoutlogger.view.Routines;
 
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,8 @@ import com.longlife.workoutlogger.model.Routine;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RoutinesAdapter
         extends RecyclerView.Adapter<RoutinesViewHolder> {

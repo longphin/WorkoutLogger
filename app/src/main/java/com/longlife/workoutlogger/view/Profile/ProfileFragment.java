@@ -7,10 +7,7 @@
 package com.longlife.workoutlogger.view.Profile;
 
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +16,10 @@ import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.R;
 
 import javax.inject.Inject;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 // [TODO] Create fragment for the user profile. This will include body weight (saved in a table), preferred measurement system (metric, imperial), name, birthday
 public class ProfileFragment

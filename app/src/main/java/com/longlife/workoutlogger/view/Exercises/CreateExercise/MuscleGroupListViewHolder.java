@@ -6,11 +6,12 @@
 
 package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MuscleGroupListViewHolder extends RecyclerView.ViewHolder implements MuscleListAdapter.IViewHolder {
     private TextView nameTextView;

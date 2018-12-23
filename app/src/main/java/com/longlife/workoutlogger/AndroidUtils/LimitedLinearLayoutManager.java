@@ -7,10 +7,11 @@
 package com.longlife.workoutlogger.AndroidUtils;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View.MeasureSpec;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 // [TODO] This was meant for when recyclerview were nested, but is not currently used. Instead, a single recyclerview is used with differing view types.
 public class LimitedLinearLayoutManager

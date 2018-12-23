@@ -6,13 +6,13 @@
 
 package com.longlife.workoutlogger.model;
 
-import android.arch.persistence.room.Embedded;
-import android.arch.persistence.room.Relation;
-
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 
 import java.util.List;
+
+import androidx.room.Embedded;
+import androidx.room.Relation;
 
 // POJO class for obtaining a session exercise with related sets.
 public class ExerciseSessionWithSets {

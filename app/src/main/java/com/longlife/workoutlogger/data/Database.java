@@ -6,8 +6,6 @@
 
 package com.longlife.workoutlogger.data;
 
-import android.arch.persistence.room.RoomDatabase;
-
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.MuscleEntity;
@@ -19,11 +17,13 @@ import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.model.WorkoutProgram;
 
+import androidx.room.RoomDatabase;
+
 /**
  * Created by Longphi on 1/5/2018.
  */
 
-@android.arch.persistence.room.Database(
+@androidx.room.Database(
         entities =
                 {
                         Profile.class,

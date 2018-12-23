@@ -6,8 +6,9 @@
 
 package com.longlife.workoutlogger.view.Routines.CreateRoutine.AddSets;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RoutineCreateAddSetViewHolder
         extends RecyclerView.ViewHolder {

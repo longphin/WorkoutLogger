@@ -9,8 +9,6 @@ package com.longlife.workoutlogger.view.Exercises.PerformExercise;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +23,9 @@ import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.enums.WeightUnitTypes;
 import com.longlife.workoutlogger.utils.Format;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static com.longlife.workoutlogger.model.Profile.decimalCharacter;
 import static com.longlife.workoutlogger.utils.Format.convertDoubleToStrWithoutZeroes;
@@ -158,100 +159,73 @@ public class PerformSetDialog extends DialogBase
 
             // Numbers buttons and click listeners.
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_0).setOnClickListener(view ->
-                    {
-                        numberClicked(0);
-                    }
+                    numberClicked(0)
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_1).setOnClickListener(view ->
-                    {
-                        numberClicked(1);
-                    }
+                    numberClicked(1)
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_2).setOnClickListener(view ->
-                    {
-                        numberClicked(2);
-                    }
+                    numberClicked(2)
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_3).setOnClickListener(view ->
-                    {
-                        numberClicked(3);
-                    }
+                    numberClicked(3)
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_4).setOnClickListener(view ->
-                    {
-                        numberClicked(4);
-                    }
+                    numberClicked(4)
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_5).setOnClickListener(view ->
-                    {
-                        numberClicked(5);
-                    }
+                    numberClicked(5)
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_6).setOnClickListener(view ->
-                    {
-                        numberClicked(6);
-                    }
+                    numberClicked(6)
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_7).setOnClickListener(view ->
-                    {
-                        numberClicked(7);
-                    }
+                    numberClicked(7)
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_8).setOnClickListener(view ->
-                    {
-                        numberClicked(8);
-                    }
+                    numberClicked(8)
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_9).setOnClickListener(view ->
-                    {
-                        numberClicked(9);
-                    }
+                    numberClicked(9)
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_X).setOnClickListener(view ->
-                    {
-                        deleteCharacter(currentFocus);
-                    }
+                    deleteCharacter(currentFocus)
             );
 
-            mView.findViewById(R.id.btn_fragment_keyboard_numbers_save).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            mView.findViewById(R.id.btn_fragment_keyboard_numbers_save).setOnClickListener(view -> {
 
-                    // Get weight and rep as numbers.
-                    final Double finalWeight = convertStrToDouble(weight);
-                    final Integer finalRep = convertStrToInt(rep);
+                // Get weight and rep as numbers.
+                final Double finalWeight = convertStrToDouble(weight);
+                final Integer finalRep = convertStrToInt(rep);
 
-                    // Get the minutes and seconds from the time.
-                    final int currentLength = time.length();
+                // Get the minutes and seconds from the time.
+                final int currentLength = time.length();
 
-                    // If empty, then just show 0's.
-                    if (currentLength == 0) {
-                        onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, 0, 0, finalWeight, finalRep, ((WeightUnitTypes.Unit) spinner.getSelectedItem()).getId());
-                        getDialog().dismiss();
-                        return;
-                    }
-
-                    String seconds;
-                    String minutes;
-                    if (currentLength <= 2) // Only seconds were entered.
-                    {
-                        seconds = time;
-                        minutes = "0";
-                    } else {
-                        seconds = time.substring(time.length() - 2);
-                        minutes = time.substring(0, time.length() - 2);
-                    }
-
-                    onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, Integer.valueOf(minutes), Integer.valueOf(seconds), finalWeight, finalRep, ((WeightUnitTypes.Unit) spinner.getSelectedItem()).getId());
-
+                // If empty, then just show 0's.
+                if (currentLength == 0) {
+                    onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, 0, 0, finalWeight, finalRep, ((WeightUnitTypes.Unit) spinner.getSelectedItem()).getId());
                     getDialog().dismiss();
+                    return;
                 }
+
+                String seconds;
+                String minutes;
+                if (currentLength <= 2) // Only seconds were entered.
+                {
+                    seconds = time;
+                    minutes = "0";
+                } else {
+                    seconds = time.substring(time.length() - 2);
+                    minutes = time.substring(0, time.length() - 2);
+                }
+
+                onSaveListener.saveSet(exerciseIndex, setIndexWithinExerciseIndex, Integer.valueOf(minutes), Integer.valueOf(seconds), finalWeight, finalRep, ((WeightUnitTypes.Unit) spinner.getSelectedItem()).getId());
+
+                getDialog().dismiss();
             });
 
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_cancel).setOnClickListener(view ->
-            {
-                getDialog().dismiss();
-            });
+                    getDialog().dismiss());
 
             // Replace blank boxes to fit the needs.
             blank1 = mView.findViewById(R.id.btn_fragment_keyboard_numbers_blank1);

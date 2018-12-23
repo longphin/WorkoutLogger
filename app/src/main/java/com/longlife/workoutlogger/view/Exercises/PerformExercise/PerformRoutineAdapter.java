@@ -7,15 +7,16 @@
 package com.longlife.workoutlogger.view.Exercises.PerformExercise;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
 import com.longlife.workoutlogger.AndroidUtils.ExercisesWithSetsAdapter;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static com.longlife.workoutlogger.utils.Format.convertDoubleToStrWithoutZeroes;
 

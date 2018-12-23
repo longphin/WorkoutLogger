@@ -9,10 +9,11 @@ package com.longlife.workoutlogger.utils;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.v4.os.ConfigurationCompat;
 
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
+import androidx.core.os.ConfigurationCompat;
 
 public class GetResource {
     public static String getStringResource(Context context, int resourceId) {

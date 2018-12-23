@@ -6,9 +6,6 @@
 
 package com.longlife.workoutlogger.view.Profile;
 
-import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
-
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.MuscleEntity;
 import com.longlife.workoutlogger.model.MuscleGroupEntity;
@@ -16,6 +13,8 @@ import com.longlife.workoutlogger.model.Profile;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;

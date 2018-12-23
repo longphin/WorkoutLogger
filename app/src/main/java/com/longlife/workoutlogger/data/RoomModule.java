@@ -6,13 +6,7 @@
 
 package com.longlife.workoutlogger.data;
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
 import android.content.ContentValues;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.longlife.workoutlogger.MyApplication;
@@ -21,6 +15,12 @@ import com.longlife.workoutlogger.view.CustomViewModelFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 import dagger.Module;
 import dagger.Provides;
 

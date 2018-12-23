@@ -6,8 +6,9 @@
 
 package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 class MusclePaddingListViewHolder extends RecyclerView.ViewHolder implements MuscleListAdapter.IViewHolder {
     MusclePaddingListViewHolder(View itemView) {

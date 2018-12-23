@@ -6,11 +6,11 @@
 
 package com.longlife.workoutlogger.model.Exercise;
 
-import android.arch.persistence.room.Relation;
-
 import com.longlife.workoutlogger.model.ExerciseMuscle;
 
 import java.util.Set;
+
+import androidx.room.Relation;
 
 public class ExerciseUpdated {
     private Long idExercise;

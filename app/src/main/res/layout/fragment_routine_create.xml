@@ -4,7 +4,7 @@
   ~ Last modified 10/3/18 9:17 PM.
   -->
 
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/routine_create_layout"
@@ -12,7 +12,7 @@
     android:layout_height="match_parent"
     tools:context=".view.Routines.CreateRoutine.RoutineCreateFragment">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/routine_create_buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,15 +40,15 @@
             app:layout_constraintEnd_toStartOf="@+id/btn_routineCreateSave"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/routine_create_buttonLayout"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_routineCreateExercises"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -124,7 +124,7 @@
             app:layout_constraintEnd_toStartOf="@+id/btn_searchExercises"
             app:layout_constraintTop_toTopOf="@+id/txt_routineexercisecreate_searchBox"
             app:srcCompat="@drawable/ic_error_outline_black_24dp" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--
     <FrameLayout
@@ -137,4 +137,4 @@
         android:id="@+id/root_routine_create_frag"
     </FrameLayout>
     -->
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

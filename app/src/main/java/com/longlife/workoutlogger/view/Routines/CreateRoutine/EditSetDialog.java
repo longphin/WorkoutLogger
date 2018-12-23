@@ -10,8 +10,6 @@ package com.longlife.workoutlogger.view.Routines.CreateRoutine;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +18,9 @@ import android.widget.TextView;
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.utils.Format;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class EditSetDialog
         extends DialogBase {
@@ -66,59 +67,37 @@ public class EditSetDialog
             timerBox = mView.findViewById(R.id.txt_perform_exercise_rest);
 
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_0).setOnClickListener(view ->
-                    {
-                        timerBox.setText(appendValue(0));
-                    }
+                    timerBox.setText(appendValue(0))
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_1).setOnClickListener(view ->
-                    {
-                        timerBox.setText(appendValue(1));
-                    }
+                    timerBox.setText(appendValue(1))
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_2).setOnClickListener(view ->
-                    {
-                        timerBox.setText(appendValue(2));
-                    }
+                    timerBox.setText(appendValue(2))
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_3).setOnClickListener(view ->
-                    {
-                        timerBox.setText(appendValue(3));
-                    }
+                    timerBox.setText(appendValue(3))
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_4).setOnClickListener(view ->
-                    {
-                        timerBox.setText(appendValue(4));
-                    }
+                    timerBox.setText(appendValue(4))
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_5).setOnClickListener(view ->
-                    {
-                        timerBox.setText(appendValue(5));
-                    }
+                    timerBox.setText(appendValue(5))
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_6).setOnClickListener(view ->
-                    {
-                        timerBox.setText(appendValue(6));
-                    }
+                    timerBox.setText(appendValue(6))
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_7).setOnClickListener(view ->
-                    {
-                        timerBox.setText(appendValue(7));
-                    }
+                    timerBox.setText(appendValue(7))
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_8).setOnClickListener(view ->
-                    {
-                        timerBox.setText(appendValue(8));
-                    }
+                    timerBox.setText(appendValue(8))
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_9).setOnClickListener(view ->
-                    {
-                        timerBox.setText(appendValue(9));
-                    }
+                    timerBox.setText(appendValue(9))
             );
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_X).setOnClickListener(view ->
-                    {
-                        timerBox.setText(removeValue());
-                    }
+                    timerBox.setText(removeValue())
             );
 
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_save).setOnClickListener(view ->
@@ -150,9 +129,7 @@ public class EditSetDialog
             });
 
             mView.findViewById(R.id.btn_fragment_keyboard_numbers_cancel).setOnClickListener(view ->
-            {
-                getDialog().dismiss();
-            });
+                    getDialog().dismiss());
 
             // Initialize values.
             timerBox.setText(getUpdatedTimeString());

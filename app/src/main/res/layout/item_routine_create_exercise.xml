@@ -4,7 +4,7 @@
   ~ Last modified 11/22/18 10:16 PM.
   -->
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -37,7 +37,7 @@
             app:srcCompat="@drawable/ic_delete_black_24dp" />
     </RelativeLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/foreground_routine_create_exercise"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imv_moveExerciseUp"
             app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <!--
     <AutoCompleteTextView
         android:id="@+id/txt_routineexercisecreate_newExerciseBox"
@@ -90,4 +90,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
     -->
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

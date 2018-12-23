@@ -6,9 +6,9 @@
 
 package com.longlife.workoutlogger.model.PreLoadedData;
 
-import android.arch.persistence.room.PrimaryKey;
-
 import com.longlife.workoutlogger.model.Exercise.Exercise;
+
+import androidx.room.PrimaryKey;
 
 public class PreLoadedExercise extends Exercise {
     @PrimaryKey

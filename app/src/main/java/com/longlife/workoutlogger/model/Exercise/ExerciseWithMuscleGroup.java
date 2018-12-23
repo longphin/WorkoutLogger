@@ -6,7 +6,7 @@
 
 package com.longlife.workoutlogger.model.Exercise;
 
-import android.arch.persistence.room.Ignore;
+import androidx.room.Ignore;
 
 public class ExerciseWithMuscleGroup implements IExerciseListable {
     public Long idExercise;

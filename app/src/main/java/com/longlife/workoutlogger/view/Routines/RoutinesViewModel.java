@@ -6,7 +6,6 @@
 
 package com.longlife.workoutlogger.view.Routines;
 
-import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 import com.longlife.workoutlogger.data.Repository;
@@ -21,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import androidx.lifecycle.ViewModel;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
@@ -118,11 +118,8 @@ public class RoutinesViewModel
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe(__ -> insertResponse.setLoading())
-                        .subscribe(insertedRoutine ->
-                                {
-                                    insertResponse.setSuccess(insertedRoutine);
-                                },
-                                throwable -> insertResponse.setError(throwable)
+                        .subscribe(insertResponse::setSuccess,
+                                insertResponse::setError
                         )
         );
     }

@@ -7,18 +7,8 @@
 package com.longlife.workoutlogger.view.Exercises;
 
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
@@ -51,6 +42,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ExercisesListFragment extends FragmentBase implements ExercisesListRemakeAdapter.IClickExercise {
     private static final String TAG = ExercisesListFragment.class.getSimpleName();
@@ -139,7 +140,7 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         }
     }
 
-    View mView;
+    private View mView;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -204,7 +205,7 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         super.onDestroyView();
     }
 
-    protected int getLayoutId() {
+    private int getLayoutId() {
         return R.layout.fragment_exercises;
     }
 
@@ -261,7 +262,7 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         return interfaces;
     }
 
-    protected void startCreateFragment() {
+    private void startCreateFragment() {
         FragmentManager manager = getActivity().getSupportFragmentManager();
 
         ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
@@ -395,7 +396,7 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
 
                 // If the snackbar was dismissed via clicking the action (Undo button), then restore the exercise.
                 if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                    viewModel.restoreLastExercise();
+                    viewModel.restoreLastExercise(); // [TODO] When dismissed after changing fragments, the undo is not done?
                     if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
                     return;
                 }

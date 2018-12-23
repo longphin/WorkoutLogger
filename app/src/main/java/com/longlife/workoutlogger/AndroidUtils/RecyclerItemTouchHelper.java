@@ -7,9 +7,10 @@
 package com.longlife.workoutlogger.AndroidUtils;
 
 import android.graphics.Canvas;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 // Swipe listener for recyclerview. The recyclerview must extend RecyclerViewHolderSwipeable.
 public class RecyclerItemTouchHelper

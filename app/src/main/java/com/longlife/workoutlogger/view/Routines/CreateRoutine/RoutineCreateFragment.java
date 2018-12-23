@@ -6,23 +6,11 @@
 
 package com.longlife.workoutlogger.view.Routines.CreateRoutine;
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.longlife.workoutlogger.AndroidUtils.ActivityBase;
 import com.longlife.workoutlogger.AndroidUtils.ExercisesWithSetsAdapter;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
@@ -62,6 +51,18 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class RoutineCreateFragment
         extends FragmentBase
         implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
@@ -74,7 +75,7 @@ public class RoutineCreateFragment
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     // Other
-    String descrip;
+    private String descrip;
     @Inject
     Context context;
     private RecyclerView recyclerView;
@@ -118,9 +119,9 @@ public class RoutineCreateFragment
         exercisesViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
 
         // Observer to get list of exercises to add to this routine through the ExercisesOverviewFragment.
-        addDisposable(exercisesSelectedViewModel.getAddExercisesToRoutineResponse().subscribe(response -> processSelectedExercisesResponse(response)));
+        addDisposable(exercisesSelectedViewModel.getAddExercisesToRoutineResponse().subscribe(this::processSelectedExercisesResponse));
         // Observer to get when routine is successfully saved.
-        addDisposable(routinesViewModel.getInsertResponse().subscribe(response -> processInsertResponse(response)));
+        addDisposable(routinesViewModel.getInsertResponse().subscribe(this::processInsertResponse));
         // Observer to get when an exercise is updated.
         addDisposable(exercisesViewModel.getExerciseEditedObservable().subscribe(exercise -> {
             adapter.exerciseUpdated(exercise);

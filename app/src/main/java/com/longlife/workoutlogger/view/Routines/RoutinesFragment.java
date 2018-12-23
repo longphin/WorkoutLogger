@@ -7,25 +7,15 @@
 package com.longlife.workoutlogger.view.Routines;
 
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
@@ -41,6 +31,17 @@ import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RoutinesFragment
         extends FragmentBase
@@ -81,8 +82,8 @@ public class RoutinesFragment
         viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
 
         //viewModel.getLoadExercisesResponse().subscribe(response -> processLoadResponse(response));
-        addDisposable(viewModel.getLoadResponse().subscribe(response -> processLoadResponse(response)));
-        addDisposable(viewModel.getInsertResponse().subscribe(response -> processInsertRoutineResponse(response)));
+        addDisposable(viewModel.getLoadResponse().subscribe(this::processLoadResponse));
+        addDisposable(viewModel.getInsertResponse().subscribe(this::processInsertRoutineResponse));
     }
 
     @Nullable
@@ -97,9 +98,7 @@ public class RoutinesFragment
             // Add listener to "add routine button"
             FloatingActionButton btn_addRoutine = mView.findViewById(R.id.btn_addRoutine);
 
-            btn_addRoutine.setOnClickListener(v -> {
-                startCreateFragment();
-            });
+            btn_addRoutine.setOnClickListener(v -> startCreateFragment());
 
             // Initialize recyclerview.
             recyclerView = mView.findViewById(R.id.rv_routines);

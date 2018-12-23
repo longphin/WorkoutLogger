@@ -6,13 +6,6 @@
 
 package com.longlife.workoutlogger.data;
 
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Transaction;
-import android.arch.persistence.room.Update;
-
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
@@ -24,6 +17,12 @@ import com.longlife.workoutlogger.model.SessionExercise;
 import java.util.List;
 import java.util.Set;
 
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.room.Transaction;
+import androidx.room.Update;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -32,7 +31,7 @@ import io.reactivex.Single;
  * Created by Longphi on 1/3/2018.
  */
 
-@android.arch.persistence.room.Dao
+@androidx.room.Dao
 public abstract class ExerciseDao {
     // Get a list of exercises that are not hidden.
     @Query("SELECT * FROM Exercise WHERE hidden = 0")

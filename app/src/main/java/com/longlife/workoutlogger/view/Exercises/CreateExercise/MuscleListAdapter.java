@@ -6,7 +6,6 @@
 
 package com.longlife.workoutlogger.view.Exercises.CreateExercise;
 
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,8 @@ import com.longlife.workoutlogger.model.ExerciseMuscle;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int MUSCLE_GROUP_TYPE = 0;
@@ -139,12 +140,9 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Integer selected_idMuscle = getMuscleIdForPosition(pos);
         if (isItemSelected) includeMuscle(selected_idMuscle);
         //Log.d(TAG, name + " is " + (isItemSelected ? "currently selected" : "currently not selected"));
-        holder.getCheckboxView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int clickedPos = holder.getAdapterPosition();
-                changeItemSelectedStatus(clickedPos);
-            }
+        holder.getCheckboxView().setOnClickListener(view -> {
+            int clickedPos = holder.getAdapterPosition();
+            changeItemSelectedStatus(clickedPos);
         });
     }
 

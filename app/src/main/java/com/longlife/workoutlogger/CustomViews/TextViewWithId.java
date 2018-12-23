@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 
 import com.longlife.workoutlogger.R;
 
-public class TextViewWithId extends android.support.v7.widget.AppCompatCheckBox {
+public class TextViewWithId extends androidx.appcompat.widget.AppCompatCheckBox {
     public Integer id = null;
     public String label = "";
 

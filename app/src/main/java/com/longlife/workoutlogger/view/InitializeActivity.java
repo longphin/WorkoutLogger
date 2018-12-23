@@ -6,11 +6,8 @@
 
 package com.longlife.workoutlogger.view;
 
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
@@ -19,6 +16,10 @@ import com.longlife.workoutlogger.enums.MuscleGroup;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 
 import javax.inject.Inject;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 public class InitializeActivity extends AppCompatActivity {
     @Inject

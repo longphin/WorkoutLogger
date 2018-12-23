@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 
@@ -25,6 +24,8 @@ import com.longlife.workoutlogger.utils.JSONParser;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.io.File;
+
+import androidx.core.content.ContextCompat;
 
 /*
 [TODO] Change how exercises are selected when creating a routine. Instead of opening another fragment, just have two recyclerviews side by side. Left side is for exercises in routine, right side is for entire list of exercises. Items from the right can be clicked on or dragged to the left side.

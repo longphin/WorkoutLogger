@@ -12,14 +12,15 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.longlife.workoutlogger.utils.Format;
 import com.longlife.workoutlogger.utils.TimeHolder;
 import com.longlife.workoutlogger.view.MainActivity;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class TimerNotificationService
         extends Service {

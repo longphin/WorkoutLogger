@@ -6,9 +6,6 @@
 
 package com.longlife.workoutlogger.view.Exercises;
 
-import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
-
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseLocked;
@@ -26,6 +23,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Maybe;

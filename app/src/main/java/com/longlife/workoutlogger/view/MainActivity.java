@@ -6,17 +6,12 @@
 
 package com.longlife.workoutlogger.view;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -38,8 +33,15 @@ import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
 import com.ncapdevi.fragnav.FragNavController;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import io.reactivex.observers.DisposableMaybeObserver;
 
 public class MainActivity
@@ -86,13 +88,10 @@ public class MainActivity
 
         fragmentHistory = new FragmentHistory();
 
-        mNavController = FragNavController.newBuilder(savedInstanceState, getSupportFragmentManager(), R.id.frameLayout_main_activity)
-                .transactionListener(this)
-                .rootFragmentListener(this, TABS.length)
-                .build();
-
-        switchTab(0);
-
+        mNavController = new FragNavController(getSupportFragmentManager(), R.id.frameLayout_main_activity);
+        //switchTab(0);
+        mNavController.setRootFragmentListener(this);
+        mNavController.initialize(FragNavController.TAB1, savedInstanceState);
         setOnTabSelectedListener();
 
         restTimerReceiver = new BroadcastReceiver() {
@@ -145,9 +144,7 @@ public class MainActivity
         toolbar = findViewById(R.id.toolbar_main_activity);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(view ->
-        {
-            onBackPressed();
-        });
+                onBackPressed());
     }
 
     private void initBottomNavigation() {
@@ -180,24 +177,20 @@ public class MainActivity
 
     private void setOnTabSelectedListener() {
         bottomTabLayout.setOnTabSelectedListener(
-                new AHBottomNavigation.OnTabSelectedListener() {
-
-                    @Override
-                    public boolean onTabSelected(int position, boolean wasSelected) {
-                        if (!enableBottomNavClick)
-                            return true;
-                        if (wasSelected) // Item was reselected.
-                        {
-                            //mNavController.clearStack();
-                            //switchTab(position);
-                            //return true;
-                            return true;
-                        } else { // Switching item.
-                            fragmentHistory.push(position);
-                            switchTab(position);
-                            updateTabSelection(position);
-                            return true;
-                        }
+                (position, wasSelected) -> {
+                    if (!enableBottomNavClick)
+                        return true;
+                    if (wasSelected) // Item was reselected.
+                    {
+                        //mNavController.clearStack();
+                        //switchTab(position);
+                        //return true;
+                        return true;
+                    } else { // Switching item.
+                        fragmentHistory.push(position);
+                        switchTab(position);
+                        updateTabSelection(position);
+                        return true;
                     }
                 }
         );
@@ -254,6 +247,12 @@ public class MainActivity
     }
 
     @Override
+    public int getNumberOfRootFragments() {
+        return 4;
+    }
+
+    @NotNull
+    @Override
     public Fragment getRootFragment(int index) {
         switch (index) {
             case FragNavController.TAB1:
@@ -262,9 +261,7 @@ public class MainActivity
                 return RoutinesFragment.newInstance();
             case FragNavController.TAB3:
                 return ExercisesListFragment.newInstance();
-            //return ExercisesFragment.newInstance();//R.id.frameLayout_main_activity, R.layout.fragment_exercises);
             case FragNavController.TAB4:
-                //return PerformFragment.newInstance();
                 return ExercisesFragment.newInstance();
         }
         throw new IllegalStateException("Need to send an index that we know");
@@ -285,6 +282,7 @@ public class MainActivity
         }
     }
 
+    @NotNull
     @Override
     public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
         //do fragmentty stuff. Maybe change title, I'm not going to tell you how to live your life
@@ -300,12 +298,12 @@ public class MainActivity
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
     }
 
-
-    //    private void updateToolbarTitle(int position){
-    //
     //
     //        getSupportActionBar().setTitle(TABS[position]);
     //
+    //
+    //    private void updateToolbarTitle(int position){
+
     //    }
 
     public void updateToolbarTitle(String title) {

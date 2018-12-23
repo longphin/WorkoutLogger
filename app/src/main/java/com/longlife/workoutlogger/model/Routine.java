@@ -6,11 +6,10 @@
 
 package com.longlife.workoutlogger.model;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-
 import com.longlife.workoutlogger.CustomAnnotationsAndExceptions.Required;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import io.reactivex.annotations.NonNull;
 
 /**

@@ -7,7 +7,6 @@
 package com.longlife.workoutlogger.view.Exercises.EditExercise;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFr
 import java.util.HashSet;
 import java.util.Set;
 
+import androidx.annotation.Nullable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
