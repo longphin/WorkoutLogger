@@ -16,6 +16,7 @@
     <integer name="MUSCLEGROUP_shoulders">3</integer>
     <integer name="MUSCLEGROUP_legs">4</integer>
     <integer name="MUSCLEGROUP_core">5</integer>
+    <integer name="MUSCLEGROUP_misc">6</integer>
 
     <!-- IDs for muscles -->
     <!-- back muscles -->
@@ -47,5 +48,8 @@
     <integer name="MUSCLE_pec_upper">20</integer>
     <integer name="MUSCLE_pec_middle">21</integer>
     <integer name="MUSCLE_pec_lower">22</integer>
+    <!-- Muscellaneous -->
+    <integer name="MUSCLE_cardio">23</integer>
+    <integer name="MUSCLE_stretch">24</integer>
 
 </resources>

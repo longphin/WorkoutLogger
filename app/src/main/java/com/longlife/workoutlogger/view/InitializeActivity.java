@@ -31,24 +31,12 @@ public class InitializeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initialize);
 
-        // Insert muscles
-        /* [TODO] Insert values into Muscles table if needed. Still not sure if this is needed.
-        ((MyApplication) this.getApplication())
-                .getApplicationComponent()
-                .inject(this);
-
-        exercisesViewModel = ViewModelProviders.of(this, viewModelFactory).get(ExercisesViewModel.class);
-
-        List<Muscles> Muscles.getList()
-        observable([muscle : muscles -> profileViewModel.insertMuscle(muscle)])
-            .onComplete(()->goToMainActivity()
-         */
-
         ((MyApplication) this.getApplication())
                 .getApplicationComponent()
                 .inject(this);
         profileViewModel = ViewModelProviders.of(this, viewModelFactory).get(ProfileViewModel.class);
 
+        // Insert muscle tables.
         profileViewModel.insertMuscles(Muscle.getAllMuscleEntities(this));
         profileViewModel.insertMuscleGroups(MuscleGroup.getAllMuscleGroupEntities(this));
 

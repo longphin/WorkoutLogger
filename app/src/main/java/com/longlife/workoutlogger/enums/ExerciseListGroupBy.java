@@ -22,18 +22,20 @@ public class ExerciseListGroupBy {
     private static final int GROUP_BY_MUSCLE_GROUP_SHOULDERS = 4;
     private static final int GROUP_BY_MUSCLE_GROUP_LEGS = 5;
     private static final int GROUP_BY_MUSCLE_GROUP_CORE = 6;
+    private static final int GROUP_BY_MUSCLE_GROUP_MISC = 7;
 
     public static List<Type> getOptions(Context context) {
         String prefix = GetResource.getStringResource(context, R.string.GROUPBY_PREFIX);
 
         List<Type> options = new ArrayList<>();
         options.add(new Type(GROUP_BY_NAME, GetResource.getStringResource(context, R.string.GROUPBY_NAME)));
-        options.add(new Type(GROUP_BY_MUSCLE_GROUP_ARMS, prefix + " " + MuscleGroup.getMuscleGroupName(context, MuscleGroup.ARMS)));
-        options.add(new Type(GROUP_BY_MUSCLE_GROUP_BACK, prefix + " " + MuscleGroup.getMuscleGroupName(context, MuscleGroup.BACK)));
-        options.add(new Type(GROUP_BY_MUSCLE_GROUP_CHEST, prefix + " " + MuscleGroup.getMuscleGroupName(context, MuscleGroup.CHEST)));
-        options.add(new Type(GROUP_BY_MUSCLE_GROUP_CORE, prefix + " " + MuscleGroup.getMuscleGroupName(context, MuscleGroup.CORE)));
-        options.add(new Type(GROUP_BY_MUSCLE_GROUP_LEGS, prefix + " " + MuscleGroup.getMuscleGroupName(context, MuscleGroup.LEGS)));
-        options.add(new Type(GROUP_BY_MUSCLE_GROUP_SHOULDERS, prefix + " " + MuscleGroup.getMuscleGroupName(context, MuscleGroup.SHOULDERS)));
+        options.add(new Type(GROUP_BY_MUSCLE_GROUP_MISC, prefix + " " + MuscleGroup.getMuscleGroupName(context, R.integer.MUSCLEGROUP_misc)));
+        options.add(new Type(GROUP_BY_MUSCLE_GROUP_ARMS, prefix + " " + MuscleGroup.getMuscleGroupName(context, R.integer.MUSCLEGROUP_arms)));
+        options.add(new Type(GROUP_BY_MUSCLE_GROUP_BACK, prefix + " " + MuscleGroup.getMuscleGroupName(context, R.integer.MUSCLEGROUP_back)));
+        options.add(new Type(GROUP_BY_MUSCLE_GROUP_CHEST, prefix + " " + MuscleGroup.getMuscleGroupName(context, R.integer.MUSCLEGROUP_chest)));
+        options.add(new Type(GROUP_BY_MUSCLE_GROUP_CORE, prefix + " " + MuscleGroup.getMuscleGroupName(context, R.integer.MUSCLEGROUP_core)));
+        options.add(new Type(GROUP_BY_MUSCLE_GROUP_LEGS, prefix + " " + MuscleGroup.getMuscleGroupName(context, R.integer.MUSCLEGROUP_legs)));
+        options.add(new Type(GROUP_BY_MUSCLE_GROUP_SHOULDERS, prefix + " " + MuscleGroup.getMuscleGroupName(context, R.integer.MUSCLEGROUP_shoulders)));
 
         return options;
     }

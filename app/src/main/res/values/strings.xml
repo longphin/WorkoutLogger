@@ -119,4 +119,7 @@
     <string name="Edit">Edit</string>
     <string name="Delete">Delete</string>
     <string name="addExercise">Add Exercise</string>
+    <string name="MUSCLEGROUP_misc">Miscellaneous</string>
+    <string name="MUSCLE_cardio">Cardio</string>
+    <string name="MUSCLE_stretch">Stretch</string>
 </resources>

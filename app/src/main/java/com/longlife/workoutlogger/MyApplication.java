@@ -57,6 +57,7 @@ import androidx.core.content.ContextCompat;
     [TODO] Add occasional "challenges" Workouts. Eventually, there should be multiple challenges available, related user's goal. But initially, these will probably be the same challenges for everyone for the duration.
             For example, everyone can opt-in to the month's weight-loss challenge.
 
+// LOW PRIORITY
 [TODO] Make recyclerview header "stick" to the top when scrolling (optional, for routines / performing) stackoverflow.com/questions/32949971
 [TODO] Pushing an image upward when scrolling (optional, low priority) stackoverflow.com/questions/28027289
 */

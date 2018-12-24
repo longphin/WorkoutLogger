@@ -16,36 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Muscle {
-    // Back
-    static final int TRAPS = 0;
-    static final int RHOMBOIDS = 1;
-    static final int LATS = 2;
-    static final int LOWER_BACK = 3;
-    // Arms
-    static final int BICEPS = 4;
-    static final int BICEP_BRACHIALIS = 5;
-    static final int TRICEPS = 6;
-    static final int FOREARMS = 7;
-    // Shoulders
-    static final int DELTOID_ANTERIOR = 8;
-    static final int DELTOID_LATERAL = 9;
-    static final int DELTOID_POSTERIOR = 10;
-    // Legs
-    static final int QUADS = 11;
-    static final int HAMSTRINGS = 12;
-    static final int GLUTES = 13;
-    static final int CALVES = 14;
-    static final int HIP_ADDUCTORS = 15;
-    static final int HIP_ABDUCTORS = 16;
-    // Core
-    static final int ABS = 17; // [TODO] break up abs into lower, middle, and upper?
-    static final int OBLIQUES = 18;
-    static final int SERRATUS = 19;
-    // Chest
-    static final int UPPER_PEC = 20;
-    static final int MIDDLE_PEC = 21;
-    static final int LOWER_PEC = 22;
-
     private int idMuscleGroup;
     private Integer idMuscle;
     private String name;
@@ -53,7 +23,7 @@ public class Muscle {
     public static List<MuscleEntity> getAllMuscleEntities(Context context) {
         List<MuscleEntity> muscles = new ArrayList<>();
         for (Integer idMuscle : Muscle.getAllMuscles(context)) {
-            muscles.add(getMuscleEntity(idMuscle));
+            muscles.add(getMuscleEntity(context, idMuscle));
         }
 
         return muscles;
@@ -67,40 +37,14 @@ public class Muscle {
         this.idMuscle = idMuscle;
     }
 
-    static List<Integer> getAllMuscles(Context context) {
+    private static List<Integer> getAllMuscles(Context context) {
+        int[] idMuscleResources = getAllIdResources();
+
         List<Integer> idMuscles = new ArrayList<>();
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_traps));//TRAPS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_rhomboids));//RHOMBOIDS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_lats));//LATS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_lower_back));//LOWER_BACK);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_biceps));//BICEPS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_bicep_brachialis));//BICEP_BRACHIALIS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_triceps));//TRICEPS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_forearms));//FOREARMS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_deltoid_anterior));//DELTOID_ANTERIOR);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_deltoid_lateral));//DELTOID_LATERAL);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_deltoid_posterior));//DELTOID_POSTERIOR);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_quads));//QUADS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_hamstrings));//HAMSTRINGS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_glutes));//GLUTES);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_calves));//CALVES);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_hip_adductors));//HIP_ADDUCTORS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_hip_abductors));//HIP_ABDUCTORS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_abs));//ABS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_obliques));//OBLIQUES);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_serratus));//SERRATUS);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_pec_upper));//UPPER_PEC);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_pec_middle));//MIDDLE_PEC);
-        idMuscles.add(GetResource.getIntResource(context, R.integer.MUSCLE_pec_lower));//LOWER_PEC);
-
+        for (int idMuscleResource : idMuscleResources) {
+            idMuscles.add(GetResource.getIntResource(context, idMuscleResource));
+        }
         return idMuscles;
-    }
-
-    // Constructor for a muscle.
-    public Muscle(int idMuscleGroup, int idMuscle, String name) {
-        this.idMuscleGroup = idMuscleGroup;
-        this.idMuscle = idMuscle;
-        this.name = name;
     }
 
     public boolean isSelected() {
@@ -123,70 +67,68 @@ public class Muscle {
         return idMuscleGroup;
     }
 
-    public void changeSelectedStatus() {
-        isSelected = !isSelected;
+    private static MuscleEntity getMuscleEntity(Context context, int idMuscle) {
+        return new MuscleEntity(idMuscle, MuscleGroup.getMuscleGroupForMuscle(context, idMuscle));
+    }
+
+    private static int[] getAllIdResources() {
+        return new int[]{
+                R.integer.MUSCLE_traps,
+                R.integer.MUSCLE_rhomboids,
+                R.integer.MUSCLE_lats,
+                R.integer.MUSCLE_lower_back,
+                R.integer.MUSCLE_biceps,
+                R.integer.MUSCLE_bicep_brachialis,
+                R.integer.MUSCLE_triceps,
+                R.integer.MUSCLE_forearms,
+                R.integer.MUSCLE_deltoid_anterior,
+                R.integer.MUSCLE_deltoid_lateral,
+                R.integer.MUSCLE_deltoid_posterior,
+                R.integer.MUSCLE_quads,
+                R.integer.MUSCLE_hamstrings,
+                R.integer.MUSCLE_glutes,
+                R.integer.MUSCLE_calves,
+                R.integer.MUSCLE_hip_abductors,
+                R.integer.MUSCLE_hip_adductors,
+                R.integer.MUSCLE_abs,
+                R.integer.MUSCLE_obliques,
+                R.integer.MUSCLE_serratus,
+                R.integer.MUSCLE_pec_lower,
+                R.integer.MUSCLE_pec_middle,
+                R.integer.MUSCLE_pec_upper,
+                R.integer.MUSCLE_cardio,
+                R.integer.MUSCLE_stretch
+        };
     }
 
     public static String getMuscleName(Context context, int idMuscle) {
-        switch (idMuscle) {
-            // Back
-            case TRAPS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_traps);
-            case RHOMBOIDS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_rhomboids);
-            case LATS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_lats);
-            case LOWER_BACK:
-                return GetResource.getStringResource(context, R.string.MUSCLE_lower_back);
-            // Arms
-            case BICEPS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_biceps);
-            case BICEP_BRACHIALIS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_bicep_brachialis);
-            case TRICEPS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_triceps);
-            case FOREARMS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_forearms);
-            // Shoulders
-            case DELTOID_ANTERIOR:
-                return GetResource.getStringResource(context, R.string.MUSCLE_deltoid_anterior);
-            case DELTOID_LATERAL:
-                return GetResource.getStringResource(context, R.string.MUSCLE_deltoid_lateral);
-            case DELTOID_POSTERIOR:
-                return GetResource.getStringResource(context, R.string.MUSCLE_deltoid_posterior);
-            // Legs
-            case QUADS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_quads);
-            case HAMSTRINGS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_hamstrings);
-            case GLUTES:
-                return GetResource.getStringResource(context, R.string.MUSCLE_glutes);
-            case CALVES:
-                return GetResource.getStringResource(context, R.string.MUSCLE_calves);
-            case HIP_ABDUCTORS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_hip_abductors);
-            case HIP_ADDUCTORS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_hip_adductors);
-            // Core
-            case ABS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_abs);
-            case OBLIQUES:
-                return GetResource.getStringResource(context, R.string.MUSCLE_obliques);
-            case SERRATUS:
-                return GetResource.getStringResource(context, R.string.MUSCLE_serratus);
-            // Chest
-            case UPPER_PEC:
-                return GetResource.getStringResource(context, R.string.MUSCLE_pec_upper);
-            case MIDDLE_PEC:
-                return GetResource.getStringResource(context, R.string.MUSCLE_pec_middle);
-            case LOWER_PEC:
-                return GetResource.getStringResource(context, R.string.MUSCLE_pec_lower);
-            default:
-                return "Muscle is missing a name."; // Should never appear.
+        int[] muscleIdResource = getAllIdResources();
+        int[] muscleNameResource = getAllNameResources();
+
+        String name = null;
+        for (int i = 0; i < muscleIdResource.length; i++) {
+            name = getMuscleNameFromResource(context, muscleIdResource[i], muscleNameResource[i], idMuscle);
+            if (name != null) return name;
         }
+        return "Muscle is missing a name."; // Should never appear.
     }
 
-    private static MuscleEntity getMuscleEntity(int idMuscle) {
-        return new MuscleEntity(idMuscle, MuscleGroup.getMuscleGroupForMuscle(idMuscle));
+    private static int[] getAllNameResources() {
+        return new int[]{R.string.MUSCLE_traps, R.string.MUSCLE_rhomboids, R.string.MUSCLE_lats,
+                R.string.MUSCLE_lower_back, R.string.MUSCLE_biceps, R.string.MUSCLE_bicep_brachialis,
+                R.string.MUSCLE_triceps, R.string.MUSCLE_forearms, R.string.MUSCLE_deltoid_anterior,
+                R.string.MUSCLE_deltoid_lateral, R.string.MUSCLE_deltoid_posterior, R.string.MUSCLE_quads,
+                R.string.MUSCLE_hamstrings, R.string.MUSCLE_glutes, R.string.MUSCLE_calves,
+                R.string.MUSCLE_hip_abductors, R.string.MUSCLE_hip_adductors, R.string.MUSCLE_abs,
+                R.string.MUSCLE_obliques, R.string.MUSCLE_serratus, R.string.MUSCLE_pec_lower,
+                R.string.MUSCLE_pec_middle, R.string.MUSCLE_pec_upper, R.string.MUSCLE_cardio,
+                R.string.MUSCLE_stretch};
+    }
+
+    private static String getMuscleNameFromResource(Context context, int idResource, int nameResource, int idMuscle) {
+        if (GetResource.getIntResource(context, idResource) == idMuscle) {
+            return GetResource.getStringResource(context, nameResource);
+        }
+        return null;
     }
 }

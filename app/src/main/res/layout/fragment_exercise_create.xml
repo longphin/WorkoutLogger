@@ -32,11 +32,37 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/musclegroup_misc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MUSCLEGROUP_misc"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_cardio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/MUSCLE_cardio"
+                app:enum_code="@integer/MUSCLE_cardio"
+                app:enum_label="@string/MUSCLE_cardio"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_misc" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_stretch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/MUSCLE_stretch"
+                app:enum_code="@integer/MUSCLE_stretch"
+                app:enum_label="@string/MUSCLE_stretch"
+                app:layout_constraintStart_toEndOf="@+id/muscle_cardio"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_misc" />
+
+            <TextView
                 android:id="@+id/musclegroup_arms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/MUSCLEGROUP_arms"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/muscle_cardio" />
 
             <com.longlife.workoutlogger.CustomViews.TextViewWithId
                 android:id="@+id/muscle_biceps"
@@ -255,7 +281,7 @@
                 app:layout_constraintStart_toEndOf="@+id/muscle_hip_abductors"
                 app:layout_constraintTop_toBottomOf="@+id/muscle_calves" />
 
-            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+            <TextView
                 android:id="@+id/musclegroup_shoulders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

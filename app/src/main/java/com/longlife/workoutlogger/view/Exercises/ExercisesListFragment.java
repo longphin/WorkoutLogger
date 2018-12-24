@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -151,7 +150,6 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
             inflater.inflate(R.menu.exercises_search_menu, menu);
 
             initializeSearchForExercisesView(menu.findItem(R.id.exercises_list_searchview));
-            initializeAddExerciseMenuItem(menu.findItem(R.id.exercises_list_addExercise));
         }
     }
 
@@ -307,14 +305,6 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         );
     }
 
-    private void initializeAddExerciseMenuItem(MenuItem addExerciseItem) //[TODO] Remove the floating action button. Instead, this menu item will be used to add an exercise. When clicked, set the added exercise's name field to the current search filter text.
-    {
-        Button button = new Button(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
-
-        //addExerciseItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //addExerciseItem.setActionView(button);
-    }
-
     private void initializeGroupByOptions(View v) {
         groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
         ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
@@ -341,12 +331,6 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
 
             }
         });
-    }
-
-    // Clear any memory references in recyclerview.
-    private void clearRecyclerView() {
-        recyclerView.setAdapter(null);
-        adapter = null;
     }
 
     @Override

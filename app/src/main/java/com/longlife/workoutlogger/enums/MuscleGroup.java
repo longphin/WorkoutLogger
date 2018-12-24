@@ -12,115 +12,109 @@ import android.util.Log;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.utils.GetResource;
-import com.longlife.workoutlogger.view.Exercises.CreateExercise.MuscleListAdapter;
-import com.longlife.workoutlogger.view.Exercises.CreateExercise.MuscleListHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MuscleGroup {
-    static final int CHEST = 0;
-    static final int BACK = 1;
-    static final int ARMS = 2;
-    static final int SHOULDERS = 3;
-    static final int LEGS = 4;
-    static final int CORE = 5;
-
     private static final String TAG = MuscleGroup.class.getSimpleName();
 
-    public static List<MuscleListHelper> getAllMuscleGroups(Context context) {
-        List<MuscleListHelper> groups = new ArrayList<>();
-        for (Integer idMuscleGroup : MuscleGroup.getAllMuscleGroupsIds(context)) {
-            groups.add(getMuscleGroup(context, idMuscleGroup));
-        }
-
-        return groups;
-    }
-
     public static List<Integer> getAllMuscleGroupsIds(Context context) {
-        List<Integer> idMuscleGroups = new ArrayList<>();
-        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_arms));//ARMS);
-        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_back));//BACK);
-        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_chest));//CHEST);
-        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_core));//CORE);
-        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_legs));//LEGS);
-        idMuscleGroups.add(GetResource.getIntResource(context, R.integer.MUSCLEGROUP_shoulders));//SHOULDERS);
+        int[] idMuscleGroupResources = getAllIdResources();
 
+        List<Integer> idMuscleGroups = new ArrayList<>();
+        for (int i = 0; i < idMuscleGroupResources.length; i++) {
+            idMuscleGroups.add(GetResource.getIntResource(context, idMuscleGroupResources[i]));
+        }
         return idMuscleGroups;
     }
 
-    private static MuscleListHelper getMuscleGroup(Context context, int idMuscleGroup) {
-        List<Muscle> muscles = new ArrayList<>();
-
-        for (Integer idMuscle : Muscle.getAllMuscles(context)) {
-            if (getMuscleGroupForMuscle(idMuscle) == idMuscleGroup) {
-                muscles.add(new Muscle(context, idMuscleGroup, idMuscle));
-            }
-        }
-
-        return new MuscleListHelper(idMuscleGroup, getMuscleGroupName(context, idMuscleGroup), muscles, MuscleListAdapter.NUMBER_OF_COLUMNS);
+    private static int[] getAllIdResources() {
+        return new int[]{R.integer.MUSCLEGROUP_chest, R.integer.MUSCLEGROUP_back, R.integer.MUSCLEGROUP_arms,
+                R.integer.MUSCLEGROUP_shoulders, R.integer.MUSCLEGROUP_legs, R.integer.MUSCLEGROUP_core, R.integer.MUSCLEGROUP_misc};
     }
 
     // Return the MuscleGroup id given an idMuscle. Used to determine what group a muscle is a part of.
-    static int getMuscleGroupForMuscle(int idMuscle) {
-        switch (idMuscle) {
-            case Muscle.UPPER_PEC:
-            case Muscle.MIDDLE_PEC:
-            case Muscle.LOWER_PEC:
-                return CHEST;
+    static int getMuscleGroupForMuscle(Context context, int idMuscle) {
+        Integer idMuscleGroup = null;
+        idMuscleGroup = getMuscleGroupForMuscleIdFromResource(context,
+                new int[]{R.integer.MUSCLE_pec_upper, R.integer.MUSCLE_pec_middle, R.integer.MUSCLE_pec_lower},
+                idMuscle,
+                R.integer.MUSCLEGROUP_chest);
+        if (idMuscleGroup != null) return idMuscleGroup;
 
-            case Muscle.TRAPS:
-            case Muscle.RHOMBOIDS:
-            case Muscle.LATS:
-            case Muscle.LOWER_BACK:
-                return BACK;
+        idMuscleGroup = getMuscleGroupForMuscleIdFromResource(context,
+                new int[]{R.integer.MUSCLE_traps, R.integer.MUSCLE_rhomboids, R.integer.MUSCLE_lats, R.integer.MUSCLE_lower_back},
+                idMuscle,
+                R.integer.MUSCLEGROUP_back);
+        if (idMuscleGroup != null) return idMuscleGroup;
 
-            case Muscle.BICEPS:
-            case Muscle.BICEP_BRACHIALIS:
-            case Muscle.TRICEPS:
-            case Muscle.FOREARMS:
-                return ARMS;
+        idMuscleGroup = getMuscleGroupForMuscleIdFromResource(context,
+                new int[]{R.integer.MUSCLE_bicep_brachialis, R.integer.MUSCLE_biceps, R.integer.MUSCLE_triceps, R.integer.MUSCLE_forearms},
+                idMuscle,
+                R.integer.MUSCLEGROUP_arms);
+        if (idMuscleGroup != null) return idMuscleGroup;
 
-            case Muscle.DELTOID_ANTERIOR:
-            case Muscle.DELTOID_LATERAL:
-            case Muscle.DELTOID_POSTERIOR:
-                return SHOULDERS;
+        idMuscleGroup = getMuscleGroupForMuscleIdFromResource(context,
+                new int[]{R.integer.MUSCLE_deltoid_posterior, R.integer.MUSCLE_deltoid_lateral, R.integer.MUSCLE_deltoid_anterior},
+                idMuscle,
+                R.integer.MUSCLEGROUP_shoulders);
+        if (idMuscleGroup != null) return idMuscleGroup;
 
-            case Muscle.QUADS:
-            case Muscle.HAMSTRINGS:
-            case Muscle.CALVES:
-            case Muscle.GLUTES:
-            case Muscle.HIP_ABDUCTORS:
-            case Muscle.HIP_ADDUCTORS:
-                return LEGS;
+        idMuscleGroup = getMuscleGroupForMuscleIdFromResource(context,
+                new int[]{R.integer.MUSCLE_quads, R.integer.MUSCLE_hamstrings, R.integer.MUSCLE_calves, R.integer.MUSCLE_glutes, R.integer.MUSCLE_hip_abductors, R.integer.MUSCLE_hip_adductors},
+                idMuscle,
+                R.integer.MUSCLEGROUP_legs);
+        if (idMuscleGroup != null) return idMuscleGroup;
 
-            case Muscle.ABS:
-            case Muscle.OBLIQUES:
-            case Muscle.SERRATUS:
-                return CORE;
-        }
+        idMuscleGroup = getMuscleGroupForMuscleIdFromResource(context,
+                new int[]{R.integer.MUSCLE_abs, R.integer.MUSCLE_obliques, R.integer.MUSCLE_serratus},
+                idMuscle,
+                R.integer.MUSCLEGROUP_core);
+        if (idMuscleGroup != null) return idMuscleGroup;
+
+        idMuscleGroup = getMuscleGroupForMuscleIdFromResource(context,
+                new int[]{R.integer.MUSCLE_cardio, R.integer.MUSCLE_stretch},
+                idMuscle,
+                R.integer.MUSCLEGROUP_misc);
+        if (idMuscleGroup != null) return idMuscleGroup;
 
         Log.d(TAG, "Could not find muscle group by " + String.valueOf(idMuscle));
         return -1;
     }
 
-    static String getMuscleGroupName(Context context, int idMuscleGroup) {
-        switch (idMuscleGroup) {
-            case CHEST:
-                return GetResource.getStringResource(context, R.string.MUSCLEGROUP_chest);
-            case BACK:
-                return GetResource.getStringResource(context, R.string.MUSCLEGROUP_back);
-            case ARMS:
-                return GetResource.getStringResource(context, R.string.MUSCLEGROUP_arms);
-            case SHOULDERS:
-                return GetResource.getStringResource(context, R.string.MUSCLEGROUP_shoulders);
-            case LEGS:
-                return GetResource.getStringResource(context, R.string.MUSCLEGROUP_legs);
-            case CORE:
-                return GetResource.getStringResource(context, R.string.MUSCLEGROUP_core);
-            default:
-                return "Muscle group not named";
+    private static Integer getMuscleGroupForMuscleIdFromResource(Context context, int[] idMuscleResources, int idMuscle, int idMuscleGroupResource) {
+        for (int idMuscleResource : idMuscleResources) {
+            if (GetResource.getIntResource(context, idMuscleResource) == idMuscle) {
+                return GetResource.getIntResource(context, idMuscleGroupResource);
+            }
         }
+        return null;
+    }
+
+    static String getMuscleGroupName(Context context, int idMuscleGroup) {
+        int[] muscleGroupIdResource = getAllIdResources();
+        int[] muscleGroupNameResource = getAllNameResources();
+
+        String name = null;
+        for (int i = 0; i < muscleGroupIdResource.length; i++) {
+            name = getMuscleGroupNameFromResource(context, muscleGroupIdResource[i], muscleGroupNameResource[i], idMuscleGroup);
+            if (name != null) return name;
+        }
+        return "Muscle group not named";
+    }
+
+    private static int[] getAllNameResources() {
+        return new int[]{R.string.MUSCLEGROUP_chest, R.string.MUSCLEGROUP_back, R.string.MUSCLEGROUP_arms,
+                R.string.MUSCLEGROUP_shoulders, R.string.MUSCLEGROUP_legs, R.string.MUSCLEGROUP_core, R.string.MUSCLEGROUP_misc};
+    }
+
+    private static String getMuscleGroupNameFromResource(Context context, int idResource, int nameResource, int idMuscleGroup) {
+        if (GetResource.getIntResource(context, idResource) == idMuscleGroup) {
+            return GetResource.getStringResource(context, nameResource);
+        }
+
+        return null;
     }
 
     public static List<MuscleGroupEntity> getAllMuscleGroupEntities(Context context) {
