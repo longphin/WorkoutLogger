@@ -19,7 +19,7 @@
         <item name="editTextStyle">@style/DefaultEditTextStyle</item>
         <item name="android:buttonStyle">@style/DefaultButtonStyle</item>
         <item name="buttonStyle">@style/DefaultButtonStyle</item>
-        <item name="customCheckBoxWIthIdStyle">@style/DefaultTextViewWithIdStyle</item>
+        <item name="customCheckBoxWIthIdStyle">@style/DefaultTextViewStyle</item>
     </style>
 
     <style name="DialogFragmentStyle" parent="@android:style/Theme.Holo.Light.Dialog">

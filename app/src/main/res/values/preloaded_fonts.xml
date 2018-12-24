@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Longphi Nguyen on 12/24/18 10:55 AM.
+  ~ Copyright (c) 2018. All rights reserved.
+  ~ Last modified 12/24/18 10:55 AM.
+  -->
+
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/andada</item>
+    </array>
+</resources>
