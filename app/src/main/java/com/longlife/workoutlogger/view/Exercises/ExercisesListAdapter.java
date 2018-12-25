@@ -22,6 +22,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+@Deprecated
 public abstract class ExercisesListAdapter
         extends RecyclerView.Adapter<ExercisesViewHolder> {
     protected List<ExerciseShort> exercises = new ArrayList<>();

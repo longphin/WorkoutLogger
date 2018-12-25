@@ -100,6 +100,8 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
         addDisposable(viewModel.getExerciseListByMuscleObservable().subscribe(this::loadDataWithMuscles));
         addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
+        addDisposable(viewModel.getExerciseRestoreObservable().subscribe(this::restoreExercise));
+        addDisposable(viewModel.getExerciseDeletedObservable().subscribe(this::deleteExercise));
 
         //initializeObservers();
         setHasOptionsMenu(true);
@@ -207,7 +209,6 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         return R.layout.fragment_exercises;
     }
 
-    // [TODO] if we want to add more items to action bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -361,6 +362,14 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         }
     }
 
+    private void restoreExercise(ExerciseShort restoredExercise) {
+        if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
+    }
+
+    private void deleteExercise(ExerciseShort deletedExercise) {
+        adapter.deleteExercise(deletedExercise.getIdExercise());
+    }
+
     @Override
     public void exerciseDelete(ExerciseShort exerciseToDelete) {
         viewModel.deleteExercise(exerciseToDelete);
@@ -381,7 +390,7 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
                 // If the snackbar was dismissed via clicking the action (Undo button), then restore the exercise.
                 if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
                     viewModel.restoreLastExercise(); // [TODO] When dismissed after changing fragments, the undo is not done?
-                    if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
+                    //if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
                     return;
                 }
             }

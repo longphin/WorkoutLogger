@@ -143,9 +143,9 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         }
 
-        setData(originalData);
+        setData(originalData); // [TODO] Possible optimization: Because wasCategorization is not correct, logic to only update views when the category for an exercise changes.
         /*
-        if(wasCategorizationChanged) // Need to reset the views because categorization was changed.  // [TODO] Because wasCategorization is not correct, logic to only update views when the category for an exercise changes.
+        if(wasCategorizationChanged) // Need to reset the views because categorization was changed.
         {
         }else{ // else, no items need the order changed, so we only notify what items were updated.
             for(int i=0; i<data.size(); i++)
@@ -260,8 +260,8 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
                                 return true;
                             case R.id.menu_exercise_delete:
                                 Long idExerciseToDelete = data.get(currentPosition).id();
-                                ExerciseShort exerciseToDelete = getExerciseById(idExerciseToDelete); // [TODO] This is causing an error if we try to delete multiple exercises too many times.
-                                deleteExercise(idExerciseToDelete);
+                                ExerciseShort exerciseToDelete = getExerciseById(idExerciseToDelete);
+                                //deleteExercise(idExerciseToDelete);
                                 callback.exerciseDelete(exerciseToDelete);
                                 return true;
                             default:
@@ -294,7 +294,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         throw new Resources.NotFoundException(String.valueOf(idExerciseToDelete) + " not found.");
     }
 
-    private void deleteExercise(Long idExercise) {
+    void deleteExercise(Long idExercise) {
         String category = "";
         int itemsInCategory = 0; // count of how many items are within a category. Does not include the header nor items to be removed.
 
@@ -337,7 +337,7 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         }
 
-        setData(filteredData); // [TODO] Re-initializing the whole data set will probably be slow. Better alternative is to remove exercises, and check if the category still has remaining exercises. If category does not have child exercises, then remove the header as well.
+        setData(filteredData); // [TODO] Possible optimization: Re-initializing the whole data set will probably be slow. Better alternative is to remove exercises, and check if the category still has remaining exercises. If category does not have child exercises, then remove the header as well.
         //notifyDataSetChanged();
     }
 

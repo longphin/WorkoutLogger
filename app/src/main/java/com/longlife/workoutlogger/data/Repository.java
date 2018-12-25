@@ -87,8 +87,12 @@ public class Repository {
     }
 
     // Hide/unhide an exercise.
-    public Single<Integer> setExerciseHiddenStatus(Long idExercise, boolean hide) {
-        return Single.fromCallable(() -> exerciseDao.setExerciseHiddenStatus(idExercise, hide ? 1 : 0));
+    public Single<ExerciseShort> setExerciseHiddenStatus(ExerciseShort exercise, boolean hide) {
+        return Single.fromCallable(() ->
+        {
+            exerciseDao.setExerciseHiddenStatus(exercise.getIdExercise(), hide ? 1 : 0);
+            return exercise;
+        });
     }
 
     // Delete routine.

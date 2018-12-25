@@ -51,8 +51,17 @@ public class ExercisesViewModel
     // Observable for when an exercise is edited.
     private final PublishSubject<ExerciseUpdated> exerciseEditedObservable = PublishSubject.create();
     // Observable for when an exercise is unhidden.
-    private final PublishSubject<DeletedExercise> exerciseRestoredObservable = PublishSubject.create();
+    private final PublishSubject<DeletedExercise> exerciseRestoredObservable = PublishSubject.create(); // [TODO] Delete this.
+    // Observable for when list of all exercise grouped by muscles is obtained.
     private final PublishSubject<List<ExerciseWithMuscleGroup>> exerciseListByMuscleObservable = PublishSubject.create();
+    // Observable for when restoring a deleted exercise.
+    private final PublishSubject<ExerciseShort> exerciseRestoreObservable = PublishSubject.create();
+    // Observable for when deleting an exercise.
+    private final PublishSubject<ExerciseShort> exerciseDeletedObservable = PublishSubject.create();
+
+    public PublishSubject<ExerciseShort> getExerciseDeletedObservable() {
+        return exerciseDeletedObservable;
+    }
     private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
     private ExerciseShort lastDeletedExercise;
     private Repository repo;
@@ -86,6 +95,10 @@ public class ExercisesViewModel
         return exerciseRestoredObservable;
     }
 
+    PublishSubject<ExerciseShort> getExerciseRestoreObservable() {
+        return exerciseRestoreObservable;
+    }
+
     DeletedExercise getFirstDeletedExercise() {
         return exercisesToDelete.poll();
     }
@@ -114,18 +127,19 @@ public class ExercisesViewModel
 
     void deleteExercise(ExerciseShort exerciseToDelete) {
         lastDeletedExercise = exerciseToDelete;
-        repo.setExerciseHiddenStatus(exerciseToDelete.getIdExercise(), true)
+        cachedExercises.removeExerciseFromCache(exerciseToDelete.getIdExercise());
+        repo.setExerciseHiddenStatus(exerciseToDelete, true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Integer>() {
+                .subscribe(new SingleObserver<ExerciseShort>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onSuccess(Integer integer) {
-
+                    public void onSuccess(ExerciseShort exerciseShort) {
+                        exerciseDeletedObservable.onNext(exerciseShort);
                     }
 
                     @Override
@@ -236,7 +250,7 @@ public class ExercisesViewModel
 
                                @Override
                                public void onSuccess(Exercise exercise) {
-                                   cachedExercises.needsUpdating(true);
+                                   cachedExercises.needsUpdating(true); // [TODO] Potential optimization. This is done lazily. When inserting an exercise, not all of the cache needs to be updated.
                                    exerciseInsertedObservable.onNext(exercise);
                                }
 
@@ -271,13 +285,39 @@ public class ExercisesViewModel
                 });
     }
 
+    @Deprecated
     void restoreExercise(DeletedExercise deletedExercise) {
-        setExerciseHiddenStatus(deletedExercise.getExercise().getIdExercise(), false);
-        exerciseRestoredObservable.onNext(deletedExercise);
+        //setExerciseHiddenStatus(deletedExercise.getExercise().getIdExercise(), false);
+        //exerciseRestoredObservable.onNext(deletedExercise);
     }
 
+    @Deprecated
     void setExerciseHiddenStatus(Long idExercise, boolean isHidden) {
+        /*
         Completable.fromAction(() -> repo.setExerciseHiddenStatus(idExercise, isHidden))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        cachedExercises.needsUpdating(true);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.getMessage();
+                    }
+                });
+        */
+    }
+
+    void setExerciseHiddenStatus(ExerciseShort exercise, boolean isHidden) {
+        Completable.fromAction(() -> repo.setExerciseHiddenStatus(exercise, isHidden))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CompletableObserver() {
@@ -305,9 +345,28 @@ public class ExercisesViewModel
     }
 
     void restoreLastExercise() {
-        repo.setExerciseHiddenStatus(lastDeletedExercise.getIdExercise(), false);
-        lastDeletedExercise = null;
-        cachedExercises.needsUpdating(true);
+        repo.setExerciseHiddenStatus(lastDeletedExercise, false)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<ExerciseShort>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(ExerciseShort exerciseShort) {
+                        exerciseRestoreObservable.onNext(exerciseShort);
+                        //cachedExercises.needsUpdating(true);
+                        cachedExercises.restoreExercise(exerciseShort);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+        //lastDeletedExercise = null;
     }
 
     ExerciseShort getLastDeletedExercise() {
@@ -343,6 +402,14 @@ public class ExercisesViewModel
             this.needsUpdating = needsUpdating;
         }
 
+        void removeExerciseFromCache(Long idExercise) {
+            for (int i = exercises.size() - 1; i >= 0; i--) {
+                if (exercises.get(i).getIdExercise().equals(idExercise)) {
+                    exercises.remove(i);
+                }
+            }
+        }
+
         void updateExercise(ExerciseUpdated updatedExercise) {
             final Long id = updatedExercise.getIdExercise();
             for (ExerciseShort ex : exercises) {
@@ -358,6 +425,10 @@ public class ExercisesViewModel
                     ex.setLocked(lockedStatus);
                 }
             }
+        }
+
+        void restoreExercise(ExerciseShort exerciseToAdd) {
+            exercises.add(exerciseToAdd);
         }
     }
 }
