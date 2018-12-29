@@ -92,13 +92,13 @@ public class MuscleGroup {
         return null;
     }
 
-    static String getMuscleGroupName(Context context, int idMuscleGroup) {
+    static String getMuscleGroupName(Context context, int idMuscleGroupResource) {
         int[] muscleGroupIdResource = getAllIdResources();
         int[] muscleGroupNameResource = getAllNameResources();
 
         String name = null;
         for (int i = 0; i < muscleGroupIdResource.length; i++) {
-            name = getMuscleGroupNameFromResource(context, muscleGroupIdResource[i], muscleGroupNameResource[i], idMuscleGroup);
+            name = getMuscleGroupNameFromResource(context, muscleGroupIdResource[i], muscleGroupNameResource[i], idMuscleGroupResource);
             if (name != null) return name;
         }
         return "Muscle group not named";
@@ -109,8 +109,10 @@ public class MuscleGroup {
                 R.string.MUSCLEGROUP_shoulders, R.string.MUSCLEGROUP_legs, R.string.MUSCLEGROUP_core, R.string.MUSCLEGROUP_misc};
     }
 
-    private static String getMuscleGroupNameFromResource(Context context, int idResource, int nameResource, int idMuscleGroup) {
-        if (GetResource.getIntResource(context, idResource) == idMuscleGroup) {
+    private static String getMuscleGroupNameFromResource(Context context, int idResource, int nameResource, int targetIdMuscleGroupResource) {
+        int targetIdMuscleGroup = GetResource.getIntResource(context, targetIdMuscleGroupResource);
+
+        if (GetResource.getIntResource(context, idResource) == targetIdMuscleGroup) {
             return GetResource.getStringResource(context, nameResource);
         }
 

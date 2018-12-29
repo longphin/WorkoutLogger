@@ -24,6 +24,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -32,12 +34,16 @@ public class Repository {
     private final ExerciseDao exerciseDao;
     private final RoutineDao routineDao;
     private final ProfileDao profileDao;
+    // ======= LIVE DATA ===========
+    private LiveData<List<ExerciseShort>> exercisesShortList_LD;
 
     @Inject
     public Repository(ExerciseDao exerciseDao, RoutineDao routineDao, ProfileDao profileDao) {
         this.exerciseDao = exerciseDao;
         this.routineDao = routineDao;
         this.profileDao = profileDao;
+
+        exercisesShortList_LD = exerciseDao.getExercisesShortList_LD();
     }
 
     public Single<List<Exercise>> getExercises() {
@@ -151,5 +157,15 @@ public class Repository {
 
     public Single<List<Long>> insertMuscleGroups(List<MuscleGroupEntity> groups) {
         return Single.fromCallable(() -> profileDao.insertMuscleGroups(groups));
+    }
+
+    public void getExercisesShortList_LD() {
+        exercisesShortList_LD = exerciseDao.getExercisesShortList_LD();
+    }
+
+    public LiveData<List<ExerciseShort>> getExercisesShortListData_LD() {
+        if (exercisesShortList_LD == null)
+            exercisesShortList_LD = new MutableLiveData<>();
+        return exercisesShortList_LD;
     }
 }

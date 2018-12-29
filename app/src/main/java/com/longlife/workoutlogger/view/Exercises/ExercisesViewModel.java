@@ -24,6 +24,8 @@ import java.util.Queue;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -58,26 +60,23 @@ public class ExercisesViewModel
     private final PublishSubject<ExerciseShort> exerciseRestoreObservable = PublishSubject.create();
     // Observable for when deleting an exercise.
     private final PublishSubject<ExerciseShort> exerciseDeletedObservable = PublishSubject.create();
-
-    public PublishSubject<ExerciseShort> getExerciseDeletedObservable() {
-        return exerciseDeletedObservable;
-    }
     private Queue<DeletedExercise> exercisesToDelete = new LinkedList<>();
     private ExerciseShort lastDeletedExercise;
     private Repository repo;
+    private ExercisesCache cachedExercises;
 
     // Protected
     public ExercisesViewModel(@NonNull Repository repo) {
         this.repo = repo;
     }
 
+    private MutableLiveData<List<ExerciseShort>> mutableExerciseShortList;
+
     public Maybe<SessionExercise> getLatestExerciseSession(Long idExercise) {
         return repo.getLatestExerciseSession(idExercise)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-
-    private ExercisesCache cachedExercises;
 
     public PublishSubject<ExerciseUpdated> getExerciseEditedObservable() {
         return exerciseEditedObservable;
@@ -99,13 +98,10 @@ public class ExercisesViewModel
         return exerciseRestoreObservable;
     }
 
-    DeletedExercise getFirstDeletedExercise() {
-        return exercisesToDelete.poll();
-    }
-
  /*   public Observable<Response<List<ExerciseShort>>> getLoadExercisesResponse() {
         return loadExercisesResponse.getObservable();
     }*/
+ private MutableLiveData<List<ExerciseWithMuscleGroup>> mutableExerciseWithMuscleList;
 
     public Single<ExerciseSessionWithSets> getSessionExerciseWithSets(Long idSessionExercise) {
         return repo.getSessionExerciseWithSets(idSessionExercise)
@@ -164,6 +160,55 @@ public class ExercisesViewModel
         return exerciseListByMuscleObservable;
     }
 
+    public PublishSubject<ExerciseShort> getExerciseDeletedObservable() {
+        return exerciseDeletedObservable;
+    }
+
+    DeletedExercise getFirstDeletedExercise() {
+        return exercisesToDelete.poll();
+    }
+
+    LiveData<List<ExerciseShort>> getMutableExerciseShortList() {
+        if (mutableExerciseShortList == null) {
+            mutableExerciseShortList = new MutableLiveData<>();
+            loadExerciseShortList();
+        }
+        return mutableExerciseShortList;
+    }
+
+    private void loadExerciseShortList() {
+        // do async operation to fetch users
+        repo.getExerciseShort()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<ExerciseShort>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<ExerciseShort> exerciseShorts) {
+                        mutableExerciseShortList.setValue(exerciseShorts);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    LiveData<List<ExerciseWithMuscleGroup>> getMutableExerciseShortListWithMuscles() {
+        if (mutableExerciseWithMuscleList == null) {
+            mutableExerciseWithMuscleList = new MutableLiveData<>();
+            //loadExercisesByMuscleGroup(idMuscleGroup);
+        }
+        return mutableExerciseWithMuscleList;
+    }
+
+    // ============ RxJava ======================
+
     void loadExercises() {
         if (cachedExercises == null) cachedExercises = new ExercisesCache();
         if (!cachedExercises.needsUpdating()) {
@@ -205,7 +250,8 @@ public class ExercisesViewModel
 
                     @Override
                     public void onSuccess(List<ExerciseWithMuscleGroup> exerciseWithMuscles) {
-                        exerciseListByMuscleObservable.onNext(exerciseWithMuscles);
+                        //exerciseListByMuscleObservable.onNext(exerciseWithMuscles);
+                        mutableExerciseWithMuscleList.setValue(exerciseWithMuscles);
                     }
 
                     @Override

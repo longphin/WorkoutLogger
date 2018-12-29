@@ -52,7 +52,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ExercisesListFragment extends FragmentBase implements ExercisesListRemakeAdapter.IClickExercise {
+public class ExercisesListFragment extends FragmentBase
+        implements ExercisesListRemakeAdapter.IClickExercise {
     private static final String TAG = ExercisesListFragment.class.getSimpleName();
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
@@ -70,18 +71,21 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mView = inflater.inflate(getLayoutId(), container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((MyApplication) getActivity().getApplication())
+                .getApplicationComponent()
+                .inject(this);
+        viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
+        //addDisposable(viewModel.getExerciseListObservable().subscribe(this::loadData));
+        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
+        //addDisposable(viewModel.getExerciseListByMuscleObservable().subscribe(this::loadDataWithMuscles));
+        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
+        addDisposable(viewModel.getExerciseRestoreObservable().subscribe(this::restoreExercise));
+        addDisposable(viewModel.getExerciseDeletedObservable().subscribe(this::deleteExercise));
 
-        //FloatingActionButton btn_addExercise = mView.findViewById(R.id.btn_addExercise);
-        //btn_addExercise.setOnClickListener(view -> startCreateFragment());
-
-        initializeObservers();
-        initializeRecyclerView(mView);
-        initializeGroupByOptions(mView);
-        return mView;
+        //initializeObservers();
+        setHasOptionsMenu(true);
     }
 
 
@@ -90,21 +94,48 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ((MyApplication) getActivity().getApplication())
-                .getApplicationComponent()
-                .inject(this);
-        viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
-        addDisposable(viewModel.getExerciseListObservable().subscribe(this::loadData));
-        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
-        addDisposable(viewModel.getExerciseListByMuscleObservable().subscribe(this::loadDataWithMuscles));
-        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
-        addDisposable(viewModel.getExerciseRestoreObservable().subscribe(this::restoreExercise));
-        addDisposable(viewModel.getExerciseDeletedObservable().subscribe(this::deleteExercise));
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mView = inflater.inflate(getLayoutId(), container, false);
+
+        //FloatingActionButton btn_addExercise = mView.findViewById(R.id.btn_addExercise);
+        //btn_addExercise.setOnClickListener(view -> startCreateFragment());
 
         //initializeObservers();
-        setHasOptionsMenu(true);
+        initializeRecyclerView(mView);
+        initializeGroupByOptions(mView);
+        return mView;
+    }
+
+    private void initializeGroupByOptions(View v) {
+        groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
+        ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
+        // Specify the layout to use when the list appears.
+        groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Attach the adapter.
+        groupBySelector.setAdapter(groupByAdapter);
+
+        groupBySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
+                // When the group by is changed, execute the filter on the new group by.
+                if (selectedGroupBy == 0) {
+                    //viewModel.loadExercises();
+                    //viewModel.getExercisesShortList_LD();
+                    //viewModel.getExercisesShortListObserverable_LD();
+                } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
+                    viewModel.loadExercisesByMuscleGroup(selectedGroupBy - 1);
+                }
+                //adapter.filter(selectedGroupBy, searchView.getQuery().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void loadExerciseUpdated(ExerciseUpdated exerciseUpdated) {
@@ -306,32 +337,14 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         );
     }
 
-    private void initializeGroupByOptions(View v) {
-        groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
-        ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
-        // Specify the layout to use when the list appears.
-        groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Attach the adapter.
-        groupBySelector.setAdapter(groupByAdapter);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        groupBySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
-                // When the group by is changed, execute the filter on the new group by.
-                if (selectedGroupBy == 0) {
-                    viewModel.loadExercises();
-                } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
-                    viewModel.loadExercisesByMuscleGroup(selectedGroupBy - 1);
-                }
-                //adapter.filter(selectedGroupBy, searchView.getQuery().toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
+        // Live Data observers.
+        viewModel.getMutableExerciseShortList().observe(getViewLifecycleOwner(), this::loadData);
+        viewModel.getMutableExerciseShortListWithMuscles().observe(getViewLifecycleOwner(), this::loadDataWithMuscles);
     }
 
     @Override

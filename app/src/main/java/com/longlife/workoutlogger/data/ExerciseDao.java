@@ -17,6 +17,7 @@ import com.longlife.workoutlogger.model.SessionExercise;
 import java.util.List;
 import java.util.Set;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -40,6 +41,10 @@ public abstract class ExerciseDao {
     // Get a list of exercises (short) that are not hidden.
     @Query("SELECT idExercise, name, note, locked FROM Exercise WHERE hidden=0")
     public abstract Single<List<ExerciseShort>> getExerciseShort();
+
+    // Get a list of exercises (short) that are not hidden.
+    @Query("SELECT idExercise, name, note, locked FROM Exercise WHERE hidden=0")
+    public abstract LiveData<List<ExerciseShort>> getExercisesShortList_LD();
 
     // Get a list of exercises, with the related muscles split up (1 row per muscle), for a specified muscle group.
     @Query("SELECT e.idExercise, e.name, e.note, e.locked, em.idMuscle " +

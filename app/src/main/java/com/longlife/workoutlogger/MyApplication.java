@@ -54,6 +54,7 @@ import androidx.core.content.ContextCompat;
 [TODO Premium] Add server and API.
     [TODO] Add user login and verification. Identify if user is premium.
     [TODO] Add syncing to cloud/server. -- Premium feature
+        - See developer.android.com/jetpack/docs/guide for architecture tutorial for syncing database with webservice data.
     [TODO] Add occasional "challenges" Workouts. Eventually, there should be multiple challenges available, related user's goal. But initially, these will probably be the same challenges for everyone for the duration.
             For example, everyone can opt-in to the month's weight-loss challenge.
 
