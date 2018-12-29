@@ -27,6 +27,11 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Predicate;
 
 public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int HEADER_TYPE = 0;
@@ -322,23 +327,35 @@ public class ExercisesListRemakeAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    void filter(String query) {
-        Log.d(TAG, "filter");
-        List<IExerciseListable> filteredData = new ArrayList<>();
-        if (query == null || query.isEmpty()) {
-            filteredData = originalData;
-        } else {
-            query = query.toLowerCase();
+    void filterData(String query) {
+        Single.fromObservable(
+                Observable.fromIterable(originalData)
+                        .map(ex -> ex)
+                        .filter(new Predicate<IExerciseListable>() {
+                            @Override
+                            public boolean test(IExerciseListable ex) throws Exception {
+                                return ex.getName().toLowerCase().contains(query);
+                            }
+                        })
+                        .toList()
+                        .toObservable()
+        )
+                .subscribe(new SingleObserver<List<IExerciseListable>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            for (IExerciseListable ex : originalData) {
-                if (ex.getName().toLowerCase().contains(query)) {
-                    filteredData.add(ex);
-                }
-            }
-        }
+                    }
 
-        setData(filteredData); // [TODO] Possible optimization: Re-initializing the whole data set will probably be slow. Better alternative is to remove exercises, and check if the category still has remaining exercises. If category does not have child exercises, then remove the header as well.
-        //notifyDataSetChanged();
+                    @Override
+                    public void onSuccess(List<IExerciseListable> iExerciseListables) {
+                        setData(iExerciseListables);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     public interface IClickExercise {

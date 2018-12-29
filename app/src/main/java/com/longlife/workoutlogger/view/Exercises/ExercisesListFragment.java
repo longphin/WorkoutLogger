@@ -9,7 +9,6 @@ package com.longlife.workoutlogger.view.Exercises;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,19 +24,16 @@ import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
-import com.longlife.workoutlogger.enums.Muscle;
 import com.longlife.workoutlogger.enums.MuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
-import com.longlife.workoutlogger.model.Exercise.ExerciseWithMuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 import com.longlife.workoutlogger.view.Exercises.PerformExercise.PerformExerciseFragment;
 import com.longlife.workoutlogger.view.MainActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -61,29 +57,13 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
     private ExercisesListRemakeAdapter adapter;
     private boolean needsToLoadData = false;
     private SearchView searchView;
+    private Spinner groupBySelector;
+    private View mView;
+
 
     public ExercisesListFragment() {
         // Required empty public constructor
     }
-
-    private Spinner groupBySelector;
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mView = inflater.inflate(getLayoutId(), container, false);
-
-        //FloatingActionButton btn_addExercise = mView.findViewById(R.id.btn_addExercise);
-        //btn_addExercise.setOnClickListener(view -> startCreateFragment());
-
-        initializeObservers();
-        initializeRecyclerView(mView);
-        initializeGroupByOptions(mView);
-        return mView;
-    }
-
 
     public static ExercisesListFragment newInstance() {
         return new ExercisesListFragment();
@@ -92,84 +72,21 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MyApplication) getActivity().getApplication())
-                .getApplicationComponent()
-                .inject(this);
-        viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
-        addDisposable(viewModel.getExerciseListObservable().subscribe(this::loadData));
-        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
-        addDisposable(viewModel.getExerciseListByMuscleObservable().subscribe(this::loadDataWithMuscles));
-        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
-        addDisposable(viewModel.getExerciseRestoreObservable().subscribe(this::restoreExercise));
-        addDisposable(viewModel.getExerciseDeletedObservable().subscribe(this::deleteExercise));
 
         //initializeObservers();
         setHasOptionsMenu(true);
     }
 
-    private void loadExerciseUpdated(ExerciseUpdated exerciseUpdated) {
-        if (adapter != null) adapter.exerciseUpdated(exerciseUpdated);
-    }
-
-    private void processExerciseInserted(Exercise ex) {
-        if (adapter != null)
-            adapter.addExercise(new ExerciseShort(ex));
-    }
-
-    private void initializeObservers() {
-        if (needsToLoadData) {
-            needsToLoadData = false;
-
-            viewModel.loadExercises();
-        }
-    }
-
-    // Data was loaded, so now attach the adapter to the recyclerview.
-    private void loadData(List<ExerciseShort> exercises) {
-        if (adapter == null) {
-            adapter = new ExercisesListRemakeAdapter(this, convertExerciseToInferface(exercises));
-        } else {
-            adapter.resetData(convertExerciseToInferface(exercises));
-        }
-        Log.d(TAG, String.valueOf(exercises.size()) + " exercises obtained");
-
-        setAdapterForRecyclerView();
-        if (searchView != null && adapter != null) {
-            String query = searchView.getQuery().toString();
-            if (!query.isEmpty())
-                adapter.filter(query);
-        }
-    }
-
-    private View mView;
-
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mView = inflater.inflate(getLayoutId(), container, false);
 
-        if (inflater != null) {
-            inflater.inflate(R.menu.exercises_search_menu, menu);
-
-            initializeSearchForExercisesView(menu.findItem(R.id.exercises_list_searchview));
-        }
-    }
-
-    // Data was loaded as a list of exercises grouped by muscles.
-    private void loadDataWithMuscles(List<ExerciseWithMuscleGroup> exercises) {
-        if (adapter == null) {
-            adapter = new ExercisesListRemakeAdapter(this, convertExerciseWithMusclesToInferface(exercises));
-        } else {
-            adapter.resetData(convertExerciseWithMusclesToInferface(exercises));
-        }
-        Log.d(TAG, String.valueOf(exercises.size()) + " exercises obtained");
-
-        setAdapterForRecyclerView();
-        if (searchView != null && adapter != null) {
-            String query = searchView.getQuery().toString();
-            if (!query.isEmpty())
-                adapter.filter(query);
-        }
+        initializeObservers();
+        initializeRecyclerView(mView);
+        initializeGroupByOptions(mView);
+        return mView;
     }
 
     @Override
@@ -209,18 +126,12 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         return R.layout.fragment_exercises;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.exercises_list_addExercise:
-                startCreateFragment();
-                return true;
-        }
+    private void initializeObservers() {
+        if (needsToLoadData) {
+            needsToLoadData = false;
 
-        return super.onOptionsItemSelected(item);
+            viewModel.loadExercises();
+        }
     }
 
     private void initializeRecyclerView(View v) {
@@ -237,6 +148,33 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         setAdapterForRecyclerView();
     }
 
+    private void initializeGroupByOptions(View v) {
+        groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
+        ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
+        // Specify the layout to use when the list appears.
+        groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Attach the adapter.
+        groupBySelector.setAdapter(groupByAdapter);
+
+        groupBySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
+                // When the group by is changed, execute the filter on the new group by.
+                if (selectedGroupBy == 0) {
+                    viewModel.loadExercises();
+                } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
+                    viewModel.loadExercisesByMuscleGroup(getContext(), selectedGroupBy - 1);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
     private void setAdapterForRecyclerView() {
         if (recyclerView != null && adapter != null) {
             recyclerView.setAdapter(adapter);
@@ -244,21 +182,45 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         }
     }
 
-    // Convert a list of exercises to a list of the underlying interface.
-    private List<IExerciseListable> convertExerciseToInferface(List<ExerciseShort> exercises) {
-        return new ArrayList<>(exercises);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        ((MyApplication) getActivity().getApplication())
+                .getApplicationComponent()
+                .inject(this);
+        viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
+        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
+        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
+        addDisposable(viewModel.getExerciseRestoreObservable().subscribe(this::restoreExercise));
+        addDisposable(viewModel.getExerciseDeletedObservable().subscribe(this::deleteExercise));
+        addDisposable(viewModel.getExercisesDataObservable().subscribe(this::loadDataInterface));
     }
 
-    // Convert a list of exercises with muscles to a list of the underlying interface.
-    private List<IExerciseListable> convertExerciseWithMusclesToInferface(List<ExerciseWithMuscleGroup> exercises) {
-        List<IExerciseListable> interfaces = new ArrayList<>();
-        for (int i = 0; i < exercises.size(); i++) {
-            ExerciseWithMuscleGroup ex = exercises.get(i);
-            ex.setMuscleName(Muscle.getMuscleName(getContext(), ex.getIdMuscle()));
-            interfaces.add(ex);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+
+        if (inflater != null) {
+            inflater.inflate(R.menu.exercises_search_menu, menu);
+
+            initializeSearchForExercisesView(menu.findItem(R.id.exercises_list_searchview));
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.exercises_list_addExercise:
+                startCreateFragment();
+                return true;
         }
 
-        return interfaces;
+        return super.onOptionsItemSelected(item);
     }
 
     private void startCreateFragment() {
@@ -286,7 +248,7 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (adapter != null) {
-                    adapter.filter(query);
+                    adapter.filterData(query);
                     return true;
                 }
                 return false;
@@ -295,7 +257,7 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (adapter != null) {
-                    adapter.filter(newText); //[TODO] Why is this not working when deleting characters from the filter? It seems to trigger, but the adapter.originalData is saving the filtered data?
+                    adapter.filterData(newText); //[TODO] Why is this not working when deleting characters from the filter? It seems to trigger, but the adapter.originalData is saving the filtered data?
                     return true;
                 }
                 return false;
@@ -306,32 +268,69 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         );
     }
 
-    private void initializeGroupByOptions(View v) {
-        groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
-        ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
-        // Specify the layout to use when the list appears.
-        groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Attach the adapter.
-        groupBySelector.setAdapter(groupByAdapter);
+    private void loadExerciseUpdated(ExerciseUpdated exerciseUpdated) {
+        if (adapter != null) adapter.exerciseUpdated(exerciseUpdated);
+    }
 
-        groupBySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
-                // When the group by is changed, execute the filter on the new group by.
-                if (selectedGroupBy == 0) {
-                    viewModel.loadExercises();
-                } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
-                    viewModel.loadExercisesByMuscleGroup(selectedGroupBy - 1);
-                }
-                //adapter.filter(selectedGroupBy, searchView.getQuery().toString());
-            }
+    private void processExerciseInserted(Exercise ex) {
+        if (adapter != null)
+            adapter.addExercise(new ExerciseShort(ex));
+    }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+    // Data was loaded, so now attach the adapter to the recyclerview.
+    private void loadDataInterface(List<IExerciseListable> exercises) {
+        if (adapter == null) {
+            adapter = new ExercisesListRemakeAdapter(this, exercises);
+        } else {
+            adapter.resetData(exercises);
+        }
 
-            }
-        });
+        setAdapterForRecyclerView();
+        if (searchView != null && adapter != null) {
+            String query = searchView.getQuery().toString();
+            if (!query.isEmpty())
+                /*
+                Observable.fromIterable(exercises)
+                    .observeOn(Schedulers.io())
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .filter(new Predicate<IExerciseListable>() {
+                        @Override
+                        public boolean test(IExerciseListable ex) throws Exception {
+                            return ex.getName().toLowerCase().contains(query);
+                        }
+                    })
+                    .toList()
+                    .toObservable()
+                .subscribe(new Observer<List<IExerciseListable>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<IExerciseListable> iExerciseListables) {
+                        adapter.setData(iExerciseListables);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+                */
+                adapter.filterData(query);
+            //adapter.filter(query);
+            //filterData(exercises, query);
+        }
+    }
+
+    private void filterData(List<IExerciseListable> exercises, String query) {
+        //adapter.filter(exercises, query);
     }
 
     @Override
@@ -354,20 +353,12 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
 
         PerformExerciseFragment fragment = (PerformExerciseFragment) manager.findFragmentByTag(PerformExerciseFragment.TAG);
         if (fragment == null) {
-            fragment = PerformExerciseFragment.newInstance(ex);//idExercise, exerciseName);
+            fragment = PerformExerciseFragment.newInstance(ex);
         }
 
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
-    }
-
-    private void restoreExercise(ExerciseShort restoredExercise) {
-        if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
-    }
-
-    private void deleteExercise(ExerciseShort deletedExercise) {
-        adapter.deleteExercise(deletedExercise.getIdExercise());
     }
 
     @Override
@@ -397,5 +388,13 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         });
         snackbar.setActionTextColor(Color.YELLOW);
         snackbar.show();
+    }
+
+    private void restoreExercise(ExerciseShort restoredExercise) {
+        if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
+    }
+
+    private void deleteExercise(ExerciseShort deletedExercise) {
+        adapter.deleteExercise(deletedExercise.getIdExercise());
     }
 }
