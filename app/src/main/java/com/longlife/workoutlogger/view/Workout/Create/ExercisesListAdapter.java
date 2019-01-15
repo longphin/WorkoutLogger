@@ -1,30 +1,31 @@
 /*
- * Created by Longphi Nguyen on 12/11/18 8:25 PM.
- * Copyright (c) 2018. All rights reserved.
- * Last modified 12/11/18 7:36 PM.
+ * Created by Longphi Nguyen on 1/13/19 7:00 PM.
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 1/13/19 6:44 PM.
  */
 
-package com.longlife.workoutlogger.view.Exercises;
+package com.longlife.workoutlogger.view.Workout.Create;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
+import com.longlife.workoutlogger.view.Exercises.ExerciseListExerciseViewHolder;
+import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapterBase;
 
 import java.util.List;
 
 import androidx.appcompat.widget.PopupMenu;
 
-public class ExercisesListRemakeAdapter extends ExercisesListAdapterBase {
+public class ExercisesListAdapter extends ExercisesListAdapterBase {
     private IClickExercise callback;
 
-    public ExercisesListRemakeAdapter(IClickExercise callback, List<IExerciseListable> exercises) {
+    ExercisesListAdapter(IClickExercise callback, List<IExerciseListable> exercises) {
         super(exercises);
         this.callback = callback;
     }
 
     @Override
     protected int exerciseItemLayout() {
-        return R.layout.item_exercise;
+        return R.layout.item_workout_create_exercise;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class ExercisesListRemakeAdapter extends ExercisesListAdapterBase {
                     //creating a popup menu
                     PopupMenu popup = new PopupMenu(callback.getContext(), holder.getMoreOptionsView());
                     //inflating menu from xml resource
-                    popup.inflate(R.menu.exercise_options_menu);
+                    popup.inflate(R.menu.workout_exercise_options_menu);
                     //adding click listener
                     popup.setOnMenuItemClickListener(item -> {
                         int currentPosition = holder.getAdapterPosition();
@@ -47,16 +48,6 @@ public class ExercisesListRemakeAdapter extends ExercisesListAdapterBase {
                             case R.id.menu_exercise_edit:
                                 //handle menu1 click
                                 callback.exerciseEdit(data.get(currentPosition).id());
-                                return true;
-                            case R.id.menu_exercise_perform:
-                                //handle menu1 click
-                                callback.exercisePerform((exerciseItem) data.get(currentPosition));//ex.getIdExercise(), ex.getName());
-                                return true;
-                            case R.id.menu_exercise_delete:
-                                Long idExerciseToDelete = data.get(currentPosition).id();
-                                ExerciseShort exerciseToDelete = getExerciseById(idExerciseToDelete);
-                                //deleteExercise(idExerciseToDelete);
-                                callback.exerciseDelete(exerciseToDelete);
                                 return true;
                             default:
                                 return false;

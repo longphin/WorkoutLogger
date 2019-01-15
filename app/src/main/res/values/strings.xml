@@ -38,6 +38,7 @@
     <string name="NavBar_Routines">Routines</string>
     <string name="NavBar_Exercises">Exercises</string>
     <string name="NavBar_Perform">Perform</string>
+    <string name="NavBar_Workout">Workouts</string>
     <!-- Toolbar title for fragments/activities -->
     <string name="Toolbar_Routines">Routines</string>
     <string name="Toolbar_RoutineCreate">Create Routine</string>
@@ -67,6 +68,7 @@
     <string name="MUSCLEGROUP_shoulders">Shoulders</string>
     <string name="MUSCLEGROUP_legs">Legs</string>
     <string name="MUSCLEGROUP_core">Core</string>
+    <string name="MUSCLEGROUP_misc">Miscellaneous</string>
 
     <!-- Names for muscles -->
     <string name="MUSCLE_traps">Traps</string>
@@ -92,6 +94,8 @@
     <string name="MUSCLE_pec_middle">Middle Pecs</string>
     <string name="MUSCLE_pec_lower">Lower Pecs</string>
     <string name="MUSCLE_serratus">Serratus</string>
+    <string name="MUSCLE_cardio">Cardio</string>
+    <string name="MUSCLE_stretch">Stretch</string>
 
     <!-- Options for exercise types -->
     <string name="EXERCISETYPE_weight_and_rep">Weight and Reps</string>
@@ -119,7 +123,4 @@
     <string name="Edit">Edit</string>
     <string name="Delete">Delete</string>
     <string name="addExercise">Add Exercise</string>
-    <string name="MUSCLEGROUP_misc">Miscellaneous</string>
-    <string name="MUSCLE_cardio">Cardio</string>
-    <string name="MUSCLE_stretch">Stretch</string>
 </resources>

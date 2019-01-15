@@ -148,7 +148,7 @@ public class ExercisesViewModel
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    void loadExercises() {
+    public void loadExercises() {
         repo.getExerciseShort()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

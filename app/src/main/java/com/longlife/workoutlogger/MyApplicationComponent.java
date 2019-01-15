@@ -19,6 +19,7 @@ import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableFragment;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragment;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
+import com.longlife.workoutlogger.view.Workout.Create.WorkoutCreateFragment;
 
 import javax.inject.Singleton;
 
@@ -51,6 +52,8 @@ public interface MyApplicationComponent {
     void inject(ExerciseEditFragment eef);
 
     void inject(ExercisesListFragment elf);
+
+    void inject(WorkoutCreateFragment wcf);
 
     Repository repository();
 

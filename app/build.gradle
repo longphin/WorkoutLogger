@@ -69,7 +69,8 @@ dependencies {
     implementation "androidx.room:room-runtime:2.1.0-alpha03"
     annotationProcessor "androidx.room:room-compiler:2.1.0-alpha03"
     // Debugger to examine Room data.
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4' // https://github.com/amitshekhariitbhu/Android-Debug-Database // adb forward tcp:8080 tcp:8080
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
+    // https://github.com/amitshekhariitbhu/Android-Debug-Database // adb forward tcp:8080 tcp:8080
 
     // RxJava2
     implementation "androidx.room:room-rxjava2:2.1.0-alpha03"

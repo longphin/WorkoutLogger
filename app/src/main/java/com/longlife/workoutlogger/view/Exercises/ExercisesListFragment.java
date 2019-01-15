@@ -7,7 +7,6 @@
 package com.longlife.workoutlogger.view.Exercises;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,19 +18,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
 import com.longlife.workoutlogger.enums.MuscleGroup;
-import com.longlife.workoutlogger.model.Exercise.Exercise;
-import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
-import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
-import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
-import com.longlife.workoutlogger.view.Exercises.PerformExercise.PerformExerciseFragment;
 import com.longlife.workoutlogger.view.MainActivity;
 
 import java.util.List;
@@ -43,23 +35,12 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-public class ExercisesListFragment extends FragmentBase implements ExercisesListRemakeAdapter.IClickExercise {
-    private static final String TAG = ExercisesListFragment.class.getSimpleName();
+public class ExercisesListFragment extends ExercisesListFragmentBase {
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
-    private ExercisesViewModel viewModel;
-    private RecyclerView recyclerView;
-    private ExercisesListRemakeAdapter adapter;
-    private boolean needsToLoadData = false;
     private SearchView searchView;
     private Spinner groupBySelector;
-    private View mView;
-
 
     public ExercisesListFragment() {
         // Required empty public constructor
@@ -81,11 +62,10 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView = inflater.inflate(getLayoutId(), container, false);
+        mView = inflater.inflate(R.layout.fragment_exercises, container, false);
 
         initializeObservers();
         initializeRecyclerView(mView);
-        initializeGroupByOptions(mView);
         return mView;
     }
 
@@ -96,17 +76,8 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
 
     @Override
     public void onDestroyView() {
-        if (adapter != null) {
-            adapter = null;
-        }
-
-        if (recyclerView != null) {
-            recyclerView = null;
-        }
-
         if (searchView != null) {
             searchView.setOnQueryTextListener(null);
-            searchView.setOnClickListener(null);
             searchView = null;
         }
 
@@ -115,37 +86,19 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
             groupBySelector = null;
         }
 
-        needsToLoadData = true;
-        //clearDisposables();
-
-        mView = null;
         super.onDestroyView();
     }
 
-    private int getLayoutId() {
-        return R.layout.fragment_exercises;
+    @Override
+    protected int getExercisesRecyclerViewId() {
+        return R.id.rv_exercises;
     }
 
-    private void initializeObservers() {
-        if (needsToLoadData) {
-            needsToLoadData = false;
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-            viewModel.loadExercises();
-        }
-    }
-
-    private void initializeRecyclerView(View v) {
-        if (recyclerView == null)
-            recyclerView = v.findViewById(R.id.rv_exercises);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-
-        //ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
-        //new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-        setAdapterForRecyclerView();
+        initializeGroupByOptions(mView);
     }
 
     private void initializeGroupByOptions(View v) {
@@ -175,28 +128,6 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         });
     }
 
-    private void setAdapterForRecyclerView() {
-        if (recyclerView != null && adapter != null) {
-            recyclerView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        ((MyApplication) getActivity().getApplication())
-                .getApplicationComponent()
-                .inject(this);
-        viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
-        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
-        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
-        addDisposable(viewModel.getExerciseRestoreObservable().subscribe(this::restoreExercise));
-        addDisposable(viewModel.getExerciseDeletedObservable().subscribe(this::deleteExercise));
-        addDisposable(viewModel.getExercisesDataObservable().subscribe(this::loadDataInterface));
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -221,6 +152,16 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void getViewModel() {
+        if (viewModel == null && getActivity() != null) {
+            ((MyApplication) getActivity().getApplication())
+                    .getApplicationComponent()
+                    .inject(this);
+            viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
+        }
     }
 
     private void startCreateFragment() {
@@ -263,138 +204,27 @@ public class ExercisesListFragment extends FragmentBase implements ExercisesList
                 return false;
             }
         });
-        searchView.setOnClickListener(view -> {
-                }
-        );
-    }
-
-    private void loadExerciseUpdated(ExerciseUpdated exerciseUpdated) {
-        if (adapter != null) adapter.exerciseUpdated(exerciseUpdated);
-    }
-
-    private void processExerciseInserted(Exercise ex) {
-        if (adapter != null)
-            adapter.addExercise(new ExerciseShort(ex));
     }
 
     // Data was loaded, so now attach the adapter to the recyclerview.
-    private void loadDataInterface(List<IExerciseListable> exercises) {
-        if (adapter == null) {
-            adapter = new ExercisesListRemakeAdapter(this, exercises);
-        } else {
-            adapter.resetData(exercises);
-        }
+    @Override
+    protected void loadDataInterface(List<IExerciseListable> exercises) {
+        super.loadDataInterface(exercises);
 
-        setAdapterForRecyclerView();
         if (searchView != null && adapter != null) {
             String query = searchView.getQuery().toString();
             if (!query.isEmpty())
-                /*
-                Observable.fromIterable(exercises)
-                    .observeOn(Schedulers.io())
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .filter(new Predicate<IExerciseListable>() {
-                        @Override
-                        public boolean test(IExerciseListable ex) throws Exception {
-                            return ex.getName().toLowerCase().contains(query);
-                        }
-                    })
-                    .toList()
-                    .toObservable()
-                .subscribe(new Observer<List<IExerciseListable>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<IExerciseListable> iExerciseListables) {
-                        adapter.setData(iExerciseListables);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-                */
                 adapter.filterData(query);
-            //adapter.filter(query);
-            //filterData(exercises, query);
-        }
-    }
-
-    private void filterData(List<IExerciseListable> exercises, String query) {
-        //adapter.filter(exercises, query);
-    }
-
-    @Override
-    public void exerciseEdit(Long idExercise) {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-
-        ExerciseEditFragment fragment = (ExerciseEditFragment) manager.findFragmentByTag(ExerciseEditFragment.TAG);
-        if (fragment == null) {
-            fragment = ExerciseEditFragment.newInstance(idExercise);
-        }
-
-        if (fragmentNavigation != null) {
-            fragmentNavigation.pushFragment(fragment);
         }
     }
 
     @Override
-    public void exercisePerform(ExercisesListRemakeAdapter.exerciseItem ex) {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-
-        PerformExerciseFragment fragment = (PerformExerciseFragment) manager.findFragmentByTag(PerformExerciseFragment.TAG);
-        if (fragment == null) {
-            fragment = PerformExerciseFragment.newInstance(ex);
-        }
-
-        if (fragmentNavigation != null) {
-            fragmentNavigation.pushFragment(fragment);
-        }
+    protected ExercisesListAdapterBase createAdapter(ExercisesListAdapterBase.IClickExercise callback, List<IExerciseListable> exercises) {
+        return new ExercisesListRemakeAdapter(this, exercises);
     }
 
     @Override
-    public void exerciseDelete(ExerciseShort exerciseToDelete) {
-        viewModel.deleteExercise(exerciseToDelete);
-
-        Snackbar snackbar = Snackbar
-                .make(mView.findViewById(R.id.exercises_overview_layout)
-                        , exerciseToDelete.getName() + " deleted.", Snackbar.LENGTH_LONG);
-        snackbar.setAction("UNDO", view -> {
-        });
-        snackbar.addCallback(new Snackbar.Callback() {
-
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                ExerciseShort restoredExercise = viewModel.getLastDeletedExercise();
-                if (restoredExercise == null)
-                    return;
-
-                // If the snackbar was dismissed via clicking the action (Undo button), then restore the exercise.
-                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                    viewModel.restoreLastExercise(); // [TODO] When dismissed after changing fragments, the undo is not done?
-                    //if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
-                    return;
-                }
-            }
-        });
-        snackbar.setActionTextColor(Color.YELLOW);
-        snackbar.show();
-    }
-
-    private void restoreExercise(ExerciseShort restoredExercise) {
-        if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
-    }
-
-    private void deleteExercise(ExerciseShort deletedExercise) {
-        adapter.deleteExercise(deletedExercise.getIdExercise());
+    protected int getLayoutRoot() {
+        return R.id.exercises_overview_layout;
     }
 }

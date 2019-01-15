@@ -26,11 +26,11 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.TimerNotificationService;
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.Profile;
-import com.longlife.workoutlogger.view.Exercises.ExercisesFragment;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
+import com.longlife.workoutlogger.view.Workout.Create.WorkoutCreateFragment;
 import com.ncapdevi.fragnav.FragNavController;
 
 import org.jetbrains.annotations.NotNull;
@@ -155,14 +155,14 @@ public class MainActivity
         bottomTabLayout.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW); // Always show the labels for items.
         // Initialize items.
         AHBottomNavigationItem ProfileItem = new AHBottomNavigationItem(getString(R.string.NavBar_Profile), R.drawable.ic_person_black_24dp);
-        AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_storage_black_24dp);
+        AHBottomNavigationItem WorkoutItem = new AHBottomNavigationItem(getString(R.string.NavBar_Workout), R.drawable.ic_storage_black_24dp);//R.drawable.ic_play_arrow_black_24dp);
         AHBottomNavigationItem ExerciseItem = new AHBottomNavigationItem(getString(R.string.NavBar_Exercises), R.drawable.ic_weightlifting);
-        AHBottomNavigationItem PerformItem = new AHBottomNavigationItem(getString(R.string.NavBar_Perform), R.drawable.ic_play_arrow_black_24dp);
+        AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_storage_black_24dp);
         // Add navigation items.
         bottomTabLayout.addItem(ProfileItem);
-        bottomTabLayout.addItem(RoutineItem);
+        bottomTabLayout.addItem(WorkoutItem);
         bottomTabLayout.addItem(ExerciseItem);
-        bottomTabLayout.addItem(PerformItem);
+        bottomTabLayout.addItem(RoutineItem);
         // Styles.
         bottomTabLayout.setDefaultBackgroundColor(Color.WHITE);
         bottomTabLayout.setAccentColor(Color.BLACK);
@@ -258,11 +258,11 @@ public class MainActivity
             case FragNavController.TAB1:
                 return ProfileFragment.newInstance();
             case FragNavController.TAB2:
-                return RoutinesFragment.newInstance();
+                return WorkoutCreateFragment.newInstance();
             case FragNavController.TAB3:
                 return ExercisesListFragment.newInstance();
             case FragNavController.TAB4:
-                return ExercisesFragment.newInstance();
+                return RoutinesFragment.newInstance();
         }
         throw new IllegalStateException("Need to send an index that we know");
     }

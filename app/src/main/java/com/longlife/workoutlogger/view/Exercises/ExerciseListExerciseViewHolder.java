@@ -13,12 +13,12 @@ import com.longlife.workoutlogger.R;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-class ExerciseListExerciseViewHolder extends RecyclerView.ViewHolder implements ExercisesListRemakeAdapter.IViewHolder {
+public class ExerciseListExerciseViewHolder extends RecyclerView.ViewHolder implements ExercisesListRemakeAdapter.IViewHolder {
     private TextView nameTextView;
 
     private TextView moreOptions;
 
-    TextView getNameTextView() {
+    public TextView getNameTextView() {
         return nameTextView;
     }
 
@@ -34,7 +34,7 @@ class ExerciseListExerciseViewHolder extends RecyclerView.ViewHolder implements 
         moreOptions = itemView.findViewById(R.id.txt_exercise_moreOptions);
     }
 
-    TextView getMoreOptionsView() {
+    public TextView getMoreOptionsView() {
         return moreOptions;
     }
 }
