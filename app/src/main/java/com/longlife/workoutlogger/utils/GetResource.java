@@ -13,11 +13,16 @@ import android.content.res.Resources;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.os.ConfigurationCompat;
 
 public class GetResource {
     public static String getStringResource(Context context, int resourceId) {
         return context.getResources().getString(resourceId);
+    }
+
+    public static String getStringResource(Context context, int resourceId, @Nullable Object... formatArgs) {
+        return context.getResources().getString(resourceId, formatArgs);
     }
 
     public static int getIntResource(Context context, int resourceId) {

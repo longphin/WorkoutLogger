@@ -9,8 +9,11 @@ package com.longlife.workoutlogger.view.Workout.Create;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.utils.GetResource;
+import com.longlife.workoutlogger.view.Exercises.IExerciseListCallbackBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<exerciseItemInRoutine> data = new ArrayList<>();
+    private IExerciseListCallbackBase simpleCallback;
+
+    RoutineAdapter(IExerciseListCallbackBase simpleCallback) {
+        this.simpleCallback = simpleCallback;
+    }
 
     @NonNull
     @Override
@@ -29,7 +37,14 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof exerciseViewHolder) {
+            onBindExerciseViewHolder((exerciseViewHolder) holder, position);
+        }
+    }
 
+    private void onBindExerciseViewHolder(exerciseViewHolder holder, int position) {
+        holder.setName(data.get(position).getName());
+        holder.setDescrip(GetResource.getStringResource(simpleCallback.getContext(), R.string.WorkoutExerciseDescription, data.get(position).getNumberOfSets()));
     }
 
     @Override
@@ -37,18 +52,29 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return data.size();
     }
 
-    public void addExercise(Long idExercise) {
-        data.add(new exerciseItemInRoutine(idExercise, 1));
+    void addExercise(Long idExercise, String exerciseName) {
+        data.add(new exerciseItemInRoutine(idExercise, exerciseName, 1));
         notifyItemInserted(data.size() - 1);
     }
 
     private class exerciseItemInRoutine {
         Long idExercise;
+
+        String name;
         private int numberOfSets;
 
-        public exerciseItemInRoutine(Long idExercise, int numberOfSets) {
+        exerciseItemInRoutine(Long idExercise, String name, int numberOfSets) {
             this.idExercise = idExercise;
+            this.name = name;
             this.numberOfSets = numberOfSets;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
 
         public Long getIdExercise() {
@@ -69,8 +95,21 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private class exerciseViewHolder extends RecyclerView.ViewHolder {
-        public exerciseViewHolder(@NonNull View itemView) {
+        TextView nameView;
+        TextView descripView;
+
+        exerciseViewHolder(@NonNull View itemView) {
             super(itemView);
+            nameView = itemView.findViewById(R.id.txt_exerciseName);
+            descripView = itemView.findViewById(R.id.txt_exerciseDescrip);
+        }
+
+        public void setName(String name) {
+            nameView.setText(name);
+        }
+
+        public void setDescrip(String descrip) {
+            descripView.setText(descrip);
         }
     }
 }

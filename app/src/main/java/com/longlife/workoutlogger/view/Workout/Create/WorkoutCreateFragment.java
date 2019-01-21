@@ -47,8 +47,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        routineAdapter = new RoutineAdapter();
     }
 
     public static Fragment newInstance() {
@@ -58,6 +56,10 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        routineAdapter = null;
+        rv_selectedExercises.setAdapter(null);
+        rv_selectedExercises = null;
     }
 
     @Override
@@ -110,6 +112,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     private void initializeSelectedExercisesRecyclerView() {
+        routineAdapter = new RoutineAdapter(this);
         rv_selectedExercises = mView.findViewById(R.id.rv_selectedExercises);
         rv_selectedExercises.setAdapter(routineAdapter);
         rv_selectedExercises.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -118,7 +121,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
-    public void addExerciseToRoutine(Long idExercise) {
-        routineAdapter.addExercise(idExercise);
+    public void addExerciseToRoutine(Long idExercise, String exerciseName) {
+        routineAdapter.addExercise(idExercise, exerciseName);
     }
 }

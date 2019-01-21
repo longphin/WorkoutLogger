@@ -46,7 +46,7 @@ public class ExercisesListAdapter extends ExercisesListAdapterBase {
                                 callback.exerciseEdit(data.get(currentPosition).id());
                                 return true;
                             case R.id.menu_exercise_add_to_routine:
-                                callback.addExerciseToRoutine(data.get(currentPosition).id());
+                                callback.addExerciseToRoutine(data.get(currentPosition).id(), data.get(currentPosition).toString());
                                 return true;
                             default:
                                 return false;
@@ -65,6 +65,6 @@ public class ExercisesListAdapter extends ExercisesListAdapterBase {
     }
 
     public interface IExerciseListCallback extends IExerciseListCallbackBase {
-        void addExerciseToRoutine(Long idExercise);
+        void addExerciseToRoutine(Long idExercise, String exerciseName);
     }
 }
