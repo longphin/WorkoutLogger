@@ -9,5 +9,7 @@
     <item
         android:id="@+id/menu_exercise_edit"
         android:title="@string/Edit" />
-
+    <item
+        android:id="@+id/menu_exercise_add_to_routine"
+        android:title="@string/AddExerciseToRoutine" />
 </menu>

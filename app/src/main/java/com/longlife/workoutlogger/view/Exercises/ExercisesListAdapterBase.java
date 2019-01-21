@@ -6,7 +6,6 @@
 
 package com.longlife.workoutlogger.view.Exercises;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +48,7 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
     public void setData(List<IExerciseListable> exercises) {
         data.clear();
         headers.clear();
+
         for (int i = 0; i < exercises.size(); i++) // [TODO] Make this an async task.
         {
             IExerciseListable ex = exercises.get(i);
@@ -61,6 +61,20 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
         for (String s : headers) {
             addItem(new headerItem(s, s));
         }
+        /* // Add categories in an async observable instead of a for loop.
+        Single.fromObservable(Observable.fromIterable(exercises)
+                .map(ex -> {
+                    return new headerItem(ex.getCategory(), ex.getCategory());
+                })
+                .toList()
+                .toObservable()
+        ).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(categories ->
+                {
+                    data.addAll(categories);
+                });
+        */
 
         // Sort data.
         Collections.sort(data);
@@ -310,17 +324,6 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
 
     interface IViewHolder {
         void onDestroy();
-    }
-
-    public interface IClickExercise {
-        // When an exercise is clicked, send the clicked exercise.
-        void exerciseEdit(Long idExercise);
-
-        void exercisePerform(exerciseItem ex);//Long idExercise, String exerciseName);
-
-        Context getContext();
-
-        void exerciseDelete(ExerciseShort exerciseToDelete);
     }
 
     public abstract class IViewItem implements Comparable<IViewItem> {

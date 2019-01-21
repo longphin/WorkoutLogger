@@ -10,22 +10,18 @@ import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.view.Exercises.ExerciseListExerciseViewHolder;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapterBase;
+import com.longlife.workoutlogger.view.Exercises.IExerciseListCallbackBase;
 
 import java.util.List;
 
 import androidx.appcompat.widget.PopupMenu;
 
 public class ExercisesListAdapter extends ExercisesListAdapterBase {
-    private IClickExercise callback;
+    private IExerciseListCallback callback;
 
-    ExercisesListAdapter(IClickExercise callback, List<IExerciseListable> exercises) {
+    ExercisesListAdapter(IExerciseListCallback callback, List<IExerciseListable> exercises) {
         super(exercises);
         this.callback = callback;
-    }
-
-    @Override
-    protected int exerciseItemLayout() {
-        return R.layout.item_workout_create_exercise;
     }
 
     @Override
@@ -49,6 +45,9 @@ public class ExercisesListAdapter extends ExercisesListAdapterBase {
                                 //handle menu1 click
                                 callback.exerciseEdit(data.get(currentPosition).id());
                                 return true;
+                            case R.id.menu_exercise_add_to_routine:
+                                callback.addExerciseToRoutine(data.get(currentPosition).id());
+                                return true;
                             default:
                                 return false;
                         }
@@ -58,5 +57,14 @@ public class ExercisesListAdapter extends ExercisesListAdapterBase {
                 });
             }
         }
+    }
+
+    @Override
+    protected int exerciseItemLayout() {
+        return R.layout.item_workout_create_exercise;
+    }
+
+    public interface IExerciseListCallback extends IExerciseListCallbackBase {
+        void addExerciseToRoutine(Long idExercise);
     }
 }

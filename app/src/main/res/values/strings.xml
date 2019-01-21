@@ -123,4 +123,5 @@
     <string name="Edit">Edit</string>
     <string name="Delete">Delete</string>
     <string name="addExercise">Add Exercise</string>
+    <string name="AddExerciseToRoutine">Add to Routine</string>
 </resources>

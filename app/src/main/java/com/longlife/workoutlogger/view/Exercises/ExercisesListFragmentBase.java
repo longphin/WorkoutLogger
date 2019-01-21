@@ -7,18 +7,15 @@
 package com.longlife.workoutlogger.view.Exercises;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
-import com.longlife.workoutlogger.view.Exercises.PerformExercise.PerformExerciseFragment;
 
 import java.util.List;
 
@@ -29,7 +26,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class ExercisesListFragmentBase extends FragmentBase implements ExercisesListAdapterBase.IClickExercise {
+public abstract class ExercisesListFragmentBase extends FragmentBase implements IExerciseListCallbackBase {
     protected ExercisesViewModel viewModel;
     protected ExercisesListAdapterBase adapter;
     //private SearchView searchView;
@@ -132,7 +129,7 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         setAdapterForRecyclerView();
     }
 
-    protected abstract ExercisesListAdapterBase createAdapter(ExercisesListAdapterBase.IClickExercise callback, List<IExerciseListable> exercises); // [TODO] change ExercisesListAdapterBase.IClickExercise to a base interface instead. That way, whether the adapter is for exercise list or workout create, the number of callback options is limited.
+    protected abstract ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises); // [TODO] change ExercisesListAdapterBase.IClickExercise to a base interface instead. That way, whether the adapter is for exercise list or workout create, the number of callback options is limited.
 
     @Override
     public void exerciseEdit(Long idExercise) {
@@ -146,49 +143,6 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         if (fragmentNavigation != null) {
             fragmentNavigation.pushFragment(fragment);
         }
-    }
-
-    @Override
-    public void exercisePerform(ExercisesListAdapterBase.exerciseItem ex) {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-
-        PerformExerciseFragment fragment = (PerformExerciseFragment) manager.findFragmentByTag(PerformExerciseFragment.TAG);
-        if (fragment == null) {
-            fragment = PerformExerciseFragment.newInstance(ex);
-        }
-
-        if (fragmentNavigation != null) {
-            fragmentNavigation.pushFragment(fragment);
-        }
-    }
-
-    @Override
-    public void exerciseDelete(ExerciseShort exerciseToDelete) {
-        viewModel.deleteExercise(exerciseToDelete);
-
-        Snackbar snackbar = Snackbar
-                .make(mView.findViewById(getLayoutRoot())
-                        , exerciseToDelete.getName() + " deleted.", Snackbar.LENGTH_LONG);
-        snackbar.setAction("UNDO", view -> {
-        });
-        snackbar.addCallback(new Snackbar.Callback() {
-
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                ExerciseShort restoredExercise = viewModel.getLastDeletedExercise();
-                if (restoredExercise == null)
-                    return;
-
-                // If the snackbar was dismissed via clicking the action (Undo button), then restore the exercise.
-                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
-                    viewModel.restoreLastExercise(); // [TODO] When dismissed after changing fragments, the undo is not done?
-                    //if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
-                    return;
-                }
-            }
-        });
-        snackbar.setActionTextColor(Color.YELLOW);
-        snackbar.show();
     }
 
     protected abstract int getLayoutRoot();

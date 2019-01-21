@@ -7,6 +7,7 @@
 package com.longlife.workoutlogger.view.Exercises;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,12 +19,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
 import com.longlife.workoutlogger.enums.MuscleGroup;
+import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.view.Exercises.CreateExercise.ExerciseCreateFragment;
+import com.longlife.workoutlogger.view.Exercises.PerformExercise.PerformExerciseFragment;
 import com.longlife.workoutlogger.view.MainActivity;
 
 import java.util.List;
@@ -36,7 +40,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-public class ExercisesListFragment extends ExercisesListFragmentBase {
+public class ExercisesListFragment extends ExercisesListFragmentBase implements ExercisesListRemakeAdapter.IExerciseListCallback {
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     private SearchView searchView;
@@ -219,12 +223,55 @@ public class ExercisesListFragment extends ExercisesListFragmentBase {
     }
 
     @Override
-    protected ExercisesListAdapterBase createAdapter(ExercisesListAdapterBase.IClickExercise callback, List<IExerciseListable> exercises) {
+    protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
         return new ExercisesListRemakeAdapter(this, exercises);
     }
 
     @Override
     protected int getLayoutRoot() {
         return R.id.exercises_overview_layout;
+    }
+
+    @Override
+    public void exercisePerform(ExercisesListAdapterBase.exerciseItem ex) {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+
+        PerformExerciseFragment fragment = (PerformExerciseFragment) manager.findFragmentByTag(PerformExerciseFragment.TAG);
+        if (fragment == null) {
+            fragment = PerformExerciseFragment.newInstance(ex);
+        }
+
+        if (fragmentNavigation != null) {
+            fragmentNavigation.pushFragment(fragment);
+        }
+    }
+
+    @Override
+    public void exerciseDelete(ExerciseShort exerciseToDelete) {
+        viewModel.deleteExercise(exerciseToDelete);
+
+        Snackbar snackbar = Snackbar
+                .make(mView.findViewById(getLayoutRoot())
+                        , exerciseToDelete.getName() + " deleted.", Snackbar.LENGTH_LONG);
+        snackbar.setAction("UNDO", view -> {
+        });
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                ExerciseShort restoredExercise = viewModel.getLastDeletedExercise();
+                if (restoredExercise == null)
+                    return;
+
+                // If the snackbar was dismissed via clicking the action (Undo button), then restore the exercise.
+                if (event == Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                    viewModel.restoreLastExercise(); // [TODO] When dismissed after changing fragments, the undo is not done?
+                    //if (adapter != null && isAdded()) adapter.restoreExercise(restoredExercise);
+                    return;
+                }
+            }
+        });
+        snackbar.setActionTextColor(Color.YELLOW);
+        snackbar.show();
     }
 }

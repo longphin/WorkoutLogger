@@ -18,6 +18,7 @@ import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapterBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListFragmentBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
+import com.longlife.workoutlogger.view.Exercises.IExerciseListCallbackBase;
 
 import java.util.List;
 
@@ -27,13 +28,27 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class WorkoutCreateFragment extends ExercisesListFragmentBase {
+public class WorkoutCreateFragment extends ExercisesListFragmentBase implements ExercisesListAdapter.IExerciseListCallback {
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
 
+    private RoutineAdapter routineAdapter;
+    private RecyclerView rv_selectedExercises;
+
     public WorkoutCreateFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        routineAdapter = new RoutineAdapter();
     }
 
     public static Fragment newInstance() {
@@ -68,7 +83,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase {
     }
 
     @Override
-    protected ExercisesListAdapterBase createAdapter(ExercisesListAdapterBase.IClickExercise callback, List<IExerciseListable> exercises) {
+    protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
         return new ExercisesListAdapter(this, exercises);
     }
 
@@ -87,9 +102,23 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_workout_create, container, false);
+        initializeSelectedExercisesRecyclerView();
 
         initializeObservers();
         initializeRecyclerView(mView);
         return mView;
+    }
+
+    private void initializeSelectedExercisesRecyclerView() {
+        rv_selectedExercises = mView.findViewById(R.id.rv_selectedExercises);
+        rv_selectedExercises.setAdapter(routineAdapter);
+        rv_selectedExercises.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv_selectedExercises.setItemAnimator(new DefaultItemAnimator());
+        rv_selectedExercises.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+    }
+
+    @Override
+    public void addExerciseToRoutine(Long idExercise) {
+        routineAdapter.addExercise(idExercise);
     }
 }

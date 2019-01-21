@@ -15,11 +15,18 @@ import java.util.List;
 import androidx.appcompat.widget.PopupMenu;
 
 public class ExercisesListRemakeAdapter extends ExercisesListAdapterBase {
-    private IClickExercise callback;
+    private IExerciseListCallback callback;
 
-    public ExercisesListRemakeAdapter(IClickExercise callback, List<IExerciseListable> exercises) {
+    public ExercisesListRemakeAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
         super(exercises);
-        this.callback = callback;
+        if (callback instanceof IExerciseListCallback)
+            this.callback = (IExerciseListCallback) callback;
+    }
+
+    public interface IExerciseListCallback extends IExerciseListCallbackBase {
+        void exercisePerform(exerciseItem ex);//Long idExercise, String exerciseName);
+
+        void exerciseDelete(ExerciseShort exerciseToDelete);
     }
 
     @Override
