@@ -19,6 +19,7 @@ import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapterBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListFragmentBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Exercises.IExerciseListCallbackBase;
+import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.util.List;
 
@@ -32,34 +33,30 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 public class WorkoutCreateFragment extends ExercisesListFragmentBase implements ExercisesListAdapter.IExerciseListCallback {
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
 
     private RoutineAdapter routineAdapter;
-    private RecyclerView rv_selectedExercises;
+    //private RecyclerView rv_selectedExercises; //[TODO - potential optimization] Does this need to be saved into a variable? Try making it local only.
 
     public WorkoutCreateFragment() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private SelectedExercisesAdapter routineHeaderAdapter;
 
     public static Fragment newInstance() {
         return new WorkoutCreateFragment();
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        routineAdapter = null;
-        rv_selectedExercises.setAdapter(null);
-        rv_selectedExercises = null;
+
     }
 
     @Override
@@ -100,10 +97,20 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        routineAdapter = null;
+        //rv_selectedExercises.setAdapter(null);
+        //rv_selectedExercises = null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_workout_create, container, false);
+        initializeSelectedExercisesViewPager();
         initializeSelectedExercisesRecyclerView();
 
         initializeObservers();
@@ -111,9 +118,40 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         return mView;
     }
 
+    private void initializeSelectedExercisesViewPager() {
+        ViewPager viewPager = mView.findViewById(R.id.view_pager);
+
+        routineHeaderAdapter = new SelectedExercisesAdapter();
+        routineHeaderAdapter.addExercise(1L, "test1");
+        routineHeaderAdapter.addExercise(2L, "test2");
+        routineHeaderAdapter.addExercise(3L, "test3");
+        viewPager.setAdapter(routineHeaderAdapter);
+
+        RecyclerTabLayout selectedExercisesLayout = mView.findViewById(R.id.rvtab_selectedExercises);
+        selectedExercisesLayout.setUpWithViewPager(viewPager);
+    }
+
+/*    private void initializeSelectedExercisesViewPager() {
+        ViewPager viewPager = mView.findViewById(R.id.view_pager);
+
+        *//*SelectedExercisesAdapter adapter = new SelectedExercisesAdapter();
+        adapter.addExercise(1L, "test1");
+        adapter.addExercise(2L, "test2");
+        viewPager.setAdapter(adapter);*//*
+
+        RoutineHeaderAdapter adapter = new RoutineHeaderAdapter(viewPager);
+        adapter.addHeader(new RoutineHeaderAdapter.headerObject(1L, "test1"));
+        adapter.addHeader(new RoutineHeaderAdapter.headerObject(2L, "test2"));
+        adapter.addHeader(new RoutineHeaderAdapter.headerObject(3L, "test3"));
+        viewPager.setAdapter(adapter);
+
+        RecyclerTabLayout selectedExercisesLayout = mView.findViewById(R.id.rvtab_selectedExercises);
+        selectedExercisesLayout.setUpWithAdapter(adapter);
+    }*/
+
     private void initializeSelectedExercisesRecyclerView() {
         routineAdapter = new RoutineAdapter(this);
-        rv_selectedExercises = mView.findViewById(R.id.rv_selectedExercises);
+        RecyclerView rv_selectedExercises = mView.findViewById(R.id.rv_selectedExercises);
         rv_selectedExercises.setAdapter(routineAdapter);
         rv_selectedExercises.setLayoutManager(new LinearLayoutManager(getContext()));
         rv_selectedExercises.setItemAnimator(new DefaultItemAnimator());
@@ -123,5 +161,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     @Override
     public void addExerciseToRoutine(Long idExercise, String exerciseName) {
         routineAdapter.addExercise(idExercise, exerciseName);
+        routineHeaderAdapter.addExercise(idExercise, exerciseName);
     }
 }

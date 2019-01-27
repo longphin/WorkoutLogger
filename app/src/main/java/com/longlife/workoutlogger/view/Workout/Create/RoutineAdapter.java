@@ -25,6 +25,10 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<exerciseItemInRoutine> data = new ArrayList<>();
     private IExerciseListCallbackBase simpleCallback;
 
+/*    RoutineAdapter(IExerciseListCallbackBase simpleCallback) {
+        this.simpleCallback = simpleCallback;
+    }*/
+
     RoutineAdapter(IExerciseListCallbackBase simpleCallback) {
         this.simpleCallback = simpleCallback;
     }
