@@ -14,48 +14,27 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/header" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/rvtab_selectedExercises"
+        app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
+        app:layout_constraintStart_toStartOf="@+id/rvtab_selectedExercises"
+        app:layout_constraintTop_toTopOf="@+id/rvtab_selectedExercises">
+
+        <androidx.viewpager.widget.PagerTabStrip
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top" />
+    </androidx.viewpager.widget.ViewPager>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvtab_selectedExercises"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.nshmura.recyclertablayout.RecyclerTabLayout
-            android:id="@+id/rvtab_selectedExercises"
-            rtl_tabBackground="?attr/selectableItemBackground"
-            rtl_tabIndicatorColor="?attr/colorAccent"
-            rtl_tabIndicatorHeight="2dp"
-            rtl_tabMaxWidth="264dp"
-            rtl_tabMinWidth="72dp"
-            rtl_tabPadding="0dp"
-            rtl_tabPaddingBottom="0dp"
-            rtl_tabPaddingTop="0dp"
-            rtl_tabSelectedTextColor="?android:textColorPrimary"
-            rtl_tabTextAppearance="@android:style/TextAppearance.Small"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_selectedExercises"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvtab_selectedExercises"
-            app:layout_constraintVertical_bias="0.0" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!--
     <androidx.viewpager.widget.ViewPager
@@ -73,8 +52,6 @@
         android:id="@+id/rv_exercises"
         android:layout_width="231dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

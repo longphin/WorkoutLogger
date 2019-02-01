@@ -61,7 +61,6 @@ public class ExercisesViewModel
     private ExerciseShort lastDeletedExercise;
     private Repository repo;
 
-    // Protected
     public ExercisesViewModel(@NonNull Repository repo) {
         this.repo = repo;
     }

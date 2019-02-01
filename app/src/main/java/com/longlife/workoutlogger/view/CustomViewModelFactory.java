@@ -11,6 +11,7 @@ import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableViewModel;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
+import com.longlife.workoutlogger.view.Workout.Create.WorkoutViewModel;
 
 import javax.inject.Inject;
 
@@ -39,6 +40,8 @@ public class CustomViewModelFactory
             return ((T) new ExercisesSelectableViewModel(repo));
         } else if (modelClass.isAssignableFrom(ProfileViewModel.class)) {
             return ((T) new ProfileViewModel(repo));
+        } else if (modelClass.isAssignableFrom(WorkoutViewModel.class)) {
+            return ((T) new WorkoutViewModel(repo));
         } else {
             throw new IllegalArgumentException("ViewModel not found");
         }

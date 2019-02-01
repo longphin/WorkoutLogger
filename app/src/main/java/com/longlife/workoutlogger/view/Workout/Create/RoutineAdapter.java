@@ -56,18 +56,18 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return data.size();
     }
 
-    void addExercise(Long idExercise, String exerciseName) {
-        data.add(new exerciseItemInRoutine(idExercise, exerciseName, 1));
+    void addExercise(exerciseItemInRoutine ex) {
+        data.add(ex);
         notifyItemInserted(data.size() - 1);
     }
 
-    private class exerciseItemInRoutine {
+    public static class exerciseItemInRoutine {
         Long idExercise;
 
         String name;
         private int numberOfSets;
 
-        exerciseItemInRoutine(Long idExercise, String name, int numberOfSets) {
+        public exerciseItemInRoutine(Long idExercise, String name, int numberOfSets) {
             this.idExercise = idExercise;
             this.name = name;
             this.numberOfSets = numberOfSets;
