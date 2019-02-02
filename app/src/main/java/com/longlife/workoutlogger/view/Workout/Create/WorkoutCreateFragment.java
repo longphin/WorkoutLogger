@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
@@ -118,6 +119,10 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         routineAdapter.addRoutine(6L);
         routineAdapter.addRoutine(7L);
         viewPager.setAdapter(routineAdapter);
+
+        // Bind tab slider.
+        PagerSlidingTabStrip tabSlider = mView.findViewById(R.id.tabSlider);
+        tabSlider.setViewPager(viewPager);
     }
 
     @Override

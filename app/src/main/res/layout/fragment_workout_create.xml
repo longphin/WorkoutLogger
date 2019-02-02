@@ -12,6 +12,15 @@
     android:layout_height="match_parent"
     tools:context=".view.Workout.Create.WorkoutCreateFragment">
 
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tabSlider"
+        android:layout_width="181dp"
+        android:layout_height="wrap_content"
+        android:background="@color/headerBackground"
+        app:layout_constraintEnd_toEndOf="@+id/view_pager"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="0dp"
@@ -19,22 +28,28 @@
         app:layout_constraintBottom_toBottomOf="@+id/rvtab_selectedExercises"
         app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
         app:layout_constraintStart_toStartOf="@+id/rvtab_selectedExercises"
-        app:layout_constraintTop_toTopOf="@+id/rvtab_selectedExercises">
+        app:layout_constraintTop_toBottomOf="@+id/tabSlider">
 
+        <!--
         <androidx.viewpager.widget.PagerTabStrip
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top" />
+            android:layout_gravity="top"
+            app:tabMode="scrollable"
+            app:tabTextColor="#000000"
+            app:tabSelectedTextColor="#ff0000"
+            app:tabIndicatorColor="#ff0000"/>
+            -->
     </androidx.viewpager.widget.ViewPager>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvtab_selectedExercises"
-        android:layout_width="0dp"
+        android:layout_width="181dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tabSlider" />
 
     <!--
     <androidx.viewpager.widget.ViewPager
