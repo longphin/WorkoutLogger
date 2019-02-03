@@ -12,6 +12,7 @@
     android:layout_height="match_parent"
     tools:context=".view.Workout.Create.WorkoutCreateFragment">
 
+    <!--
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabSlider"
         android:layout_width="181dp"
@@ -20,6 +21,19 @@
         app:layout_constraintEnd_toEndOf="@+id/view_pager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+        -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabSlider"
+        android:layout_width="130dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_addRoutine"
+        app:layout_constraintEnd_toStartOf="@+id/btn_addRoutine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabMode="scrollable" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
@@ -70,4 +84,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_addRoutine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
+        tools:text="Button" />
 </androidx.constraintlayout.widget.ConstraintLayout>

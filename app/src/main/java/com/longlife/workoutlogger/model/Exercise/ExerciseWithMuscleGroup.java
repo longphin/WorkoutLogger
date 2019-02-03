@@ -13,7 +13,7 @@ public class ExerciseWithMuscleGroup implements IExerciseListable {
     public String name;
     public String note;
     private boolean locked; // Flag to indicate whether exercise is locked.
-
+    @Ignore
     private String muscleName;
     private int idMuscle;
 

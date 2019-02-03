@@ -11,8 +11,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
-import com.astuetz.PagerSlidingTabStrip;
+import com.google.android.material.tabs.TabLayout;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
@@ -20,6 +21,7 @@ import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapterBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListFragmentBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Exercises.IExerciseListCallbackBase;
+import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 
 import java.util.List;
 
@@ -30,11 +32,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class WorkoutCreateFragment extends ExercisesListFragmentBase implements ExercisesListAdapter.IExerciseListCallback {
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     private WorkoutViewModel workoutViewModel;
+    private RoutinesViewModel routineViewModel;
+    private int numberOfTabs = 4;
+    private RoutinesPagerAdapter routineAdapter;
+    private Long idWorkout;
 
     public WorkoutCreateFragment() {
         // Required empty public constructor
@@ -47,6 +57,11 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
     @Override
@@ -69,6 +84,46 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                     .inject(this);
             viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
             workoutViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WorkoutViewModel.class);
+            routineViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
+
+            workoutViewModel.createNewWorkoutProgram()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new SingleObserver<Long>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Long idWorkoutProgram) {
+                            idWorkout = idWorkoutProgram;
+                            routineViewModel.insertRoutineForWorkout(idWorkout)
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribeOn(Schedulers.io())
+                                    .subscribe(new SingleObserver<Long>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onSuccess(Long idRoutine) {
+                                            routineAdded(idRoutine);
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+                    });
         }
     }
 
@@ -88,14 +143,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        //rv_selectedExercises.setAdapter(null);
-        //rv_selectedExercises = null;
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -107,22 +154,41 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         return mView;
     }
 
+    private void routineAdded(Long idRoutine) {
+        numberOfTabs += 1;
+        routineAdapter.addRoutine(idRoutine);
+    }
+
     private void initializeSelectedExercisesViewPager() {
         ViewPager viewPager = mView.findViewById(R.id.view_pager);
 
-        RoutinesPagerAdapter routineAdapter = new RoutinesPagerAdapter(getFragmentManager());
-        routineAdapter.addRoutine(1L);
-        routineAdapter.addRoutine(2L);
-        routineAdapter.addRoutine(3L);
-        routineAdapter.addRoutine(4L);
-        routineAdapter.addRoutine(5L);
-        routineAdapter.addRoutine(6L);
-        routineAdapter.addRoutine(7L);
+        routineAdapter = new RoutinesPagerAdapter(getFragmentManager());
+        for (int i = 1; i <= numberOfTabs; i++) {
+            routineAdapter.addRoutine(Long.valueOf(i));
+        }
         viewPager.setAdapter(routineAdapter);
 
-        // Bind tab slider.
-        PagerSlidingTabStrip tabSlider = mView.findViewById(R.id.tabSlider);
-        tabSlider.setViewPager(viewPager);
+        // Slider between the tabs.
+        TabLayout tabLayout = mView.findViewById(R.id.tabSlider);
+        tabLayout.setupWithViewPager(viewPager);
+
+        // Listener for when to add a new routine.
+        ImageButton addRoutineButton = mView.findViewById(R.id.btn_addRoutine);
+        /*
+        addRoutineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                numberOfTabs += 1;
+                routineAdapter.addRoutine(Long.valueOf(numberOfTabs));
+            }
+        });
+        */
+        addRoutineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //workoutViewModel.insertRoutine(idWorkout); // [TODO] insertRoutine(idWorkout) will return the idRoutine that is inserted. When observed, we need to call routineAdded(idRoutine)
+            }
+        });
     }
 
     @Override

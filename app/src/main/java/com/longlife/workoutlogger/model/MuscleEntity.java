@@ -15,9 +15,6 @@ public class MuscleEntity {
     private Integer idMuscle;
     private Integer idMuscleGroup;
 
-    public MuscleEntity() {
-    }
-
     public MuscleEntity(Integer idMuscle, Integer idMuscleGroup) {
         this.idMuscle = idMuscle;
         this.idMuscleGroup = idMuscleGroup;

@@ -12,10 +12,12 @@ import com.longlife.workoutlogger.model.MuscleEntity;
 import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.RoutineExercise;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.model.WorkoutProgram;
+import com.longlife.workoutlogger.model.WorkoutRoutine;
 
 import androidx.room.RoomDatabase;
 
@@ -35,7 +37,9 @@ import androidx.room.RoomDatabase;
                         ExerciseMuscle.class,
                         WorkoutProgram.class,
                         MuscleEntity.class,
-                        MuscleGroupEntity.class
+                        MuscleGroupEntity.class,
+                        RoutineExercise.class,
+                        WorkoutRoutine.class
                 },
         version = DatabaseVersion.CURRENT
 )
@@ -48,6 +52,8 @@ public abstract class Database
     public abstract RoutineDao routineDao();
 
     public abstract ProfileDao profileDao();
+
+    public abstract WorkoutDao workoutDao();
 }
 
 

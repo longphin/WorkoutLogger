@@ -12,7 +12,7 @@ import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
-import com.longlife.workoutlogger.model.WorkoutProgram;
+import com.longlife.workoutlogger.model.WorkoutRoutine;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.List;
@@ -103,10 +103,6 @@ public abstract class RoutineDao {
         return newSessionExercise;
     }
 
-    // Insert a workout plan.
-    @Insert(onConflict = OnConflictStrategy.FAIL)
-    public abstract Long insertWorkoutProgram(WorkoutProgram program);
-
     // Insert a session.
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract Long insertRoutineSession(RoutineSession rs);
@@ -146,4 +142,17 @@ public abstract class RoutineDao {
     // Hide/unhide a routine.
     @Query("UPDATE Routine SET hidden = :isHidden WHERE idRoutine=:idRoutine")
     public abstract void setRoutineAsHidden(Long idRoutine, int isHidden);
+
+    // Create a new routine for a workout. Return the idRoutine for the new routine.
+    @Transaction
+    public Long insertRoutineForWorkout(Long idWorkout) {
+        Long idRoutine = insertRoutine(new Routine());
+
+        insertWorkoutRoutine(new WorkoutRoutine(idRoutine, idWorkout));
+
+        return idRoutine;
+    }
+
+    @Insert
+    public abstract Long insertWorkoutRoutine(WorkoutRoutine workoutRoutine);
 }

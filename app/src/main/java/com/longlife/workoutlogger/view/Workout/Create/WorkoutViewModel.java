@@ -10,6 +10,7 @@ import com.longlife.workoutlogger.data.Repository;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
+import io.reactivex.Single;
 import io.reactivex.subjects.PublishSubject;
 
 public class WorkoutViewModel extends ViewModel {
@@ -25,7 +26,15 @@ public class WorkoutViewModel extends ViewModel {
     }
 
     public void insertExercise(RoutineAdapter.exerciseItemInRoutine ex) {
-        exerciseToInsertObservable.onNext(ex);
+        exerciseToInsertObservable.onNext(ex); // [TODO] insert into database
+    }
+
+    public Single<Long> createNewWorkoutProgram() {
+        return repo.createWorkoutProgram();
+    }
+
+    public Single<Long> insertRoutineToWorkout(Long idWorkout) {
+        return repo.insertRoutineForWorkout(idWorkout);
     }
     // [TODO] - This will be used to interact between WorkoutCreateFragment and the child ROutineFragment when an exercise is to be added.
 }

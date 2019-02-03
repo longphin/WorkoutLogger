@@ -17,6 +17,7 @@ import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine;
 import com.longlife.workoutlogger.model.SessionExercise;
+import com.longlife.workoutlogger.model.WorkoutProgram;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.List;
@@ -32,12 +33,14 @@ public class Repository {
     private final ExerciseDao exerciseDao;
     private final RoutineDao routineDao;
     private final ProfileDao profileDao;
+    private final WorkoutDao workoutDao;
 
     @Inject
-    public Repository(ExerciseDao exerciseDao, RoutineDao routineDao, ProfileDao profileDao) {
+    public Repository(ExerciseDao exerciseDao, RoutineDao routineDao, ProfileDao profileDao, WorkoutDao workoutDao) {
         this.exerciseDao = exerciseDao;
         this.routineDao = routineDao;
         this.profileDao = profileDao;
+        this.workoutDao = workoutDao;
     }
 
     public Single<List<Exercise>> getExercises() {
@@ -151,5 +154,13 @@ public class Repository {
 
     public Single<List<Long>> insertMuscleGroups(List<MuscleGroupEntity> groups) {
         return Single.fromCallable(() -> profileDao.insertMuscleGroups(groups));
+    }
+
+    public Single<Long> createWorkoutProgram() {
+        return workoutDao.createWorkoutProgram(new WorkoutProgram());
+    }
+
+    public Single<Long> insertRoutineForWorkout(Long idWorkout) {
+        return Single.fromCallable(() -> routineDao.insertRoutineForWorkout(idWorkout));
     }
 }

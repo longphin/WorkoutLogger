@@ -110,8 +110,14 @@ public class RoomModule {
 
     @Provides
     @Singleton
-    Repository provideRepository(ExerciseDao exerciseDao, RoutineDao routineDao, ProfileDao profileDao) {
-        return new Repository(exerciseDao, routineDao, profileDao);
+    WorkoutDao provideWorkoutDao(Database db) {
+        return db.workoutDao();
+    }
+
+    @Provides
+    @Singleton
+    Repository provideRepository(ExerciseDao exerciseDao, RoutineDao routineDao, ProfileDao profileDao, WorkoutDao workoutDao) {
+        return new Repository(exerciseDao, routineDao, profileDao, workoutDao);
     }
 
     @Provides
