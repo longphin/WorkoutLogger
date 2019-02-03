@@ -11,10 +11,9 @@ import com.longlife.workoutlogger.model.WorkoutProgram;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
-import io.reactivex.Single;
 
 @Dao
 public abstract class WorkoutDao {
     @Insert(onConflict = OnConflictStrategy.FAIL)
-    public abstract Single<Long> createWorkoutProgram(WorkoutProgram program);
+    public abstract Long createWorkoutProgram(WorkoutProgram program);
 }

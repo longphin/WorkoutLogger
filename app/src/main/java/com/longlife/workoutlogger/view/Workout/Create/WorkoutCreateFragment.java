@@ -42,7 +42,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     public ViewModelProvider.Factory viewModelFactory;
     private WorkoutViewModel workoutViewModel;
     private RoutinesViewModel routineViewModel;
-    private int numberOfTabs = 4;
     private RoutinesPagerAdapter routineAdapter;
     private Long idWorkout;
 
@@ -75,6 +74,9 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
 
         initializeGroupByOptions(mView);
     }
+
+    private Long idFirstRoutine;
+    private boolean firstRoutineWasCreated = false;
 
     @Override
     public void getViewModel() {
@@ -109,7 +111,8 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
 
                                         @Override
                                         public void onSuccess(Long idRoutine) {
-                                            routineAdded(idRoutine);
+                                            idFirstRoutine = idRoutine;
+                                            firstRoutineCreated(idRoutine); // [TODO] Do not allow user to interact with fragment until this is completed.
                                         }
 
                                         @Override
@@ -126,7 +129,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                     });
         }
     }
-
     @Override
     protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
         return new ExercisesListAdapter(this, exercises);
@@ -154,18 +156,24 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         return mView;
     }
 
+    private void firstRoutineCreated(Long idRoutine) {
+        if (!firstRoutineWasCreated && idRoutine != null) {
+            firstRoutineWasCreated = true;
+            routineAdded(idRoutine);
+        }
+    }
+
     private void routineAdded(Long idRoutine) {
-        numberOfTabs += 1;
-        routineAdapter.addRoutine(idRoutine);
+        if (routineAdapter != null) {
+            routineAdapter.addRoutine(idRoutine);
+        }
     }
 
     private void initializeSelectedExercisesViewPager() {
         ViewPager viewPager = mView.findViewById(R.id.view_pager);
 
         routineAdapter = new RoutinesPagerAdapter(getFragmentManager());
-        for (int i = 1; i <= numberOfTabs; i++) {
-            routineAdapter.addRoutine(Long.valueOf(i));
-        }
+        firstRoutineCreated(idFirstRoutine);
         viewPager.setAdapter(routineAdapter);
 
         // Slider between the tabs.
@@ -174,15 +182,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
 
         // Listener for when to add a new routine.
         ImageButton addRoutineButton = mView.findViewById(R.id.btn_addRoutine);
-        /*
-        addRoutineButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                numberOfTabs += 1;
-                routineAdapter.addRoutine(Long.valueOf(numberOfTabs));
-            }
-        });
-        */
         addRoutineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

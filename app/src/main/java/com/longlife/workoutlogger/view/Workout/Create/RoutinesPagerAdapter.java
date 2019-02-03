@@ -41,6 +41,6 @@ public class RoutinesPagerAdapter extends FragmentStatePagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return "test" + String.valueOf(idRoutines.get(position));
+        return String.valueOf(idRoutines.get(position));
     }
 }

@@ -157,7 +157,7 @@ public class Repository {
     }
 
     public Single<Long> createWorkoutProgram() {
-        return workoutDao.createWorkoutProgram(new WorkoutProgram());
+        return Single.fromCallable(() -> workoutDao.createWorkoutProgram(new WorkoutProgram()));
     }
 
     public Single<Long> insertRoutineForWorkout(Long idWorkout) {

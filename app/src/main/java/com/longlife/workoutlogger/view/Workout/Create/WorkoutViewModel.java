@@ -32,9 +32,4 @@ public class WorkoutViewModel extends ViewModel {
     public Single<Long> createNewWorkoutProgram() {
         return repo.createWorkoutProgram();
     }
-
-    public Single<Long> insertRoutineToWorkout(Long idWorkout) {
-        return repo.insertRoutineForWorkout(idWorkout);
-    }
-    // [TODO] - This will be used to interact between WorkoutCreateFragment and the child ROutineFragment when an exercise is to be added.
 }
