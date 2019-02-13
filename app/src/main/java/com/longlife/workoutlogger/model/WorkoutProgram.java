@@ -16,6 +16,16 @@ public class WorkoutProgram {
     private boolean isActive = false;
     private String name;
 
+    private boolean isSaved = false;
+
+    public boolean isSaved() {
+        return isSaved;
+    }
+
+    public void setIsSaved(boolean saved) {
+        isSaved = saved;
+    }
+
     public Long getIdWorkoutProgram() {
         return idWorkoutProgram;
     }

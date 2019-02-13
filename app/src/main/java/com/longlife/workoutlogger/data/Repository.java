@@ -25,6 +25,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -132,6 +133,11 @@ public class Repository {
         return exerciseDao.getLatestExerciseSession(idExercise);
     }
 
+    // Get latest unsaved workout program.
+    public Maybe<WorkoutProgram> getFirstUnsavedWorkout() {
+        return workoutDao.getFirstNonSavedWorkout();
+    }
+
     public Single<ExerciseSessionWithSets> getSessionExerciseWithSets(Long idSessionExercise) {
         return exerciseDao.getSessionExerciseWithSets(idSessionExercise);
     }
@@ -160,7 +166,7 @@ public class Repository {
         return Single.fromCallable(() -> workoutDao.createWorkoutProgram(new WorkoutProgram()));
     }
 
-    public Single<Long> insertRoutineForWorkout(Long idWorkout) {
+    public Single<Routine> insertRoutineForWorkout(@NonNull Long idWorkout) {
         return Single.fromCallable(() -> routineDao.insertRoutineForWorkout(idWorkout));
     }
 }

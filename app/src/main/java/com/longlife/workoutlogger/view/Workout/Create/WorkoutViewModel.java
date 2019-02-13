@@ -7,10 +7,14 @@
 package com.longlife.workoutlogger.view.Workout.Create;
 
 import com.longlife.workoutlogger.data.Repository;
+import com.longlife.workoutlogger.model.WorkoutProgram;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public class WorkoutViewModel extends ViewModel {
@@ -30,6 +34,14 @@ public class WorkoutViewModel extends ViewModel {
     }
 
     public Single<Long> createNewWorkoutProgram() {
-        return repo.createWorkoutProgram();
+        return repo.createWorkoutProgram()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Maybe<WorkoutProgram> getFirstUnsavedWorkout() {
+        return repo.getFirstUnsavedWorkout()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

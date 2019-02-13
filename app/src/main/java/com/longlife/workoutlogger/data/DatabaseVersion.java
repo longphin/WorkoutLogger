@@ -68,7 +68,8 @@ class DatabaseVersion {
     private static final int V9_1d = 48; // Recreate database to find debug error related to the first exercise being created.
     private static final int V9_1e = 49; // Recreate database to find debug error related to the first exercise being created.
     private static final int V9_2 = 50; // Add workout routine tables.
+    private static final int V9_2b = 51; // Added saved field to workout.
 
-    static final int CURRENT = V9_2;
+    static final int CURRENT = V9_2b;
 }
 

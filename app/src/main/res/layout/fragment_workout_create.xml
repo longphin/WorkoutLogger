@@ -24,13 +24,10 @@
         -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabSlider"
-        android:layout_width="130dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
         android:minHeight="?attr/actionBarSize"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_addRoutine"
-        app:layout_constraintEnd_toStartOf="@+id/btn_addRoutine"
+        app:layout_constraintEnd_toEndOf="@+id/view_pager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabMode="scrollable" />
@@ -38,11 +35,10 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="552dp"
         app:layout_constraintBottom_toBottomOf="@+id/rvtab_selectedExercises"
         app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
-        app:layout_constraintStart_toStartOf="@+id/rvtab_selectedExercises"
-        app:layout_constraintTop_toBottomOf="@+id/tabSlider">
+        app:layout_constraintStart_toStartOf="@+id/rvtab_selectedExercises">
 
         <!--
         <androidx.viewpager.widget.PagerTabStrip
@@ -63,7 +59,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabSlider" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_addRoutine" />
 
     <!--
     <androidx.viewpager.widget.ViewPager
@@ -85,12 +81,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <Button
         android:id="@+id/btn_addRoutine"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:text="@string/AddRoutine"
         app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
-        tools:text="Button" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabSlider" />
 </androidx.constraintlayout.widget.ConstraintLayout>

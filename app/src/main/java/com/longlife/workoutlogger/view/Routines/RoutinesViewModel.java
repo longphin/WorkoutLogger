@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
@@ -152,8 +153,10 @@ public class RoutinesViewModel
                 );
     }
 
-    public Single<Long> insertRoutineForWorkout(Long idWorkout) {
-        return repo.insertRoutineForWorkout(idWorkout);
+    public Single<Routine> insertRoutineForWorkout(@NonNull Long idWorkout) {
+        return repo.insertRoutineForWorkout(idWorkout)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
     }
 }
 

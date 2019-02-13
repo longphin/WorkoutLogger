@@ -145,12 +145,14 @@ public abstract class RoutineDao {
 
     // Create a new routine for a workout. Return the idRoutine for the new routine.
     @Transaction
-    public Long insertRoutineForWorkout(Long idWorkout) {
-        Long idRoutine = insertRoutine(new Routine());
+    public Routine insertRoutineForWorkout(Long idWorkout) {
+        Routine routineToAdd = new Routine();
+        Long idRoutine = insertRoutine(routineToAdd);
+        routineToAdd.setIdRoutine(idRoutine);
 
         insertWorkoutRoutine(new WorkoutRoutine(idRoutine, idWorkout));
 
-        return idRoutine;
+        return routineToAdd;
     }
 
     @Insert

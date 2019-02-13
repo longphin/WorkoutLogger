@@ -11,18 +11,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayout;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
+import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.WorkoutProgram;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapterBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListFragmentBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Exercises.IExerciseListCallbackBase;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,10 +35,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.observers.DisposableMaybeObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 
 public class WorkoutCreateFragment extends ExercisesListFragmentBase implements ExercisesListAdapter.IExerciseListCallback {
     @Inject
@@ -78,6 +79,9 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     private Long idFirstRoutine;
     private boolean firstRoutineWasCreated = false;
 
+    private boolean routinesInitialized = false;
+    private List<Routine> initializedRoutines = new ArrayList<>();
+
     @Override
     public void getViewModel() {
         if (viewModel == null) {
@@ -88,7 +92,38 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
             workoutViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WorkoutViewModel.class);
             routineViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
 
-            workoutViewModel.createNewWorkoutProgram()
+            // [TODO] Need to check if a non-saved workout exists. Then we would need to load the workout. Otherwise, create a new workout with a single routine by default.
+            workoutViewModel.getFirstUnsavedWorkout()
+                    .subscribe(new DisposableMaybeObserver<WorkoutProgram>() {
+                                   @Override
+                                   public void onSuccess(WorkoutProgram workoutProgram) {
+                                       obtainedExistingWorkout(workoutProgram);
+                                   }
+
+                                   @Override
+                                   public void onError(Throwable e) {
+
+                                   }
+
+                                   @Override
+                                   public void onComplete() {
+                                       workoutViewModel.createNewWorkoutProgram()
+                                               .subscribe(new DisposableSingleObserver<Long>() {
+                                                   @Override
+                                                   public void onSuccess(Long idWorkoutProgram) {
+                                                       obtainedNewWorkout(idWorkoutProgram);
+                                                   }
+
+                                                   @Override
+                                                   public void onError(Throwable e) {
+
+                                                   }
+                                               });
+                                   }
+                               }
+                    );
+
+/*            workoutViewModel.createNewWorkoutProgram()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(new SingleObserver<Long>() {
@@ -126,9 +161,52 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                         public void onError(Throwable e) {
 
                         }
-                    });
+                    });*/
         }
     }
+
+    private void obtainedExistingWorkout(WorkoutProgram workoutProgram) {
+        idWorkout = workoutProgram.getIdWorkoutProgram();
+    }
+
+    private void obtainedNewWorkout(Long idWorkoutProgram) {
+        idWorkout = idWorkoutProgram;
+        routineViewModel.insertRoutineForWorkout(idWorkout)
+                .subscribe(new DisposableSingleObserver<Routine>() {
+                    @Override
+                    public void onSuccess(Routine routine) {
+                        //idFirstRoutine = routine.getIdRoutine();
+                        //firstRoutineCreated(idFirstRoutine);
+                        initializedRoutines.add(routine);
+                        setRoutineSliderAdapterData();
+                        // [TODO] We instead need a function that accepts List<Routine>. That way, when an existing workout is loaded, it can load all of its associated routines as well. Then, the viewpager will create a tab per routine.
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+/*        routineViewModel.insertRoutineForWorkout(idWorkout)
+                .subscribe(new SingleObserver<Long>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Long idRoutine) {
+                        idFirstRoutine = idRoutine;
+                        firstRoutineCreated(idRoutine); // [TODO] Do not allow user to interact with fragment until this is completed.
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });*/
+    }
+
     @Override
     protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
         return new ExercisesListAdapter(this, exercises);
@@ -156,16 +234,22 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         return mView;
     }
 
-    private void firstRoutineCreated(Long idRoutine) {
+/*    private void firstRoutineCreated(Long idRoutine) {
         if (!firstRoutineWasCreated && idRoutine != null) {
             firstRoutineWasCreated = true;
             routineAdded(idRoutine);
         }
-    }
+    }*/
 
-    private void routineAdded(Long idRoutine) {
-        if (routineAdapter != null) {
-            routineAdapter.addRoutine(idRoutine);
+    // Will check if the routineAdapter has been initialized and if the routine data has been initialized.
+    // If they are, then add the routine id's to the routineAdapter.
+    private void setRoutineSliderAdapterData() {
+        if (!routinesInitialized && routineAdapter != null) {
+            if (!initializedRoutines.isEmpty()) {
+                routineAdapter.addRoutines(initializedRoutines);
+
+                routinesInitialized = true;
+            }
         }
     }
 
@@ -173,7 +257,9 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         ViewPager viewPager = mView.findViewById(R.id.view_pager);
 
         routineAdapter = new RoutinesPagerAdapter(getFragmentManager());
-        firstRoutineCreated(idFirstRoutine);
+        //firstRoutineCreated(idFirstRoutine);
+        // [TODO] if initializedRoutinesFlag = true, then add the initializedRoutines list to the routineAdapter.
+        setRoutineSliderAdapterData();
         viewPager.setAdapter(routineAdapter);
 
         // Slider between the tabs.
@@ -181,13 +267,34 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         tabLayout.setupWithViewPager(viewPager);
 
         // Listener for when to add a new routine.
-        ImageButton addRoutineButton = mView.findViewById(R.id.btn_addRoutine);
+        Button addRoutineButton = mView.findViewById(R.id.btn_addRoutine);
         addRoutineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //workoutViewModel.insertRoutine(idWorkout); // [TODO] insertRoutine(idWorkout) will return the idRoutine that is inserted. When observed, we need to call routineAdded(idRoutine)
+                routineViewModel.insertRoutineForWorkout(idWorkout)
+                        .subscribe(new DisposableSingleObserver<Routine>() {
+                            @Override
+                            public void onSuccess(Routine routine) {
+                                //idFirstRoutine = routine.getIdRoutine();
+                                //firstRoutineCreated(idFirstRoutine);
+                                //initializedRoutines.add(routine);
+                                //setRoutineSliderAdapterData();
+                                addRoutineToSliderAdapterData(routine);
+                                // [TODO] We instead need a function that accepts List<Routine>. That way, when an existing workout is loaded, it can load all of its associated routines as well. Then, the viewpager will create a tab per routine.
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        });
             }
         });
+    }
+
+    private void addRoutineToSliderAdapterData(Routine routine) {
+        routineAdapter.addRoutine(routine);
     }
 
     @Override
