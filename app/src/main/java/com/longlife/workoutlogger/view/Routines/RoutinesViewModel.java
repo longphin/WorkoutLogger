@@ -158,5 +158,11 @@ public class RoutinesViewModel
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
+
+    public Single<List<Routine>> getRoutinesForWorkout(Long idWorkout) {
+        return repo.getRoutinesForWorkout(idWorkout)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
 }
 

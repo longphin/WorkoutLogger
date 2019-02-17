@@ -157,4 +157,10 @@ public abstract class RoutineDao {
 
     @Insert
     public abstract Long insertWorkoutRoutine(WorkoutRoutine workoutRoutine);
+
+    @Query("SELECT r.*" +
+            " FROM WorkoutRoutine AS wr" +
+            "   LEFT JOIN Routine AS r" +
+            " WHERE wr.idWorkout=:idWorkout")
+    public abstract Single<List<Routine>> getRoutinesForWorkout(Long idWorkout);
 }

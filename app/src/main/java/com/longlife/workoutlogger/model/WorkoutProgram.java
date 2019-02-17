@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class WorkoutProgram {
     @PrimaryKey
-    private Long idWorkoutProgram;
+    private Long idWorkout;
     private boolean isActive = false;
     private String name;
 
@@ -26,12 +26,12 @@ public class WorkoutProgram {
         isSaved = saved;
     }
 
-    public Long getIdWorkoutProgram() {
-        return idWorkoutProgram;
+    public Long getIdWorkout() {
+        return idWorkout;
     }
 
-    public void setIdWorkoutProgram(Long idWorkoutProgram) {
-        this.idWorkoutProgram = idWorkoutProgram;
+    public void setIdWorkout(Long idWorkout) {
+        this.idWorkout = idWorkout;
     }
 
     public boolean isActive() {

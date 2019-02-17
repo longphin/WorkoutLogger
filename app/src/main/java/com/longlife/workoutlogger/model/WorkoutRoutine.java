@@ -13,24 +13,24 @@ import androidx.room.PrimaryKey;
 
 @Entity(
         foreignKeys = {
-                @ForeignKey(entity = WorkoutProgram.class, parentColumns = "idWorkoutProgram", childColumns = "idWorkoutProgram", onDelete = ForeignKey.CASCADE),
+                @ForeignKey(entity = WorkoutProgram.class, parentColumns = "idWorkout", childColumns = "idWorkout", onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Routine.class, parentColumns = "idRoutine", childColumns = "idRoutine", onDelete = ForeignKey.CASCADE)
         },
         indices = {
-                @Index(value = {"idWorkoutProgram", "idRoutine"}),
-                @Index(value = {"idWorkoutProgram"}),
+                @Index(value = {"idWorkout", "idRoutine"}),
+                @Index(value = {"idWorkout"}),
                 @Index(value = {"idRoutine"})
         }
 )
 public class WorkoutRoutine {
     @PrimaryKey
     private Long idWorkoutRoutine;
-    private Long idWorkoutProgram;
+    private Long idWorkout;
     private Long idRoutine;
 
-    public WorkoutRoutine(Long idWorkoutRoutine, Long idWorkoutProgram) {
+    public WorkoutRoutine(Long idWorkoutRoutine, Long idWorkout) {
         this.idWorkoutRoutine = idWorkoutRoutine;
-        this.idWorkoutProgram = idWorkoutProgram;
+        this.idWorkout = idWorkout;
     }
 
     public Long getIdWorkoutRoutine() {
@@ -41,12 +41,12 @@ public class WorkoutRoutine {
         this.idWorkoutRoutine = idWorkoutRoutine;
     }
 
-    public Long getIdWorkoutProgram() {
-        return idWorkoutProgram;
+    public Long getIdWorkout() {
+        return idWorkout;
     }
 
-    public void setIdWorkoutProgram(Long idWorkoutProgram) {
-        this.idWorkoutProgram = idWorkoutProgram;
+    public void setIdWorkout(Long idWorkout) {
+        this.idWorkout = idWorkout;
     }
 
     public Long getIdRoutine() {

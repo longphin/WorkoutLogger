@@ -169,4 +169,8 @@ public class Repository {
     public Single<Routine> insertRoutineForWorkout(@NonNull Long idWorkout) {
         return Single.fromCallable(() -> routineDao.insertRoutineForWorkout(idWorkout));
     }
+
+    public Single<List<Routine>> getRoutinesForWorkout(Long idWorkout) {
+        return routineDao.getRoutinesForWorkout(idWorkout);
+    }
 }
