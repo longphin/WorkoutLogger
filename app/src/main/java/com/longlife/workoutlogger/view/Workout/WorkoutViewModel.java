@@ -1,13 +1,16 @@
 /*
- * Created by Longphi Nguyen on 1/30/19 7:49 AM.
+ * Created by Longphi Nguyen on 2/17/19 2:56 PM.
  * Copyright (c) 2019. All rights reserved.
- * Last modified 1/30/19 7:49 AM.
+ * Last modified 2/17/19 1:26 PM.
  */
 
-package com.longlife.workoutlogger.view.Workout.Create;
+package com.longlife.workoutlogger.view.Workout;
 
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.WorkoutProgram;
+import com.longlife.workoutlogger.view.Workout.Create.RoutineAdapter;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -41,6 +44,12 @@ public class WorkoutViewModel extends ViewModel {
 
     public Maybe<WorkoutProgram> getFirstUnsavedWorkout() {
         return repo.getFirstUnsavedWorkout()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<WorkoutProgram>> getWorkoutList() {
+        return repo.getWorkoutList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

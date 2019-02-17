@@ -173,4 +173,8 @@ public class Repository {
     public Single<List<Routine>> getRoutinesForWorkout(Long idWorkout) {
         return routineDao.getRoutinesForWorkout(idWorkout);
     }
+
+    public Single<List<WorkoutProgram>> getWorkoutList() {
+        return workoutDao.getWorkoutList();
+    }
 }

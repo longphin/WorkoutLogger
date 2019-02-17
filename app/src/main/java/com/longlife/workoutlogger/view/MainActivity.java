@@ -14,7 +14,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -29,8 +28,7 @@ import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileFragment;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
-import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
-import com.longlife.workoutlogger.view.Workout.Create.WorkoutCreateFragment;
+import com.longlife.workoutlogger.view.Workout.WorkoutListFragment;
 import com.ncapdevi.fragnav.FragNavController;
 
 import org.jetbrains.annotations.NotNull;
@@ -62,9 +60,7 @@ public class MainActivity
     private FragNavController mNavController;
     private FragmentHistory fragmentHistory;
     private boolean enableBottomNavClick = true;
-    private FrameLayout contentFrame;
-    private Toolbar toolbar;
-    private String[] TABS = {"Profile", "Routine", "Exercise", "Perform"};
+    //private Toolbar toolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +75,7 @@ public class MainActivity
         getProfile();
 
         // Get UI.
-        contentFrame = findViewById(R.id.frameLayout_main_activity);
+        //FrameLayout contentFrame = findViewById(R.id.frameLayout_main_activity);
         bottomTabLayout = findViewById(R.id.bottomNav_main_activity);
 
         initToolbar();
@@ -141,7 +137,7 @@ public class MainActivity
     }
 
     private void initToolbar() {
-        toolbar = findViewById(R.id.toolbar_main_activity);
+        Toolbar toolbar = findViewById(R.id.toolbar_main_activity);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(view ->
                 onBackPressed());
@@ -155,7 +151,7 @@ public class MainActivity
         bottomTabLayout.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW); // Always show the labels for items.
         // Initialize items.
         AHBottomNavigationItem ProfileItem = new AHBottomNavigationItem(getString(R.string.NavBar_Profile), R.drawable.ic_person_black_24dp);
-        AHBottomNavigationItem WorkoutItem = new AHBottomNavigationItem(getString(R.string.NavBar_Workout), R.drawable.ic_storage_black_24dp);//R.drawable.ic_play_arrow_black_24dp);
+        AHBottomNavigationItem WorkoutItem = new AHBottomNavigationItem(getString(R.string.NavBar_Workout), R.drawable.ic_storage_black_24dp);
         AHBottomNavigationItem ExerciseItem = new AHBottomNavigationItem(getString(R.string.NavBar_Exercises), R.drawable.ic_weightlifting);
         AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_storage_black_24dp);
         // Add navigation items.
@@ -248,7 +244,7 @@ public class MainActivity
 
     @Override
     public int getNumberOfRootFragments() {
-        return 4;
+        return 3;
     }
 
     @NotNull
@@ -258,11 +254,11 @@ public class MainActivity
             case FragNavController.TAB1:
                 return ProfileFragment.newInstance();
             case FragNavController.TAB2:
-                return WorkoutCreateFragment.newInstance();
+                return WorkoutListFragment.newInstance();
             case FragNavController.TAB3:
                 return ExercisesListFragment.newInstance();
-            case FragNavController.TAB4:
-                return RoutinesFragment.newInstance();
+            /*case FragNavController.TAB4:
+                return RoutinesFragment.newInstance();*/
         }
         throw new IllegalStateException("Need to send an index that we know");
     }

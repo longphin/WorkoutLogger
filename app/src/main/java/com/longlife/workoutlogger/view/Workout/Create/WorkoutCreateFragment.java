@@ -24,6 +24,7 @@ import com.longlife.workoutlogger.view.Exercises.ExercisesListFragmentBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Exercises.IExerciseListCallbackBase;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
+import com.longlife.workoutlogger.view.Workout.WorkoutViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

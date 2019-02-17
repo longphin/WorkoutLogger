@@ -34,6 +34,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentManager;
@@ -133,19 +134,17 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
 
-        if (inflater != null) {
-            inflater.inflate(R.menu.exercises_search_menu, menu);
+        inflater.inflate(R.menu.exercises_search_menu, menu);
 
-            initializeSearchForExercisesView(menu.findItem(R.id.exercises_list_searchview));
-        }
+        initializeSearchForExercisesView(menu.findItem(R.id.exercises_list_searchview));
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
