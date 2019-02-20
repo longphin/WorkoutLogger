@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ExerciseListExerciseViewHolder extends RecyclerView.ViewHolder implements ExercisesListRemakeAdapter.IViewHolder {
     private TextView nameTextView;
-
     private TextView moreOptions;
 
     public TextView getNameTextView() {

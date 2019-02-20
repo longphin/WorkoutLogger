@@ -6,6 +6,7 @@
 
 package com.longlife.workoutlogger.view.Workout;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.WorkoutViewHolder> {
     private List<WorkoutProgramShort> workoutList = new ArrayList<>();
+
+    private OptionsCallback callback;
 
     @NonNull
     @Override
@@ -30,11 +34,45 @@ public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.
         return new WorkoutViewHolder(v);
     }
 
+    public WorkoutListAdapter(OptionsCallback callback) {
+        this.callback = callback;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull WorkoutViewHolder holder, int position) {
         final WorkoutProgramShort workout = workoutList.get(position);
         holder.setName(workout.getName());
         holder.setDescrip(workout.getRoutineConcatenated());
+
+        // Create listener for the "more options" button. credit: Shaba Aafreen @https://stackoverflow.com/questions/37601346/create-options-menu-for-recyclerview-item
+        if (holder.getMoreOptionsView() != null) {
+            holder.getMoreOptionsView().setOnClickListener(view -> {
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(callback.getContext(), holder.getMoreOptionsView());
+                //inflating menu from xml resource
+                popup.inflate(R.menu.workout_options_menu);
+                //adding click listener
+                popup.setOnMenuItemClickListener(item -> {
+                    int currentPosition = holder.getAdapterPosition();
+
+                    switch (item.getItemId()) {
+                        case R.id.menu_workout_edit:
+                            //handle menu1 click
+                            callback.workoutEdit(workoutList.get(currentPosition).getIdWorkout());
+                        default:
+                            return false;
+                    }
+                });
+                //displaying the popup
+                popup.show();
+            });
+        }
+    }
+
+    public interface OptionsCallback {
+        Context getContext();
+
+        void workoutEdit(Long idWorkout);
     }
 
     @Override
@@ -50,12 +88,14 @@ public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.
     class WorkoutViewHolder extends RecyclerView.ViewHolder {
         private TextView nameView;
         private TextView descripView;
+        private TextView moreOptions;
 
         WorkoutViewHolder(@NonNull View itemView) {
             super(itemView);
 
             nameView = itemView.findViewById(R.id.txt_workout_name);
             descripView = itemView.findViewById(R.id.txt_workout_descrip);
+            moreOptions = itemView.findViewById(R.id.txt_workout_moreOptions);
         }
 
         public void setName(String name) {
@@ -64,6 +104,10 @@ public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.
 
         public void setDescrip(String descrip) {
             descripView.setText(descrip);
+        }
+
+        public TextView getMoreOptionsView() {
+            return moreOptions;
         }
     }
 }

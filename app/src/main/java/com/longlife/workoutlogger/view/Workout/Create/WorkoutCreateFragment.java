@@ -56,10 +56,13 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
 
     private static final String INPUT_IDWORKOUT = "idWorkout";
 
+    // Constructor for when a new workout. A new workout entry will be added to the database.
     public static WorkoutCreateFragment newInstance() {
         return newInstance(null);
     }
 
+    // Constructor for a workout. If idWorkout != null, then it will load routines for the existing workout.
+    // If idWorkout == null, then it will create one routine for the workout by default.
     public static WorkoutCreateFragment newInstance(@Nullable Long idWorkout) {
         Bundle bundle = new Bundle();
         bundle.putLong(INPUT_IDWORKOUT, idWorkout == null ? -1 : idWorkout);

@@ -39,10 +39,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class WorkoutListFragment extends FragmentBase {
+public class WorkoutListFragment extends FragmentBase implements WorkoutListAdapter.OptionsCallback {
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     private WorkoutViewModel workoutViewModel;
@@ -69,7 +66,7 @@ public class WorkoutListFragment extends FragmentBase {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_workout_list, container, false);
         RecyclerView recyclerView = v.findViewById(R.id.rv_workoutL_list);
-        workoutListAdapter = new WorkoutListAdapter();
+        workoutListAdapter = new WorkoutListAdapter(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         if (getContext() != null) {
@@ -137,19 +134,19 @@ public class WorkoutListFragment extends FragmentBase {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.workout_list_addWorkout:
-                startCreateFragment();
+                startCreateFragment(null);
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void startCreateFragment() {
+    private void startCreateFragment(@Nullable Long idWorkout) {
         FragmentManager manager = getActivity().getSupportFragmentManager();
 
         WorkoutCreateFragment fragment = (WorkoutCreateFragment) manager.findFragmentByTag(WorkoutCreateFragment.TAG);
         if (fragment == null) {
-            fragment = WorkoutCreateFragment.newInstance();
+            fragment = WorkoutCreateFragment.newInstance(idWorkout);
         }
 
         if (fragmentNavigation != null) {
@@ -167,5 +164,10 @@ public class WorkoutListFragment extends FragmentBase {
             fragmentNavigation.pushFragment(fragment);
         }
         */
+    }
+
+    @Override
+    public void workoutEdit(Long idWorkout) {
+        startCreateFragment(idWorkout);
     }
 }

@@ -129,4 +129,5 @@
     <string name="AddRoutine">Add Routine</string>
     <string name="addWorkout">Add Workout</string>
     <string name="NavBar_Workouts">Workouts</string>
+    <string name="RemoveExerciseFromRoutine">Remove From Routine</string>
 </resources>

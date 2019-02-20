@@ -153,12 +153,12 @@ public class MainActivity
         AHBottomNavigationItem ProfileItem = new AHBottomNavigationItem(getString(R.string.NavBar_Profile), R.drawable.ic_person_black_24dp);
         AHBottomNavigationItem WorkoutItem = new AHBottomNavigationItem(getString(R.string.NavBar_Workout), R.drawable.ic_storage_black_24dp);
         AHBottomNavigationItem ExerciseItem = new AHBottomNavigationItem(getString(R.string.NavBar_Exercises), R.drawable.ic_weightlifting);
-        AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_storage_black_24dp);
+        //AHBottomNavigationItem RoutineItem = new AHBottomNavigationItem(getString(R.string.NavBar_Routines), R.drawable.ic_storage_black_24dp);
         // Add navigation items.
         bottomTabLayout.addItem(ProfileItem);
         bottomTabLayout.addItem(WorkoutItem);
         bottomTabLayout.addItem(ExerciseItem);
-        bottomTabLayout.addItem(RoutineItem);
+        //bottomTabLayout.addItem(RoutineItem);
         // Styles.
         bottomTabLayout.setDefaultBackgroundColor(Color.WHITE);
         bottomTabLayout.setAccentColor(Color.BLACK);

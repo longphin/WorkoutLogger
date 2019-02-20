@@ -29,7 +29,7 @@ public abstract class WorkoutDao {
             " LIMIT 1")
     public abstract Maybe<WorkoutProgram> getFirstNonSavedWorkout();
 
-    @Query("SELECT wp.idWorkout, wp.name, group_concat(cast(r.idRoutine as text), ', ') as routineConcatenated" +
+    @Query("SELECT wp.idWorkout, wp.name, group_concat(coalesce(r.name,' Unnamed'), ', ') as routineConcatenated" +
             " FROM WorkoutProgram as wp" +
             " LEFT JOIN WorkoutRoutine as wr on wp.idWorkout=wr.idWorkout" +
             " LEFT JOIN Routine as r on wr.idRoutine=r.idRoutine" +
