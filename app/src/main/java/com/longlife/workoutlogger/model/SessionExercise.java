@@ -7,6 +7,7 @@
 package com.longlife.workoutlogger.model;
 
 import com.longlife.workoutlogger.model.Exercise.Exercise;
+import com.longlife.workoutlogger.model.Routine.RoutineSession;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;

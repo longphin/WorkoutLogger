@@ -1,10 +1,10 @@
 /*
- * Created by Longphi Nguyen on 2/3/19 11:15 AM.
+ * Created by Longphi Nguyen on 2/18/19 2:36 PM.
  * Copyright (c) 2019. All rights reserved.
- * Last modified 2/3/19 11:15 AM.
+ * Last modified 2/3/19 12:35 PM.
  */
 
-package com.longlife.workoutlogger.model;
+package com.longlife.workoutlogger.model.Routine;
 
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 

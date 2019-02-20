@@ -6,7 +6,7 @@
 
 package com.longlife.workoutlogger.model.comparators;
 
-import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.Routine.Routine;
 
 import java.util.Comparator;
 

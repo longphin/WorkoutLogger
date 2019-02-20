@@ -21,7 +21,7 @@ import com.longlife.workoutlogger.AndroidUtils.RecyclerItemTouchHelper;
 import com.longlife.workoutlogger.AndroidUtils.RecyclerViewHolderSwipeable;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.Routine.Routine;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.MainActivity;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragment;

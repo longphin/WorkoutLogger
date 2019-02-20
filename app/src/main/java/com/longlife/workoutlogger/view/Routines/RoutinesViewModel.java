@@ -9,7 +9,7 @@ package com.longlife.workoutlogger.view.Routines;
 import android.util.Log;
 
 import com.longlife.workoutlogger.data.Repository;
-import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.Routine.Routine;
 import com.longlife.workoutlogger.model.comparators.RoutineComparators;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;

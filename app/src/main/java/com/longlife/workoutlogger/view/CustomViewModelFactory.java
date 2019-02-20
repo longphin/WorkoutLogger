@@ -7,11 +7,11 @@
 package com.longlife.workoutlogger.view;
 
 import com.longlife.workoutlogger.data.Repository;
+import com.longlife.workoutlogger.dataViewModel.WorkoutViewModel;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Profile.ProfileViewModel;
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRoutine.ExercisesSelectableViewModel;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
-import com.longlife.workoutlogger.view.Workout.WorkoutViewModel;
 
 import javax.inject.Inject;
 

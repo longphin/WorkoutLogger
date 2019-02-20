@@ -6,7 +6,8 @@
 
 package com.longlife.workoutlogger.data;
 
-import com.longlife.workoutlogger.model.WorkoutProgram;
+import com.longlife.workoutlogger.model.Workout.WorkoutProgram;
+import com.longlife.workoutlogger.model.Workout.WorkoutProgramShort;
 
 import java.util.List;
 
@@ -28,6 +29,10 @@ public abstract class WorkoutDao {
             " LIMIT 1")
     public abstract Maybe<WorkoutProgram> getFirstNonSavedWorkout();
 
-    @Query("SELECT wp.* FROM WorkoutProgram as wp")
-    public abstract Single<List<WorkoutProgram>> getWorkoutList();
+    @Query("SELECT wp.idWorkout, wp.name, group_concat(cast(r.idRoutine as text), ', ') as routineConcatenated" +
+            " FROM WorkoutProgram as wp" +
+            " LEFT JOIN WorkoutRoutine as wr on wp.idWorkout=wr.idWorkout" +
+            " LEFT JOIN Routine as r on wr.idRoutine=r.idRoutine" +
+            " GROUP BY wp.idWorkout")
+    public abstract Single<List<WorkoutProgramShort>> getWorkoutShortList();
 }

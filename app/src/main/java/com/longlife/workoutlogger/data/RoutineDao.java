@@ -8,11 +8,11 @@ package com.longlife.workoutlogger.data;
 
 import com.longlife.workoutlogger.enums.PerformanceStatus;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
-import com.longlife.workoutlogger.model.Routine;
-import com.longlife.workoutlogger.model.RoutineSession;
+import com.longlife.workoutlogger.model.Routine.Routine;
+import com.longlife.workoutlogger.model.Routine.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
-import com.longlife.workoutlogger.model.WorkoutRoutine;
+import com.longlife.workoutlogger.model.Workout.WorkoutRoutine;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.List;

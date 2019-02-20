@@ -1,10 +1,10 @@
 /*
- * Created by Longphi Nguyen on 12/11/18 8:25 PM.
- * Copyright (c) 2018. All rights reserved.
- * Last modified 10/3/18 9:17 PM.
+ * Created by Longphi Nguyen on 2/18/19 2:36 PM.
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 12/29/18 11:00 AM.
  */
 
-package com.longlife.workoutlogger.model;
+package com.longlife.workoutlogger.model.Routine;
 
 import com.longlife.workoutlogger.enums.PerformanceStatus;
 import com.longlife.workoutlogger.enums.PerformanceStatusConverter;

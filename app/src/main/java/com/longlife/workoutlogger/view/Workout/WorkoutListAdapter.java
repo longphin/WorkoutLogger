@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.WorkoutProgram;
+import com.longlife.workoutlogger.model.Workout.WorkoutProgramShort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.WorkoutViewHolder> {
-    private List<WorkoutProgram> workoutList = new ArrayList<>();
+    private List<WorkoutProgramShort> workoutList = new ArrayList<>();
 
     @NonNull
     @Override
@@ -32,7 +32,9 @@ public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull WorkoutViewHolder holder, int position) {
-        holder.setName(workoutList.get(position).getName());
+        final WorkoutProgramShort workout = workoutList.get(position);
+        holder.setName(workout.getName());
+        holder.setDescrip(workout.getRoutineConcatenated());
     }
 
     @Override
@@ -40,22 +42,28 @@ public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.
         return workoutList.size();
     }
 
-    public void setData(List<WorkoutProgram> workoutPrograms) {
+    public void setData(List<WorkoutProgramShort> workoutPrograms) {
         this.workoutList = workoutPrograms;
         notifyDataSetChanged();
     }
 
     class WorkoutViewHolder extends RecyclerView.ViewHolder {
         private TextView nameView;
+        private TextView descripView;
 
         WorkoutViewHolder(@NonNull View itemView) {
             super(itemView);
 
             nameView = itemView.findViewById(R.id.txt_workout_name);
+            descripView = itemView.findViewById(R.id.txt_workout_descrip);
         }
 
         public void setName(String name) {
             nameView.setText(name);
+        }
+
+        public void setDescrip(String descrip) {
+            descripView.setText(descrip);
         }
     }
 }

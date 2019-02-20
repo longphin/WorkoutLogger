@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.Routine.Routine;
 
 import java.util.ArrayList;
 import java.util.List;

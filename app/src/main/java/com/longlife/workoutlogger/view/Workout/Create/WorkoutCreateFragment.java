@@ -16,15 +16,15 @@ import android.widget.Button;
 import com.google.android.material.tabs.TabLayout;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.dataViewModel.WorkoutViewModel;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
-import com.longlife.workoutlogger.model.Routine;
-import com.longlife.workoutlogger.model.WorkoutProgram;
+import com.longlife.workoutlogger.model.Routine.Routine;
+import com.longlife.workoutlogger.model.Workout.WorkoutProgram;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapterBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListFragmentBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
 import com.longlife.workoutlogger.view.Exercises.IExerciseListCallbackBase;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
-import com.longlife.workoutlogger.view.Workout.WorkoutViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +33,13 @@ import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import io.reactivex.observers.DisposableSingleObserver;
 
 public class WorkoutCreateFragment extends ExercisesListFragmentBase implements ExercisesListAdapter.IExerciseListCallback {
+    public static final String TAG = WorkoutCreateFragment.class.getSimpleName();
     private static final String SAVEDSTATE_IDWORKOUT = "idWorkout";
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
@@ -54,8 +54,19 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         // Required empty public constructor
     }
 
-    public static Fragment newInstance() {
-        return new WorkoutCreateFragment();
+    private static final String INPUT_IDWORKOUT = "idWorkout";
+
+    public static WorkoutCreateFragment newInstance() {
+        return newInstance(null);
+    }
+
+    public static WorkoutCreateFragment newInstance(@Nullable Long idWorkout) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(INPUT_IDWORKOUT, idWorkout == null ? -1 : idWorkout);
+
+        WorkoutCreateFragment fragment = new WorkoutCreateFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -126,7 +137,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     private void initializeGroupByOptions(View mView) {
         getViewModel();
         viewModel.loadExercises();
-        if (idWorkout == null) {
+        if (idWorkout == null || idWorkout == -1) {
             workoutViewModel.createNewWorkoutProgram()
                     .subscribe(new DisposableSingleObserver<Long>() {
                         @Override
@@ -139,39 +150,8 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
 
                         }
                     });
-            /*
-            workoutViewModel.getFirstUnsavedWorkout()
-                    .subscribe(new DisposableMaybeObserver<WorkoutProgram>() {
-                                   @Override
-                                   public void onSuccess(WorkoutProgram workoutProgram) {
-                                       obtainedExistingWorkout(workoutProgram); // [TODO]
-                                   }
-
-                                   @Override
-                                   public void onError(Throwable e) {
-
-                                   }
-
-                                   @Override
-                                   public void onComplete() {
-                                       workoutViewModel.createNewWorkoutProgram()
-                                               .subscribe(new DisposableSingleObserver<Long>() {
-                                                   @Override
-                                                   public void onSuccess(Long idWorkoutProgram) {
-                                                       obtainedNewWorkout(idWorkoutProgram);
-                                                   }
-
-                                                   @Override
-                                                   public void onError(Throwable e) {
-
-                                                   }
-                                               });
-                                   }
-                               }
-                    );
-                    */
         } else {
-            getRoutinesForWorkout(idWorkout);
+            getRoutinesForWorkout(idWorkout);// [TODO]
         }
     }
 

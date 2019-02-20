@@ -1,10 +1,10 @@
 /*
- * Created by Longphi Nguyen on 12/11/18 8:25 PM.
- * Copyright (c) 2018. All rights reserved.
- * Last modified 11/27/18 9:07 PM.
+ * Created by Longphi Nguyen on 2/18/19 2:37 PM.
+ * Copyright (c) 2019. All rights reserved.
+ * Last modified 2/16/19 5:06 PM.
  */
 
-package com.longlife.workoutlogger.model;
+package com.longlife.workoutlogger.model.Workout;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

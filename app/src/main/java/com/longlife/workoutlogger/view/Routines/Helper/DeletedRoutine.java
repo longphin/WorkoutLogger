@@ -6,7 +6,7 @@
 
 package com.longlife.workoutlogger.view.Routines.Helper;
 
-import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.Routine.Routine;
 
 // A helper class for when an exercise is being deleted. When an exercise is beginning to be deleted,
 // it will be stored in this class. This class helps for when the delete is undone or when the delete is finalized.

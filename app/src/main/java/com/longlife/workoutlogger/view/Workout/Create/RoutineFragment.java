@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
-import com.longlife.workoutlogger.view.Workout.WorkoutViewModel;
+import com.longlife.workoutlogger.dataViewModel.WorkoutViewModel;
 
 import javax.inject.Inject;
 

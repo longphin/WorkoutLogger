@@ -6,7 +6,7 @@
 
 package com.longlife.workoutlogger.view.Workout.Create;
 
-import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.Routine.Routine;
 
 import java.util.ArrayList;
 import java.util.List;

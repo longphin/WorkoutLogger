@@ -15,9 +15,10 @@ import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.MuscleEntity;
 import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.model.Profile;
-import com.longlife.workoutlogger.model.Routine;
+import com.longlife.workoutlogger.model.Routine.Routine;
 import com.longlife.workoutlogger.model.SessionExercise;
-import com.longlife.workoutlogger.model.WorkoutProgram;
+import com.longlife.workoutlogger.model.Workout.WorkoutProgram;
+import com.longlife.workoutlogger.model.Workout.WorkoutProgramShort;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
 
 import java.util.List;
@@ -174,7 +175,7 @@ public class Repository {
         return routineDao.getRoutinesForWorkout(idWorkout);
     }
 
-    public Single<List<WorkoutProgram>> getWorkoutList() {
-        return workoutDao.getWorkoutList();
+    public Single<List<WorkoutProgramShort>> getWorkoutShortList() {
+        return workoutDao.getWorkoutShortList();
     }
 }

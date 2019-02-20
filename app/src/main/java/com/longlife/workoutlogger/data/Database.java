@@ -11,13 +11,13 @@ import com.longlife.workoutlogger.model.ExerciseMuscle;
 import com.longlife.workoutlogger.model.MuscleEntity;
 import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.model.Profile;
-import com.longlife.workoutlogger.model.Routine;
-import com.longlife.workoutlogger.model.RoutineExercise;
-import com.longlife.workoutlogger.model.RoutineSession;
+import com.longlife.workoutlogger.model.Routine.Routine;
+import com.longlife.workoutlogger.model.Routine.RoutineExercise;
+import com.longlife.workoutlogger.model.Routine.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
-import com.longlife.workoutlogger.model.WorkoutProgram;
-import com.longlife.workoutlogger.model.WorkoutRoutine;
+import com.longlife.workoutlogger.model.Workout.WorkoutProgram;
+import com.longlife.workoutlogger.model.Workout.WorkoutRoutine;
 
 import androidx.room.RoomDatabase;
 
