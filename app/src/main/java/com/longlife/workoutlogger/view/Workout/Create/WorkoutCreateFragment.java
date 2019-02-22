@@ -76,7 +76,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null) { // Restore a session from save state
             idWorkout = savedInstanceState.getLong(SAVEDSTATE_IDWORKOUT, -1);
             /*
             if(idWorkout == -1) obtainedExistingWorkout(idWorkout); // [TODO]
@@ -94,6 +94,8 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                    }
                });
              */
+        } else { // Initialize workout.
+            idWorkout = getArguments().getLong(INPUT_IDWORKOUT);
         }
     }
 
@@ -101,6 +103,8 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     public void onDestroyView() {
         super.onDestroyView();
         routinesInitialized = false;
+        mView = null;
+        routineAdapter = null;
     }
 
     @Override

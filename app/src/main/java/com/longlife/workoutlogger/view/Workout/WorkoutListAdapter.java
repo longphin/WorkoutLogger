@@ -59,6 +59,7 @@ public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.
                         case R.id.menu_workout_edit:
                             //handle menu1 click
                             callback.workoutEdit(workoutList.get(currentPosition).getIdWorkout());
+                            return true;
                         default:
                             return false;
                     }

@@ -30,8 +30,8 @@ public class WorkoutRoutine {
     private Long idWorkout;
     private Long idRoutine;
 
-    public WorkoutRoutine(Long idWorkoutRoutine, Long idWorkout) {
-        this.idWorkoutRoutine = idWorkoutRoutine;
+    public WorkoutRoutine(Long idRoutine, Long idWorkout) {
+        this.idRoutine = idRoutine;
         this.idWorkout = idWorkout;
     }
 

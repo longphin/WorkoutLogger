@@ -155,12 +155,12 @@ public abstract class RoutineDao {
         return routineToAdd;
     }
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract Long insertWorkoutRoutine(WorkoutRoutine workoutRoutine);
 
     @Query("SELECT r.*" +
             " FROM WorkoutRoutine AS wr" +
-            "   LEFT JOIN Routine AS r" +
+            "   LEFT JOIN Routine AS r ON wr.idRoutine=r.idRoutine" +
             " WHERE wr.idWorkout=:idWorkout")
     public abstract Single<List<Routine>> getRoutinesForWorkout(Long idWorkout);
 }
