@@ -87,6 +87,8 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
         super.onDestroyView();
 
         clearDisposables();
+        routineAdapter = null;
+        mView = null;
     }
 
     private void initializeSelectedExercisesRecyclerView() {

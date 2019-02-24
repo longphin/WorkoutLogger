@@ -78,33 +78,23 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
 
         if (savedInstanceState != null) { // Restore a session from save state
             idWorkout = savedInstanceState.getLong(SAVEDSTATE_IDWORKOUT, -1);
-            /*
-            if(idWorkout == -1) obtainedExistingWorkout(idWorkout); // [TODO]
-            else
-                workoutViewModel.createNewWorkoutProgram()
-               .subscribe(new DisposableSingleObserver<Long>() {
-                   @Override
-                   public void onSuccess(Long idWorkoutProgram) {
-                       obtainedNewWorkout(idWorkoutProgram);
-                   }
-
-                   @Override
-                   public void onError(Throwable e) {
-
-                   }
-               });
-             */
         } else { // Initialize workout.
-            idWorkout = getArguments().getLong(INPUT_IDWORKOUT);
+            if (getArguments() != null) {
+                idWorkout = getArguments().getLong(INPUT_IDWORKOUT);
+            } else {
+                idWorkout = null;
+            }
         }
     }
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         routinesInitialized = false;
         mView = null;
         routineAdapter = null;
+        initializedRoutines = null;
+
+        super.onDestroyView();
     }
 
     @Override
@@ -158,7 +148,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                         }
                     });
         } else {
-            getRoutinesForWorkout(idWorkout);// [TODO]
+            getRoutinesForWorkout(idWorkout);
         }
     }
 
@@ -195,45 +185,16 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                 });
     }
 
-    // Will check if the routineAdapter has been initialized and if the routine data has been initialized.
-    // If they are, then add the routine id's to the routineAdapter.
-    private void setRoutineSliderAdapterData() {
-        if (!routinesInitialized && routineAdapter != null) {
-            if (!initializedRoutines.isEmpty()) {
-                routineAdapter.addRoutines(initializedRoutines);
-
-                initializedRoutines.clear();
-                routinesInitialized = true;
-            }
-        }
-    }
-
-    private void obtainedExistingWorkout(WorkoutProgram workoutProgram) {
-        idWorkout = workoutProgram.getIdWorkout();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_workout_create, container, false);
-        initializeSelectedExercisesViewPager();
-
-        initializeObservers();
-        initializeRecyclerView(mView);
-        return mView;
-    }
-
     private void initializeSelectedExercisesViewPager() {
-        ViewPager viewPager = mView.findViewById(R.id.view_pager);
+        ViewPager routineViewPager = mView.findViewById(R.id.view_pager);
 
-        routineAdapter = new RoutinesPagerAdapter(getFragmentManager());
+        routineAdapter = new RoutinesPagerAdapter(getChildFragmentManager());
         setRoutineSliderAdapterData();
-        viewPager.setAdapter(routineAdapter);
+        routineViewPager.setAdapter(routineAdapter);
 
         // Slider between the tabs.
         TabLayout tabLayout = mView.findViewById(R.id.tabSlider);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setupWithViewPager(routineViewPager);
 
         // Listener for when to add a new routine.
         Button addRoutineButton = mView.findViewById(R.id.btn_addRoutine);
@@ -254,6 +215,40 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                         });
             }
         });
+    }
+
+    private void obtainedExistingWorkout(WorkoutProgram workoutProgram) {
+        idWorkout = workoutProgram.getIdWorkout();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mView = inflater.inflate(R.layout.fragment_workout_create, container, false);
+        initializeSelectedExercisesViewPager();
+
+        initializeObservers();
+        initializeRecyclerView(mView);
+        return mView;
+    }
+
+/*    private ViewPager routineViewPager;
+    private TabLayout tabLayout;
+    private Button addRoutineButton;*/
+
+    // Will check if the routineAdapter has been initialized and if the routine data has been initialized.
+    // If they are, then add the routine id's to the routineAdapter.
+    private void setRoutineSliderAdapterData() {
+        if (!routinesInitialized && routineAdapter != null) {
+            if (initializedRoutines == null) initializedRoutines = new ArrayList<>();
+            if (!initializedRoutines.isEmpty()) {
+                routineAdapter.addRoutines(initializedRoutines);
+
+                initializedRoutines.clear();
+                routinesInitialized = true;
+            }
+        }
     }
 
     private void addRoutineToSliderAdapterData(Routine routine) {

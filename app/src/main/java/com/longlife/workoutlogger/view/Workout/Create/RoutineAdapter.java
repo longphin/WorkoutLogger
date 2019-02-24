@@ -25,10 +25,6 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<exerciseItemInRoutine> data = new ArrayList<>();
     private IExerciseListCallbackBase simpleCallback;
 
-/*    RoutineAdapter(IExerciseListCallbackBase simpleCallback) {
-        this.simpleCallback = simpleCallback;
-    }*/
-
     RoutineAdapter(IExerciseListCallbackBase simpleCallback) {
         this.simpleCallback = simpleCallback;
     }
@@ -62,9 +58,8 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public static class exerciseItemInRoutine {
-        Long idExercise;
-
-        String name;
+        private Long idExercise;
+        private String name;
         private int numberOfSets;
 
         public exerciseItemInRoutine(Long idExercise, String name, int numberOfSets) {
@@ -99,8 +94,8 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private class exerciseViewHolder extends RecyclerView.ViewHolder {
-        TextView nameView;
-        TextView descripView;
+        private TextView nameView;
+        private TextView descripView;
 
         exerciseViewHolder(@NonNull View itemView) {
             super(itemView);
