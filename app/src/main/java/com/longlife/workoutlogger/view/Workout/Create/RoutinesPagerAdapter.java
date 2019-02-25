@@ -56,6 +56,10 @@ public class RoutinesPagerAdapter extends FragmentStatePagerAdapter {
         notifyDataSetChanged();
     }
 
+    public Long getRoutineId(int position) {
+        return routineTabs.get(position).getIdRoutine();
+    }
+
     private class routineTabHelper {
         private Long idRoutine;
         private String name;

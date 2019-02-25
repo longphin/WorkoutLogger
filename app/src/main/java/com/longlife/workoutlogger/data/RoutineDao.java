@@ -9,11 +9,13 @@ package com.longlife.workoutlogger.data;
 import com.longlife.workoutlogger.enums.PerformanceStatus;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Routine.Routine;
+import com.longlife.workoutlogger.model.Routine.RoutineExercise;
 import com.longlife.workoutlogger.model.Routine.RoutineSession;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.model.Workout.WorkoutRoutine;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
+import com.longlife.workoutlogger.view.Workout.Create.RoutineAdapter;
 
 import java.util.List;
 
@@ -163,4 +165,17 @@ public abstract class RoutineDao {
             "   LEFT JOIN Routine AS r ON wr.idRoutine=r.idRoutine" +
             " WHERE wr.idWorkout=:idWorkout")
     public abstract Single<List<Routine>> getRoutinesForWorkout(Long idWorkout);
+
+    @Transaction
+    public RoutineAdapter.exerciseItemInRoutine insertExerciseIntoRoutine(RoutineAdapter.exerciseItemInRoutine ex) {
+        Long idRoutineExercise = insertRoutineExercise(new RoutineExercise(ex.getIdRoutine(), ex.getIdExercise()));
+
+        ex.setIdRoutineExercise(idRoutineExercise);
+        return ex;
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract Long insertRoutineExercise(RoutineExercise routineExercise);
+
+    ;
 }

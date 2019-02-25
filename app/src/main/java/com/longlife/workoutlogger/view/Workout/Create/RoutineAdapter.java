@@ -58,14 +58,30 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public static class exerciseItemInRoutine {
+        private Long idRoutineExercise;
+        private Long idRoutine;
+
+        public exerciseItemInRoutine(Long idRoutine, Long idExercise, String name, int numberOfSets) {
+            this.idRoutine = idRoutine;
+            this.idExercise = idExercise;
+            this.name = name;
+            this.numberOfSets = numberOfSets;
+        }
+
+        public Long getIdRoutine() {
+            return idRoutine;
+        }
+
+        public void setIdRoutine(Long idRoutine) {
+            this.idRoutine = idRoutine;
+        }
+
         private Long idExercise;
         private String name;
         private int numberOfSets;
 
-        public exerciseItemInRoutine(Long idExercise, String name, int numberOfSets) {
-            this.idExercise = idExercise;
-            this.name = name;
-            this.numberOfSets = numberOfSets;
+        public Long getIdRoutineExercise() {
+            return idRoutineExercise;
         }
 
         public String getName() {
@@ -90,6 +106,10 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public void setNumberOfSets(int numberOfSets) {
             this.numberOfSets = numberOfSets;
+        }
+
+        public void setIdRoutineExercise(Long idRoutineExercise) {
+            this.idRoutineExercise = idRoutineExercise;
         }
     }
 

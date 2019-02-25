@@ -20,6 +20,7 @@ import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.Workout.WorkoutProgram;
 import com.longlife.workoutlogger.model.Workout.WorkoutProgramShort;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
+import com.longlife.workoutlogger.view.Workout.Create.RoutineAdapter;
 
 import java.util.List;
 import java.util.Set;
@@ -177,5 +178,9 @@ public class Repository {
 
     public Single<List<WorkoutProgramShort>> getWorkoutShortList() {
         return workoutDao.getWorkoutShortList();
+    }
+
+    public Single<RoutineAdapter.exerciseItemInRoutine> insertExerciseForRoutine(RoutineAdapter.exerciseItemInRoutine ex) {
+        return Single.fromCallable(() -> routineDao.insertExerciseIntoRoutine(ex));
     }
 }

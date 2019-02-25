@@ -10,6 +10,7 @@ import com.longlife.workoutlogger.model.Exercise.Exercise;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -18,7 +19,6 @@ import androidx.room.PrimaryKey;
         @ForeignKey(entity = Exercise.class, parentColumns = "idExercise", childColumns = "idExercise")
 },
         indices = {
-                @Index(value = {"idRoutine", "idExercise"}),
                 @Index(value = {"idRoutine"}),
                 @Index(value = {"idExercise"})
         }
@@ -28,6 +28,18 @@ public class RoutineExercise {
     private Long idRoutineExercise;
     private Long idRoutine;
     private Long idExercise;
+
+    public RoutineExercise(Long idRoutineExercise, Long idRoutine, Long idExercise) {
+        this.idRoutineExercise = idRoutineExercise;
+        this.idRoutine = idRoutine;
+        this.idExercise = idExercise;
+    }
+
+    @Ignore
+    public RoutineExercise(Long idRoutine, Long idExercise) {
+        this.idRoutine = idRoutine;
+        this.idExercise = idExercise;
+    }
 
     public Long getIdRoutineExercise() {
         return idRoutineExercise;

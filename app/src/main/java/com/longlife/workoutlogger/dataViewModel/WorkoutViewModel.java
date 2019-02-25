@@ -15,7 +15,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
@@ -31,8 +33,26 @@ public class WorkoutViewModel extends ViewModel {
         return exerciseToInsertObservable;
     }
 
-    public void insertExercise(RoutineAdapter.exerciseItemInRoutine ex) {
-        exerciseToInsertObservable.onNext(ex); // [TODO] insert into database
+    public void insertExerciseForRoutine(RoutineAdapter.exerciseItemInRoutine ex) {
+        repo.insertExerciseForRoutine(ex)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<RoutineAdapter.exerciseItemInRoutine>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(RoutineAdapter.exerciseItemInRoutine addedRoutineExercise) {
+                        exerciseToInsertObservable.onNext(addedRoutineExercise);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     public Single<Long> createNewWorkoutProgram() {

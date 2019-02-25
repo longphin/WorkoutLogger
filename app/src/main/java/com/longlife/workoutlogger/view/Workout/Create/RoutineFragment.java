@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+// This fragment displays the list of exercises used in a specific routine.
 public class RoutineFragment extends FragmentBase implements ExercisesListAdapter.IExerciseListCallback {
     private static final String INPUT_IDROUTINE = "IdRoutine";
     @Inject
@@ -58,12 +59,16 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
                     .inject(this);
             workoutViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WorkoutViewModel.class);
 
+            // Observe when an exercise is to be added to the routine.
             addDisposable(workoutViewModel.getExerciseToInsertObservable().subscribe(this::exerciseInserted));
+            // [TODO] Add observable for when this routine is restored. The observable calls query to grab all RoutineExercise where idRoutine=:idRoutine
         }
     }
 
+    // Exercise is inserted into the routine.
     private void exerciseInserted(RoutineAdapter.exerciseItemInRoutine exerciseInsertedToRoutine) {
-        routineAdapter.addExercise(exerciseInsertedToRoutine);
+        if (isAdded())
+            routineAdapter.addExercise(exerciseInsertedToRoutine);
     }
 
     @Override
@@ -91,13 +96,15 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
         mView = null;
     }
 
+    // Initialize recyclerview.
     private void initializeSelectedExercisesRecyclerView() {
         routineAdapter = new RoutineAdapter(this);
         RecyclerView rv_selectedExercises = mView.findViewById(R.id.rv_selectedExercises);
         rv_selectedExercises.setAdapter(routineAdapter);
         rv_selectedExercises.setLayoutManager(new LinearLayoutManager(getContext()));
         rv_selectedExercises.setItemAnimator(new DefaultItemAnimator());
-        rv_selectedExercises.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        if (getContext() != null)
+            rv_selectedExercises.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
     }
 
     @Override

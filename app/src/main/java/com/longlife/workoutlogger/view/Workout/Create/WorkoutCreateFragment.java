@@ -87,15 +87,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        routinesInitialized = false;
-        mView = null;
-        routineAdapter = null;
-        initializedRoutines = null;
-
-        super.onDestroyView();
-    }
+    private ViewPager routineViewPager;
 
     @Override
     protected int getExercisesRecyclerViewId() {
@@ -185,8 +177,19 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                 });
     }
 
+    @Override
+    public void onDestroyView() {
+        routinesInitialized = false;
+        mView = null;
+        routineAdapter = null;
+        initializedRoutines = null;
+        routineViewPager = null;
+
+        super.onDestroyView();
+    }
+
     private void initializeSelectedExercisesViewPager() {
-        ViewPager routineViewPager = mView.findViewById(R.id.view_pager);
+        routineViewPager = mView.findViewById(R.id.view_pager);
 
         routineAdapter = new RoutinesPagerAdapter(getChildFragmentManager());
         setRoutineSliderAdapterData();
@@ -263,6 +266,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
 
     @Override
     public void addExerciseToRoutine(Long idExercise, String exerciseName) {
-        workoutViewModel.insertExercise(new RoutineAdapter.exerciseItemInRoutine(idExercise, exerciseName, 1));
+        workoutViewModel.insertExerciseForRoutine(new RoutineAdapter.exerciseItemInRoutine(routineAdapter.getRoutineId(routineViewPager.getCurrentItem()), idExercise, exerciseName, 1));
     }
 }
