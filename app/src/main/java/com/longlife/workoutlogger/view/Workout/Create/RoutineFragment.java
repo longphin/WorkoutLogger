@@ -17,6 +17,9 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.dataViewModel.WorkoutViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import androidx.annotation.Nullable;
@@ -52,6 +55,7 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
         getViewModel();
     }
 
+    private List<RoutineAdapter.exerciseItemInRoutine> exercisesToAddIntoRoutine = new ArrayList<>();
     public void getViewModel() {
         if (workoutViewModel == null) {
             ((MyApplication) getActivity().getApplication())
@@ -66,9 +70,20 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
     }
 
     // Exercise is inserted into the routine.
-    private void exerciseInserted(RoutineAdapter.exerciseItemInRoutine exerciseInsertedToRoutine) {
-        if (isAdded())
-            routineAdapter.addExercise(exerciseInsertedToRoutine);
+    private void exerciseInserted(RoutineAdapter.exerciseItemInRoutine exerciseToAdd) {
+        if (exerciseToAdd.getIdRoutine().equals(idRoutine)) {
+            //routineAdapter.addExercise(exerciseInsertedToRoutine);
+            exercisesToAddIntoRoutine.add(exerciseToAdd);
+            addExercisesToRoutine();
+        }
+    }
+
+    // If exercisesToAddIntoRoutine has any items, then add the items into the routine.
+    private void addExercisesToRoutine() {
+        if (isAdded() && routineAdapter != null && exercisesToAddIntoRoutine != null && !exercisesToAddIntoRoutine.isEmpty()) {
+            routineAdapter.addExercises(exercisesToAddIntoRoutine);
+            exercisesToAddIntoRoutine.clear();
+        }
     }
 
     @Override
@@ -105,6 +120,9 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
         rv_selectedExercises.setItemAnimator(new DefaultItemAnimator());
         if (getContext() != null)
             rv_selectedExercises.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        // If the exercises for this routine were loaded, then add them to the recyclerview.
+        addExercisesToRoutine();
     }
 
     @Override

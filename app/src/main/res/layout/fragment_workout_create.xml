@@ -25,7 +25,7 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabSlider"
         android:layout_width="0dp"
-        android:layout_height="36dp"
+        android:layout_height="43dp"
         android:minHeight="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="@+id/view_pager"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,10 +35,11 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="0dp"
-        android:layout_height="552dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/rvtab_selectedExercises"
         app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
-        app:layout_constraintStart_toStartOf="@+id/rvtab_selectedExercises">
+        app:layout_constraintStart_toStartOf="@+id/rvtab_selectedExercises"
+        app:layout_constraintTop_toBottomOf="@+id/btn_addRoutine">
 
         <!--
         <androidx.viewpager.widget.PagerTabStrip
@@ -54,7 +55,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvtab_selectedExercises"
-        android:layout_width="181dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
@@ -75,7 +76,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_exercises"
-        android:layout_width="231dp"
+        android:layout_width="214dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

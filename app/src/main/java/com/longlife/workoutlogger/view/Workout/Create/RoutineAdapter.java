@@ -57,6 +57,13 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyItemInserted(data.size() - 1);
     }
 
+    public void addExercises(List<exerciseItemInRoutine> exercisesToAddIntoRoutine) {
+        int sizeBeforeAddedItems = data.size();
+        data.addAll(exercisesToAddIntoRoutine);
+        //notifyItemRangeInserted(sizeBeforeAddedItems, exercisesToAddIntoRoutine.size());
+        notifyDataSetChanged();
+    }
+
     public static class exerciseItemInRoutine {
         private Long idRoutineExercise;
         private Long idRoutine;
