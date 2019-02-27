@@ -14,6 +14,7 @@ import com.longlife.workoutlogger.model.comparators.RoutineComparators;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
+import com.longlife.workoutlogger.view.Workout.Create.RoutineAdapter;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -22,6 +23,7 @@ import java.util.Queue;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
+import androidx.room.Query;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
@@ -161,6 +163,17 @@ public class RoutinesViewModel
 
     public Single<List<Routine>> getRoutinesForWorkout(Long idWorkout) {
         return repo.getRoutinesForWorkout(idWorkout)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
+    @Query("SELECT re.idRoutineExercise, e.idExercise, e.name, e.note, e.locked" +
+            " FROM Routine as r" +
+            " INNER JOIN RoutineExercise as re on r.idRoutine=re.idRoutine" +
+            " INNER JOIN Exercise as e on re.idExercise=e.idExercise" +
+            " WHERE r.idRoutine=:idRoutine")
+    public Single<List<RoutineAdapter.exerciseItemInRoutine>> getExercisesShortForRoutine(Long idRoutine) {
+        return repo.getExercisesShortForRoutine(idRoutine)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }

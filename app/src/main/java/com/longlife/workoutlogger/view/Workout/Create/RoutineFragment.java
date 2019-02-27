@@ -16,6 +16,7 @@ import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.dataViewModel.WorkoutViewModel;
+import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
 
 // This fragment displays the list of exercises used in a specific routine.
 public class RoutineFragment extends FragmentBase implements ExercisesListAdapter.IExerciseListCallback {
@@ -62,9 +65,28 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
                     .getApplicationComponent()
                     .inject(this);
             workoutViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WorkoutViewModel.class);
+            RoutinesViewModel routineViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
 
             // Observe when an exercise is to be added to the routine.
             addDisposable(workoutViewModel.getExerciseToInsertObservable().subscribe(this::exerciseInserted));
+            if (idRoutine != null)
+                routineViewModel.getExercisesShortForRoutine(idRoutine)
+                        .subscribe(new SingleObserver<List<RoutineAdapter.exerciseItemInRoutine>>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onSuccess(List<RoutineAdapter.exerciseItemInRoutine> exercisesToAdd) {
+                                includeExercisesToRoutine(exercisesToAdd);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        });
             // [TODO] Add observable for when this routine is restored. The observable calls query to grab all RoutineExercise where idRoutine=:idRoutine
         }
     }
@@ -76,6 +98,12 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
             exercisesToAddIntoRoutine.add(exerciseToAdd);
             addExercisesToRoutine();
         }
+    }
+
+    private void includeExercisesToRoutine(List<RoutineAdapter.exerciseItemInRoutine> exercisesToAdd) {
+        if (exercisesToAddIntoRoutine == null) exercisesToAddIntoRoutine = new ArrayList<>();
+        exercisesToAddIntoRoutine.addAll(exercisesToAdd);
+        addExercisesToRoutine();
     }
 
     // If exercisesToAddIntoRoutine has any items, then add the items into the routine.

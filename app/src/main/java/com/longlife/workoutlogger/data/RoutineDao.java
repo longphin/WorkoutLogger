@@ -168,7 +168,7 @@ public abstract class RoutineDao {
 
     @Transaction
     public RoutineAdapter.exerciseItemInRoutine insertExerciseIntoRoutine(RoutineAdapter.exerciseItemInRoutine ex) {
-        Long idRoutineExercise = insertRoutineExercise(new RoutineExercise(ex.getIdRoutine(), ex.getIdExercise()));
+        Long idRoutineExercise = insertRoutineExercise(new RoutineExercise(ex.getIdRoutine(), ex.getIdExercise(), ex.getNumberOfSets()));
 
         ex.setIdRoutineExercise(idRoutineExercise);
         return ex;
@@ -177,5 +177,10 @@ public abstract class RoutineDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract Long insertRoutineExercise(RoutineExercise routineExercise);
 
-    ;
+    @Query("SELECT re.idRoutineExercise, r.idRoutine, e.idExercise, e.name, re.numberOfSets" +
+            " FROM Routine as r" +
+            " INNER JOIN RoutineExercise as re on r.idRoutine=re.idRoutine" +
+            " INNER JOIN Exercise as e on re.idExercise=e.idExercise" +
+            " WHERE r.idRoutine=:idRoutine")
+    public abstract Single<List<RoutineAdapter.exerciseItemInRoutine>> getExercisesShortForRoutine(Long idRoutine);
 }

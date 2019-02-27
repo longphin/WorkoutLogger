@@ -60,13 +60,15 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void addExercises(List<exerciseItemInRoutine> exercisesToAddIntoRoutine) {
         int sizeBeforeAddedItems = data.size();
         data.addAll(exercisesToAddIntoRoutine);
-        //notifyItemRangeInserted(sizeBeforeAddedItems, exercisesToAddIntoRoutine.size());
-        notifyDataSetChanged();
+        notifyItemRangeInserted(sizeBeforeAddedItems, exercisesToAddIntoRoutine.size());
     }
 
     public static class exerciseItemInRoutine {
         private Long idRoutineExercise;
         private Long idRoutine;
+        private Long idExercise;
+        private String name;
+        private int numberOfSets;
 
         public exerciseItemInRoutine(Long idRoutine, Long idExercise, String name, int numberOfSets) {
             this.idRoutine = idRoutine;
@@ -83,12 +85,12 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             this.idRoutine = idRoutine;
         }
 
-        private Long idExercise;
-        private String name;
-        private int numberOfSets;
-
         public Long getIdRoutineExercise() {
             return idRoutineExercise;
+        }
+
+        public void setIdRoutineExercise(Long idRoutineExercise) {
+            this.idRoutineExercise = idRoutineExercise;
         }
 
         public String getName() {
@@ -113,10 +115,6 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public void setNumberOfSets(int numberOfSets) {
             this.numberOfSets = numberOfSets;
-        }
-
-        public void setIdRoutineExercise(Long idRoutineExercise) {
-            this.idRoutineExercise = idRoutineExercise;
         }
     }
 

@@ -29,16 +29,28 @@ public class RoutineExercise {
     private Long idRoutine;
     private Long idExercise;
 
-    public RoutineExercise(Long idRoutineExercise, Long idRoutine, Long idExercise) {
+    private int numberOfSets;
+
+    public RoutineExercise(Long idRoutineExercise, Long idRoutine, Long idExercise, int numberOfSets) {
         this.idRoutineExercise = idRoutineExercise;
         this.idRoutine = idRoutine;
         this.idExercise = idExercise;
+        this.numberOfSets = numberOfSets;
     }
 
     @Ignore
-    public RoutineExercise(Long idRoutine, Long idExercise) {
+    public RoutineExercise(Long idRoutine, Long idExercise, int numberOfSets) {
         this.idRoutine = idRoutine;
         this.idExercise = idExercise;
+        this.numberOfSets = numberOfSets;
+    }
+
+    public int getNumberOfSets() {
+        return numberOfSets;
+    }
+
+    public void setNumberOfSets(int numberOfSets) {
+        this.numberOfSets = numberOfSets;
     }
 
     public Long getIdRoutineExercise() {

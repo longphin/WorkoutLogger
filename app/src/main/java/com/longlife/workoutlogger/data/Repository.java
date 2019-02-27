@@ -183,4 +183,8 @@ public class Repository {
     public Single<RoutineAdapter.exerciseItemInRoutine> insertExerciseForRoutine(RoutineAdapter.exerciseItemInRoutine ex) {
         return Single.fromCallable(() -> routineDao.insertExerciseIntoRoutine(ex));
     }
+
+    public Single<List<RoutineAdapter.exerciseItemInRoutine>> getExercisesShortForRoutine(Long idRoutine) {
+        return routineDao.getExercisesShortForRoutine(idRoutine);
+    }
 }

@@ -72,7 +72,8 @@ class DatabaseVersion {
     private static final int V9_2c = 52; // Renamed idWorkoutProgram to idWorkout.
     private static final int V9_2d = 53; // Fix WorkoutRoutine get the proper idRoutine.
     private static final int V9_3 = 54; // Fix WorkoutRoutine memory leak.
+    private static final int V9_4 = 55; // Add number of sets to RoutineExercise.
 
-    static final int CURRENT = V9_3;
+    static final int CURRENT = V9_4;
 }
 
