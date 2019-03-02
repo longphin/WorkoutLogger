@@ -26,12 +26,12 @@ import androidx.fragment.app.Fragment;
 public class RoutineCreateExerciseSetFragment
         extends Fragment {
     public static final String TAG = RoutineCreateExerciseSetFragment.class.getSimpleName();
-    private Exercise exercise;
-    private List<SessionExerciseSet> sets;
-    private View mView;
     // Input constants.
     private static final String INPUT_EXERCISE = "exercise";
     private static final String INPUT_EXERCISE_SET = "exerciseSets";
+    private Exercise exercise;
+    private List<SessionExerciseSet> sets;
+    private View mView;
 
     public static RoutineCreateExerciseSetFragment newInstance(Exercise exercise, ArrayList<SessionExerciseSet> sets) {
         RoutineCreateExerciseSetFragment fragment = new RoutineCreateExerciseSetFragment();

@@ -28,14 +28,6 @@ public class ExerciseMuscle {
         this.idMuscle = idMuscle;
     }
 
-    public Long getIdMuscle() {
-        return idMuscle;
-    }
-
-    public void setIdMuscle(Long idMuscle) {
-        this.idMuscle = idMuscle;
-    }
-
     public Long getIdExerciseMuscle() {
         return idExerciseMuscle;
     }
@@ -78,5 +70,13 @@ public class ExerciseMuscle {
 /*        return (idExercise == null && other.getIdExercise() == null) || (idExercise.equals(other.getIdExercise()))
                 && idMuscle.equals(other.getIdMuscle());*/
         return idMuscle.equals(other.getIdMuscle());
+    }
+
+    public Long getIdMuscle() {
+        return idMuscle;
+    }
+
+    public void setIdMuscle(Long idMuscle) {
+        this.idMuscle = idMuscle;
     }
 }

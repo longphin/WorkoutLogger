@@ -45,26 +45,25 @@ public class PerformExerciseFragment
         RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
         PerformSetDialog.IOnSave {
     public static final String TAG = PerformFragment.TAG;
-    private Long idExercise;
-    @Inject
-    public ViewModelProvider.Factory viewModelFactory;
-    private Long idSessionExercise;
-    private String note;
-    private ExercisesViewModel exercisesViewModel;
     // Input Constants
     private static final String INPUT_ID_EXERCISE = "idExercise";
     private static final String INPUT_EXERCISE_NAME = "exerciseName";
     private static final String INPUT_NOTE = "note";
-
-    public PerformExerciseFragment() {
-        // Required empty public constructor
-    }
-
+    @Inject
+    public ViewModelProvider.Factory viewModelFactory;
+    private Long idExercise;
+    private Long idSessionExercise;
+    private String note;
+    private ExercisesViewModel exercisesViewModel;
     private ExerciseSessionWithSets exerciseWithSets;
     private View mView;
     private RecyclerView exercisesRecyclerView;
     private PerformRoutineAdapter adapter;
     private ConstraintLayout coordinatorLayout; // layout for recycler view
+
+    public PerformExerciseFragment() {
+        // Required empty public constructor
+    }
 
     public static PerformExerciseFragment newInstance(ExercisesListRemakeAdapter.exerciseItem ex) {
         Bundle bundle = new Bundle();
@@ -135,6 +134,13 @@ public class PerformExerciseFragment
         }
     }
 
+    private void fillAdapterData() {
+        adapter.setExercisesToInclude(exerciseWithSets);
+        adapter.notifyDataSetChanged();
+
+        ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_PerformExercise, exerciseWithSets.getExercise().getName() + " (session " + String.valueOf(exerciseWithSets.getSessionExercise().getIdRoutineSession()) + ")"));
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -150,13 +156,6 @@ public class PerformExerciseFragment
 
         // Inflate the layout for this fragment
         return mView;
-    }
-
-    private void fillAdapterData() {
-        adapter.setExercisesToInclude(exerciseWithSets);
-        adapter.notifyDataSetChanged();
-
-        ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_PerformExercise, exerciseWithSets.getExercise().getName() + " (session " + String.valueOf(exerciseWithSets.getSessionExercise().getIdRoutineSession()) + ")"));
     }
 
     private void initializeRecyclerView() {

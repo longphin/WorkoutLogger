@@ -56,12 +56,6 @@ public class RoutinesFragment
     private View mView;
     private ConstraintLayout viewRootLayout; // layout for recycler view
 
-    @Override
-    public void onDestroyView() {
-        recyclerView.removeAllViews();
-        super.onDestroyView();
-    }
-
     public RoutinesFragment() {
 
     }
@@ -69,7 +63,6 @@ public class RoutinesFragment
     public static RoutinesFragment newInstance() {
         return (new RoutinesFragment());
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +100,12 @@ public class RoutinesFragment
 
         ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_Routines));
         return (mView);
+    }
+
+    @Override
+    public void onDestroyView() {
+        recyclerView.removeAllViews();
+        super.onDestroyView();
     }
 
     private void startCreateFragment() {
@@ -155,19 +154,6 @@ public class RoutinesFragment
         }
     }
 
-    // Methods
-    private void processInsertRoutineResponse(Response<Routine> response) {
-        switch (response.getStatus()) {
-            case LOADING:
-                break;
-            case SUCCESS:
-                renderInsertSuccessState(response.getValue());
-                break;
-            case ERROR:
-                break;
-        }
-    }
-
     private void renderLoadingState() {
         Log.d(TAG, "loading routines");
     }
@@ -182,6 +168,19 @@ public class RoutinesFragment
     private void renderErrorState(Throwable throwable) {
         // change anything if loading data had an error.
         Log.d(TAG, throwable.getMessage());
+    }
+
+    // Methods
+    private void processInsertRoutineResponse(Response<Routine> response) {
+        switch (response.getStatus()) {
+            case LOADING:
+                break;
+            case SUCCESS:
+                renderInsertSuccessState(response.getValue());
+                break;
+            case ERROR:
+                break;
+        }
     }
 
     private void renderInsertSuccessState(Routine routine) {

@@ -84,6 +84,22 @@ public abstract class RoutineDao {
         return r;
     }
 
+    // Insert routine.
+    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
+    public abstract Long insertRoutine(Routine r);
+
+    // Insert a session.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract Long insertRoutineSession(RoutineSession rs);
+
+    // Insert a session exercise.
+    @Insert
+    public abstract Long insertSessionExercise(SessionExercise se);
+
+    // Insert sets.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertSessionExerciseSets(List<SessionExerciseSet> ses);
+
     // Insert a session for an exercise. i.e. performing an exercise outside of a routine.
     @Transaction
     public SessionExercise insertNewSessionForExercise(Long idExercise, String note) {
@@ -105,25 +121,9 @@ public abstract class RoutineDao {
         return newSessionExercise;
     }
 
-    // Insert a session.
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract Long insertRoutineSession(RoutineSession rs);
-
-    // Insert a session exercise.
-    @Insert
-    public abstract Long insertSessionExercise(SessionExercise se);
-
     // Insert set.
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertSessionExerciseSet(SessionExerciseSet ses);
-
-    // Insert routine.
-    @Insert(onConflict = OnConflictStrategy.ROLLBACK)
-    public abstract Long insertRoutine(Routine r);
-
-    // Insert sets.
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insertSessionExerciseSets(List<SessionExerciseSet> ses);
 
     // Delete routine.
     @Delete

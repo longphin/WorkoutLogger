@@ -101,6 +101,13 @@ public class WorkoutListFragment extends FragmentBase implements WorkoutListAdap
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        workoutListAdapter = null;
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -108,13 +115,6 @@ public class WorkoutListFragment extends FragmentBase implements WorkoutListAdap
                 .getApplicationComponent()
                 .inject(this);
         workoutViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WorkoutViewModel.class);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        workoutListAdapter = null;
     }
 
     @Override

@@ -103,14 +103,6 @@ public class MainActivity
         };
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mNavController != null) {
-            mNavController.onSaveInstanceState(outState);
-        }
-    }
-
     // Initialize user profile. If one does not exist in database, then one will be inserted.
     private void getProfile() {
         // Do back end stuff on launch.
@@ -163,12 +155,6 @@ public class MainActivity
         bottomTabLayout.setDefaultBackgroundColor(Color.WHITE);
         bottomTabLayout.setAccentColor(Color.BLACK);
         bottomTabLayout.setInactiveColor(Color.GRAY);
-    }
-
-    private void switchTab(int position) {
-        mNavController.switchTab(position);
-        bottomTabLayout.enableItemAtPosition(position);
-        //updateTabSelection(position);
     }
 
     private void setOnTabSelectedListener() {
@@ -235,11 +221,39 @@ public class MainActivity
         }
     }
 
+    private void switchTab(int position) {
+        mNavController.switchTab(position);
+        bottomTabLayout.enableItemAtPosition(position);
+        //updateTabSelection(position);
+    }
+
     private void updateTabSelection(int currentTab) {
 
         enableBottomNavClick = false;
         bottomTabLayout.setCurrentItem(currentTab);
         enableBottomNavClick = true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(restTimerReceiver, new IntentFilter(TimerNotificationService.BROADCAST_INTENT_NAME));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(restTimerReceiver);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mNavController != null) {
+            mNavController.onSaveInstanceState(outState);
+        }
     }
 
     @Override
@@ -278,6 +292,14 @@ public class MainActivity
         }
     }
 
+    //
+    //        getSupportActionBar().setTitle(TABS[position]);
+    //
+    //
+    //    private void updateToolbarTitle(int position){
+
+    //    }
+
     @NotNull
     @Override
     public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
@@ -294,34 +316,12 @@ public class MainActivity
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
     }
 
-    //
-    //        getSupportActionBar().setTitle(TABS[position]);
-    //
-    //
-    //    private void updateToolbarTitle(int position){
-
-    //    }
-
     public void updateToolbarTitle(String title) {
         getSupportActionBar().setTitle(title);
     }
 
     public void startTimerNotificationService(View v, int headerIndex, int setIndex, int minutes, int seconds) {
         ((MyApplication) getApplication()).startTimerNotificationService(v, headerIndex, setIndex, minutes, seconds);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(restTimerReceiver, new IntentFilter(TimerNotificationService.BROADCAST_INTENT_NAME));
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(restTimerReceiver);
     }
 }
 

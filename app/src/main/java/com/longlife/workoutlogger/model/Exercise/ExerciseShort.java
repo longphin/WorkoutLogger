@@ -32,13 +32,27 @@ public class ExerciseShort implements IExerciseListable {
         update(ex);
     }
 
+    public boolean isLocked() {
+        return locked;
+    }
+
+    @Override
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    @Override
+    public String getCategory() {
+        return name.substring(0, Math.min(1, name.length())).toUpperCase();
+    }
+
+    public String getNote() {
+        return note;
+    }
+
     @Override
     public String getName() {
         return name;
-    }
-
-    public boolean isLocked() {
-        return locked;
     }
 
     @Override
@@ -57,26 +71,12 @@ public class ExerciseShort implements IExerciseListable {
         this.idExercise = idExercise;
     }
 
-    @Override
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getNote() {
-        return note;
-    }
-
     public void setNote(String note) {
         this.note = note;
-    }
-
-    @Override
-    public String getCategory() {
-        return name.substring(0, Math.min(1, name.length())).toUpperCase();
     }
     /*
     public ExerciseShort update(ExerciseUpdated updatedExercise) {

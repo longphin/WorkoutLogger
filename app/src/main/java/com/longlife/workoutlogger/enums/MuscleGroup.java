@@ -19,21 +19,6 @@ import java.util.List;
 public class MuscleGroup {
     private static final String TAG = MuscleGroup.class.getSimpleName();
 
-    public static List<Integer> getAllMuscleGroupsIds(Context context) {
-        int[] idMuscleGroupResources = getAllIdResources();
-
-        List<Integer> idMuscleGroups = new ArrayList<>();
-        for (int i = 0; i < idMuscleGroupResources.length; i++) {
-            idMuscleGroups.add(GetResource.getIntResource(context, idMuscleGroupResources[i]));
-        }
-        return idMuscleGroups;
-    }
-
-    private static int[] getAllIdResources() {
-        return new int[]{R.integer.MUSCLEGROUP_chest, R.integer.MUSCLEGROUP_back, R.integer.MUSCLEGROUP_arms,
-                R.integer.MUSCLEGROUP_shoulders, R.integer.MUSCLEGROUP_legs, R.integer.MUSCLEGROUP_core, R.integer.MUSCLEGROUP_misc};
-    }
-
     // Return the MuscleGroup id given an idMuscle. Used to determine what group a muscle is a part of.
     static int getMuscleGroupForMuscle(Context context, int idMuscle) {
         Integer idMuscleGroup = null;
@@ -104,6 +89,11 @@ public class MuscleGroup {
         return "Muscle group not named";
     }
 
+    private static int[] getAllIdResources() {
+        return new int[]{R.integer.MUSCLEGROUP_chest, R.integer.MUSCLEGROUP_back, R.integer.MUSCLEGROUP_arms,
+                R.integer.MUSCLEGROUP_shoulders, R.integer.MUSCLEGROUP_legs, R.integer.MUSCLEGROUP_core, R.integer.MUSCLEGROUP_misc};
+    }
+
     private static int[] getAllNameResources() {
         return new int[]{R.string.MUSCLEGROUP_chest, R.string.MUSCLEGROUP_back, R.string.MUSCLEGROUP_arms,
                 R.string.MUSCLEGROUP_shoulders, R.string.MUSCLEGROUP_legs, R.string.MUSCLEGROUP_core, R.string.MUSCLEGROUP_misc};
@@ -125,5 +115,15 @@ public class MuscleGroup {
         }
 
         return muscleGroups;
+    }
+
+    public static List<Integer> getAllMuscleGroupsIds(Context context) {
+        int[] idMuscleGroupResources = getAllIdResources();
+
+        List<Integer> idMuscleGroups = new ArrayList<>();
+        for (int i = 0; i < idMuscleGroupResources.length; i++) {
+            idMuscleGroups.add(GetResource.getIntResource(context, idMuscleGroupResources[i]));
+        }
+        return idMuscleGroups;
     }
 }

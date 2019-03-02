@@ -48,12 +48,6 @@ public class ExercisesSelectableFragment
     }
 
     @Override
-    protected void initializeAdapter() {
-        if (adapter == null)
-            adapter = new ExercisesSelectableAdapter(this, this);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
@@ -78,6 +72,12 @@ public class ExercisesSelectableFragment
 
         ((MainActivity) getActivity()).updateToolbarTitle(getString(R.string.Toolbar_RoutineCreate));
         return mView;
+    }
+
+    @Override
+    protected void initializeAdapter() {
+        if (adapter == null)
+            adapter = new ExercisesSelectableAdapter(this, this);
     }
 
     @Override

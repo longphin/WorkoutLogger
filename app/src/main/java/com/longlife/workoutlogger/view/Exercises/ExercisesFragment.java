@@ -53,15 +53,15 @@ public class ExercisesFragment
         implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener,
         ExercisesAdapter.IClickExercise {
     public static final String TAG = ExercisesFragment.class.getSimpleName();
+    // Input constants.
+    protected static final String INPUT_ACTIVITY_ROOT = "activityRoot";
+    protected static final String INPUT_EXERCISE_ITEM_LAYOUT = "exerciseItemLayout";
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     protected View mView;
     protected ExercisesListAdapter adapter;
     private ExercisesViewModel viewModel;
     private RecyclerView recyclerView;
-    // Input constants.
-    protected static final String INPUT_ACTIVITY_ROOT = "activityRoot";
-    protected static final String INPUT_EXERCISE_ITEM_LAYOUT = "exerciseItemLayout";
 
     public static ExercisesFragment newInstance() {
         return (new ExercisesFragment());
@@ -186,26 +186,8 @@ public class ExercisesFragment
         }
     }
 
-    private void processExerciseInserted(Exercise ex) {
-        adapter.addExercise(new ExerciseShort(ex));
-    }
-
-    // Methods
-    private void processExerciseLocked(ExerciseLocked exerciseLocked) {
-        adapter.exerciseLocked(exerciseLocked);
-    }
-
     private void renderLoadRoutineLoadState() {
         Log.d(TAG, "loading exercises");
-    }
-
-    private void processExerciseEdited(ExerciseUpdated exercise) {
-        adapter.exerciseUpdated(new ExerciseShort(exercise));
-    }
-
-    private void renderLoadRoutineErrorState(@NonNull Throwable throwable) {
-        // change anything if loading data had an error.
-        Log.d(TAG, throwable.getMessage());
     }
 
     private void renderLoadRoutineSuccessState(List<ExerciseShort> exercises) {
@@ -223,6 +205,24 @@ public class ExercisesFragment
             return;
 
         adapter.setExercises(exercises);
+    }
+
+    private void renderLoadRoutineErrorState(@NonNull Throwable throwable) {
+        // change anything if loading data had an error.
+        Log.d(TAG, throwable.getMessage());
+    }
+
+    private void processExerciseInserted(Exercise ex) {
+        adapter.addExercise(new ExerciseShort(ex));
+    }
+
+    // Methods
+    private void processExerciseLocked(ExerciseLocked exerciseLocked) {
+        adapter.exerciseLocked(exerciseLocked);
+    }
+
+    private void processExerciseEdited(ExerciseUpdated exercise) {
+        adapter.exerciseUpdated(new ExerciseShort(exercise));
     }
 
     @Override

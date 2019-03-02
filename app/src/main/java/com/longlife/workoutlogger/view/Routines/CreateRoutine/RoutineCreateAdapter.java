@@ -32,10 +32,6 @@ public class RoutineCreateAdapter
         this.onSetClickListener = onSetClickListener;
     }
 
-    public interface IOnSetClick {
-        void onSetClick(@Nullable RoutineExerciseSetPositions positionHelper);
-    }
-
     @Override
     public int getSetLayout() {
         return R.layout.item_routine_create_exercise_set;
@@ -64,5 +60,9 @@ public class RoutineCreateAdapter
             int clickedPos = holder.getAdapterPosition();
             onSetClickListener.onSetClick(getIdSessionExerciseAtPosition(clickedPos));
         });
+    }
+
+    public interface IOnSetClick {
+        void onSetClick(@Nullable RoutineExerciseSetPositions positionHelper);
     }
 }

@@ -26,16 +26,15 @@ public class TimerNotificationService
         extends Service {
     public static final String BROADCAST_INTENT_NAME = "com.longlife.workoutlogger.TimerNotificationService.REQUEST_PROCESSED"; // Abitrary name, but unique within the app. Used in the intent when broadcasting result.
     public static final String EXTRA_HEADERINDEX = "headerIndex";
+    public static final String EXTRA_SETINDEX = "setIndex";
+    public static final String EXTRA_MINUTES = "restMinutes";
+    public static final String EXTRA_SECONDS = "restSeconds";
+    private static int NOTIFICATION_ID = 49; // This can be anything, I believe.
     // Constants - names for the values passed from the activity to this service.
     // Object that receives interaction between this service and the activity.
     private final IBinder mBinder = new LocalBinder();
     // Broadcast object to activity.
     LocalBroadcastManager broadcastManager;
-    public static final String EXTRA_SETINDEX = "setIndex";
-    public static final String EXTRA_MINUTES = "restMinutes";
-    public static final String EXTRA_SECONDS = "restSeconds";
-    private static int NOTIFICATION_ID = 49; // This can be anything, I believe.
-
     private NotificationCompat.Builder notificationBuilder;
     private CountDownTimer timer;
     private boolean timerInProgress;
@@ -46,6 +45,14 @@ public class TimerNotificationService
     private int setIndex; // Index for the set within the header index. RoutineExerciseHelper.get(headerIndex).getSets().get(setIndex)
 
     private NotificationManagerCompat notificationManager;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        broadcastManager = LocalBroadcastManager.getInstance(this);
+        notificationManager = NotificationManagerCompat.from(this);
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -62,6 +69,17 @@ public class TimerNotificationService
         startTimer(Format.convertToMilliseconds(minutes, seconds));
 
         return START_NOT_STICKY; // [TODO] Need to learn about the different types and make sure what happens when the system destroys our notification.
+    }
+
+    // Stops timer and resets some values.
+    private void stopTimer() {
+        if (timer != null && timerInProgress) {
+            timer.cancel();
+            destroyNotification();
+        }
+
+        timerInProgress = false;
+        stopForeground(true);
     }
 
     // Creates the rest notification given the rest times.
@@ -109,15 +127,14 @@ public class TimerNotificationService
         timerInProgress = true;
     }
 
-    // Stops timer and resets some values.
-    private void stopTimer() {
-        if (timer != null && timerInProgress) {
-            timer.cancel();
-            destroyNotification();
-        }
+    // Destroy notification.
+    private void destroyNotification() {
+        notificationManager.cancel(NOTIFICATION_ID);
+        notificationManager.cancelAll();
+    }
 
-        timerInProgress = false;
-        stopForeground(true);
+    private void updateNotification(NotificationCompat.Builder builder) {
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     // Update notification builder.
@@ -136,20 +153,6 @@ public class TimerNotificationService
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-
-        broadcastManager = LocalBroadcastManager.getInstance(this);
-        notificationManager = NotificationManagerCompat.from(this);
-    }
-
-    // Destroy notification.
-    private void destroyNotification() {
-        notificationManager.cancel(NOTIFICATION_ID);
-        notificationManager.cancelAll();
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         stopTimer();
@@ -159,10 +162,6 @@ public class TimerNotificationService
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
-    }
-
-    private void updateNotification(NotificationCompat.Builder builder) {
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     class LocalBinder extends Binder {

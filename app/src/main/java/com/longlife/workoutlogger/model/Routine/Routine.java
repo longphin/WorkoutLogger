@@ -31,16 +31,16 @@ public class Routine {
 
     private Long idWorkoutProgram;
 
+    public Routine() {
+
+    }
+
     public Long getIdWorkoutProgram() {
         return idWorkoutProgram;
     }
 
     public void setIdWorkoutProgram(Long idWorkoutProgram) {
         this.idWorkoutProgram = idWorkoutProgram;
-    }
-
-    public Routine() {
-
     }
 
     public Long getIdRoutine() {

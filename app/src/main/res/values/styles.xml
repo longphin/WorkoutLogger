@@ -40,16 +40,6 @@
         <item name="fontFamily">andada</item>
     </style>
 
-    <style name="DefaultTextViewWithIdStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
-        <item name="android:fontFamily">andada</item>
-        <item name="fontFamily">andada</item>
-    </style>
-
-    <style name="TextViewWithId" parent="Base.Widget.AppCompat.CompoundButton.CheckBox">
-        <item name="android:fontFamily">andada</item>
-        <item name="fontFamily">andada</item>
-    </style>
-
     <style name="DefaultButtonStyle" parent="android:Widget.Button">
         <item name="android:fontFamily">andada</item>
         <item name="fontFamily">andada</item>

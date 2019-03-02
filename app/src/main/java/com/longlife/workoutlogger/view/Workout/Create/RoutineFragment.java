@@ -41,6 +41,7 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
     private Long idRoutine;
     private RoutineAdapter routineAdapter;
     private View mView;
+    private List<RoutineAdapter.exerciseItemInRoutine> exercisesToAddIntoRoutine = new ArrayList<>();
 
     public static RoutineFragment newInstance(Long idRoutine) {
         RoutineFragment fragment = new RoutineFragment();
@@ -57,7 +58,6 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
         getViewModel();
     }
 
-    private List<RoutineAdapter.exerciseItemInRoutine> exercisesToAddIntoRoutine = new ArrayList<>();
     public void getViewModel() {
         ((MyApplication) getActivity().getApplication())
                 .getApplicationComponent()
@@ -66,35 +66,26 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
         WorkoutViewModel workoutViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WorkoutViewModel.class);
         RoutinesViewModel routineViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
 
-            // Observe when an exercise is to be added to the routine.
-            addDisposable(workoutViewModel.getExerciseToInsertObservable().subscribe(this::exerciseInserted));
+        // Observe when an exercise is to be added to the routine.
+        addDisposable(workoutViewModel.getExerciseToInsertObservable().subscribe(this::exerciseInserted));
         if (idRoutine != null) {
-                routineViewModel.getExercisesShortForRoutine(idRoutine)
-                        .subscribe(new SingleObserver<List<RoutineAdapter.exerciseItemInRoutine>>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
+            routineViewModel.getExercisesShortForRoutine(idRoutine)
+                    .subscribe(new SingleObserver<List<RoutineAdapter.exerciseItemInRoutine>>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onSuccess(List<RoutineAdapter.exerciseItemInRoutine> exercisesToAdd) {
-                                includeExercisesToRoutine(exercisesToAdd);
-                            }
+                        @Override
+                        public void onSuccess(List<RoutineAdapter.exerciseItemInRoutine> exercisesToAdd) {
+                            includeExercisesToRoutine(exercisesToAdd);
+                        }
 
-                            @Override
-                            public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
 
-                            }
-                        });
-        }
-    }
-
-    // Exercise is inserted into the routine.
-    private void exerciseInserted(RoutineAdapter.exerciseItemInRoutine exerciseToAdd) {
-        if (exerciseToAdd.getIdRoutine().equals(idRoutine)) {
-            //routineAdapter.addExercise(exerciseInsertedToRoutine);
-            exercisesToAddIntoRoutine.add(exerciseToAdd);
-            addExercisesToRoutine();
+                        }
+                    });
         }
     }
 
@@ -109,6 +100,15 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
         if (isAdded() && routineAdapter != null && exercisesToAddIntoRoutine != null && !exercisesToAddIntoRoutine.isEmpty()) {
             routineAdapter.addExercises(exercisesToAddIntoRoutine);
             exercisesToAddIntoRoutine.clear();
+        }
+    }
+
+    // Exercise is inserted into the routine.
+    private void exerciseInserted(RoutineAdapter.exerciseItemInRoutine exerciseToAdd) {
+        if (exerciseToAdd.getIdRoutine().equals(idRoutine)) {
+            //routineAdapter.addExercise(exerciseInsertedToRoutine);
+            exercisesToAddIntoRoutine.add(exerciseToAdd);
+            addExercisesToRoutine();
         }
     }
 

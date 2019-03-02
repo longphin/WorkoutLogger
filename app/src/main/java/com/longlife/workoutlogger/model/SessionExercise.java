@@ -48,12 +48,12 @@ public class SessionExercise {
         this.note = note;
     }
 
-    public String getNote() {
-        return note;
-    }
-
     public SessionExercise() {
 
+    }
+
+    public String getNote() {
+        return note;
     }
 
     public void setNote(String note) {

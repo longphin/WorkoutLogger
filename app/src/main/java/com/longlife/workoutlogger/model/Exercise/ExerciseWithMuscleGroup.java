@@ -41,13 +41,13 @@ public class ExerciseWithMuscleGroup implements IExerciseListable {
         this.idMuscle = idMuscle;
     }
 
+    public String getNote() {
+        return note;
+    }
+
     @Override
     public String getName() {
         return name;
-    }
-
-    public void setIdExercise(Long idExercise) {
-        this.idExercise = idExercise;
     }
 
     @Override
@@ -55,20 +55,8 @@ public class ExerciseWithMuscleGroup implements IExerciseListable {
         return idExercise;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public boolean isLocked() {
-        return locked;
+    public void setIdExercise(Long idExercise) {
+        this.idExercise = idExercise;
     }
 
     @Override
@@ -77,6 +65,18 @@ public class ExerciseWithMuscleGroup implements IExerciseListable {
         this.idExercise = updatedExercise.getIdExercise();
         this.name = updatedExercise.getName();
         this.note = updatedExercise.getNote();
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 
     @Override

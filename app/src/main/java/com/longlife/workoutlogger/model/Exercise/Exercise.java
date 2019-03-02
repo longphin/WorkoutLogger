@@ -74,17 +74,6 @@ public class Exercise implements Parcelable, JSONParser.JSON {
     //@TypeConverters({ExerciseTypeConverter.class})
     //private ExerciseType exerciseType; // The type of exercise, such as weight, bodyweight, distance.
     private int exerciseType;
-
-    public Exercise() {
-
-    }
-
-    @Ignore
-    private Exercise(Parcel parcel) {
-        idExercise = parcel.readLong();
-        name = parcel.readString();
-    }
-
     @TypeConverters({MeasurementTypeConverter.class})
     private MeasurementType measurementType; // The measurement of the exercise, such as reps or duration.
     // That that this instance was created.
@@ -93,6 +82,14 @@ public class Exercise implements Parcelable, JSONParser.JSON {
     private Date lastUpdateDate = (new GregorianCalendar()).getTime();
     @Nullable
     private Boolean isPreloaded = false;
+    public Exercise() {
+
+    }
+    @Ignore
+    private Exercise(Parcel parcel) {
+        idExercise = parcel.readLong();
+        name = parcel.readString();
+    }
 
     // Constructor that builds an exercise from a JSON object.
     @Ignore

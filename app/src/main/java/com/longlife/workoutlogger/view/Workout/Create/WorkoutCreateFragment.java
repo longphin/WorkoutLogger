@@ -46,6 +46,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 public class WorkoutCreateFragment extends ExercisesListFragmentBase implements ExercisesListAdapter.IExerciseListCallback {
     public static final String TAG = WorkoutCreateFragment.class.getSimpleName();
     private static final String SAVEDSTATE_IDWORKOUT = "idWorkout";
+    private static final String INPUT_IDWORKOUT = "idWorkout";
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     private WorkoutViewModel workoutViewModel;
@@ -54,12 +55,12 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     private Long idWorkout;
     private boolean routinesInitialized = false;
     private List<Routine> initializedRoutines = new ArrayList<>();
+    private ViewPager routineViewPager;
+    private Spinner groupBySelector;
 
     public WorkoutCreateFragment() {
         // Required empty public constructor
     }
-
-    private static final String INPUT_IDWORKOUT = "idWorkout";
 
     // Constructor for when a new workout. A new workout entry will be added to the database.
     public static WorkoutCreateFragment newInstance() {
@@ -92,14 +93,34 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         }
     }
 
-    private ViewPager routineViewPager;
+    @Override
+    public void onDestroyView() {
+        routinesInitialized = false;
+        mView = null;
+        routineAdapter = null;
+        initializedRoutines = null;
+        routineViewPager = null;
+
+        if (groupBySelector != null) {
+            groupBySelector.setAdapter(null);
+            groupBySelector = null;
+        }
+
+        super.onDestroyView();
+    }
 
     @Override
     protected int getExercisesRecyclerViewId() {
         return R.id.rv_exercises;
     }
 
-    private Spinner groupBySelector;
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initializeWorkoutData(mView);
+        initializeGroupByOptions(mView);
+    }
 
     @Override
     public void getViewModel() {
@@ -121,14 +142,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     @Override
     protected int getLayoutRoot() {
         return R.id.workout_create_overview_layout;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        initializeWorkoutData(mView);
-        initializeGroupByOptions(mView);
     }
 
     private void initializeWorkoutData(View mView) {
@@ -212,20 +225,35 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                 });
     }
 
-    @Override
-    public void onDestroyView() {
-        routinesInitialized = false;
-        mView = null;
-        routineAdapter = null;
-        initializedRoutines = null;
-        routineViewPager = null;
+    // Will check if the routineAdapter has been initialized and if the routine data has been initialized.
+    // If they are, then add the routine id's to the routineAdapter.
+    private void setRoutineSliderAdapterData() {
+        if (!routinesInitialized && routineAdapter != null) {
+            if (initializedRoutines == null) initializedRoutines = new ArrayList<>();
+            if (!initializedRoutines.isEmpty()) {
+                routineAdapter.addRoutines(initializedRoutines);
 
-        if (groupBySelector != null) {
-            groupBySelector.setAdapter(null);
-            groupBySelector = null;
+                initializedRoutines.clear();
+                routinesInitialized = true;
+            }
         }
+    }
 
-        super.onDestroyView();
+    private void obtainedExistingWorkout(WorkoutProgram workoutProgram) {
+        idWorkout = workoutProgram.getIdWorkout();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mView = inflater.inflate(R.layout.fragment_workout_create, container, false);
+        groupBySelector = mView.findViewById(R.id.spinner_workout_exercise_group_by);
+        initializeSelectedExercisesViewPager();
+
+        //initializeObservers();
+        initializeRecyclerView(mView);
+        return mView;
     }
 
     private void initializeSelectedExercisesViewPager() {
@@ -258,41 +286,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                         });
             }
         });
-    }
-
-    private void obtainedExistingWorkout(WorkoutProgram workoutProgram) {
-        idWorkout = workoutProgram.getIdWorkout();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_workout_create, container, false);
-        groupBySelector = mView.findViewById(R.id.spinner_workout_exercise_group_by);
-        initializeSelectedExercisesViewPager();
-
-        //initializeObservers();
-        initializeRecyclerView(mView);
-        return mView;
-    }
-
-/*    private ViewPager routineViewPager;
-    private TabLayout tabLayout;
-    private Button addRoutineButton;*/
-
-    // Will check if the routineAdapter has been initialized and if the routine data has been initialized.
-    // If they are, then add the routine id's to the routineAdapter.
-    private void setRoutineSliderAdapterData() {
-        if (!routinesInitialized && routineAdapter != null) {
-            if (initializedRoutines == null) initializedRoutines = new ArrayList<>();
-            if (!initializedRoutines.isEmpty()) {
-                routineAdapter.addRoutines(initializedRoutines);
-
-                initializedRoutines.clear();
-                routinesInitialized = true;
-            }
-        }
     }
 
     private void addRoutineToSliderAdapterData(Routine routine) {

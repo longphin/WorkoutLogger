@@ -36,9 +36,21 @@ public class PerformSetDialog extends DialogBase
         implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = PerformSetDialog.class.getSimpleName();
+    // Set limited digits for numbers.
+    private static final int weightsDigitLimit = 4;
+    private static final int repsDigitLimit = 3;
+    // Input constants.
+    private static final String INPUT_EXERCISE_INDEX = "exerciseIndex";
+    private static final String INPUT_SET_INDEX_WITHIN_EXERCISE_INDEX = "setIndexWithinExerciseIndex";
+    private static final String INPUT_REST_MINUTES = "restMinutes";
+    private static final String INPUT_REST_SECONDS = "restSeconds";
+    private static final String INPUT_EXERCISE_NAME = "exerciseName";
+    private static final String INPUT_INITIAL_FOCUS = "initialFocus";
+    private static final String INPUT_WEIGHT_UNIT = "weightUnit";
+    private static final String INPUT_WEIGHT = "weight";
+    private static final String INPUT_REPS = "reps";
     // Populate a drop down list (spinner) with selectable weight units.
     private Spinner spinner;
-
     // Indicates what the user will be editing when they press the number buttons.
     private EditingType currentFocus = EditingType.WEIGHT;
     private int exerciseIndex; // [TODO] Probably can use idSessionExercise instead since all changes should be propogated to the database.
@@ -57,21 +69,6 @@ public class PerformSetDialog extends DialogBase
     private Button blank3;
     private View mView;
     private IOnSave onSaveListener;
-
-    // Set limited digits for numbers.
-    private static final int weightsDigitLimit = 4;
-    private static final int repsDigitLimit = 3;
-
-    // Input constants.
-    private static final String INPUT_EXERCISE_INDEX = "exerciseIndex";
-    private static final String INPUT_SET_INDEX_WITHIN_EXERCISE_INDEX = "setIndexWithinExerciseIndex";
-    private static final String INPUT_REST_MINUTES = "restMinutes";
-    private static final String INPUT_REST_SECONDS = "restSeconds";
-    private static final String INPUT_EXERCISE_NAME = "exerciseName";
-    private static final String INPUT_INITIAL_FOCUS = "initialFocus";
-    private static final String INPUT_WEIGHT_UNIT = "weightUnit";
-    private static final String INPUT_WEIGHT = "weight";
-    private static final String INPUT_REPS = "reps";
 
     public PerformSetDialog() {
         // Required empty public constructor
@@ -282,18 +279,6 @@ public class PerformSetDialog extends DialogBase
         return mView;
     }
 
-    private void initializeWeightSelector(View mView) {
-        spinner = mView.findViewById(R.id.spinner_perform_exercise_units);
-        // Selectable values.
-        ArrayAdapter<WeightUnitTypes.Unit> adapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, WeightUnitTypes.getOptions(getContext()));
-        // Specify the layout to use when the list appears.
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner.
-        spinner.setAdapter(adapter);
-
-        spinner.setSelection(getArguments().getInt(PerformSetDialog.INPUT_WEIGHT_UNIT, WeightUnitTypes.getDefault()));
-    }
-
     private void numberClicked(int num) {
         if (currentFocus == EditingType.WEIGHT) {
             weight = appendCharacter(weight, String.valueOf(num), weightsDigitLimit);
@@ -391,6 +376,18 @@ public class PerformSetDialog extends DialogBase
             return (text + toAppend);
 
         return text;
+    }
+
+    private void initializeWeightSelector(View mView) {
+        spinner = mView.findViewById(R.id.spinner_perform_exercise_units);
+        // Selectable values.
+        ArrayAdapter<WeightUnitTypes.Unit> adapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, WeightUnitTypes.getOptions(getContext()));
+        // Specify the layout to use when the list appears.
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner.
+        spinner.setAdapter(adapter);
+
+        spinner.setSelection(getArguments().getInt(PerformSetDialog.INPUT_WEIGHT_UNIT, WeightUnitTypes.getDefault()));
     }
 
     // When time is updated, then do some cleaning up.

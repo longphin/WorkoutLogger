@@ -35,9 +35,7 @@
 
     <!-- Bottom navigation bar text -->
     <string name="NavBar_Profile">Profile</string>
-    <string name="NavBar_Routines">Routines</string>
     <string name="NavBar_Exercises">Exercises</string>
-    <string name="NavBar_Perform">Perform</string>
     <string name="NavBar_Workout">Workouts</string>
     <!-- Toolbar title for fragments/activities -->
     <string name="Toolbar_Routines">Routines</string>
@@ -129,5 +127,4 @@
     <string name="AddRoutine">Add Routine</string>
     <string name="addWorkout">Add Workout</string>
     <string name="NavBar_Workouts">Workouts</string>
-    <string name="RemoveExerciseFromRoutine">Remove From Routine</string>
 </resources>

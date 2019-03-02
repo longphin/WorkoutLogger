@@ -64,17 +64,6 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_exercises, container, false);
-
-        //initializeObservers();
-        initializeRecyclerView(mView);
-        return mView;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
     }
@@ -134,6 +123,49 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
+    public void getViewModel() {
+        if (viewModel == null && getActivity() != null) {
+            ((MyApplication) getActivity().getApplication())
+                    .getApplicationComponent()
+                    .inject(this);
+            viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
+        }
+    }
+
+    // Data was loaded, so now attach the adapter to the recyclerview.
+    @Override
+    protected void loadDataInterface(List<IExerciseListable> exercises) {
+        super.loadDataInterface(exercises);
+
+        if (searchView != null && adapter != null) {
+            String query = searchView.getQuery().toString();
+            if (!query.isEmpty())
+                adapter.filterData(query);
+        }
+    }
+
+    @Override
+    protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
+        return new ExercisesListRemakeAdapter(this, exercises);
+    }
+
+    @Override
+    protected int getLayoutRoot() {
+        return R.id.exercises_overview_layout;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mView = inflater.inflate(R.layout.fragment_exercises, container, false);
+
+        //initializeObservers();
+        initializeRecyclerView(mView);
+        return mView;
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
@@ -155,16 +187,6 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void getViewModel() {
-        if (viewModel == null && getActivity() != null) {
-            ((MyApplication) getActivity().getApplication())
-                    .getApplicationComponent()
-                    .inject(this);
-            viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
-        }
     }
 
     private void startCreateFragment() {
@@ -207,28 +229,6 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
                 return false;
             }
         });
-    }
-
-    // Data was loaded, so now attach the adapter to the recyclerview.
-    @Override
-    protected void loadDataInterface(List<IExerciseListable> exercises) {
-        super.loadDataInterface(exercises);
-
-        if (searchView != null && adapter != null) {
-            String query = searchView.getQuery().toString();
-            if (!query.isEmpty())
-                adapter.filterData(query);
-        }
-    }
-
-    @Override
-    protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
-        return new ExercisesListRemakeAdapter(this, exercises);
-    }
-
-    @Override
-    protected int getLayoutRoot() {
-        return R.id.exercises_overview_layout;
     }
 
     @Override

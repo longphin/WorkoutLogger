@@ -120,12 +120,12 @@ public abstract class ExerciseDao {
         return ex;
     }
 
-    @Insert
-    public abstract List<Long> insertExerciseMuscles(Set<ExerciseMuscle> muscles);
-
     // Insert an exercise. Do not use directly. Instead, use insertExerciseFull(exercise) to insert a source exercise and a leaf copy.
     @Insert(onConflict = OnConflictStrategy.REPLACE)//OnConflictStrategy.ROLLBACK)
     public abstract Long insertExercise(Exercise ex);
+
+    @Insert
+    public abstract List<Long> insertExerciseMuscles(Set<ExerciseMuscle> muscles);
 
     // Delete an exercise. Currently, we do not use this because exercises will only be hidden/unhidden.
     @Delete

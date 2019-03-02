@@ -74,10 +74,10 @@ public class RoutineCreateFragment
     // View models
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
-    // Other
-    private String descrip;
     @Inject
     Context context;
+    // Other
+    private String descrip;
     private RecyclerView recyclerView;
     private RoutineCreateAdapter adapter;
     // OnClick listener for when item in recyclerview is clicked.
@@ -273,6 +273,17 @@ public class RoutineCreateFragment
         }
     }
 
+    private void renderSelectedExercisesState() {
+    }
+    // Insertion Response
+
+    private void renderSelectedExercisesSuccessState(List<ExerciseShort> ex) {
+        adapter.addExercises(ex);
+    }
+
+    private void renderSelectedExercisesErrorState(Throwable error) {
+    }
+
     private void processInsertResponse(Response<Routine> response) {
         switch (response.getStatus()) {
             case LOADING:
@@ -285,17 +296,6 @@ public class RoutineCreateFragment
                 renderInsertErrorState(response.getError());
                 break;
         }
-    }
-    // Insertion Response
-
-    private void renderSelectedExercisesState() {
-    }
-
-    private void renderSelectedExercisesSuccessState(List<ExerciseShort> ex) {
-        adapter.addExercises(ex);
-    }
-
-    private void renderSelectedExercisesErrorState(Throwable error) {
     }
 
     // Methods

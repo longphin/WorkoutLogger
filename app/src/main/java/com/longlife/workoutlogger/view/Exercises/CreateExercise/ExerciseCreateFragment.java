@@ -45,23 +45,19 @@ public class ExerciseCreateFragment
         extends FragmentBase
         implements AddNoteDialog.OnInputListener {
     public static final String TAG = ExerciseCreateFragment.class.getSimpleName();
-
+    private static final String INPUT_NAME = "name";
+    @Inject
+    public ViewModelProvider.Factory viewModelFactory;
+    protected TextViewWithId[] selectableMuscleViews;
+    protected ExercisesViewModel viewModel;
+    protected EditText name;
+    protected Spinner exerciseTypeSelector;
+    protected boolean saveButtonEnabled = true;
     private Button saveButton;
     private Button cancelButton;
     private ImageView addNoteImage;
-
-    protected TextViewWithId[] selectableMuscleViews;
-
-    @Inject
-    public ViewModelProvider.Factory viewModelFactory;
-    protected ExercisesViewModel viewModel;
-    protected EditText name;
     private String descrip;
-    protected Spinner exerciseTypeSelector;
-    protected boolean saveButtonEnabled = true;
     private View mView;
-
-    private static final String INPUT_NAME = "name";
 
     public static ExerciseCreateFragment newInstance(String name) {
         ExerciseCreateFragment fragment = new ExerciseCreateFragment();
@@ -70,6 +66,17 @@ public class ExerciseCreateFragment
 
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ((MyApplication) getActivity().getApplication())
+                .getApplicationComponent()
+                .inject(this);
+
+        viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
     }
 
     @Nullable
@@ -137,17 +144,6 @@ public class ExerciseCreateFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        ((MyApplication) getActivity().getApplication())
-                .getApplicationComponent()
-                .inject(this);
-
-        viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
-    }
-
-    @Override
     public void onDestroyView() {
         if (exerciseTypeSelector != null) {
             exerciseTypeSelector.setAdapter(null);
@@ -201,17 +197,6 @@ public class ExerciseCreateFragment
         getActivity().onBackPressed();
     }
 
-    private Set<ExerciseMuscle> getSelectedMuscles() {
-        Set<ExerciseMuscle> muscles = new HashSet<>();
-        for (TextViewWithId selectableMuscleView : selectableMuscleViews) {
-            if (selectableMuscleView.isChecked()) {
-                muscles.add(new ExerciseMuscle(Long.valueOf(selectableMuscleView.id)));
-            }
-        }
-
-        return muscles;
-    }
-
     protected void initialToolbarTitle() {
         updateToolbarTitle(getString(R.string.Toolbar_ExerciseCreate));
     }
@@ -227,6 +212,17 @@ public class ExerciseCreateFragment
     // By default, inserts a new record of the exercise.
     protected void exerciseSaved(Exercise newExercise, Set<ExerciseMuscle> relatedMuscles) {
         viewModel.insertExercise(newExercise, relatedMuscles);
+    }
+
+    private Set<ExerciseMuscle> getSelectedMuscles() {
+        Set<ExerciseMuscle> muscles = new HashSet<>();
+        for (TextViewWithId selectableMuscleView : selectableMuscleViews) {
+            if (selectableMuscleView.isChecked()) {
+                muscles.add(new ExerciseMuscle(Long.valueOf(selectableMuscleView.id)));
+            }
+        }
+
+        return muscles;
     }
 
     // By default, displays the exercise create title.

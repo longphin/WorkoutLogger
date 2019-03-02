@@ -63,12 +63,12 @@ import androidx.core.content.ContextCompat;
 */
 public class MyApplication
         extends Application {
-    private static final String TAG = MyApplication.class.getSimpleName();
-
-    private MyApplicationComponent component;
     public static final String NOTIFICATION_CHANNEL_NAME = "Rest Timer";
+    private static final String TAG = MyApplication.class.getSimpleName();
+    private static final String PRELOAD_FILE_1 = "preloadedFile1.json";
     public static String NOTIFICATION_CHANNEL_ID = "RestTimerNotification"; // This can be anything, I believe.
     private static String NOTIFICATION_CHANNEL_DESCRIPTION = "Displays time remaining while resting.";
+    private MyApplicationComponent component;
     // Service for the rest timer notification.
     private TimerNotificationService timerNotificationService;
     private boolean timerNotificationBound = false;
@@ -89,8 +89,6 @@ public class MyApplication
             // [TODO] Why is the service not being disconnected? Should this trigger when the service uses stopSelf()?
         }
     };
-
-    private static final String PRELOAD_FILE_1 = "preloadedFile1.json";
 
     @Override
     public void onCreate() {
@@ -113,6 +111,30 @@ public class MyApplication
         //preloadData();
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
+        // Unbind from timer service.
+        if (timerNotificationBound) {
+            unbindService(timerNotificationConnection);
+            timerNotificationBound = false;
+        }
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
+            notificationChannel.setDescription(NOTIFICATION_CHANNEL_DESCRIPTION);
+            notificationChannel.enableVibration(false);
+            notificationChannel.setSound(null, null);
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            //manager.deleteNotificationChannel(NOTIFICATION_CHANNEL_ID);
+            manager.createNotificationChannel(notificationChannel);
+        }
+    }
+
     private void preloadData() {
         File file1 = new File(PRELOAD_FILE_1);
         if (!file1.exists()) {
@@ -123,17 +145,6 @@ public class MyApplication
         //List<Exercise> preloadedExercises = JSONParser.getExercisesToPreload(this, "dummy.json");
         String res = JSONParser.readFromFile(this, PRELOAD_FILE_1);
         //Exercise ex = gson.fromJson(res, Exercise.class);
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-
-        // Unbind from timer service.
-        if (timerNotificationBound) {
-            unbindService(timerNotificationConnection);
-            timerNotificationBound = false;
-        }
     }
 
     public void startTimerNotificationService(View v, int headerIndex, int setIndex, int minutes, int seconds) {
@@ -150,19 +161,6 @@ public class MyApplication
     public void stopTimerNotificationService() {
         Intent serviceIntent = new Intent(this, TimerNotificationService.class);
         stopService(serviceIntent);
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
-            notificationChannel.setDescription(NOTIFICATION_CHANNEL_DESCRIPTION);
-            notificationChannel.enableVibration(false);
-            notificationChannel.setSound(null, null);
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            //manager.deleteNotificationChannel(NOTIFICATION_CHANNEL_ID);
-            manager.createNotificationChannel(notificationChannel);
-        }
     }
 
     public MyApplicationComponent getApplicationComponent() {

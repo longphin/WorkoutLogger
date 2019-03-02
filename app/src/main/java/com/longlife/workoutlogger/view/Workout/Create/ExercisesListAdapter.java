@@ -25,6 +25,11 @@ public class ExercisesListAdapter extends ExercisesListAdapterBase {
     }
 
     @Override
+    protected int exerciseItemLayout() {
+        return R.layout.item_workout_create_exercise;
+    }
+
+    @Override
     protected void onBindExerciseViewHolder(ExerciseListExerciseViewHolder holder, int position) {
         if (data.get(position) instanceof exerciseItem) {
             holder.getNameTextView().setText((data.get(position)).toString());
@@ -57,11 +62,6 @@ public class ExercisesListAdapter extends ExercisesListAdapterBase {
                 });
             }
         }
-    }
-
-    @Override
-    protected int exerciseItemLayout() {
-        return R.layout.item_workout_create_exercise;
     }
 
     public interface IExerciseListCallback extends IExerciseListCallbackBase {

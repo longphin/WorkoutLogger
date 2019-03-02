@@ -33,6 +33,16 @@ public class PerformRoutineAdapter
     }
 
     @Override
+    public int getSetLayout() {
+        return R.layout.item_perform_routine_set;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder createSetViewHolder(View v) {
+        return new PerformRoutineViewHolder(v);
+    }
+
+    @Override
     public void bindSetViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (!(holder instanceof PerformRoutineViewHolder)) {
             Log.e(TAG, "ViewHolder is not of the proper instance.");
@@ -99,16 +109,6 @@ public class PerformRoutineAdapter
 
             }
         });
-    }
-
-    @Override
-    public int getSetLayout() {
-        return R.layout.item_perform_routine_set;
-    }
-
-    @Override
-    public RecyclerView.ViewHolder createSetViewHolder(View v) {
-        return new PerformRoutineViewHolder(v);
     }
 
     public interface IOnSetClick {

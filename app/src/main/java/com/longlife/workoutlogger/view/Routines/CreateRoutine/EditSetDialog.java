@@ -25,18 +25,18 @@ import androidx.annotation.Nullable;
 public class EditSetDialog
         extends DialogBase {
     public static final String TAG = EditSetDialog.class.getSimpleName();
-    private int exerciseIndex;
-    private int setIndexWithinExerciseIndex;
-    private TextView timerBox;
-    private String time = "";
-    private View mView;
-    private IOnSave onSaveListener;
     // Input constants.
     private static final String INPUT_EXERCISE_INDEX = "exerciseIndex";
     private static final String INPUT_SET_INDEX_WITHIN_EXERCISE_INDEX = "setIndexWithinExerciseIndex";
     private static final String INPUT_REST_MINUTES = "restMinutes";
     private static final String INPUT_REST_SECONDS = "restSeconds";
     private static final String INPUT_EXERCISE_NAME = "exerciseName";
+    private int exerciseIndex;
+    private int setIndexWithinExerciseIndex;
+    private TextView timerBox;
+    private String time = "";
+    private View mView;
+    private IOnSave onSaveListener;
 
     public EditSetDialog() {
         // Required empty public constructor

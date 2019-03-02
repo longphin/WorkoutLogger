@@ -26,14 +26,14 @@ import androidx.annotation.Nullable;
 public class AddNoteDialog
         extends DialogBase {
     public static final String TAG = AddNoteDialog.class.getSimpleName();
+    // Input constants.
+    private static final String INPUT_DESCRIP = "descrip";
     private OnInputListener onInputListener;
     // Other
     private String descripText;
     private Button saveButton;
     private Button cancelButton;
     private EditText descrip;
-    // Input constants.
-    private static final String INPUT_DESCRIP = "descrip";
 
     public static AddNoteDialog newInstance(String descrip) {
         AddNoteDialog dialog = new AddNoteDialog();

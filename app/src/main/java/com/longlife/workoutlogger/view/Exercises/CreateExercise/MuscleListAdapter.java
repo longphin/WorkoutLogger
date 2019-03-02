@@ -22,24 +22,23 @@ import java.util.Set;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int MUSCLE_GROUP_TYPE = 0;
-    private static final int MUSCLE_TYPE = 1;
     // Number of columns for the recyclerview to show.
     public static final int NUMBER_OF_COLUMNS = 2; // [TODO] This should be based on device's screen size, not a static number.
+    private static final int MUSCLE_GROUP_TYPE = 0;
+    private static final int MUSCLE_TYPE = 1;
     private static final int FOOTER_PADDING_TYPE = 2;
     private static final int HEADER_PADDING_TYPE = 3;
     private static final String TAG = MuscleListAdapter.class.getSimpleName();
     private int itemCount;
-
-    public void onStop() {
-        data.clear();
-        data = null;
-        selectedIdMuscle.clear();
-        selectedIdMuscle = null;
-    }
-
     private List<MuscleListHelper> data;
     private Set<Integer> selectedIdMuscle = new HashSet<>(); // List of idMuscle for each muscle that is selected to be a part of the exercise.
+
+    MuscleListAdapter(List<MuscleListHelper> data) {
+        super();
+
+        this.data = data;
+        updateHeaderPositions();
+    }
 
     private void updateHeaderPositions() {
         int pos = 0;
@@ -50,6 +49,13 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             pos += 1 + item.getHeaderPadding();
             itemCount = pos;
         }
+    }
+
+    public void onStop() {
+        data.clear();
+        data = null;
+        selectedIdMuscle.clear();
+        selectedIdMuscle = null;
     }
 
     // Set a list of muscles as selected.
@@ -65,14 +71,6 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         }
         notifyDataSetChanged();
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        if (holder instanceof IViewHolder) {
-            ((IViewHolder) holder).onDestroy();
-        }
     }
 
     @Override
@@ -98,21 +96,6 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    interface IViewHolder {
-        void onDestroy();
-    }
-
-    MuscleListAdapter(List<MuscleListHelper> data) {
-        super();
-
-        this.data = data;
-        updateHeaderPositions();
-    }
-
-    private void bindHeaderViewHolder(MuscleGroupListViewHolder holder, int position) {
-        holder.setName(getNameAtPosition(position));
-    }
-
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int pos) {
         int position = holder.getAdapterPosition();
@@ -131,6 +114,10 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    private void bindHeaderViewHolder(MuscleGroupListViewHolder holder, int position) {
+        holder.setName(getNameAtPosition(position));
+    }
+
     private void bindMuscleViewHolder(MuscleListViewHolder holder, int position) {
         int pos = holder.getAdapterPosition();
         String name = getNameAtPosition(pos);
@@ -144,6 +131,38 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             int clickedPos = holder.getAdapterPosition();
             changeItemSelectedStatus(clickedPos);
         });
+    }
+
+    private void bindPaddingViewHolder(MusclePaddingListViewHolder holder, int position) {
+    }
+
+    private String getNameAtPosition(int position) {
+        for (MuscleListHelper item : data) {
+            int headerPosition = item.getVisiblePosition();
+            int headerPadding = item.getHeaderPadding();
+
+            if (headerPosition == position) return item.getMuscleGroupName();
+            if (item.isExpanded() && position > headerPosition && position <= headerPosition + headerPadding + item.getMuscles().size()) {
+                return item.getMuscles().get(position - headerPosition - headerPadding - 1).getName();
+            }
+        }
+
+        return "Could not find name.";
+    }
+
+    private boolean isItemSelected(int position) {
+        for (MuscleListHelper item : data) {
+            int headerPosition = item.getVisiblePosition();
+            int headerPadding = item.getHeaderPadding();
+
+            if (headerPosition == position)
+                return false; // We do not change selection status for header items.
+            if (item.isExpanded() && position > headerPosition && position <= headerPosition + headerPadding + item.getMuscles().size()) {
+                return item.getMuscles().get(position - headerPosition - headerPadding - 1).isSelected();
+            }
+        }
+
+        return false;
     }
 
     private Integer getMuscleIdForPosition(int position) {
@@ -193,42 +212,10 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private boolean isItemSelected(int position) {
-        for (MuscleListHelper item : data) {
-            int headerPosition = item.getVisiblePosition();
-            int headerPadding = item.getHeaderPadding();
-
-            if (headerPosition == position)
-                return false; // We do not change selection status for header items.
-            if (item.isExpanded() && position > headerPosition && position <= headerPosition + headerPadding + item.getMuscles().size()) {
-                return item.getMuscles().get(position - headerPosition - headerPadding - 1).isSelected();
-            }
-        }
-
-        return false;
-    }
-
     private void removeMuscle(Integer idMuscle) {
         if (idMuscle != null) {
             selectedIdMuscle.remove(idMuscle);
         }
-    }
-
-    private void bindPaddingViewHolder(MusclePaddingListViewHolder holder, int position) {
-    }
-
-    private String getNameAtPosition(int position) {
-        for (MuscleListHelper item : data) {
-            int headerPosition = item.getVisiblePosition();
-            int headerPadding = item.getHeaderPadding();
-
-            if (headerPosition == position) return item.getMuscleGroupName();
-            if (item.isExpanded() && position > headerPosition && position <= headerPosition + headerPadding + item.getMuscles().size()) {
-                return item.getMuscles().get(position - headerPosition - headerPadding - 1).getName();
-            }
-        }
-
-        return "Could not find name.";
     }
 
     @Override
@@ -254,6 +241,14 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return itemCount;
     }
 
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (holder instanceof IViewHolder) {
+            ((IViewHolder) holder).onDestroy();
+        }
+    }
+
     Set<ExerciseMuscle> getExerciseMuscles() {
         Set<ExerciseMuscle> muscles = new HashSet<>();
         for (Integer idMuscle : selectedIdMuscle) {
@@ -261,5 +256,9 @@ public class MuscleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         return muscles;
+    }
+
+    interface IViewHolder {
+        void onDestroy();
     }
 }

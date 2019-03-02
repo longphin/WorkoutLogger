@@ -27,15 +27,15 @@ public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.
 
     private OptionsCallback callback;
 
+    public WorkoutListAdapter(OptionsCallback callback) {
+        this.callback = callback;
+    }
+
     @NonNull
     @Override
     public WorkoutViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workout_list, parent, false);
         return new WorkoutViewHolder(v);
-    }
-
-    public WorkoutListAdapter(OptionsCallback callback) {
-        this.callback = callback;
     }
 
     @Override
@@ -70,12 +70,6 @@ public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.
         }
     }
 
-    public interface OptionsCallback {
-        Context getContext();
-
-        void workoutEdit(Long idWorkout);
-    }
-
     @Override
     public int getItemCount() {
         return workoutList.size();
@@ -84,6 +78,12 @@ public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.
     public void setData(List<WorkoutProgramShort> workoutPrograms) {
         this.workoutList = workoutPrograms;
         notifyDataSetChanged();
+    }
+
+    public interface OptionsCallback {
+        Context getContext();
+
+        void workoutEdit(Long idWorkout);
     }
 
     class WorkoutViewHolder extends RecyclerView.ViewHolder {

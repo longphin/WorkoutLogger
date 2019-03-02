@@ -17,6 +17,13 @@ public class ExerciseListExerciseViewHolder extends RecyclerView.ViewHolder impl
     private TextView nameTextView;
     private TextView moreOptions;
 
+    ExerciseListExerciseViewHolder(View itemView) {
+        super(itemView);
+
+        nameTextView = itemView.findViewById(R.id.txt_exerciseName);
+        moreOptions = itemView.findViewById(R.id.txt_exercise_moreOptions);
+    }
+
     public TextView getNameTextView() {
         return nameTextView;
     }
@@ -24,13 +31,6 @@ public class ExerciseListExerciseViewHolder extends RecyclerView.ViewHolder impl
     @Override
     public void onDestroy() {
         //nameTextView = null;
-    }
-
-    ExerciseListExerciseViewHolder(View itemView) {
-        super(itemView);
-
-        nameTextView = itemView.findViewById(R.id.txt_exerciseName);
-        moreOptions = itemView.findViewById(R.id.txt_exercise_moreOptions);
     }
 
     public TextView getMoreOptionsView() {

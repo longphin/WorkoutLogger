@@ -23,12 +23,6 @@ public class ExercisesListRemakeAdapter extends ExercisesListAdapterBase {
             this.callback = (IExerciseListCallback) callback;
     }
 
-    public interface IExerciseListCallback extends IExerciseListCallbackBase {
-        void exercisePerform(exerciseItem ex);//Long idExercise, String exerciseName);
-
-        void exerciseDelete(ExerciseShort exerciseToDelete);
-    }
-
     @Override
     protected int exerciseItemLayout() {
         return R.layout.item_exercise;
@@ -74,5 +68,11 @@ public class ExercisesListRemakeAdapter extends ExercisesListAdapterBase {
                 });
             }
         }
+    }
+
+    public interface IExerciseListCallback extends IExerciseListCallbackBase {
+        void exercisePerform(exerciseItem ex);//Long idExercise, String exerciseName);
+
+        void exerciseDelete(ExerciseShort exerciseToDelete);
     }
 }

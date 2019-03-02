@@ -66,31 +66,6 @@ public class SessionExerciseSet
     // Indicate whether the set was performed.
     private boolean performed = false;
 
-    public boolean isPerformed() {
-        return performed;
-    }
-
-    public void setPerformed(boolean performed) {
-        this.performed = performed;
-    }
-
-    public int getWeightUnit() {
-        return weightUnit;
-    }
-
-    @NonNull
-    public SetType getType() {
-        return type;
-    }
-
-    public void setType(@NonNull SetType type) {
-        this.type = type;
-    }
-
-    public void setWeightUnit(int weightUnit) {
-        this.weightUnit = weightUnit;
-    }
-
     @Ignore
     private SessionExerciseSet(Parcel parcel) {
         idSessionExerciseSet = parcel.readLong();
@@ -104,6 +79,31 @@ public class SessionExerciseSet
     @Ignore
     public SessionExerciseSet(Long idSessionExercise) {
         this.idSessionExercise = idSessionExercise;
+    }
+
+    public boolean isPerformed() {
+        return performed;
+    }
+
+    public void setPerformed(boolean performed) {
+        this.performed = performed;
+    }
+
+    public int getWeightUnit() {
+        return weightUnit;
+    }
+
+    public void setWeightUnit(int weightUnit) {
+        this.weightUnit = weightUnit;
+    }
+
+    @NonNull
+    public SetType getType() {
+        return type;
+    }
+
+    public void setType(@NonNull SetType type) {
+        this.type = type;
     }
 
     @Ignore
