@@ -220,6 +220,11 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         initializedRoutines = null;
         routineViewPager = null;
 
+        if (groupBySelector != null) {
+            groupBySelector.setAdapter(null);
+            groupBySelector = null;
+        }
+
         super.onDestroyView();
     }
 
@@ -267,7 +272,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         groupBySelector = mView.findViewById(R.id.spinner_workout_exercise_group_by);
         initializeSelectedExercisesViewPager();
 
-        initializeObservers();
+        //initializeObservers();
         initializeRecyclerView(mView);
         return mView;
     }

@@ -39,7 +39,6 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     private Long idRoutine;
-    private WorkoutViewModel workoutViewModel;
     private RoutineAdapter routineAdapter;
     private View mView;
 
@@ -60,16 +59,16 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
 
     private List<RoutineAdapter.exerciseItemInRoutine> exercisesToAddIntoRoutine = new ArrayList<>();
     public void getViewModel() {
-        if (workoutViewModel == null) {
-            ((MyApplication) getActivity().getApplication())
-                    .getApplicationComponent()
-                    .inject(this);
-            workoutViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WorkoutViewModel.class);
-            RoutinesViewModel routineViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
+        ((MyApplication) getActivity().getApplication())
+                .getApplicationComponent()
+                .inject(this);
+
+        WorkoutViewModel workoutViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WorkoutViewModel.class);
+        RoutinesViewModel routineViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
 
             // Observe when an exercise is to be added to the routine.
             addDisposable(workoutViewModel.getExerciseToInsertObservable().subscribe(this::exerciseInserted));
-            if (idRoutine != null)
+        if (idRoutine != null) {
                 routineViewModel.getExercisesShortForRoutine(idRoutine)
                         .subscribe(new SingleObserver<List<RoutineAdapter.exerciseItemInRoutine>>() {
                             @Override
@@ -87,7 +86,6 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
 
                             }
                         });
-            // [TODO] Add observable for when this routine is restored. The observable calls query to grab all RoutineExercise where idRoutine=:idRoutine
         }
     }
 

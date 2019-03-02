@@ -26,8 +26,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 
 public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int HEADER_TYPE = 0;
@@ -49,40 +51,63 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
         data.clear();
         headers.clear();
 
-        for (int i = 0; i < exercises.size(); i++) // [TODO] Make this an async task.
-        {
-            IExerciseListable ex = exercises.get(i);
-            // Get how the exercise will be grouped by.
-            String headerCategory = ex.getCategory();
-            headers.add(headerCategory);
-            addItem(new exerciseItem(headerCategory, ex, ex.getNote())); // [TODO] for WorkoutCreateFragment, we need to set the item to a different type, or at least be able to only allow editing the exercise (not delete/perform)
-        }
-        // Include headers
-        for (String s : headers) {
-            addItem(new headerItem(s, s));
-        }
-        /* // Add categories in an async observable instead of a for loop.
-        Single.fromObservable(Observable.fromIterable(exercises)
-                .map(ex -> {
-                    return new headerItem(ex.getCategory(), ex.getCategory());
-                })
-                .toList()
-                .toObservable()
-        ).observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(categories ->
+        // 1. Iterate through the exercises and create a list item for the exercise.
+        // 2. Then, create headers for the exercise categories also as a list item.
+        Observable.fromIterable(exercises)
+                .map(ex ->
                 {
-                    data.addAll(categories);
+                    String headerCategory = ex.getCategory();
+                    headers.add(headerCategory); // Keep track of the exercise's category to create an item for the category later.
+                    return new exerciseItem(headerCategory, ex, ex.getNote()); // The list item for the exercise.
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toList()
+                .subscribe(new SingleObserver<List<exerciseItem>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<exerciseItem> exerciseItems) {
+                        // Add exercises to the list.
+                        data.addAll(exerciseItems);
+
+                        // Add headers to the list.
+                        Observable.fromIterable(headers)
+                                .map(headerName -> new headerItem(headerName, headerName))
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .toList()
+                                .subscribe(new SingleObserver<List<headerItem>>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onSuccess(List<headerItem> headerItems) {
+                                        // Add list items for each category.
+                                        data.addAll(headerItems);
+
+                                        // Sort the exercise list items and the category list items.
+                                        Collections.sort(data);
+                                        notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
                 });
-        */
-
-        // Sort data.
-        Collections.sort(data);
-        notifyDataSetChanged();
-    }
-
-    private void addItem(IViewItem item) {
-        data.add(item);
     }
 
     void restoreExercise(ExerciseShort exerciseToRestore) {

@@ -69,7 +69,7 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_exercises, container, false);
 
-        initializeObservers();
+        //initializeObservers();
         initializeRecyclerView(mView);
         return mView;
     }
