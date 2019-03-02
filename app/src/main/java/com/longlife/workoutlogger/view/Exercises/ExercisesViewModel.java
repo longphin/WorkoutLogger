@@ -176,7 +176,7 @@ public class ExercisesViewModel
                 });
     }
 
-    void loadExercisesByMuscleGroup(Context context, int idMuscleGroup) {
+    public void loadExercisesByMuscleGroup(Context context, int idMuscleGroup) {
         repo.getExercisesByMuscleGroup(idMuscleGroup)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

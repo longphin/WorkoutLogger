@@ -201,7 +201,7 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (adapter != null) {
-                    adapter.filterData(newText); //[TODO] Why is this not working when deleting characters from the filter? It seems to trigger, but the adapter.originalData is saving the filtered data?
+                    adapter.filterData(newText);
                     return true;
                 }
                 return false;

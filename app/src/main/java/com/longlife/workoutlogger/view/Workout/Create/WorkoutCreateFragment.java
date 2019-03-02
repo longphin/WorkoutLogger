@@ -11,12 +11,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.google.android.material.tabs.TabLayout;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.dataViewModel.WorkoutViewModel;
+import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
+import com.longlife.workoutlogger.enums.MuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.model.Routine.Routine;
 import com.longlife.workoutlogger.model.Workout.WorkoutProgram;
@@ -94,12 +99,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         return R.id.rv_exercises;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        initializeGroupByOptions(mView);
-    }
+    private Spinner groupBySelector;
 
     @Override
     public void getViewModel() {
@@ -123,9 +123,17 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         return R.id.workout_create_overview_layout;
     }
 
-    private void initializeGroupByOptions(View mView) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initializeWorkoutData(mView);
+        initializeGroupByOptions(mView);
+    }
+
+    private void initializeWorkoutData(View mView) {
         getViewModel();
-        viewModel.loadExercises();
+        //viewModel.loadExercises();
         if (idWorkout == null || idWorkout == -1) {
             workoutViewModel.createNewWorkoutProgram()
                     .subscribe(new DisposableSingleObserver<Long>() {
@@ -142,6 +150,33 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         } else {
             getRoutinesForWorkout(idWorkout);
         }
+    }
+
+    private void initializeGroupByOptions(View v) {
+        groupBySelector = v.findViewById(R.id.spinner_workout_exercise_group_by);
+        ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
+        // Specify the layout to use when the list appears.
+        groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Attach the adapter.
+        groupBySelector.setAdapter(groupByAdapter);
+
+        groupBySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
+                // When the group by is changed, execute the filter on the new group by.
+                if (selectedGroupBy == 0) {
+                    viewModel.loadExercises();
+                } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
+                    viewModel.loadExercisesByMuscleGroup(getContext(), selectedGroupBy - 1);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void obtainedNewWorkout(Long idWorkoutProgram) {
@@ -229,6 +264,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_workout_create, container, false);
+        groupBySelector = mView.findViewById(R.id.spinner_workout_exercise_group_by);
         initializeSelectedExercisesViewPager();
 
         initializeObservers();
