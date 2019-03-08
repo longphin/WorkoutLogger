@@ -107,8 +107,8 @@
     <string name="WEIGHTUNIT_kbs">Kgs</string>
 
     <!-- Options for grouping exercise list -->
-    <string name="GROUPBY_NAME">Group By Name</string>
-    <string name="GROUPBY_PREFIX">Group By</string>
+    <string name="GROUPBY_NAME">A-Z</string>
+    <string name="GROUPBY_PREFIX"></string>
 
     <!-- List of weight unit options [TODO} remove, this is no longer used-->
     <string-array name="units_array">

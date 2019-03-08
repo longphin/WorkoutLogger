@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.longlife.workoutlogger.AndroidUtils.SpinnerInteractionListener;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
@@ -55,32 +56,24 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
         return new ExercisesListFragment();
     }
 
+    private static final String SAVEDSTATE_groupBySelection = "initialGroupBySelection";
+    private int initialGroupBySelection = 0;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //initializeObservers();
+        if (savedInstanceState != null) {
+            initialGroupBySelection = savedInstanceState.getInt(SAVEDSTATE_groupBySelection, 0);
+        }
+
         setHasOptionsMenu(true);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (searchView != null) {
-            searchView.setOnQueryTextListener(null);
-            searchView = null;
-        }
-
-        if (groupBySelector != null) {
-            groupBySelector.setAdapter(null);
-            groupBySelector = null;
-        }
-
-        super.onDestroyView();
     }
 
     @Override
@@ -95,31 +88,38 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
         initializeGroupByOptions(mView);
     }
 
-    private void initializeGroupByOptions(View v) {
-        groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
-        ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
-        // Specify the layout to use when the list appears.
-        groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Attach the adapter.
-        groupBySelector.setAdapter(groupByAdapter);
+    @Override
+    public void onDestroyView() {
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(null);
+            searchView = null;
+        }
 
-        groupBySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
-                // When the group by is changed, execute the filter on the new group by.
-                if (selectedGroupBy == 0) {
-                    viewModel.loadExercises();
-                } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
-                    viewModel.loadExercisesByMuscleGroup(getContext(), selectedGroupBy - 1);
-                }
-            }
+        if (groupBySelector != null) {
+            groupBySelector.setAdapter(null);
+            groupBySelector.setOnItemSelectedListener(null);
+            groupBySelector = null;
+        }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+        super.onDestroyView();
+    }
 
-            }
-        });
+    // Data was loaded, so now attach the adapter to the recyclerview.
+    @Override
+    protected void loadExercises(List<IExerciseListable> exercises) {
+        super.loadExercises(exercises);
+
+        if (isAdded() && searchView != null && adapter != null) {
+            String query = searchView.getQuery().toString();
+            if (!query.isEmpty())
+                adapter.filterData(query);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(SAVEDSTATE_groupBySelection, ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId());
     }
 
     @Override
@@ -132,16 +132,41 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
         }
     }
 
-    // Data was loaded, so now attach the adapter to the recyclerview.
-    @Override
-    protected void loadDataInterface(List<IExerciseListable> exercises) {
-        super.loadDataInterface(exercises);
+    private void initializeGroupByOptions(View v) {
+        if (groupBySelector == null && getContext() != null) {
+            groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
+            ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
+            // Specify the layout to use when the list appears.
+            groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // Attach the adapter.
+            groupBySelector.setAdapter(groupByAdapter);
 
-        if (searchView != null && adapter != null) {
-            String query = searchView.getQuery().toString();
-            if (!query.isEmpty())
-                adapter.filterData(query);
+            groupBySelector.setSelection(initialGroupBySelection, false);
+            SpinnerInteractionListener selectionListener = new SpinnerInteractionListener() {
+                @Override
+                public void onItemSelectedFunction(AdapterView<?> parent, View view, int pos, long id) {
+                    int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
+                    // When the group by is changed, execute the filter on the new group by.
+                    if (selectedGroupBy == 0) {
+                        viewModel.loadExercises();
+                    } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
+                        viewModel.loadExercisesByMuscleGroup(getContext(), selectedGroupBy - 1);
+                    }
+                }
+            };
+            groupBySelector.setOnItemSelectedListener(selectionListener); // Need this to trigger when the spinner item is chosen.
+            groupBySelector.setOnTouchListener(selectionListener); // Need this to prevent the fragment from only triggering when user interacts with listener or on first load.
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -206,29 +231,31 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
     }
 
     private void initializeSearchForExercisesView(MenuItem searchForExerciseItem) {
-        searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+        if (searchView == null) {
+            searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
 
-        searchForExerciseItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        searchForExerciseItem.setActionView(searchView);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (adapter != null) {
-                    adapter.filterData(query);
-                    return true;
+            searchForExerciseItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            searchForExerciseItem.setActionView(searchView);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    if (adapter != null) {
+                        adapter.filterData(query);
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (adapter != null) {
-                    adapter.filterData(newText);
-                    return true;
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (adapter != null) {
+                        adapter.filterData(newText);
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        }
     }
 
     @Override

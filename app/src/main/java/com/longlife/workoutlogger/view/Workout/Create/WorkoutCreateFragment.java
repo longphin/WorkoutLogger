@@ -7,6 +7,7 @@
 package com.longlife.workoutlogger.view.Workout.Create;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.android.material.tabs.TabLayout;
+import com.longlife.workoutlogger.AndroidUtils.SpinnerInteractionListener;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.dataViewModel.WorkoutViewModel;
@@ -24,7 +26,6 @@ import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
 import com.longlife.workoutlogger.enums.MuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.model.Routine.Routine;
-import com.longlife.workoutlogger.model.Workout.WorkoutProgram;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapterBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListFragmentBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesViewModel;
@@ -57,6 +58,8 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     private List<Routine> initializedRoutines = new ArrayList<>();
     private ViewPager routineViewPager;
     private Spinner groupBySelector;
+    @Inject
+    public Context context;
 
     public WorkoutCreateFragment() {
         // Required empty public constructor
@@ -118,7 +121,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initializeWorkoutData(mView);
+        initializeWorkoutData();
         initializeGroupByOptions(mView);
     }
 
@@ -144,7 +147,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         return R.id.workout_create_overview_layout;
     }
 
-    private void initializeWorkoutData(View mView) {
+    private void initializeWorkoutData() {
         getViewModel();
         //viewModel.loadExercises();
         if (idWorkout == null || idWorkout == -1) {
@@ -167,29 +170,31 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
 
     private void initializeGroupByOptions(View v) {
         groupBySelector = v.findViewById(R.id.spinner_workout_exercise_group_by);
-        ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
-        // Specify the layout to use when the list appears.
-        groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Attach the adapter.
-        groupBySelector.setAdapter(groupByAdapter);
 
-        groupBySelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
-                // When the group by is changed, execute the filter on the new group by.
-                if (selectedGroupBy == 0) {
-                    viewModel.loadExercises();
-                } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
-                    viewModel.loadExercisesByMuscleGroup(getContext(), selectedGroupBy - 1);
+        Context context = getContext();
+        if (context != null && groupBySelector != null) {
+            ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(context, R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(context));
+
+            // Specify the layout to use when the list appears.
+            groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // Attach the adapter.
+            groupBySelector.setAdapter(groupByAdapter);
+
+            SpinnerInteractionListener spinnerListener = new SpinnerInteractionListener() {
+                @Override
+                public void onItemSelectedFunction(AdapterView<?> parent, View view, int pos, long id) {
+                    int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
+                    // When the group by is changed, execute the filter on the new group by.
+                    if (selectedGroupBy == 0) {
+                        viewModel.loadExercises();
+                    } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
+                        viewModel.loadExercisesByMuscleGroup(getContext(), selectedGroupBy - 1);
+                    }
                 }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+            };
+            groupBySelector.setOnItemSelectedListener(spinnerListener);
+            groupBySelector.setOnTouchListener(spinnerListener);
+        }
     }
 
     private void obtainedNewWorkout(Long idWorkoutProgram) {
@@ -198,8 +203,10 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                 .subscribe(new DisposableSingleObserver<Routine>() {
                     @Override
                     public void onSuccess(Routine routine) {
-                        initializedRoutines.add(routine);
-                        setRoutineSliderAdapterData();
+                        if (isAdded()) {
+                            initializedRoutines.add(routine);
+                            setRoutineSliderAdapterData();
+                        }
                     }
 
                     @Override
@@ -214,8 +221,10 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                 .subscribe(new DisposableSingleObserver<List<Routine>>() {
                     @Override
                     public void onSuccess(List<Routine> routines) {
-                        initializedRoutines.addAll(routines);
-                        setRoutineSliderAdapterData();
+                        if (isAdded()) {
+                            initializedRoutines.addAll(routines);
+                            setRoutineSliderAdapterData();
+                        }
                     }
 
                     @Override
@@ -237,10 +246,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                 routinesInitialized = true;
             }
         }
-    }
-
-    private void obtainedExistingWorkout(WorkoutProgram workoutProgram) {
-        idWorkout = workoutProgram.getIdWorkout();
     }
 
     @Override
@@ -289,7 +294,8 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     private void addRoutineToSliderAdapterData(Routine routine) {
-        routineAdapter.addRoutine(routine);
+        if (isAdded())
+            routineAdapter.addRoutine(routine);
     }
 
     @Override
@@ -300,6 +306,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
 
     @Override
     public void addExerciseToRoutine(Long idExercise, String exerciseName) {
-        workoutViewModel.insertExerciseForRoutine(new RoutineAdapter.exerciseItemInRoutine(routineAdapter.getRoutineId(routineViewPager.getCurrentItem()), idExercise, exerciseName, 1));
+        if (isAdded())
+            workoutViewModel.insertExerciseForRoutine(new RoutineAdapter.exerciseItemInRoutine(routineAdapter.getRoutineId(routineViewPager.getCurrentItem()), idExercise, exerciseName, 1));
     }
 }
