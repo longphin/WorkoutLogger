@@ -12,18 +12,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 
 import com.google.android.material.tabs.TabLayout;
-import com.longlife.workoutlogger.AndroidUtils.SpinnerInteractionListener;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.dataViewModel.WorkoutViewModel;
-import com.longlife.workoutlogger.enums.ExerciseListGroupBy;
-import com.longlife.workoutlogger.enums.MuscleGroup;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.model.Routine.Routine;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapterBase;
@@ -57,7 +51,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     private boolean routinesInitialized = false;
     private List<Routine> initializedRoutines = new ArrayList<>();
     private ViewPager routineViewPager;
-    private Spinner groupBySelector;
     @Inject
     public Context context;
 
@@ -104,11 +97,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         initializedRoutines = null;
         routineViewPager = null;
 
-        if (groupBySelector != null) {
-            groupBySelector.setAdapter(null);
-            groupBySelector = null;
-        }
-
         super.onDestroyView();
     }
 
@@ -122,7 +110,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         super.onActivityCreated(savedInstanceState);
 
         initializeWorkoutData();
-        initializeGroupByOptions(mView);
+        //initializeGroupByOptions(mView);
     }
 
     @Override
@@ -165,35 +153,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                     });
         } else {
             getRoutinesForWorkout(idWorkout);
-        }
-    }
-
-    private void initializeGroupByOptions(View v) {
-        groupBySelector = v.findViewById(R.id.spinner_workout_exercise_group_by);
-
-        Context context = getContext();
-        if (context != null && groupBySelector != null) {
-            ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(context, R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(context));
-
-            // Specify the layout to use when the list appears.
-            groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Attach the adapter.
-            groupBySelector.setAdapter(groupByAdapter);
-
-            SpinnerInteractionListener spinnerListener = new SpinnerInteractionListener() {
-                @Override
-                public void onItemSelectedFunction(AdapterView<?> parent, View view, int pos, long id) {
-                    int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
-                    // When the group by is changed, execute the filter on the new group by.
-                    if (selectedGroupBy == 0) {
-                        viewModel.loadExercises();
-                    } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
-                        viewModel.loadExercisesByMuscleGroup(getContext(), selectedGroupBy - 1);
-                    }
-                }
-            };
-            groupBySelector.setOnItemSelectedListener(spinnerListener);
-            groupBySelector.setOnTouchListener(spinnerListener);
         }
     }
 
@@ -253,7 +212,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_workout_create, container, false);
-        groupBySelector = mView.findViewById(R.id.spinner_workout_exercise_group_by);
+        //groupBySelector = mView.findViewById(R.id.spinner_workout_exercise_group_by);
         initializeSelectedExercisesViewPager();
 
         //initializeObservers();
