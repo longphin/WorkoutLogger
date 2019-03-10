@@ -8,8 +8,10 @@ package com.longlife.workoutlogger.view.Exercises;
 
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -93,19 +95,16 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         super.onDestroyView();
     }
 
-    protected void initializeRecyclerView(View v) {
-        if (recyclerView == null)
-            recyclerView = v.findViewById(getExercisesRecyclerViewId());
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mView = inflater.inflate(getViewLayout(), container, false);
 
-        recyclerView.setAdapter(adapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        if (getContext() != null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        }
-        //ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
-        //new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-        setAdapterForRecyclerView();
+        //initializeObservers();
+        initializeRecyclerView();
+        initializeSearchExercises();
+        return mView;
     }
 
     protected abstract int getExercisesRecyclerViewId();
@@ -197,6 +196,49 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
     }
 
     protected abstract ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises); // [TODO] change ExercisesListAdapterBase.IClickExercise to a base interface instead. That way, whether the adapter is for exercise list or workout create, the number of callback options is limited.
+
+    // This is the fragment layout resource.
+    protected abstract int getViewLayout();
+
+    protected void initializeRecyclerView() {
+        if (recyclerView == null)
+            recyclerView = mView.findViewById(getExercisesRecyclerViewId());
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        if (getContext() != null) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        }
+        //ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
+        //new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+        setAdapterForRecyclerView();
+    }
+
+    private void initializeSearchExercises() {
+        if (searchView == null) {
+            searchView = mView.findViewById(R.id.exercises_search_exercises);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    if (adapter != null) {
+                        adapter.filterData(query);
+                        return true;
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (adapter != null) {
+                        adapter.filterData(newText);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
+    }
 
     private void initializeSearchForExercisesView(MenuItem searchForExerciseItem) {
         if (searchView == null) {

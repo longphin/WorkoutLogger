@@ -131,6 +131,16 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        super.onCreateView(inflater, container, savedInstanceState);
+        initializeSelectedExercisesViewPager();
+
+        return mView;
+    }
+
+    @Override
     protected int getLayoutRoot() {
         return R.id.workout_create_overview_layout;
     }
@@ -208,16 +218,8 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_workout_create, container, false);
-        //groupBySelector = mView.findViewById(R.id.spinner_workout_exercise_group_by);
-        initializeSelectedExercisesViewPager();
-
-        //initializeObservers();
-        initializeRecyclerView(mView);
-        return mView;
+    protected int getViewLayout() {
+        return R.layout.fragment_workout_create;
     }
 
     private void initializeSelectedExercisesViewPager() {
