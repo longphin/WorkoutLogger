@@ -49,4 +49,11 @@
         <item name="android:fontFamily">andada</item>
         <item name="fontFamily">andada</item>
     </style>
+
+    <!-- Horizontal Divider for entire page -->
+    <style name="HorizontalDivider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
 </resources>

@@ -9,7 +9,6 @@ package com.longlife.workoutlogger.view.Exercises;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,7 +25,6 @@ import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
-import com.longlife.workoutlogger.view.MainActivity;
 
 import java.util.List;
 
@@ -42,14 +40,10 @@ import androidx.recyclerview.widget.RecyclerView;
 public abstract class ExercisesListFragmentBase extends FragmentBase implements IExerciseListCallbackBase {
     protected ExercisesViewModel viewModel;
     protected ExercisesListAdapterBase adapter;
-    //private SearchView searchView;
-    //private Spinner groupBySelector;
     protected View mView;
     private RecyclerView recyclerView;
-    private boolean needsToLoadData = false;
     private static final String SAVEDSTATE_groupBySelection = "initialGroupBySelection";
     protected SearchView searchView;
-    // Needed
     protected Spinner groupBySelector;
     private int initialGroupBySelection = 0;
 
@@ -88,7 +82,6 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
             groupBySelector = null;
         }
 
-        needsToLoadData = true;
         clearDisposables();
 
         mView = null;
@@ -144,7 +137,9 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(SAVEDSTATE_groupBySelection, ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId());
+        if (groupBySelector != null) {
+            outState.putLong(SAVEDSTATE_groupBySelection, ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId());
+        }
     }
 
     private void initializeGroupByOptions(View v) {
@@ -200,7 +195,7 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
     // This is the fragment layout resource.
     protected abstract int getViewLayout();
 
-    protected void initializeRecyclerView() {
+    private void initializeRecyclerView() {
         if (recyclerView == null)
             recyclerView = mView.findViewById(getExercisesRecyclerViewId());
 
@@ -210,8 +205,6 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         }
-        //ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.RIGHT, this);
-        //new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
         setAdapterForRecyclerView();
     }
 
@@ -235,34 +228,19 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
                         return true;
                     }
                     return false;
-                }
-            });
-        }
-    }
-
-    private void initializeSearchForExercisesView(MenuItem searchForExerciseItem) {
-        if (searchView == null) {
-            searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
-
-            searchForExerciseItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            searchForExerciseItem.setActionView(searchView);
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    if (adapter != null) {
-                        adapter.filterData(query);
-                        return true;
-                    }
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    if (adapter != null) {
-                        adapter.filterData(newText);
-                        return true;
-                    }
-                    return false;
+                    /* // [TODO] - If we want to add a delay to the search, use a handler instead.
+                    searchHandler.removeCallbacksAndMessages(null);
+                    String searchText = newText;
+                    searchHandler.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run() {
+                            if (adapter != null) {
+                                adapter.filterData(searchText);
+                            }
+                        }
+                    }, 400);
+                    return true;*/
                 }
             });
         }

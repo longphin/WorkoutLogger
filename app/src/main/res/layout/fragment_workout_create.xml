@@ -27,7 +27,7 @@
         android:layout_width="0dp"
         android:layout_height="43dp"
         android:minHeight="?attr/actionBarSize"
-        app:layout_constraintEnd_toEndOf="@+id/view_pager"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabMode="scrollable" />
@@ -58,7 +58,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_addRoutine" />
 
@@ -80,6 +80,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/divider"
         app:layout_constraintTop_toBottomOf="@+id/spinner_exercises_group_by" />
 
     <Button
@@ -87,16 +88,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/AddRoutine"
-        app:layout_constraintEnd_toStartOf="@+id/rv_exercises"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabSlider" />
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/exercises_search_exercises"
         android:layout_width="0dp"
-        android:layout_height="33dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/rvtab_selectedExercises"
+        app:layout_constraintStart_toEndOf="@+id/divider"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
@@ -104,7 +105,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/rv_exercises"
+        app:layout_constraintStart_toEndOf="@+id/divider"
         app:layout_constraintTop_toBottomOf="@+id/exercises_search_exercises" />
+
+    <View
+        android:id="@+id/divider"
+        style="@style/HorizontalDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
