@@ -137,6 +137,17 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         super.onCreateView(inflater, container, savedInstanceState);
         initializeSelectedExercisesViewPager();
 
+        mView.findViewById(R.id.btn_edit_Routine).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (routineViewPager != null) {
+                    // [TODO] Create EditRoutineDetailsDialog
+                    EditRoutineDetailsDialog dialog = EditRoutineDetailsDialog.newInstance();
+                    dialog.show(getChildFragmentManager(), EditRoutineDetailsDialog.TAG);
+                }
+            }
+        });
+
         return mView;
     }
 

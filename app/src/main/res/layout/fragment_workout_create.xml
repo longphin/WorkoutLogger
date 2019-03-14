@@ -76,7 +76,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_exercises"
-        android:layout_width="214dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,7 +88,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/AddRoutine"
-        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintEnd_toStartOf="@+id/btn_edit_Routine"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabSlider" />
 
@@ -115,5 +116,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_edit_Routine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_addRoutine"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/tabSlider"
+        app:srcCompat="@drawable/ic_edit_black_24dp"
+        tools:src="@drawable/ic_add_circle_outline_black_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
