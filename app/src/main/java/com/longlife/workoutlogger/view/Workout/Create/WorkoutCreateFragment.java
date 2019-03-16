@@ -38,7 +38,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import io.reactivex.observers.DisposableSingleObserver;
 
-public class WorkoutCreateFragment extends ExercisesListFragmentBase implements ExercisesListAdapter.IExerciseListCallback {
+public class WorkoutCreateFragment extends ExercisesListFragmentBase implements ExercisesListAdapter.IExerciseListCallback, EditRoutineDetailsDialog.IOnInteraction {
     public static final String TAG = WorkoutCreateFragment.class.getSimpleName();
     private static final String SAVEDSTATE_IDWORKOUT = "idWorkout";
     private static final String INPUT_IDWORKOUT = "idWorkout";
@@ -280,5 +280,10 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     public void addExerciseToRoutine(Long idExercise, String exerciseName) {
         if (isAdded())
             workoutViewModel.insertExerciseForRoutine(new RoutineAdapter.exerciseItemInRoutine(routineAdapter.getRoutineId(routineViewPager.getCurrentItem()), idExercise, exerciseName, 1));
+    }
+
+    @Override
+    public void onSave(String name, EditRoutineDetailsDialog.PerformanceSchedule schedule) {
+
     }
 }

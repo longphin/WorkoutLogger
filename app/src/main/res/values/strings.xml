@@ -138,4 +138,7 @@
     <string name="Every">Every</string>
     <string name="NumberOfDaysInWeekRange">0-7</string>
     <string name="days">days</string>
+    <string name="ScheduleWeekday">Weekday</string>
+    <string name="ScheduleXDays">Frequency</string>
+    <string name="ScheduleNone">None</string>
 </resources>

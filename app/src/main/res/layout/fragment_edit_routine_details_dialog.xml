@@ -29,7 +29,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/Monday"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_routine_name" />
+        app:layout_constraintTop_toBottomOf="@+id/radio_scheduleWeekday" />
 
     <CheckBox
         android:id="@+id/checkBox3"
@@ -96,11 +96,11 @@
         style="@style/HorizontalDivider"
         android:layout_width="1dp"
         android:layout_height="0dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/checkBox4"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/et_routine_name" />
+        app:layout_constraintTop_toBottomOf="@+id/radio_scheduleWeekday" />
 
     <TextView
         android:id="@+id/textView6"
@@ -111,7 +111,8 @@
         android:text="@string/Or"
         app:layout_constraintBottom_toBottomOf="@+id/checkBox4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/checkBox4"
         app:layout_constraintTop_toTopOf="@+id/checkBox4" />
 
     <View
@@ -137,10 +138,10 @@
         app:layout_constraintTop_toTopOf="@+id/checkBox" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/et_scheduleXDays"
         android:layout_width="35dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:ems="10"
         android:inputType="number"
         android:maxLength="1"
@@ -154,13 +155,73 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="4dp"
         android:text="@string/days"
-        app:layout_constraintBottom_toBottomOf="@+id/editText2"
+        app:layout_constraintBottom_toBottomOf="@+id/et_scheduleXDays"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/editText2"
-        app:layout_constraintTop_toTopOf="@+id/editText2" />
+        app:layout_constraintStart_toEndOf="@+id/et_scheduleXDays"
+        app:layout_constraintTop_toTopOf="@+id/et_scheduleXDays" />
+
+    <Button
+        android:id="@+id/btn_Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/text_cancel"
+        app:layout_constraintEnd_toStartOf="@+id/btn_Save"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+    <Button
+        android:id="@+id/btn_Save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/text_save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+    <RadioButton
+        android:id="@+id/radio_scheduleFreq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ScheduleXDays"
+        app:layout_constraintBottom_toBottomOf="@+id/radio_scheduleWeekday"
+        app:layout_constraintEnd_toEndOf="@+id/textView8"
+        app:layout_constraintStart_toStartOf="@+id/textView7"
+        app:layout_constraintTop_toTopOf="@+id/radio_scheduleWeekday"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <RadioButton
+        android:id="@+id/radio_scheduleWeekday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:checked="false"
+        android:text="@string/ScheduleWeekday"
+        app:layout_constraintEnd_toStartOf="@+id/textView6"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/checkBox"
+        app:layout_constraintTop_toBottomOf="@+id/et_routine_name" />
+
+    <RadioButton
+        android:id="@+id/radio_scheduleNone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
+        android:checked="false"
+        android:text="@string/ScheduleNone"
+        app:layout_constraintBottom_toBottomOf="@+id/radio_scheduleFreq"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toEndOf="@+id/radio_scheduleFreq"
+        app:layout_constraintTop_toTopOf="@+id/radio_scheduleFreq" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

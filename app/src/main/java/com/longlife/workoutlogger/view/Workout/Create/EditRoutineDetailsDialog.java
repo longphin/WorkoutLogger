@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
 import com.longlife.workoutlogger.R;
@@ -26,12 +29,56 @@ public class EditRoutineDetailsDialog extends DialogBase {
         return new EditRoutineDetailsDialog();
     }
 
+    private TextView nameTextView;
+    private CheckBox[] daysOfWeekBoxes = new CheckBox[7];
+    private RadioButton[] scheduleOptions = new RadioButton[3];
+    private TextView frequencyView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_edit_routine_details_dialog, container, false);
-        // Add save and cancel buttons.
-        return v;
+        View mView = inflater.inflate(R.layout.fragment_edit_routine_details_dialog, container, false);
+        // Name the routine.
+        nameTextView = mView.findViewById(R.id.et_routine_name);
+        // Cancel button
+        mView.findViewById(R.id.btn_Cancel).setOnClickListener(v -> dismiss());
+        // Schedule options.
+        scheduleOptions[0] = mView.findViewById(R.id.radio_scheduleWeekday);
+        scheduleOptions[1] = mView.findViewById(R.id.radio_scheduleFreq);
+        scheduleOptions[2] = mView.findViewById(R.id.radio_scheduleNone);
+        scheduleOptions[0].setOnClickListener(v -> clearRadioButtonsExcept(0));
+        scheduleOptions[1].setOnClickListener(v -> clearRadioButtonsExcept(1));
+        scheduleOptions[2].setOnClickListener(v -> clearRadioButtonsExcept(2));
+        // Frequency schedule.
+        frequencyView = mView.findViewById(R.id.et_scheduleXDays);
+
+        // Save button
+        mView.findViewById(R.id.btn_Save).setOnClickListener(v ->
+        {
+            interactionCallback.onSave(nameTextView.getText().toString(), getPerformanceSchedule());
+            dismiss();
+        });
+        return mView;
+    }
+
+    // Resets all schedule options except the one at position "pos"
+    private void clearRadioButtonsExcept(int pos) {
+        for (int i = 0; i < scheduleOptions.length; i++) {
+            if (i != pos) {
+                scheduleOptions[i].setChecked(false);
+            }
+        }
+    }
+
+    @Nullable
+    private PerformanceSchedule getPerformanceSchedule() {
+        if (scheduleOptions[0].isChecked())
+            return new WeekdaySchedule(daysOfWeekBoxes);
+
+        if (scheduleOptions[1].isChecked())
+            return new XDaysSchedule(Integer.valueOf(frequencyView.getText().toString()));
+
+        return null;
     }
 
     @Override
@@ -52,12 +99,35 @@ public class EditRoutineDetailsDialog extends DialogBase {
 
     public interface IOnInteraction {
         void onSave(String name, PerformanceSchedule schedule);
-
-        void onCancel();
     }
 
-    private class PerformanceSchedule {
-        private Integer[] daysOfWeek = new Integer[7];
-        private Integer everyXDays;
+    public interface PerformanceSchedule {
+    }
+
+    class WeekdaySchedule implements PerformanceSchedule {
+        private boolean[] daysOfWeek = new boolean[7];
+
+        public WeekdaySchedule(CheckBox[] checkBoxes) {
+            for (int i = 0; i < checkBoxes.length; i++) {
+                daysOfWeek[i] = checkBoxes[i].isChecked();
+            }
+        }
+
+        public boolean[] getDaysOfWeek() {
+            return daysOfWeek;
+        }
+
+    }
+
+    class XDaysSchedule implements PerformanceSchedule {
+        private int everyXDays;
+
+        public XDaysSchedule(int step) {
+            everyXDays = step;
+        }
+
+        public int getEveryXDays() {
+            return everyXDays;
+        }
     }
 }
