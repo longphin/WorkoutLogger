@@ -14,6 +14,7 @@ import com.longlife.workoutlogger.model.comparators.RoutineComparators;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
+import com.longlife.workoutlogger.view.Workout.Create.EditRoutineDetailsDialog;
 import com.longlife.workoutlogger.view.Workout.Create.RoutineAdapter;
 
 import java.util.Collections;
@@ -174,6 +175,12 @@ public class RoutinesViewModel
             " WHERE r.idRoutine=:idRoutine")
     public Single<List<RoutineAdapter.exerciseItemInRoutine>> getExercisesShortForRoutine(Long idRoutine) {
         return repo.getExercisesShortForRoutine(idRoutine)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
+    public void updateSchedule(Long idRoutine, EditRoutineDetailsDialog.RoutineUpdateHelper routineUpdates) {
+        return repo.updateRoutineSchedule(idRoutine, routineUpdates)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }

@@ -20,6 +20,7 @@ import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.Workout.WorkoutProgram;
 import com.longlife.workoutlogger.model.Workout.WorkoutProgramShort;
 import com.longlife.workoutlogger.view.Routines.Helper.RoutineExerciseHelper;
+import com.longlife.workoutlogger.view.Workout.Create.EditRoutineDetailsDialog;
 import com.longlife.workoutlogger.view.Workout.Create.RoutineAdapter;
 
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -186,5 +188,16 @@ public class Repository {
 
     public Single<List<RoutineAdapter.exerciseItemInRoutine>> getExercisesShortForRoutine(Long idRoutine) {
         return routineDao.getExercisesShortForRoutine(idRoutine);
+    }
+
+    public Completable updateRoutineSchedule(Long idRoutine, EditRoutineDetailsDialog.RoutineUpdateHelper routineUpdates) {
+        if (routineUpdates.getSchedule() instanceof EditRoutineDetailsDialog.WeekdaySchedule) {
+            boolean[] schedule = ((EditRoutineDetailsDialog.WeekdaySchedule) routineUpdates.getSchedule()).getDaysOfWeek();
+            return routineDao.updateRoutineNameAndWeekdaySchedule(idRoutine, routineUpdates.getName(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], schedule[5], schedule[6]);
+        }
+        if (routineUpdates.getSchedule() instanceof EditRoutineDetailsDialog.XDaysSchedule) {
+            return routineDao.updateRoutineNameAndFrequencySchedule(idRoutine, routineUpdates.getName(), ((EditRoutineDetailsDialog.XDaysSchedule) routineUpdates.getSchedule()).getEveryXDays());
+        }
+        return null;
     }
 }

@@ -73,7 +73,8 @@ class DatabaseVersion {
     private static final int V9_2d = 53; // Fix WorkoutRoutine get the proper idRoutine.
     private static final int V9_3 = 54; // Fix WorkoutRoutine memory leak.
     private static final int V9_4 = 55; // Add number of sets to RoutineExercise.
+    private static final int V9_5 = 56; // Added schedule to routine.
 
-    static final int CURRENT = V9_4;
+    static final int CURRENT = V9_5;
 }
 

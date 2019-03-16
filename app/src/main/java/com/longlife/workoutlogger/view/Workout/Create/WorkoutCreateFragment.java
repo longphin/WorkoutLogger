@@ -283,7 +283,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
-    public void onSave(String name, EditRoutineDetailsDialog.PerformanceSchedule schedule) {
-
+    public void onSave(EditRoutineDetailsDialog.RoutineUpdateHelper routineUpdates) {
+        routineViewModel.updateSchedule(routineAdapter.getRoutineId(routineViewPager.getCurrentItem()), routineUpdates);
     }
 }

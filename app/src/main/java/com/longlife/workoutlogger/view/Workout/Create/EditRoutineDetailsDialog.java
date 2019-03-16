@@ -55,7 +55,8 @@ public class EditRoutineDetailsDialog extends DialogBase {
         // Save button
         mView.findViewById(R.id.btn_Save).setOnClickListener(v ->
         {
-            interactionCallback.onSave(nameTextView.getText().toString(), getPerformanceSchedule());
+            interactionCallback.onSave(
+                    new RoutineUpdateHelper(nameTextView.getText().toString(), getPerformanceSchedule()));
             dismiss();
         });
         return mView;
@@ -98,13 +99,13 @@ public class EditRoutineDetailsDialog extends DialogBase {
     }
 
     public interface IOnInteraction {
-        void onSave(String name, PerformanceSchedule schedule);
+        void onSave(RoutineUpdateHelper routineUpdates);
     }
 
     public interface PerformanceSchedule {
     }
 
-    class WeekdaySchedule implements PerformanceSchedule {
+    public class WeekdaySchedule implements PerformanceSchedule {
         private boolean[] daysOfWeek = new boolean[7];
 
         public WeekdaySchedule(CheckBox[] checkBoxes) {
@@ -119,7 +120,7 @@ public class EditRoutineDetailsDialog extends DialogBase {
 
     }
 
-    class XDaysSchedule implements PerformanceSchedule {
+    public class XDaysSchedule implements PerformanceSchedule {
         private int everyXDays;
 
         public XDaysSchedule(int step) {
@@ -128,6 +129,24 @@ public class EditRoutineDetailsDialog extends DialogBase {
 
         public int getEveryXDays() {
             return everyXDays;
+        }
+    }
+
+    public class RoutineUpdateHelper {
+        private String name;
+        private PerformanceSchedule schedule;
+
+        public RoutineUpdateHelper(String name, PerformanceSchedule schedule) {
+            this.name = name;
+            this.schedule = schedule;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public PerformanceSchedule getSchedule() {
+            return schedule;
         }
     }
 }
