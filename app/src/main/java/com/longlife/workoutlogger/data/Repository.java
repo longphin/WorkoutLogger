@@ -29,7 +29,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
-import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -190,14 +189,16 @@ public class Repository {
         return routineDao.getExercisesShortForRoutine(idRoutine);
     }
 
-    public Completable updateRoutineSchedule(Long idRoutine, EditRoutineDetailsDialog.RoutineUpdateHelper routineUpdates) {
+    public void updateRoutineSchedule(Long idRoutine, EditRoutineDetailsDialog.RoutineUpdateHelper routineUpdates) {
+        routineDao.updateRoutineName(idRoutine, routineUpdates.getName());
         if (routineUpdates.getSchedule() instanceof EditRoutineDetailsDialog.WeekdaySchedule) {
             boolean[] schedule = ((EditRoutineDetailsDialog.WeekdaySchedule) routineUpdates.getSchedule()).getDaysOfWeek();
-            return routineDao.updateRoutineNameAndWeekdaySchedule(idRoutine, routineUpdates.getName(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], schedule[5], schedule[6]);
+            routineDao.updateRoutineWeekdaySchedule(idRoutine, schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], schedule[5], schedule[6]);
+            return;
         }
         if (routineUpdates.getSchedule() instanceof EditRoutineDetailsDialog.XDaysSchedule) {
-            return routineDao.updateRoutineNameAndFrequencySchedule(idRoutine, routineUpdates.getName(), ((EditRoutineDetailsDialog.XDaysSchedule) routineUpdates.getSchedule()).getEveryXDays());
+            routineDao.UpdateRoutineFrequencySchedule(idRoutine, ((EditRoutineDetailsDialog.XDaysSchedule) routineUpdates.getSchedule()).getEveryXDays());
+            return;
         }
-        return null;
     }
 }

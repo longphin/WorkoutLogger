@@ -24,7 +24,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
-import io.reactivex.Completable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 
@@ -186,8 +185,7 @@ public abstract class RoutineDao {
     public abstract Single<List<RoutineAdapter.exerciseItemInRoutine>> getExercisesShortForRoutine(Long idRoutine);
 
     @Query("UPDATE Routine" +
-            " SET name=:name" +
-            " ,Monday=:mon" +
+            " SET Monday=:mon" +
             " ,Tuesday=:tues" +
             " ,Wednesday=:wed" +
             " ,Thursday=:thurs" +
@@ -195,10 +193,15 @@ public abstract class RoutineDao {
             " ,Saturday=:sat" +
             " ,Sunday=:sun" +
             " WHERE idRoutine=:idRoutine")
-    public abstract Completable updateRoutineNameAndWeekdaySchedule(Long idRoutine, String name, boolean mon, boolean tues, boolean wed, boolean thurs, boolean fri, boolean sat, boolean sun);
+    public abstract void updateRoutineWeekdaySchedule(Long idRoutine, boolean mon, boolean tues, boolean wed, boolean thurs, boolean fri, boolean sat, boolean sun);
+
+    @Query("UPDATE Routine" +
+            " SET FrequencyDays=:everyXDays" +
+            " WHERE idRoutine=:idRoutine")
+    public abstract void UpdateRoutineFrequencySchedule(Long idRoutine, int everyXDays);
 
     @Query("UPDATE Routine" +
             " SET name=:name" +
-            " ,FrequencyDays=:everyXDays")
-    public abstract Completable updateRoutineNameAndFrequencySchedule(Long idRoutine, String name, int everyXDays);
+            " WHERE idRoutine=:idRoutine")
+    public abstract void updateRoutineName(Long idRoutine, String name);
 }

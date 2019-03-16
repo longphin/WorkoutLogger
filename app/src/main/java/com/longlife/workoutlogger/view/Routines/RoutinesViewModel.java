@@ -180,9 +180,25 @@ public class RoutinesViewModel
     }
 
     public void updateSchedule(Long idRoutine, EditRoutineDetailsDialog.RoutineUpdateHelper routineUpdates) {
-        return repo.updateRoutineSchedule(idRoutine, routineUpdates)
+        Completable.fromAction(() -> repo.updateRoutineSchedule(idRoutine, routineUpdates))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io());
+                .subscribeOn(Schedulers.io())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 }
 

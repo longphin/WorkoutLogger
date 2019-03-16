@@ -47,8 +47,9 @@ public class RoutinesPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         String label = routineTabs.get(position).getName();
 
-        return (label == null || label.isEmpty() ? "Unnamed" : label) +
-                " " + String.valueOf(routineTabs.get(position).getIdRoutine());
+        return (label == null || label.isEmpty()
+                ? "Unnamed"
+                : label);
     }
 
     public void addRoutine(Routine r) {
@@ -58,6 +59,15 @@ public class RoutinesPagerAdapter extends FragmentStatePagerAdapter {
 
     public Long getRoutineId(int position) {
         return routineTabs.get(position).getIdRoutine();
+    }
+
+    public void updateRoutine(Long idRoutineToUpdate, EditRoutineDetailsDialog.RoutineUpdateHelper routineUpdates) {
+        for (int i = 0; i < routineTabs.size(); i++) {
+            if (routineTabs.get(i).getIdRoutine().equals(idRoutineToUpdate)) {
+                routineTabs.get(i).setName(routineUpdates.getName());
+            }
+        }
+        notifyDataSetChanged();
     }
 
     private class routineTabHelper {

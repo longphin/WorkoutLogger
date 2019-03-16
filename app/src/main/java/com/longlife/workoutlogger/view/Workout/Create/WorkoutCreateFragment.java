@@ -284,6 +284,8 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
 
     @Override
     public void onSave(EditRoutineDetailsDialog.RoutineUpdateHelper routineUpdates) {
-        routineViewModel.updateSchedule(routineAdapter.getRoutineId(routineViewPager.getCurrentItem()), routineUpdates);
+        Long idRoutineToUpdate = routineAdapter.getRoutineId(routineViewPager.getCurrentItem());
+        routineAdapter.updateRoutine(idRoutineToUpdate, routineUpdates);
+        routineViewModel.updateSchedule(idRoutineToUpdate, routineUpdates);
     }
 }
