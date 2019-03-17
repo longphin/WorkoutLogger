@@ -72,11 +72,13 @@ public class ExerciseCreateFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((MyApplication) getActivity().getApplication())
-                .getApplicationComponent()
-                .inject(this);
+        if (getActivity() != null) {
+            ((MyApplication) getActivity().getApplication())
+                    .getApplicationComponent()
+                    .inject(this);
 
-        viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
+            viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(ExercisesViewModel.class);
+        }
     }
 
     @Nullable

@@ -16,10 +16,19 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.AndroidUtils.DialogBase;
+import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.data.RoutineSchedule.FrequencySchedule;
+import com.longlife.workoutlogger.data.RoutineSchedule.PerformanceSchedule;
+import com.longlife.workoutlogger.data.RoutineSchedule.WeekdaySchedule;
+import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
+
+import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 public class EditRoutineDetailsDialog extends DialogBase {
     public static final String TAG = EditRoutineDetailsDialog.class.getSimpleName();
@@ -33,6 +42,22 @@ public class EditRoutineDetailsDialog extends DialogBase {
     private CheckBox[] daysOfWeekBoxes = new CheckBox[7];
     private RadioButton[] scheduleOptions = new RadioButton[3];
     private TextView frequencyView;
+    @Inject
+    public ViewModelProvider.Factory viewModelFactory;
+    private RoutinesViewModel routineViewModel;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getActivity() != null) {
+            ((MyApplication) getActivity().getApplication())
+                    .getApplicationComponent()
+                    .inject(this);
+
+            routineViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class); //[TODO] get the name and schedule from the routine.
+        }
+    }
 
     @Nullable
     @Override
@@ -77,7 +102,7 @@ public class EditRoutineDetailsDialog extends DialogBase {
             return new WeekdaySchedule(daysOfWeekBoxes);
 
         if (scheduleOptions[1].isChecked())
-            return new XDaysSchedule(Integer.valueOf(frequencyView.getText().toString()));
+            return new FrequencySchedule(Integer.valueOf(frequencyView.getText().toString()));
 
         return null;
     }
@@ -100,36 +125,6 @@ public class EditRoutineDetailsDialog extends DialogBase {
 
     public interface IOnInteraction {
         void onSave(RoutineUpdateHelper routineUpdates);
-    }
-
-    public interface PerformanceSchedule {
-    }
-
-    public class WeekdaySchedule implements PerformanceSchedule {
-        private boolean[] daysOfWeek = new boolean[7];
-
-        public WeekdaySchedule(CheckBox[] checkBoxes) {
-            for (int i = 0; i < checkBoxes.length; i++) {
-                daysOfWeek[i] = checkBoxes[i].isChecked();
-            }
-        }
-
-        public boolean[] getDaysOfWeek() {
-            return daysOfWeek;
-        }
-
-    }
-
-    public class XDaysSchedule implements PerformanceSchedule {
-        private int everyXDays;
-
-        public XDaysSchedule(int step) {
-            everyXDays = step;
-        }
-
-        public int getEveryXDays() {
-            return everyXDays;
-        }
     }
 
     public class RoutineUpdateHelper {

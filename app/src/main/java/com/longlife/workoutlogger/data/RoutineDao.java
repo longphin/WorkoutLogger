@@ -192,13 +192,15 @@ public abstract class RoutineDao {
             " ,Friday=:fri" +
             " ,Saturday=:sat" +
             " ,Sunday=:sun" +
+            " ,ScheduleType=:scheduleType" +
             " WHERE idRoutine=:idRoutine")
-    public abstract void updateRoutineWeekdaySchedule(Long idRoutine, boolean mon, boolean tues, boolean wed, boolean thurs, boolean fri, boolean sat, boolean sun);
+    public abstract void updateRoutineWeekdaySchedule(Long idRoutine, int scheduleType, boolean mon, boolean tues, boolean wed, boolean thurs, boolean fri, boolean sat, boolean sun);
 
     @Query("UPDATE Routine" +
             " SET FrequencyDays=:everyXDays" +
+            " ,ScheduleType=:scheduleType" +
             " WHERE idRoutine=:idRoutine")
-    public abstract void UpdateRoutineFrequencySchedule(Long idRoutine, int everyXDays);
+    public abstract void UpdateRoutineFrequencySchedule(Long idRoutine, int scheduleType, int everyXDays);
 
     @Query("UPDATE Routine" +
             " SET name=:name" +

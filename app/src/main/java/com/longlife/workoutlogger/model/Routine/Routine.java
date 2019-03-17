@@ -28,83 +28,91 @@ public class Routine {
     // Flag for hiding the routine.
     @NonNull
     private boolean hidden = false;
-    private int FrequencyDays;
-    private boolean Monday;
-    private boolean Tuesday;
-    private boolean Wednesday;
-    private boolean Thursday;
-    private boolean Friday;
-    private boolean Saturday;
-    private boolean Sunday;
-
-    public int getFrequencyDays() {
-        return FrequencyDays;
-    }
-
-    public void setFrequencyDays(int frequencyDays) {
-        FrequencyDays = frequencyDays;
-    }
-
-    public boolean isMonday() {
-        return Monday;
-    }
-
-    public void setMonday(boolean monday) {
-        Monday = monday;
-    }
-
-    public boolean isTuesday() {
-        return Tuesday;
-    }
-
-    public void setTuesday(boolean tuesday) {
-        Tuesday = tuesday;
-    }
-
-    public boolean isWednesday() {
-        return Wednesday;
-    }
-
-    public void setWednesday(boolean wednesday) {
-        Wednesday = wednesday;
-    }
-
-    public boolean isThursday() {
-        return Thursday;
-    }
-
-    public void setThursday(boolean thursday) {
-        Thursday = thursday;
-    }
-
-    public boolean isFriday() {
-        return Friday;
-    }
-
-    public void setFriday(boolean friday) {
-        Friday = friday;
-    }
-
-    public boolean isSaturday() {
-        return Saturday;
-    }
-
-    public void setSaturday(boolean saturday) {
-        Saturday = saturday;
-    }
-
-    public boolean isSunday() {
-        return Sunday;
-    }
-
-    public void setSunday(boolean sunday) {
-        Sunday = sunday;
-    }
-
+    private Integer scheduleType;
+    private Integer FrequencyDays;
+    private Boolean Monday;
+    private Boolean Tuesday;
+    private Boolean Wednesday;
+    private Boolean Thursday;
+    private Boolean Friday;
+    private Boolean Saturday;
+    private Boolean Sunday;
     private Long idWorkoutProgram;
 
     public Routine() {
 
+    }
+
+    public Integer getScheduleType() {
+        return scheduleType;
+    }
+
+    public void setScheduleType(Integer scheduleType) {
+        this.scheduleType = scheduleType;
+    }
+
+    public Boolean getMonday() {
+        return Monday;
+    }
+
+    public void setMonday(Boolean monday) {
+        Monday = monday;
+    }
+
+    public Boolean getTuesday() {
+        return Tuesday;
+    }
+
+    public void setTuesday(Boolean tuesday) {
+        Tuesday = tuesday;
+    }
+
+    public Boolean getWednesday() {
+        return Wednesday;
+    }
+
+    public void setWednesday(Boolean wednesday) {
+        Wednesday = wednesday;
+    }
+
+    public Boolean getThursday() {
+        return Thursday;
+    }
+
+    public void setThursday(Boolean thursday) {
+        Thursday = thursday;
+    }
+
+    public Boolean getFriday() {
+        return Friday;
+    }
+
+    public void setFriday(Boolean friday) {
+        Friday = friday;
+    }
+
+    public Boolean getSaturday() {
+        return Saturday;
+    }
+
+    public void setSaturday(Boolean saturday) {
+        Saturday = saturday;
+    }
+
+    public Boolean getSunday() {
+        return Sunday;
+    }
+
+    public void setSunday(Boolean sunday) {
+        Sunday = sunday;
+    }
+
+    public Integer getFrequencyDays() {
+        return FrequencyDays;
+    }
+
+    public void setFrequencyDays(Integer frequencyDays) {
+        FrequencyDays = frequencyDays;
     }
 
     public Long getIdWorkoutProgram() {

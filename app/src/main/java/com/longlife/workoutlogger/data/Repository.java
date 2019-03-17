@@ -6,6 +6,9 @@
 
 package com.longlife.workoutlogger.data;
 
+import com.longlife.workoutlogger.data.RoutineSchedule.FrequencySchedule;
+import com.longlife.workoutlogger.data.RoutineSchedule.PerformanceSchedule;
+import com.longlife.workoutlogger.data.RoutineSchedule.WeekdaySchedule;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
@@ -191,13 +194,14 @@ public class Repository {
 
     public void updateRoutineSchedule(Long idRoutine, EditRoutineDetailsDialog.RoutineUpdateHelper routineUpdates) {
         routineDao.updateRoutineName(idRoutine, routineUpdates.getName());
-        if (routineUpdates.getSchedule() instanceof EditRoutineDetailsDialog.WeekdaySchedule) {
-            boolean[] schedule = ((EditRoutineDetailsDialog.WeekdaySchedule) routineUpdates.getSchedule()).getDaysOfWeek();
-            routineDao.updateRoutineWeekdaySchedule(idRoutine, schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], schedule[5], schedule[6]);
+        PerformanceSchedule routineSchedule = routineUpdates.getSchedule();
+        if (routineUpdates.getSchedule() instanceof WeekdaySchedule) {
+            boolean[] schedule = ((WeekdaySchedule) routineUpdates.getSchedule()).getDaysOfWeek();
+            routineDao.updateRoutineWeekdaySchedule(idRoutine, routineSchedule.getScheduleType(), schedule[0], schedule[1], schedule[2], schedule[3], schedule[4], schedule[5], schedule[6]);
             return;
         }
-        if (routineUpdates.getSchedule() instanceof EditRoutineDetailsDialog.XDaysSchedule) {
-            routineDao.UpdateRoutineFrequencySchedule(idRoutine, ((EditRoutineDetailsDialog.XDaysSchedule) routineUpdates.getSchedule()).getEveryXDays());
+        if (routineUpdates.getSchedule() instanceof FrequencySchedule) {
+            routineDao.UpdateRoutineFrequencySchedule(idRoutine, routineSchedule.getScheduleType(), ((FrequencySchedule) routineUpdates.getSchedule()).getEveryXDays());
             return;
         }
     }
