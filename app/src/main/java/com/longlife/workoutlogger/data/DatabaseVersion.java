@@ -75,7 +75,10 @@ class DatabaseVersion {
     private static final int V9_4 = 55; // Add number of sets to RoutineExercise.
     private static final int V9_5 = 56; // Added schedule to routine.
     private static final int V9_5b = 57; // Added schedule type to routine
+    private static final int V9_5c = 58; // Renamed some routine fields.
+    private static final int V9_5d = 59; // Made routine schedule type mandatory.
+    private static final int V9_5e = 60; // Changing routine schedule to nullable if None.
 
-    static final int CURRENT = V9_5b;
+    static final int CURRENT = V9_5e;
 }
 

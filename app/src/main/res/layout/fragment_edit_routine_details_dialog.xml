@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/cb_Monday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -32,64 +32,64 @@
         app:layout_constraintTop_toBottomOf="@+id/radio_scheduleWeekday" />
 
     <CheckBox
-        android:id="@+id/checkBox3"
+        android:id="@+id/cb_Tuesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/Tuesday"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+        app:layout_constraintTop_toBottomOf="@+id/cb_Monday" />
 
     <CheckBox
-        android:id="@+id/checkBox4"
+        android:id="@+id/cb_Wednesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/Wednesday"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox3" />
+        app:layout_constraintTop_toBottomOf="@+id/cb_Tuesday" />
 
     <CheckBox
-        android:id="@+id/checkBox5"
+        android:id="@+id/cb_Thursday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/Thursday"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox4" />
+        app:layout_constraintTop_toBottomOf="@+id/cb_Wednesday" />
 
     <CheckBox
-        android:id="@+id/checkBox6"
+        android:id="@+id/cb_Friday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/Friday"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox5" />
+        app:layout_constraintTop_toBottomOf="@+id/cb_Thursday" />
 
     <CheckBox
-        android:id="@+id/checkBox7"
+        android:id="@+id/cb_Saturday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/Saturday"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox6" />
+        app:layout_constraintTop_toBottomOf="@+id/cb_Friday" />
 
     <CheckBox
-        android:id="@+id/checkBox8"
+        android:id="@+id/cb_Sunday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/Sunday"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox7" />
+        app:layout_constraintTop_toBottomOf="@+id/cb_Saturday" />
 
     <View
         android:id="@+id/divider2"
@@ -97,7 +97,7 @@
         android:layout_width="1dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox4"
+        app:layout_constraintBottom_toTopOf="@+id/cb_Wednesday"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/radio_scheduleWeekday" />
@@ -109,11 +109,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="@string/Or"
-        app:layout_constraintBottom_toBottomOf="@+id/checkBox4"
+        app:layout_constraintBottom_toBottomOf="@+id/cb_Wednesday"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/checkBox4"
-        app:layout_constraintTop_toTopOf="@+id/checkBox4" />
+        app:layout_constraintStart_toEndOf="@+id/cb_Wednesday"
+        app:layout_constraintTop_toTopOf="@+id/cb_Wednesday" />
 
     <View
         android:id="@+id/divider3"
@@ -121,7 +121,7 @@
         android:layout_width="2dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/checkBox8"
+        app:layout_constraintBottom_toBottomOf="@+id/cb_Sunday"
         app:layout_constraintEnd_toEndOf="@+id/textView6"
         app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
@@ -133,9 +133,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/Every"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox3"
+        app:layout_constraintBottom_toTopOf="@+id/cb_Tuesday"
         app:layout_constraintStart_toEndOf="@+id/divider2"
-        app:layout_constraintTop_toTopOf="@+id/checkBox" />
+        app:layout_constraintTop_toTopOf="@+id/cb_Monday" />
 
     <EditText
         android:id="@+id/et_scheduleXDays"
@@ -207,7 +207,7 @@
         android:text="@string/ScheduleWeekday"
         app:layout_constraintEnd_toStartOf="@+id/textView6"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/checkBox"
+        app:layout_constraintStart_toStartOf="@+id/cb_Monday"
         app:layout_constraintTop_toBottomOf="@+id/et_routine_name" />
 
     <RadioButton

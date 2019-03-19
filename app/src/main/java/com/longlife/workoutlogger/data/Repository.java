@@ -19,6 +19,7 @@ import com.longlife.workoutlogger.model.MuscleEntity;
 import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.model.Profile;
 import com.longlife.workoutlogger.model.Routine.Routine;
+import com.longlife.workoutlogger.model.Routine.RoutineShort;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.Workout.WorkoutProgram;
 import com.longlife.workoutlogger.model.Workout.WorkoutProgramShort;
@@ -204,5 +205,10 @@ public class Repository {
             routineDao.UpdateRoutineFrequencySchedule(idRoutine, routineSchedule.getScheduleType(), ((FrequencySchedule) routineUpdates.getSchedule()).getEveryXDays());
             return;
         }
+        routineDao.UpdateRoutineScheduleNone(idRoutine);
+    }
+
+    public Single<RoutineShort> getRoutineShort(Long idRoutine) {
+        return routineDao.getRoutineShort(idRoutine);
     }
 }

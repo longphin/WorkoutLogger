@@ -9,13 +9,13 @@ package com.longlife.workoutlogger.data.RoutineSchedule;
 import com.longlife.workoutlogger.enums.RoutineScheduleType;
 
 public class FrequencySchedule implements PerformanceSchedule {
-    private int everyXDays;
+    private Integer everyXDays;
 
-    public FrequencySchedule(int step) {
+    public FrequencySchedule(Integer step) {
         everyXDays = step;
     }
 
-    public int getEveryXDays() {
+    public Integer getEveryXDays() {
         return everyXDays;
     }
 

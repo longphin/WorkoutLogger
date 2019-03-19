@@ -11,6 +11,7 @@ import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Routine.Routine;
 import com.longlife.workoutlogger.model.Routine.RoutineExercise;
 import com.longlife.workoutlogger.model.Routine.RoutineSession;
+import com.longlife.workoutlogger.model.Routine.RoutineShort;
 import com.longlife.workoutlogger.model.SessionExercise;
 import com.longlife.workoutlogger.model.SessionExerciseSet;
 import com.longlife.workoutlogger.model.Workout.WorkoutRoutine;
@@ -200,10 +201,16 @@ public abstract class RoutineDao {
             " SET FrequencyDays=:everyXDays" +
             " ,ScheduleType=:scheduleType" +
             " WHERE idRoutine=:idRoutine")
-    public abstract void UpdateRoutineFrequencySchedule(Long idRoutine, int scheduleType, int everyXDays);
+    public abstract void UpdateRoutineFrequencySchedule(Long idRoutine, int scheduleType, Integer everyXDays);
 
     @Query("UPDATE Routine" +
             " SET name=:name" +
             " WHERE idRoutine=:idRoutine")
     public abstract void updateRoutineName(Long idRoutine, String name);
+
+    @Query("SELECT idRoutine, name, scheduleType, FrequencyDays, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday FROM Routine WHERE idRoutine=:idRoutine")
+    public abstract Single<RoutineShort> getRoutineShort(Long idRoutine);
+
+    @Query("UPDATE Routine SET ScheduleType=NULL WHERE idRoutine=:idRoutine")
+    public abstract void UpdateRoutineScheduleNone(Long idRoutine);
 }

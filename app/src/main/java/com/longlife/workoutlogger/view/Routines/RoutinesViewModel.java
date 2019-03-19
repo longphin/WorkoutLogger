@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.longlife.workoutlogger.data.Repository;
 import com.longlife.workoutlogger.model.Routine.Routine;
+import com.longlife.workoutlogger.model.Routine.RoutineShort;
 import com.longlife.workoutlogger.model.comparators.RoutineComparators;
 import com.longlife.workoutlogger.utils.Response;
 import com.longlife.workoutlogger.view.Routines.Helper.DeletedRoutine;
@@ -199,6 +200,12 @@ public class RoutinesViewModel
 
                     }
                 });
+    }
+
+    public Single<RoutineShort> getRoutineShortObservable(Long idRoutine) {
+        return repo.getRoutineShort(idRoutine)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
     }
 }
 

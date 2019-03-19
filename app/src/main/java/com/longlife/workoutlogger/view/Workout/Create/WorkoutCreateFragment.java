@@ -141,8 +141,7 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
             @Override
             public void onClick(View v) {
                 if (routineViewPager != null) {
-                    // [TODO] Create EditRoutineDetailsDialog
-                    EditRoutineDetailsDialog dialog = EditRoutineDetailsDialog.newInstance();
+                    EditRoutineDetailsDialog dialog = EditRoutineDetailsDialog.newInstance(routineAdapter.getRoutineId(routineViewPager.getCurrentItem()));
                     dialog.show(getChildFragmentManager(), EditRoutineDetailsDialog.TAG);
                 }
             }
