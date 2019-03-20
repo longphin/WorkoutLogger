@@ -213,4 +213,7 @@ public abstract class RoutineDao {
 
     @Query("UPDATE Routine SET ScheduleType=NULL WHERE idRoutine=:idRoutine")
     public abstract void UpdateRoutineScheduleNone(Long idRoutine);
+
+    @Query("DELETE FROM RoutineExercise WHERE idRoutineExercise=:idRoutineExercise")
+    public abstract void deleteRoutineExercise(Long idRoutineExercise);
 }

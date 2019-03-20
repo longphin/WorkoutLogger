@@ -207,5 +207,27 @@ public class RoutinesViewModel
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
+
+    public void deleteRoutineExercise(Long idRoutineExercise) {
+        Completable.fromAction(() -> repo.deleteRoutineExercise(idRoutineExercise))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
 }
 

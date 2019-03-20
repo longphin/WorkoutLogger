@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Longphi Nguyen on 3/19/19 7:12 PM.
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 12/29/18 11:00 AM.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_routineexercise_edit"
+        android:title="@string/Edit" />
+
+    <item
+        android:id="@+id/menu_routineexercise_delete"
+        android:title="@string/Delete" />
+</menu>

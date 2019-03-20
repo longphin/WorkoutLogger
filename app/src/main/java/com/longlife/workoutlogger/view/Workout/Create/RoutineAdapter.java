@@ -19,14 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<exerciseItemInRoutine> data = new ArrayList<>();
     private IExerciseListCallbackBase simpleCallback;
+    private IRoutineExerciseListCallback routineExerciseListCallback;
 
-    RoutineAdapter(IExerciseListCallbackBase simpleCallback) {
+    RoutineAdapter(IExerciseListCallbackBase simpleCallback, IRoutineExerciseListCallback routineExerciseListCallback) {
         this.simpleCallback = simpleCallback;
+        this.routineExerciseListCallback = routineExerciseListCallback;
     }
 
     @NonNull
@@ -45,6 +48,36 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private void onBindExerciseViewHolder(exerciseViewHolder holder, int position) {
         holder.setName(data.get(position).getName());
         holder.setDescrip(GetResource.getStringResource(simpleCallback.getContext(), R.string.WorkoutExerciseDescription, data.get(position).getNumberOfSets()));
+
+        if (holder.getMoreOptionsView() != null) {
+            holder.getMoreOptionsView().setOnClickListener(view -> {
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(simpleCallback.getContext(), holder.getMoreOptionsView());
+                //inflating menu from xml resource
+                popup.inflate(R.menu.routineexercise_options_menu);
+                //adding click listener
+                popup.setOnMenuItemClickListener(item -> {
+                    int currentPosition = holder.getAdapterPosition();
+
+                    Long idRoutineExerciseInteracted = data.get(currentPosition).getIdRoutineExercise();
+                    switch (item.getItemId()) {
+                        case R.id.menu_routineexercise_edit:
+                            //handle menu1 click
+                            routineExerciseListCallback.routineExerciseEdit(idRoutineExerciseInteracted);
+                            return true;
+                        case R.id.menu_routineexercise_delete:
+                            routineExerciseListCallback.routineExerciseDelete(idRoutineExerciseInteracted);
+                            data.remove(currentPosition);
+                            notifyItemRemoved(currentPosition);
+                            return true;
+                        default:
+                            return false;
+                    }
+                });
+                //displaying the popup
+                popup.show();
+            });
+        }
     }
 
     @Override
@@ -121,11 +154,13 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private class exerciseViewHolder extends RecyclerView.ViewHolder {
         private TextView nameView;
         private TextView descripView;
+        private TextView optionsView;
 
         exerciseViewHolder(@NonNull View itemView) {
             super(itemView);
             nameView = itemView.findViewById(R.id.txt_exerciseName);
             descripView = itemView.findViewById(R.id.txt_exerciseDescrip);
+            optionsView = itemView.findViewById(R.id.txt_exercise_moreOptions);
         }
 
         public void setName(String name) {
@@ -134,6 +169,10 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public void setDescrip(String descrip) {
             descripView.setText(descrip);
+        }
+
+        public TextView getMoreOptionsView() {
+            return optionsView;
         }
     }
 }

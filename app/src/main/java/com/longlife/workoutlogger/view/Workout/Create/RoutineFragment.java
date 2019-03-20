@@ -34,7 +34,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 
 // This fragment displays the list of exercises used in a specific routine.
-public class RoutineFragment extends FragmentBase implements ExercisesListAdapter.IExerciseListCallback {
+public class RoutineFragment extends FragmentBase implements ExercisesListAdapter.IExerciseListCallback, IRoutineExerciseListCallback {
     private static final String INPUT_IDROUTINE = "IdRoutine";
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
@@ -42,6 +42,7 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
     private RoutineAdapter routineAdapter;
     private View mView;
     private List<RoutineAdapter.exerciseItemInRoutine> exercisesToAddIntoRoutine = new ArrayList<>();
+    private RoutinesViewModel routineViewModel;
 
     public static RoutineFragment newInstance(Long idRoutine) {
         RoutineFragment fragment = new RoutineFragment();
@@ -64,7 +65,7 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
                 .inject(this);
 
         WorkoutViewModel workoutViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(WorkoutViewModel.class);
-        RoutinesViewModel routineViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
+        routineViewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(RoutinesViewModel.class);
 
         // Observe when an exercise is to be added to the routine.
         addDisposable(workoutViewModel.getExerciseToInsertObservable().subscribe(this::exerciseInserted));
@@ -139,7 +140,7 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
 
     // Initialize recyclerview.
     private void initializeSelectedExercisesRecyclerView() {
-        routineAdapter = new RoutineAdapter(this);
+        routineAdapter = new RoutineAdapter(this, this);
         RecyclerView rv_selectedExercises = mView.findViewById(R.id.rv_selectedExercises);
         rv_selectedExercises.setAdapter(routineAdapter);
         rv_selectedExercises.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -159,5 +160,15 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
     @Override
     public void exerciseEdit(Long idExercise) {
 
+    }
+
+    @Override
+    public void routineExerciseDelete(Long idRoutineExercise) {
+        routineViewModel.deleteRoutineExercise(idRoutineExercise);
+    }
+
+    @Override
+    public void routineExerciseEdit(Long idRoutineExercise) {
+        // [TODO] When editing the routine exercise, open a fragment that lets user edit the exercise sets.
     }
 }

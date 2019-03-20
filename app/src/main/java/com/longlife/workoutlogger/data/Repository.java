@@ -211,4 +211,8 @@ public class Repository {
     public Single<RoutineShort> getRoutineShort(Long idRoutine) {
         return routineDao.getRoutineShort(idRoutine);
     }
+
+    public void deleteRoutineExercise(Long idRoutineExercise) {
+        routineDao.deleteRoutineExercise(idRoutineExercise);
+    }
 }
