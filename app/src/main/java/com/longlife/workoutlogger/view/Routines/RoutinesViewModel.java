@@ -9,6 +9,7 @@ package com.longlife.workoutlogger.view.Routines;
 import android.util.Log;
 
 import com.longlife.workoutlogger.data.Repository;
+import com.longlife.workoutlogger.model.Routine.ExerciseSet;
 import com.longlife.workoutlogger.model.Routine.Routine;
 import com.longlife.workoutlogger.model.Routine.RoutineShort;
 import com.longlife.workoutlogger.model.comparators.RoutineComparators;
@@ -228,6 +229,12 @@ public class RoutinesViewModel
 
                     }
                 });
+    }
+
+    public Single<List<ExerciseSet>> getSetsForRoutineExercise(Long idRoutineExercise) {
+        return repo.getSetsForRoutineExercise(idRoutineExercise)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
     }
 }
 

@@ -8,6 +8,7 @@ package com.longlife.workoutlogger.data;
 
 import com.longlife.workoutlogger.enums.PerformanceStatus;
 import com.longlife.workoutlogger.model.Exercise.Exercise;
+import com.longlife.workoutlogger.model.Routine.ExerciseSet;
 import com.longlife.workoutlogger.model.Routine.Routine;
 import com.longlife.workoutlogger.model.Routine.RoutineExercise;
 import com.longlife.workoutlogger.model.Routine.RoutineSession;
@@ -169,20 +170,29 @@ public abstract class RoutineDao {
 
     @Transaction
     public RoutineAdapter.exerciseItemInRoutine insertExerciseIntoRoutine(RoutineAdapter.exerciseItemInRoutine ex) {
-        Long idRoutineExercise = insertRoutineExercise(new RoutineExercise(ex.getIdRoutine(), ex.getIdExercise(), ex.getNumberOfSets()));
-
+        Long idRoutineExercise = insertRoutineExercise(new RoutineExercise(ex.getIdRoutine(), ex.getIdExercise()));
         ex.setIdRoutineExercise(idRoutineExercise);
+
+        for (int i = 0; i < ex.getNumberOfSets(); i++) {
+            // [TODO] insert into RoutineExerciseSets and Set
+            insertExerciseSet(new ExerciseSet(idRoutineExercise));
+        }
         return ex;
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract Long insertExerciseSet(ExerciseSet es);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract Long insertRoutineExercise(RoutineExercise routineExercise);
 
-    @Query("SELECT re.idRoutineExercise, r.idRoutine, e.idExercise, e.name, re.numberOfSets" +
+    @Query("SELECT re.idRoutineExercise, r.idRoutine, e.idExercise, e.name, COUNT(*) AS numberOfSets" +
             " FROM Routine as r" +
             " INNER JOIN RoutineExercise as re on r.idRoutine=re.idRoutine" +
             " INNER JOIN Exercise as e on re.idExercise=e.idExercise" +
-            " WHERE r.idRoutine=:idRoutine")
+            " LEFT OUTER JOIN ExerciseSet as es on re.idRoutineExercise=es.idRoutineExercise" +
+            " WHERE r.idRoutine=:idRoutine" +
+            " GROUP BY re.idRoutineExercise, r.idRoutine, e.idExercise, e.name")
     public abstract Single<List<RoutineAdapter.exerciseItemInRoutine>> getExercisesShortForRoutine(Long idRoutine);
 
     @Query("UPDATE Routine" +
@@ -216,4 +226,7 @@ public abstract class RoutineDao {
 
     @Query("DELETE FROM RoutineExercise WHERE idRoutineExercise=:idRoutineExercise")
     public abstract void deleteRoutineExercise(Long idRoutineExercise);
+
+    @Query("SELECT * FROM ExerciseSet WHERE idRoutineExercise=:idRoutineExercise")
+    public abstract Single<List<ExerciseSet>> getSetsForRoutineExercise(Long idRoutineExercise);
 }

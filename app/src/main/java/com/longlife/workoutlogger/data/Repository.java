@@ -18,6 +18,7 @@ import com.longlife.workoutlogger.model.ExerciseSessionWithSets;
 import com.longlife.workoutlogger.model.MuscleEntity;
 import com.longlife.workoutlogger.model.MuscleGroupEntity;
 import com.longlife.workoutlogger.model.Profile;
+import com.longlife.workoutlogger.model.Routine.ExerciseSet;
 import com.longlife.workoutlogger.model.Routine.Routine;
 import com.longlife.workoutlogger.model.Routine.RoutineShort;
 import com.longlife.workoutlogger.model.SessionExercise;
@@ -214,5 +215,9 @@ public class Repository {
 
     public void deleteRoutineExercise(Long idRoutineExercise) {
         routineDao.deleteRoutineExercise(idRoutineExercise);
+    }
+
+    public Single<List<ExerciseSet>> getSetsForRoutineExercise(Long idRoutineExercise) {
+        return routineDao.getSetsForRoutineExercise(idRoutineExercise);
     }
 }

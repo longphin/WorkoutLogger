@@ -20,6 +20,7 @@ import com.longlife.workoutlogger.view.Routines.CreateRoutine.AddExercisesToRout
 import com.longlife.workoutlogger.view.Routines.CreateRoutine.RoutineCreateFragment;
 import com.longlife.workoutlogger.view.Routines.RoutinesFragment;
 import com.longlife.workoutlogger.view.Workout.Create.EditRoutineDetailsDialog;
+import com.longlife.workoutlogger.view.Workout.Create.EditRoutineExerciseDialog;
 import com.longlife.workoutlogger.view.Workout.Create.RoutineFragment;
 import com.longlife.workoutlogger.view.Workout.Create.WorkoutCreateFragment;
 import com.longlife.workoutlogger.view.Workout.WorkoutListFragment;
@@ -63,6 +64,8 @@ public interface MyApplicationComponent {
     void inject(WorkoutListFragment wlf);
 
     void inject(EditRoutineDetailsDialog erdd);
+
+    void inject(EditRoutineExerciseDialog ered);
 
     Repository repository();
 

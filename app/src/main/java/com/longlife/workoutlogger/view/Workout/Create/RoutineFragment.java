@@ -169,6 +169,7 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
 
     @Override
     public void routineExerciseEdit(Long idRoutineExercise) {
-        // [TODO] When editing the routine exercise, open a fragment that lets user edit the exercise sets.
+        EditRoutineExerciseDialog dialog = EditRoutineExerciseDialog.newInstance(idRoutineExercise);
+        dialog.show(getChildFragmentManager(), EditRoutineExerciseDialog.TAG);
     }
 }
