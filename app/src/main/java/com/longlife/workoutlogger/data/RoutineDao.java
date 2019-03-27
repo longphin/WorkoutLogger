@@ -174,7 +174,6 @@ public abstract class RoutineDao {
         ex.setIdRoutineExercise(idRoutineExercise);
 
         for (int i = 0; i < ex.getNumberOfSets(); i++) {
-            // [TODO] insert into RoutineExerciseSets and Set
             insertExerciseSet(new ExerciseSet(idRoutineExercise));
         }
         return ex;

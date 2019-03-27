@@ -7,6 +7,7 @@
 package com.longlife.workoutlogger.view.Workout.Create;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,7 @@ public class EditRoutineExerciseDialog extends DialogBase {
                             @Override
                             public void onSuccess(List<ExerciseSet> exerciseSets) {
                                 // [TODO] add the list to an adapter.
+                                Log.d(TAG, "Loaded sets: " + String.valueOf(exerciseSets.size()));
                             }
 
                             @Override
