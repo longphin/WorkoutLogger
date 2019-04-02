@@ -19,6 +19,7 @@ import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.dataViewModel.WorkoutViewModel;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
+import com.longlife.workoutlogger.model.Routine.ExerciseSet;
 import com.longlife.workoutlogger.model.Routine.Routine;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListAdapterBase;
 import com.longlife.workoutlogger.view.Exercises.ExercisesListFragmentBase;
@@ -38,7 +39,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import io.reactivex.observers.DisposableSingleObserver;
 
-public class WorkoutCreateFragment extends ExercisesListFragmentBase implements ExercisesListAdapter.IExerciseListCallback, EditRoutineDetailsDialog.IOnInteraction {
+public class WorkoutCreateFragment extends ExercisesListFragmentBase implements ExercisesListAdapter.IExerciseListCallback, EditRoutineDetailsDialog.IOnInteraction, EditRoutineExerciseDialog.onSetDialogInteraction {
     public static final String TAG = WorkoutCreateFragment.class.getSimpleName();
     private static final String SAVEDSTATE_IDWORKOUT = "idWorkout";
     private static final String INPUT_IDWORKOUT = "idWorkout";
@@ -286,5 +287,11 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         Long idRoutineToUpdate = routineAdapter.getRoutineId(routineViewPager.getCurrentItem());
         routineAdapter.updateRoutine(idRoutineToUpdate, routineUpdates);
         routineViewModel.updateSchedule(idRoutineToUpdate, routineUpdates);
+    }
+
+    @Override
+    public void onSave(List<ExerciseSet> completeData, List<ExerciseSet> setsToDelete) {
+        // [TODO] Need to iterate over completeData and check if idExerciseSet==null. If it is null, then we need to add it to the database.
+        // [TODO] Need to iterate over setsToDelete and delete the ExerciseSet from the database.
     }
 }

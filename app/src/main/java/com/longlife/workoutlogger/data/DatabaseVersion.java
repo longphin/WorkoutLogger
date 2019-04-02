@@ -79,7 +79,8 @@ class DatabaseVersion {
     private static final int V9_5d = 59; // Made routine schedule type mandatory.
     private static final int V9_5e = 60; // Changing routine schedule to nullable if None.
     private static final int V9_6 = 61; // Added ExerciseSets table and removed sets from RoutineExercise.
+    private static final int V9_6b = 62; //
 
-    static final int CURRENT = V9_6;
+    static final int CURRENT = V9_6b;
 }
 

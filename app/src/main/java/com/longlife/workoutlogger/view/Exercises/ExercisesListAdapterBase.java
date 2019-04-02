@@ -197,13 +197,13 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
     }
 
     private RecyclerView.ViewHolder exerciseViewHolder(ViewGroup parent) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(exerciseItemLayout()//R.layout.item_exercise
-                , parent, false); // [TODO] create another layout
+        View v = LayoutInflater.from(parent.getContext()).inflate(exerciseItemLayout()
+                , parent, false);
         return new ExerciseListExerciseViewHolder(v);
     }
 
     private RecyclerView.ViewHolder headerViewHolder(ViewGroup parent) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_exercises_header, parent, false); // [TODO] create another layout
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_exercises_header, parent, false);
         return new ExerciseListHeaderViewHolder(v);
     }
 

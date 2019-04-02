@@ -67,11 +67,11 @@ public class WorkoutListFragment extends FragmentBase implements WorkoutListAdap
         View v = inflater.inflate(R.layout.fragment_workout_list, container, false);
         RecyclerView recyclerView = v.findViewById(R.id.rv_workoutL_list);
         workoutListAdapter = new WorkoutListAdapter(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
         if (getContext() != null) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         }
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(workoutListAdapter);
 
         return v;

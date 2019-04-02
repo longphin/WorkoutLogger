@@ -171,5 +171,7 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
     public void routineExerciseEdit(Long idRoutineExercise) {
         EditRoutineExerciseDialog dialog = EditRoutineExerciseDialog.newInstance(idRoutineExercise);
         dialog.show(getChildFragmentManager(), EditRoutineExerciseDialog.TAG);
+
+        //fragmentNavigation.pushFragment(EditRoutineExerciseDialog.newInstance(idRoutineExercise));
     }
 }

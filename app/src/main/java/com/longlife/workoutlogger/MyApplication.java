@@ -28,34 +28,33 @@ import java.io.File;
 import androidx.core.content.ContextCompat;
 
 /*
-[TODO] Change how exercises are selected when creating a routine. Instead of opening another fragment, just have two recyclerviews side by side. Left side is for exercises in routine, right side is for entire list of exercises. Items from the right can be clicked on or dragged to the left side.
-
-[TODO] Allow users to create Workouts, which schedule routines by day or every "x" days.
-    [TODO] Allow users to activate/deactivate Workouts.
-    {TODO] Create planner and calendar to see upcoming routines. The listed routines will be based on the active Workouts.
+[TODO] Allow users to activate/deactivate Workouts.
+{TODO] Create planner and calendar to see upcoming routines. The listed routines will be based on the active Workouts.
 
 [TODO] Allow rest timer to be stopped, reset, continued.
 [TODO] Allow user to set target goals for each exercise.
 [TODO] optimize recyclerviews
 [TODO] optimize images once thumbnails/images are added to the exercise. https://medium.freecodecamp.org/how-we-reduced-memory-footprint-by-50-in-our-android-app-49efa5c93ad8
 
-[TODO] Add user preference settings. - PreferenceFragments etc.
-[TODO] Create variations for exercises that users can swap in and out.
-[TODO] Put cached objects in repository.
-[TODO Premium] Allow users to upload progress pictures of themselves. Have them time-stamped so they can also be used to verify challenges. -- Premium feature.
-[TODO Premium] Allow users to upload their own image for an exercise. -- Premium feature
-
-[TODO] Link exercises to create a superset. This will alternate sets between the exercises.
-
-[TODO] Preload dummy data. May want to see if Room eventually provides a better way to do this.
-    https://medium.com/@johann.pardanaud/ship-an-android-app-with-a-pre-populated-database-cd2b3aa3311f
-    https://stackoverflow.com/questions/513084/ship-an-application-with-a-database
-
 [TODO Premium] Add server and API.
     [TODO] Add user login and verification. Identify if user is premium.
     [TODO] Add syncing to cloud/server. -- Premium feature
     [TODO] Add occasional "challenges" Workouts. Eventually, there should be multiple challenges available, related user's goal. But initially, these will probably be the same challenges for everyone for the duration.
             For example, everyone can opt-in to the month's weight-loss challenge.
+
+[TODO] Preload dummy data. May want to see if Room eventually provides a better way to do this.
+    https://medium.com/@johann.pardanaud/ship-an-android-app-with-a-pre-populated-database-cd2b3aa3311f
+    https://stackoverflow.com/questions/513084/ship-an-application-with-a-database
+
+[TODO] Add user preference settings. - PreferenceFragments is deprecated, so find a new way.
+[TODO] Create variations for exercises that users can swap in and out.
+[TODO] Put cached objects in repository.
+[TODO Premium] Allow users to upload progress pictures of themselves. Have them time-stamped so they can also be used to verify challenges. -- Premium feature.
+[TODO Premium] Allow users to upload their own image for an exercise. -- Premium feature
+
+[TODO Premium] Link exercises to create a superset. This will alternate sets between the exercises.
+
+[TODO Premium] Add metronome if exercise type is tempo-based.
 
 // LOW PRIORITY
 [TODO] Make recyclerview header "stick" to the top when scrolling (optional, for routines / performing) stackoverflow.com/questions/32949971

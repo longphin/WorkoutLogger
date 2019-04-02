@@ -8,6 +8,7 @@ package com.longlife.workoutlogger.model.Routine;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -19,6 +20,11 @@ public class ExerciseSet {
     @PrimaryKey
     private Long idExerciseSet;
     private Long idRoutineExercise;
+
+    @Ignore
+    public ExerciseSet() {
+
+    }
 
     public ExerciseSet(Long idRoutineExercise) {
         this.idRoutineExercise = idRoutineExercise;

@@ -103,11 +103,11 @@ public class WorkoutListAdapter extends RecyclerView.Adapter<WorkoutListAdapter.
             nameView.setText(name);
         }
 
-        public void setDescrip(String descrip) {
+        void setDescrip(String descrip) {
             descripView.setText(descrip);
         }
 
-        public TextView getMoreOptionsView() {
+        TextView getMoreOptionsView() {
             return moreOptions;
         }
     }
