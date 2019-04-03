@@ -9,6 +9,7 @@ package com.longlife.workoutlogger.view.Workout.Create;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.longlife.workoutlogger.AndroidUtils.Item_Add_ViewHolder;
@@ -27,19 +28,18 @@ public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<ExerciseSet> sets = new ArrayList<>(); // This is the current list of sets, both existing and new.
     private List<ExerciseSet> deletedSets = new ArrayList<>(); // This is a list of sets to be deleted from the database.
 
+
     public List<ExerciseSet> getSets() {
         return sets;
     }
 
-    public List<ExerciseSet> getDeletedSets() {
+    List<ExerciseSet> getDeletedSets() {
         return deletedSets;
     }
 
-    public void deleteSet(int position) {
-        ExerciseSet setToDelete = sets.get(position);
-        sets.remove(position);
-        if (setToDelete.getIdExerciseSet() != null)
-            deletedSets.add(setToDelete);
+    private void onBindSetsViewHolder(SetsViewHolder holder, int position) {
+        holder.getSetNumberView().setText(String.valueOf(position));
+        holder.getDeleteSetView().setOnClickListener(v -> deleteSet(holder.getAdapterPosition()));
     }
 
     public void setData(List<ExerciseSet> data) {
@@ -92,8 +92,13 @@ public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
-    private void onBindSetsViewHolder(SetsViewHolder holder, int position) {
-        holder.getSetNumberView().setText(String.valueOf(position));
+    private void deleteSet(int position) {
+        ExerciseSet setToDelete = sets.get(position);
+        sets.remove(position);
+        if (setToDelete.getIdExerciseSet() != null)
+            deletedSets.add(setToDelete);
+
+        notifyItemRemoved(position);
     }
 
     private void addSet() {
@@ -106,12 +111,19 @@ public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private class SetsViewHolder extends RecyclerView.ViewHolder {
         private TextView setNumberView;
 
-        public SetsViewHolder(@NonNull View itemView) {
+        private ImageButton deleteSetView;
+
+        SetsViewHolder(@NonNull View itemView) {
             super(itemView);
             setNumberView = itemView.findViewById(R.id.txt_setNumber);
+            deleteSetView = itemView.findViewById(R.id.btn_remove);
         }
 
-        public TextView getSetNumberView() {
+        ImageButton getDeleteSetView() {
+            return deleteSetView;
+        }
+
+        TextView getSetNumberView() {
             return setNumberView;
         }
     }
