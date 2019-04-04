@@ -44,6 +44,8 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     private static final String INPUT_IDWORKOUT = "idWorkout";
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
+    @Inject
+    public Context context;
     private WorkoutViewModel workoutViewModel;
     private RoutinesViewModel routineViewModel;
     private RoutinesPagerAdapter routineAdapter;
@@ -51,8 +53,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     private boolean routinesInitialized = false;
     private List<Routine> initializedRoutines = new ArrayList<>();
     private ViewPager routineViewPager;
-    @Inject
-    public Context context;
 
     public WorkoutCreateFragment() {
         // Required empty public constructor
@@ -90,6 +90,26 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        super.onCreateView(inflater, container, savedInstanceState);
+        initializeSelectedExercisesViewPager();
+
+        mView.findViewById(R.id.btn_edit_Routine).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (routineViewPager != null) {
+                    EditRoutineDetailsDialog dialog = EditRoutineDetailsDialog.newInstance(routineAdapter.getRoutineId(routineViewPager.getCurrentItem()));
+                    dialog.show(getChildFragmentManager(), EditRoutineDetailsDialog.TAG);
+                }
+            }
+        });
+
+        return mView;
+    }
+
+    @Override
     public void onDestroyView() {
         routinesInitialized = false;
         mView = null;
@@ -98,6 +118,11 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         routineViewPager = null;
 
         super.onDestroyView();
+    }
+
+    @Override
+    protected int getViewLayout() {
+        return R.layout.fragment_workout_create;
     }
 
     @Override
@@ -126,28 +151,14 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
-    protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
-        return new ExercisesListAdapter(this, exercises);
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(SAVEDSTATE_IDWORKOUT, idWorkout);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        super.onCreateView(inflater, container, savedInstanceState);
-        initializeSelectedExercisesViewPager();
-
-        mView.findViewById(R.id.btn_edit_Routine).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (routineViewPager != null) {
-                    EditRoutineDetailsDialog dialog = EditRoutineDetailsDialog.newInstance(routineAdapter.getRoutineId(routineViewPager.getCurrentItem()));
-                    dialog.show(getChildFragmentManager(), EditRoutineDetailsDialog.TAG);
-                }
-            }
-        });
-
-        return mView;
+    protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
+        return new ExercisesListAdapter(this, exercises);
     }
 
     @Override
@@ -213,25 +224,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
                 });
     }
 
-    // Will check if the routineAdapter has been initialized and if the routine data has been initialized.
-    // If they are, then add the routine id's to the routineAdapter.
-    private void setRoutineSliderAdapterData() {
-        if (!routinesInitialized && routineAdapter != null) {
-            if (initializedRoutines == null) initializedRoutines = new ArrayList<>();
-            if (!initializedRoutines.isEmpty()) {
-                routineAdapter.addRoutines(initializedRoutines);
-
-                initializedRoutines.clear();
-                routinesInitialized = true;
-            }
-        }
-    }
-
-    @Override
-    protected int getViewLayout() {
-        return R.layout.fragment_workout_create;
-    }
-
     private void initializeSelectedExercisesViewPager() {
         routineViewPager = mView.findViewById(R.id.view_pager);
 
@@ -264,15 +256,23 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         });
     }
 
+    // Will check if the routineAdapter has been initialized and if the routine data has been initialized.
+    // If they are, then add the routine id's to the routineAdapter.
+    private void setRoutineSliderAdapterData() {
+        if (!routinesInitialized && routineAdapter != null) {
+            if (initializedRoutines == null) initializedRoutines = new ArrayList<>();
+            if (!initializedRoutines.isEmpty()) {
+                routineAdapter.addRoutines(initializedRoutines);
+
+                initializedRoutines.clear();
+                routinesInitialized = true;
+            }
+        }
+    }
+
     private void addRoutineToSliderAdapterData(Routine routine) {
         if (isAdded())
             routineAdapter.addRoutine(routine);
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putLong(SAVEDSTATE_IDWORKOUT, idWorkout);
     }
 
     @Override

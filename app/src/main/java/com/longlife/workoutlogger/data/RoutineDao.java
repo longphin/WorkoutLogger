@@ -180,10 +180,10 @@ public abstract class RoutineDao {
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract Long insertExerciseSet(ExerciseSet es);
+    public abstract Long insertRoutineExercise(RoutineExercise routineExercise);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract Long insertRoutineExercise(RoutineExercise routineExercise);
+    public abstract Long insertExerciseSet(ExerciseSet es);
 
     @Query("SELECT re.idRoutineExercise, r.idRoutine, e.idExercise, e.name, COUNT(*) AS numberOfSets" +
             " FROM Routine as r" +

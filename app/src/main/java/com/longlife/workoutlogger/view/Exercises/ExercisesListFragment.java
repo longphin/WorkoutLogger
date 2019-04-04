@@ -52,6 +52,23 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
 
         setHasOptionsMenu(true);
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    protected int getViewLayout() {
+        return R.layout.fragment_exercises;
+    }
+
     @Override
     protected int getExercisesRecyclerViewId() {
         return R.id.rv_exercises;
@@ -60,17 +77,6 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    // Data was loaded, so now attach the adapter to the recyclerview.
-    @Override
-    protected void loadExercises(List<IExerciseListable> exercises) {
-        super.loadExercises(exercises);
     }
 
     @Override
@@ -83,6 +89,12 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
         }
     }
 
+    // Data was loaded, so now attach the adapter to the recyclerview.
+    @Override
+    protected void loadExercises(List<IExerciseListable> exercises) {
+        super.loadExercises(exercises);
+    }
+
     @Override
     protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
         return new ExercisesListRemakeAdapter(this, exercises);
@@ -91,17 +103,6 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
     @Override
     protected int getLayoutRoot() {
         return R.id.exercises_overview_layout;
-    }
-
-    @Override
-    protected int getViewLayout() {
-        return R.layout.fragment_exercises;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override

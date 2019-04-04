@@ -82,9 +82,11 @@ public class Exercise implements Parcelable, JSONParser.JSON {
     private Date lastUpdateDate = (new GregorianCalendar()).getTime();
     @Nullable
     private Boolean isPreloaded = false;
+
     public Exercise() {
 
     }
+
     @Ignore
     private Exercise(Parcel parcel) {
         idExercise = parcel.readLong();

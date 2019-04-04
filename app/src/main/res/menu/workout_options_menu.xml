@@ -9,7 +9,5 @@
     <item
         android:id="@+id/menu_workout_edit"
         android:title="@string/Edit" />
-    <item
-        android:id="@+id/menu_workout_delete"
-        android:title="@string/Delete" />
+    <item android:title="@string/Delete" />
 </menu>

@@ -24,14 +24,6 @@ public class ExerciseSet {
 
     private int order;
 
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
-    }
-
     @Ignore
     public ExerciseSet() {
 
@@ -39,6 +31,14 @@ public class ExerciseSet {
 
     public ExerciseSet(Long idRoutineExercise) {
         this.idRoutineExercise = idRoutineExercise;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public Long getIdExerciseSet() {

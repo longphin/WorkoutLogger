@@ -38,13 +38,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class ExercisesListFragmentBase extends FragmentBase implements IExerciseListCallbackBase {
+    private static final String SAVEDSTATE_groupBySelection = "initialGroupBySelection";
     protected ExercisesViewModel viewModel;
     protected ExercisesListAdapterBase adapter;
     protected View mView;
-    private RecyclerView recyclerView;
-    private static final String SAVEDSTATE_groupBySelection = "initialGroupBySelection";
     protected SearchView searchView;
     protected Spinner groupBySelector;
+    private RecyclerView recyclerView;
     private int initialGroupBySelection = 0;
 
     @Override
@@ -54,6 +54,18 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         if (savedInstanceState != null) {
             initialGroupBySelection = savedInstanceState.getInt(SAVEDSTATE_groupBySelection, 0);
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        mView = inflater.inflate(getViewLayout(), container, false);
+
+        //initializeObservers();
+        initializeRecyclerView();
+        initializeSearchExercises();
+        return mView;
     }
 
     @Override
@@ -87,110 +99,6 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         mView = null;
         super.onDestroyView();
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        mView = inflater.inflate(getViewLayout(), container, false);
-
-        //initializeObservers();
-        initializeRecyclerView();
-        initializeSearchExercises();
-        return mView;
-    }
-
-    protected abstract int getExercisesRecyclerViewId();
-
-    private void setAdapterForRecyclerView() {
-        if (recyclerView != null && adapter != null) {
-            recyclerView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        getViewModel();
-        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
-        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
-        addDisposable(viewModel.getExerciseRestoreObservable().subscribe(this::restoreExercise));
-        addDisposable(viewModel.getExerciseDeletedObservable().subscribe(this::deleteExercise));
-        addDisposable(viewModel.getExercisesDataObservable().subscribe(this::loadExercises));
-
-        initializeGroupByOptions(mView);
-    }
-
-    public abstract void getViewModel();
-
-    private void loadExerciseUpdated(ExerciseUpdated exerciseUpdated) {
-        if (adapter != null) adapter.exerciseUpdated(exerciseUpdated);
-    }
-
-    private void processExerciseInserted(Exercise ex) {
-        if (adapter != null)
-            adapter.addExercise(new ExerciseShort(ex));
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (groupBySelector != null) {
-            outState.putLong(SAVEDSTATE_groupBySelection, ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId());
-        }
-    }
-
-    private void initializeGroupByOptions(View v) {
-        if (groupBySelector == null && getContext() != null) {
-            groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
-            ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
-            // Specify the layout to use when the list appears.
-            groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Attach the adapter.
-            groupBySelector.setAdapter(groupByAdapter);
-
-            groupBySelector.setSelection(initialGroupBySelection, true);
-            SpinnerInteractionListener selectionListener = new SpinnerInteractionListener() {
-                @Override
-                public void onItemSelectedFunction(AdapterView<?> parent, View view, int pos, long id) {
-                    int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
-                    // When the group by is changed, execute the filter on the new group by.
-                    if (selectedGroupBy == 0) {
-                        viewModel.loadExercises();
-                    } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
-                        viewModel.loadExercisesByMuscleGroup(getContext(), selectedGroupBy - 1);
-                    }
-                }
-            };
-            groupBySelector.setOnItemSelectedListener(selectionListener); // Need this to trigger when the spinner item is chosen.
-            groupBySelector.setOnTouchListener(selectionListener); // Need this to prevent the fragment from only triggering when user interacts with listener or on first load.
-        }
-    }
-
-    // Data was loaded, so now attach the adapter to the recyclerview.
-    protected void loadExercises(List<IExerciseListable> exercises) {
-        if (isAdded()) {
-            if (adapter == null) {
-                adapter = createAdapter(this, exercises);//adapter = new ExercisesListRemakeAdapter(this, exercises);
-            } else {
-                adapter.resetData(exercises);
-            }
-        }
-
-        if (isAdded() && searchView != null && adapter != null) {
-            String query = searchView.getQuery().toString();
-            if (!query.isEmpty())
-                adapter.filterData(query);
-        }
-
-        if (isAdded()) {
-            setAdapterForRecyclerView();
-        }
-    }
-
-    protected abstract ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises); // [TODO] change ExercisesListAdapterBase.IClickExercise to a base interface instead. That way, whether the adapter is for exercise list or workout create, the number of callback options is limited.
 
     // This is the fragment layout resource.
     protected abstract int getViewLayout();
@@ -245,6 +153,98 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
             });
         }
     }
+
+    protected abstract int getExercisesRecyclerViewId();
+
+    private void setAdapterForRecyclerView() {
+        if (recyclerView != null && adapter != null) {
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getViewModel();
+        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
+        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
+        addDisposable(viewModel.getExerciseRestoreObservable().subscribe(this::restoreExercise));
+        addDisposable(viewModel.getExerciseDeletedObservable().subscribe(this::deleteExercise));
+        addDisposable(viewModel.getExercisesDataObservable().subscribe(this::loadExercises));
+
+        initializeGroupByOptions(mView);
+    }
+
+    public abstract void getViewModel();
+
+    private void initializeGroupByOptions(View v) {
+        if (groupBySelector == null && getContext() != null) {
+            groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
+            ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
+            // Specify the layout to use when the list appears.
+            groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // Attach the adapter.
+            groupBySelector.setAdapter(groupByAdapter);
+
+            groupBySelector.setSelection(initialGroupBySelection, true);
+            SpinnerInteractionListener selectionListener = new SpinnerInteractionListener() {
+                @Override
+                public void onItemSelectedFunction(AdapterView<?> parent, View view, int pos, long id) {
+                    int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
+                    // When the group by is changed, execute the filter on the new group by.
+                    if (selectedGroupBy == 0) {
+                        viewModel.loadExercises();
+                    } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
+                        viewModel.loadExercisesByMuscleGroup(getContext(), selectedGroupBy - 1);
+                    }
+                }
+            };
+            groupBySelector.setOnItemSelectedListener(selectionListener); // Need this to trigger when the spinner item is chosen.
+            groupBySelector.setOnTouchListener(selectionListener); // Need this to prevent the fragment from only triggering when user interacts with listener or on first load.
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (groupBySelector != null) {
+            outState.putLong(SAVEDSTATE_groupBySelection, ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId());
+        }
+    }
+
+    private void loadExerciseUpdated(ExerciseUpdated exerciseUpdated) {
+        if (adapter != null) adapter.exerciseUpdated(exerciseUpdated);
+    }
+
+    private void processExerciseInserted(Exercise ex) {
+        if (adapter != null)
+            adapter.addExercise(new ExerciseShort(ex));
+    }
+
+    // Data was loaded, so now attach the adapter to the recyclerview.
+    protected void loadExercises(List<IExerciseListable> exercises) {
+        if (isAdded()) {
+            if (adapter == null) {
+                adapter = createAdapter(this, exercises);//adapter = new ExercisesListRemakeAdapter(this, exercises);
+            } else {
+                adapter.resetData(exercises);
+            }
+        }
+
+        if (isAdded() && searchView != null && adapter != null) {
+            String query = searchView.getQuery().toString();
+            if (!query.isEmpty())
+                adapter.filterData(query);
+        }
+
+        if (isAdded()) {
+            setAdapterForRecyclerView();
+        }
+    }
+
+    protected abstract ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises); // [TODO] change ExercisesListAdapterBase.IClickExercise to a base interface instead. That way, whether the adapter is for exercise list or workout create, the number of callback options is limited.
 
     @Override
     public void exerciseEdit(Long idExercise) {

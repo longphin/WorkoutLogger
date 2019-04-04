@@ -27,12 +27,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 public class InitializeActivity extends AppCompatActivity {
+    private static final int MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
+    private static final int MY_PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 1;
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
     private ProfileViewModel profileViewModel;
-
-    private static final int MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
-    private static final int MY_PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

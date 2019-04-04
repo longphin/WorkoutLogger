@@ -39,6 +39,36 @@ public class Muscle {
         return "Muscle is missing a name."; // Should never appear.
     }
 
+    private static int[] getAllIdResources() {
+        return new int[]{
+                R.integer.MUSCLE_traps,
+                R.integer.MUSCLE_rhomboids,
+                R.integer.MUSCLE_lats,
+                R.integer.MUSCLE_lower_back,
+                R.integer.MUSCLE_biceps,
+                R.integer.MUSCLE_bicep_brachialis,
+                R.integer.MUSCLE_triceps,
+                R.integer.MUSCLE_forearms,
+                R.integer.MUSCLE_deltoid_anterior,
+                R.integer.MUSCLE_deltoid_lateral,
+                R.integer.MUSCLE_deltoid_posterior,
+                R.integer.MUSCLE_quads,
+                R.integer.MUSCLE_hamstrings,
+                R.integer.MUSCLE_glutes,
+                R.integer.MUSCLE_calves,
+                R.integer.MUSCLE_hip_abductors,
+                R.integer.MUSCLE_hip_adductors,
+                R.integer.MUSCLE_abs,
+                R.integer.MUSCLE_obliques,
+                R.integer.MUSCLE_serratus,
+                R.integer.MUSCLE_pec_lower,
+                R.integer.MUSCLE_pec_middle,
+                R.integer.MUSCLE_pec_upper,
+                R.integer.MUSCLE_cardio,
+                R.integer.MUSCLE_stretch
+        };
+    }
+
     private static int[] getAllNameResources() {
         return new int[]{R.string.MUSCLE_traps, R.string.MUSCLE_rhomboids, R.string.MUSCLE_lats,
                 R.string.MUSCLE_lower_back, R.string.MUSCLE_biceps, R.string.MUSCLE_bicep_brachialis,
@@ -79,36 +109,6 @@ public class Muscle {
 
     private static MuscleEntity getMuscleEntity(Context context, int idMuscle) {
         return new MuscleEntity(idMuscle, MuscleGroup.getMuscleGroupForMuscle(context, idMuscle));
-    }
-
-    private static int[] getAllIdResources() {
-        return new int[]{
-                R.integer.MUSCLE_traps,
-                R.integer.MUSCLE_rhomboids,
-                R.integer.MUSCLE_lats,
-                R.integer.MUSCLE_lower_back,
-                R.integer.MUSCLE_biceps,
-                R.integer.MUSCLE_bicep_brachialis,
-                R.integer.MUSCLE_triceps,
-                R.integer.MUSCLE_forearms,
-                R.integer.MUSCLE_deltoid_anterior,
-                R.integer.MUSCLE_deltoid_lateral,
-                R.integer.MUSCLE_deltoid_posterior,
-                R.integer.MUSCLE_quads,
-                R.integer.MUSCLE_hamstrings,
-                R.integer.MUSCLE_glutes,
-                R.integer.MUSCLE_calves,
-                R.integer.MUSCLE_hip_abductors,
-                R.integer.MUSCLE_hip_adductors,
-                R.integer.MUSCLE_abs,
-                R.integer.MUSCLE_obliques,
-                R.integer.MUSCLE_serratus,
-                R.integer.MUSCLE_pec_lower,
-                R.integer.MUSCLE_pec_middle,
-                R.integer.MUSCLE_pec_upper,
-                R.integer.MUSCLE_cardio,
-                R.integer.MUSCLE_stretch
-        };
     }
 
     public boolean isSelected() {

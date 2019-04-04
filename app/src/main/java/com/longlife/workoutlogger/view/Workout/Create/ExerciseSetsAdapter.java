@@ -37,11 +37,6 @@ public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return deletedSets;
     }
 
-    private void onBindSetsViewHolder(SetsViewHolder holder, int position) {
-        holder.getSetNumberView().setText(String.valueOf(position));
-        holder.getDeleteSetView().setOnClickListener(v -> deleteSet(holder.getAdapterPosition()));
-    }
-
     public void setData(List<ExerciseSet> data) {
         sets = data;
         notifyDataSetChanged();
@@ -92,13 +87,9 @@ public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
-    private void deleteSet(int position) {
-        ExerciseSet setToDelete = sets.get(position);
-        sets.remove(position);
-        if (setToDelete.getIdExerciseSet() != null)
-            deletedSets.add(setToDelete);
-
-        notifyItemRemoved(position);
+    private void onBindSetsViewHolder(SetsViewHolder holder, int position) {
+        holder.getSetNumberView().setText(String.valueOf(position));
+        holder.getDeleteSetView().setOnClickListener(v -> deleteSet(holder.getAdapterPosition()));
     }
 
     private void addSet() {
@@ -106,6 +97,15 @@ public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ExerciseSet setToAdd = new ExerciseSet();
         sets.add(setToAdd);
         notifyItemInserted(positionToAdd);
+    }
+
+    private void deleteSet(int position) {
+        ExerciseSet setToDelete = sets.get(position);
+        sets.remove(position);
+        if (setToDelete.getIdExerciseSet() != null)
+            deletedSets.add(setToDelete);
+
+        notifyItemRemoved(position);
     }
 
     private class SetsViewHolder extends RecyclerView.ViewHolder {

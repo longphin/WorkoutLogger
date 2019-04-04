@@ -26,7 +26,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/ic_delete_item"
             android:layout_width="@dimen/ic_delete_item"
             android:layout_height="@dimen/ic_delete_item"
             android:layout_alignParentStart="true"

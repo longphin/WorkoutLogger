@@ -36,17 +36,16 @@ import io.reactivex.disposables.Disposable;
 
 public class EditRoutineDetailsDialog extends DialogBase {
     public static final String TAG = EditRoutineDetailsDialog.class.getSimpleName();
-    private IOnInteraction interactionCallback;
     private static final String INPUT_IDROUTINE = "idRoutine";
+    @Inject
+    public ViewModelProvider.Factory viewModelFactory;
+    private IOnInteraction interactionCallback;
     private Long idRoutine;
-
     private TextView nameTextView;
     private CheckBox[] daysOfWeekBoxes = new CheckBox[7];
     private RadioButton[] scheduleOptions = new RadioButton[3];
     private TextView frequencyView;
     private RoutineShort routine;
-    @Inject
-    public ViewModelProvider.Factory viewModelFactory;
     private RoutinesViewModel routineViewModel;
     private boolean viewWasLoaded = false;
     private boolean routineWasLoaded = false;
