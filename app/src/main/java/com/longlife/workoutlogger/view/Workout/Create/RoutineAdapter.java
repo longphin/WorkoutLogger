@@ -96,6 +96,17 @@ public class RoutineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyItemRangeInserted(sizeBeforeAddedItems, exercisesToAddIntoRoutine.size());
     }
 
+    public void updateSetCountForExercise(Long idRoutineExercise, int size) {
+        for (int i = 0; i < data.size(); i++) {
+            exerciseItemInRoutine exercise = data.get(i);
+            if (exercise.getIdRoutineExercise().equals(idRoutineExercise)) {
+                exercise.setNumberOfSets(size);
+                notifyItemChanged(i);
+                return;
+            }
+        }
+    }
+
     public static class exerciseItemInRoutine {
         private Long idRoutineExercise;
         private Long idRoutine;

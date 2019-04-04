@@ -14,12 +14,23 @@ import androidx.room.PrimaryKey;
 
 @Entity(foreignKeys = @ForeignKey(entity = RoutineExercise.class, parentColumns = "idRoutineExercise", childColumns = "idRoutineExercise"),
         indices = {
-                @Index(value = {"idRoutineExercise"})
+                @Index(value = {"idRoutineExercise"}),
+                @Index(value = {"idRoutineExercise", "order"})
         })
 public class ExerciseSet {
     @PrimaryKey
     private Long idExerciseSet;
     private Long idRoutineExercise;
+
+    private int order;
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
     @Ignore
     public ExerciseSet() {

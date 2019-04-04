@@ -16,6 +16,7 @@ import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
 import com.longlife.workoutlogger.MyApplication;
 import com.longlife.workoutlogger.R;
 import com.longlife.workoutlogger.dataViewModel.WorkoutViewModel;
+import com.longlife.workoutlogger.model.Routine.ExerciseSet;
 import com.longlife.workoutlogger.view.Routines.RoutinesViewModel;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 
 // This fragment displays the list of exercises used in a specific routine.
-public class RoutineFragment extends FragmentBase implements ExercisesListAdapter.IExerciseListCallback, IRoutineExerciseListCallback {
+public class RoutineFragment extends FragmentBase implements ExercisesListAdapter.IExerciseListCallback, IRoutineExerciseListCallback, EditRoutineExerciseDialog.onSetDialogInteraction {
     private static final String INPUT_IDROUTINE = "IdRoutine";
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
@@ -173,5 +174,16 @@ public class RoutineFragment extends FragmentBase implements ExercisesListAdapte
         dialog.show(getChildFragmentManager(), EditRoutineExerciseDialog.TAG);
 
         //fragmentNavigation.pushFragment(EditRoutineExerciseDialog.newInstance(idRoutineExercise));
+    }
+
+    @Override
+    public void onSave(Long idRoutineExercise, List<ExerciseSet> completeData, List<ExerciseSet> setsToDelete) {
+        routineViewModel.deleteRoutineExerciseSets(setsToDelete);
+        for (int i = 0; i < completeData.size(); i++) {
+            completeData.get(i).setOrder(i);
+            completeData.get(i).setIdRoutineExercise(idRoutineExercise);
+        }
+        routineViewModel.insertRoutineExerciseSets(completeData);
+        routineAdapter.updateSetCountForExercise(idRoutineExercise, completeData.size());
     }
 }

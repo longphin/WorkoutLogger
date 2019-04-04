@@ -60,8 +60,8 @@ public class EditRoutineExerciseDialog extends DialogBase {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof onSetDialogInteraction) {
-            callback = (onSetDialogInteraction) context;
+        if (getParentFragment() instanceof onSetDialogInteraction) {
+            callback = (onSetDialogInteraction) getParentFragment();
         }
     }
 
@@ -113,7 +113,6 @@ public class EditRoutineExerciseDialog extends DialogBase {
                         });
             }
         }
-
     }
 
     /**
@@ -145,7 +144,7 @@ public class EditRoutineExerciseDialog extends DialogBase {
         mView.findViewById(R.id.btn_save).setOnClickListener(v ->
         {
             if (callback != null) {
-                callback.onSave(adapter.getSets(), adapter.getDeletedSets());
+                callback.onSave(idRoutineExercise, adapter.getSets(), adapter.getDeletedSets());
                 dismiss();
             }
         });
@@ -165,6 +164,6 @@ public class EditRoutineExerciseDialog extends DialogBase {
     }
 
     interface onSetDialogInteraction {
-        void onSave(List<ExerciseSet> completeData, List<ExerciseSet> setsToDelete); // This will include both existing sets and new sets. If the set does not have an idExerciseSet, then it needs to be inserted into the database.
+        void onSave(Long idRoutineExercise, List<ExerciseSet> completeData, List<ExerciseSet> setsToDelete); // This will include both existing sets and new sets. If the set does not have an idExerciseSet, then it needs to be inserted into the database.
     }
 }

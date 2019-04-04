@@ -220,4 +220,12 @@ public class Repository {
     public Single<List<ExerciseSet>> getSetsForRoutineExercise(Long idRoutineExercise) {
         return routineDao.getSetsForRoutineExercise(idRoutineExercise);
     }
+
+    public void deleteRoutineExerciseSets(List<ExerciseSet> setsToDelete) {
+        routineDao.deleteRoutineExerciseSets(setsToDelete);
+    }
+
+    public Single<List<Long>> insertRoutineExerciseSets(List<ExerciseSet> completeData) {
+        return routineDao.insertRoutineExerciseSets(completeData);
+    }
 }

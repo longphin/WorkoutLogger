@@ -226,6 +226,12 @@ public abstract class RoutineDao {
     @Query("DELETE FROM RoutineExercise WHERE idRoutineExercise=:idRoutineExercise")
     public abstract void deleteRoutineExercise(Long idRoutineExercise);
 
-    @Query("SELECT * FROM ExerciseSet WHERE idRoutineExercise=:idRoutineExercise")
+    @Query("SELECT * FROM ExerciseSet WHERE idRoutineExercise=:idRoutineExercise ORDER BY [order] ASC")
     public abstract Single<List<ExerciseSet>> getSetsForRoutineExercise(Long idRoutineExercise);
+
+    @Delete
+    public abstract void deleteRoutineExerciseSets(List<ExerciseSet> setsToDelete);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract Single<List<Long>> insertRoutineExerciseSets(List<ExerciseSet> completeData);
 }
