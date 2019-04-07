@@ -27,6 +27,13 @@ import java.io.File;
 
 import androidx.core.content.ContextCompat;
 
+/* Bugs
+[TODO] - when loading exercise list, make it initially populate.
+[TODO] - add set types (warmup, normal, to failure)
+[TODO] - add transitions between fragments
+[TODO] - fix titles for fragments
+ */
+
 /*
 [TODO] Allow users to activate/deactivate Workouts.
 {TODO] Create planner and calendar to see upcoming routines. The listed routines will be based on the active Workouts.

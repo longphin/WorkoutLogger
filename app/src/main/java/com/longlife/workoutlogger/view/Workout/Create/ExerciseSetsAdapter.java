@@ -6,20 +6,22 @@
 
 package com.longlife.workoutlogger.view.Workout.Create;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.longlife.workoutlogger.AndroidUtils.Item_Add_ViewHolder;
 import com.longlife.workoutlogger.R;
+import com.longlife.workoutlogger.enums.ExerciseSetType;
 import com.longlife.workoutlogger.model.Routine.ExerciseSet;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -28,7 +30,7 @@ public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<ExerciseSet> sets = new ArrayList<>(); // This is the current list of sets, both existing and new.
     private List<ExerciseSet> deletedSets = new ArrayList<>(); // This is a list of sets to be deleted from the database.
 
-
+    private IExerciseSetCallback adapterCallback;
     public List<ExerciseSet> getSets() {
         return sets;
     }
@@ -87,9 +89,66 @@ public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
+    public ExerciseSetsAdapter(IExerciseSetCallback callback) {
+        adapterCallback = callback;
+    }
+
     private void onBindSetsViewHolder(SetsViewHolder holder, int position) {
-        holder.getSetNumberView().setText(String.valueOf(position));
+        // Modify the view that gives the set's number.
+        holder.getSetNumberView().setImageResource(getSetTypeImage(holder.getAdapterPosition()));
+        // Create listener for the "more options" button. credit: Shaba Aafreen @https://stackoverflow.com/questions/37601346/create-options-menu-for-recyclerview-item
+        holder.getSetNumberView().setOnClickListener(view -> {
+            //creating a popup menu
+            PopupMenu popup = new PopupMenu(adapterCallback.getContext(), holder.getSetNumberView());
+            //inflating menu from xml resource
+            popup.inflate(R.menu.exercise_set_options_menu);
+            //adding click listener
+            popup.setOnMenuItemClickListener(item -> {
+                int setPos = holder.getAdapterPosition();
+                switch (item.getItemId()) {
+                    case R.id.menu_exercise_set_warmup:
+                        changeTypeForSetAtPosition(setPos, ExerciseSetType.WARMUP);
+                        break;
+                    case R.id.menu_exercise_set_regular:
+                        changeTypeForSetAtPosition(setPos, ExerciseSetType.REGULAR);
+                        break;
+                    case R.id.menu_exercise_set_tofailure:
+                        changeTypeForSetAtPosition(setPos, ExerciseSetType.TOFAILURE);
+                        break;
+                    default:
+                        break;
+                }
+
+                holder.getSetNumberView().setImageResource(getSetTypeImage(setPos));
+                return true;
+            });
+            //displaying the popup
+            popup.show();
+        });
+
+        // Modify the view for deleting the set.
         holder.getDeleteSetView().setOnClickListener(v -> deleteSet(holder.getAdapterPosition()));
+    }
+
+    private int getSetTypeImage(int pos) {
+        switch (sets.get(pos).getType()) {
+            case ExerciseSetType.WARMUP:
+                return R.drawable.ic_airline_seat_legroom_reduced_black_24dp;
+            case ExerciseSetType.REGULAR:
+                return R.drawable.ic_airline_seat_legroom_normal_black_24dp;
+            case ExerciseSetType.TOFAILURE:
+                return R.drawable.ic_airline_seat_legroom_extra_black_24dp;
+            default:
+                return R.drawable.ic_airline_seat_legroom_normal_black_24dp;
+        }
+    }
+
+    private void changeTypeForSetAtPosition(int pos, int newValue) {
+        sets.get(pos).setType(newValue);
+    }
+
+    interface IExerciseSetCallback {
+        Context getContext();
     }
 
     private void addSet() {
@@ -109,7 +168,7 @@ public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private class SetsViewHolder extends RecyclerView.ViewHolder {
-        private TextView setNumberView;
+        private ImageButton setNumberView;
 
         private ImageButton deleteSetView;
 
@@ -123,7 +182,7 @@ public class ExerciseSetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return deleteSetView;
         }
 
-        TextView getSetNumberView() {
+        ImageButton getSetNumberView() {
             return setNumberView;
         }
     }

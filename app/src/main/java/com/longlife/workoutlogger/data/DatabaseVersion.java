@@ -81,7 +81,8 @@ class DatabaseVersion {
     private static final int V9_6 = 61; // Added ExerciseSets table and removed sets from RoutineExercise.
     private static final int V9_6b = 62; //
     private static final int V9_7 = 63; // Added order to exercise set.
+    private static final int V9_8 = 64; // Added set types.
 
-    static final int CURRENT = V9_7;
+    static final int CURRENT = V9_8;
 }
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Longphi Nguyen on 4/6/19 7:22 PM.
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 12/29/18 11:00 AM.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_exercise_set_warmup"
+        android:title="@string/Warmup" />
+
+    <item
+        android:id="@+id/menu_exercise_set_regular"
+        android:title="@string/Regular" />
+
+    <item
+        android:id="@+id/menu_exercise_set_tofailure"
+        android:title="@string/ToFailure" />
+</menu>

@@ -140,4 +140,9 @@
     <string name="ScheduleWeekday">Weekday</string>
     <string name="ScheduleXDays">Frequency</string>
     <string name="ScheduleNone">None</string>
+
+    <!-- Set types-->
+    <string name="Warmup">Warmup</string>
+    <string name="Regular">Regular</string>
+    <string name="ToFailure">To Failure</string>
 </resources>

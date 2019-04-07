@@ -6,6 +6,8 @@
 
 package com.longlife.workoutlogger.model.Routine;
 
+import com.longlife.workoutlogger.enums.ExerciseSetType;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -22,7 +24,10 @@ public class ExerciseSet {
     private Long idExerciseSet;
     private Long idRoutineExercise;
 
+    // This is the order of the set for the exercise.
     private int order;
+    // This is the type of set it is. e.g. a warmup, regular, or to-failure.
+    private int type = ExerciseSetType.REGULAR;
 
     @Ignore
     public ExerciseSet() {
@@ -31,6 +36,14 @@ public class ExerciseSet {
 
     public ExerciseSet(Long idRoutineExercise) {
         this.idRoutineExercise = idRoutineExercise;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public int getOrder() {

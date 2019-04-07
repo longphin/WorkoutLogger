@@ -34,12 +34,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 
-public class EditRoutineExerciseDialog extends DialogBase {
+public class EditRoutineExerciseDialog extends DialogBase implements ExerciseSetsAdapter.IExerciseSetCallback {
     public static final String TAG = EditRoutineExerciseDialog.class.getSimpleName();
     private static final String INPUT_IDROUTINEEXERCISE = "idRoutineExercise";
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
-    // private RoutinesViewModel routineViewModel;
     private Long idRoutineExercise;
     private RecyclerView setsRecyclerView;
     private ExerciseSetsAdapter adapter;
@@ -136,7 +135,7 @@ public class EditRoutineExerciseDialog extends DialogBase {
             setsRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         }
         setsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new ExerciseSetsAdapter();
+        adapter = new ExerciseSetsAdapter(this);
         setsRecyclerView.setAdapter(adapter);
         setAdapterData();
 
