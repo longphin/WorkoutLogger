@@ -29,7 +29,6 @@ import androidx.core.content.ContextCompat;
 
 /* Bugs
 [TODO] - when loading exercise list, make it initially populate.
-[TODO] - add set types (warmup, normal, to failure)
 [TODO] - add transitions between fragments
 [TODO] - fix titles for fragments
  */
@@ -72,8 +71,8 @@ public class MyApplication
     public static final String NOTIFICATION_CHANNEL_NAME = "Rest Timer";
     private static final String TAG = MyApplication.class.getSimpleName();
     private static final String PRELOAD_FILE_1 = "preloadedFile1.json";
-    public static String NOTIFICATION_CHANNEL_ID = "RestTimerNotification"; // This can be anything, I believe.
-    private static String NOTIFICATION_CHANNEL_DESCRIPTION = "Displays time remaining while resting.";
+    public static final String NOTIFICATION_CHANNEL_ID = "RestTimerNotification"; // This can be anything, I believe.
+    private static final String NOTIFICATION_CHANNEL_DESCRIPTION = "Displays time remaining while resting.";
     private MyApplicationComponent component;
     // Service for the rest timer notification.
     private TimerNotificationService timerNotificationService;

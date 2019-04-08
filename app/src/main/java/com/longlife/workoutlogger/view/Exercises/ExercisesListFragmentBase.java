@@ -56,6 +56,8 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         }
     }
 
+    private boolean exerciseOptionHasBeenInitialized = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         //initializeObservers();
         initializeRecyclerView();
         initializeSearchExercises();
+        initializeExerciseOptionsSpinner();
         return mView;
     }
 
@@ -73,31 +76,15 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         super.onResume();
     }
 
-    @Override
-    public void onDestroyView() {
-        if (adapter != null) {
-            adapter = null;
+    private void initializeExerciseOptionsSpinner() {
+        groupBySelector = mView.findViewById(R.id.spinner_exercises_group_by);
+        if (getContext() != null) {
+            ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
+            // Specify the layout to use when the list appears.
+            groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // Attach the adapter.
+            groupBySelector.setAdapter(groupByAdapter);
         }
-
-        if (recyclerView != null) {
-            recyclerView = null;
-        }
-
-        if (searchView != null) {
-            searchView.setOnQueryTextListener(null);
-            searchView = null;
-        }
-
-        if (groupBySelector != null) {
-            groupBySelector.setAdapter(null);
-            groupBySelector.setOnItemSelectedListener(null);
-            groupBySelector = null;
-        }
-
-        clearDisposables();
-
-        mView = null;
-        super.onDestroyView();
     }
 
     // This is the fragment layout resource.
@@ -179,16 +166,36 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
 
     public abstract void getViewModel();
 
-    private void initializeGroupByOptions(View v) {
-        if (groupBySelector == null && getContext() != null) {
-            groupBySelector = v.findViewById(R.id.spinner_exercises_group_by);
-            ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
-            // Specify the layout to use when the list appears.
-            groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Attach the adapter.
-            groupBySelector.setAdapter(groupByAdapter);
+    @Override
+    public void onDestroyView() {
+        if (adapter != null) {
+            adapter = null;
+        }
 
-            groupBySelector.setSelection(initialGroupBySelection, true);
+        if (recyclerView != null) {
+            recyclerView = null;
+        }
+
+        if (searchView != null) {
+            searchView.setOnQueryTextListener(null);
+            searchView = null;
+        }
+
+        if (groupBySelector != null) {
+            groupBySelector.setAdapter(null);
+            groupBySelector.setOnItemSelectedListener(null);
+            groupBySelector = null;
+        }
+        exerciseOptionHasBeenInitialized = false;
+
+        clearDisposables();
+
+        mView = null;
+        super.onDestroyView();
+    }
+
+    private void initializeGroupByOptions(View v) {
+        if (!exerciseOptionHasBeenInitialized && groupBySelector != null && getContext() != null) {
             SpinnerInteractionListener selectionListener = new SpinnerInteractionListener() {
                 @Override
                 public void onItemSelectedFunction(AdapterView<?> parent, View view, int pos, long id) {
@@ -203,6 +210,9 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
             };
             groupBySelector.setOnItemSelectedListener(selectionListener); // Need this to trigger when the spinner item is chosen.
             groupBySelector.setOnTouchListener(selectionListener); // Need this to prevent the fragment from only triggering when user interacts with listener or on first load.
+
+            groupBySelector.setSelection(initialGroupBySelection, false);
+            exerciseOptionHasBeenInitialized = true;
         }
     }
 
