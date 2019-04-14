@@ -145,4 +145,5 @@
     <string name="Warmup">Warmup</string>
     <string name="Regular">Regular</string>
     <string name="ToFailure">To Failure</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>

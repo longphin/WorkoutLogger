@@ -1,15 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Created by Longphi Nguyen on 12/11/18 8:26 PM.
-  ~ Copyright (c) 2018. All rights reserved.
-  ~ Last modified 12/6/18 8:42 PM.
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.longlife.workoutlogger">
-
     <!-- read/write permissions for local storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -29,12 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".view.MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
+
             <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

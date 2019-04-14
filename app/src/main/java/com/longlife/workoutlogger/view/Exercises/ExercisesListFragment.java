@@ -135,7 +135,8 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
         ExerciseCreateFragment fragment = (ExerciseCreateFragment) manager.findFragmentByTag(ExerciseCreateFragment.TAG);
         if (fragment == null) {
             String currentFilter = "";
-            if (searchView != null) currentFilter = searchView.getQuery().toString();
+            if (searchView != null)
+                currentFilter = filter.getQuery();//searchView.getQuery().toString();
 
             fragment = ExerciseCreateFragment.newInstance(currentFilter);
         }

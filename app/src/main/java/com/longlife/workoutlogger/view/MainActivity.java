@@ -157,6 +157,14 @@ public class MainActivity
         bottomTabLayout.setInactiveColor(Color.GRAY);
     }
 
+    protected void hideBottomNavigation() {
+        bottomTabLayout.hideBottomNavigation();
+    }
+
+    protected void showBottomNavigation() {
+        bottomTabLayout.restoreBottomNavigation();
+    }
+
     private void setOnTabSelectedListener() {
         bottomTabLayout.setOnTabSelectedListener(
                 (position, wasSelected) -> {

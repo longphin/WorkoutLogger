@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Longphi Nguyen on 4/8/19 8:24 PM.
+  ~ Copyright (c) 2019. All rights reserved.
+  ~ Last modified 4/8/19 8:24 PM.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <TextView
+                android:id="@+id/musclegroup_misc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MUSCLEGROUP_misc"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- [TODO] The text style for this custom view is not being used. Figure out a way to make the text style for this custom view to be the same as the global text view style -->
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_cardio"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_cardio"
+                app:enum_code="@integer/MUSCLE_cardio"
+                app:enum_label="@string/MUSCLE_cardio"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_stretch"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_misc" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_stretch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_stretch"
+                app:enum_code="@integer/MUSCLE_stretch"
+                app:enum_label="@string/MUSCLE_stretch"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_weight="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_cardio"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_misc" />
+
+            <TextView
+                android:id="@+id/musclegroup_arms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MUSCLEGROUP_arms"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_cardio" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_biceps"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_biceps"
+                app:enum_code="@integer/MUSCLE_biceps"
+                app:enum_label="@string/MUSCLE_biceps"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_bicep_brachialis"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_arms" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_bicep_brachialis"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_bicep_brachialis"
+                app:enum_code="@integer/MUSCLE_bicep_brachialis"
+                app:enum_label="@string/MUSCLE_bicep_brachialis"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_biceps"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_arms" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_triceps"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_triceps"
+                app:enum_code="@integer/MUSCLE_triceps"
+                app:enum_label="@string/MUSCLE_triceps"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_forearms"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_biceps" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_forearms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_forearms"
+                app:enum_code="@integer/MUSCLE_forearms"
+                app:enum_label="@string/MUSCLE_forearms"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_triceps"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_bicep_brachialis" />
+
+            <TextView
+                android:id="@+id/musclegroup_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MUSCLEGROUP_back"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_triceps" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_traps"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_traps"
+                app:enum_code="@integer/MUSCLE_traps"
+                app:enum_label="@string/MUSCLE_traps"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_rhomboids"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_back" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_rhomboids"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_rhomboids"
+                app:enum_code="@integer/MUSCLE_rhomboids"
+                app:enum_label="@string/MUSCLE_rhomboids"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_traps"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_back" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_lats"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_lats"
+                app:enum_code="@integer/MUSCLE_lats"
+                app:enum_label="@string/MUSCLE_lats"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_lower_back"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_traps" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_lower_back"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_lower_back"
+                app:enum_code="@integer/MUSCLE_lower_back"
+                app:enum_label="@string/MUSCLE_lower_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_lats"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_traps" />
+
+            <TextView
+                android:id="@+id/musclegroup_chest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MUSCLEGROUP_chest"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_lats" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_pec_upper"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_pec_upper"
+                app:enum_code="@integer/MUSCLE_pec_upper"
+                app:enum_label="@string/MUSCLE_pec_upper"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_pec_middle"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_chest" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_pec_middle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_pec_middle"
+                app:enum_code="@integer/MUSCLE_pec_middle"
+                app:enum_label="@string/MUSCLE_pec_middle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_pec_upper"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_chest" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_pec_lower"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_pec_lower"
+                app:enum_code="@integer/MUSCLE_pec_lower"
+                app:enum_label="@string/MUSCLE_pec_lower"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_pec_upper" />
+
+            <TextView
+                android:id="@+id/musclegroup_core"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MUSCLEGROUP_core"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_pec_lower" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_abs"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_abs"
+                app:enum_code="@integer/MUSCLE_abs"
+                app:enum_label="@string/MUSCLE_abs"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_obliques"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_core" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_obliques"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_obliques"
+                app:enum_code="@integer/MUSCLE_obliques"
+                app:enum_label="@string/MUSCLE_obliques"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_abs"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_core" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_serratus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_serratus"
+                app:enum_code="@integer/MUSCLE_serratus"
+                app:enum_label="@string/MUSCLE_serratus"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_abs" />
+
+            <TextView
+                android:id="@+id/musclegroup_legs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MUSCLEGROUP_legs"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_serratus" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_quads"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_quads"
+                app:enum_code="@integer/MUSCLE_quads"
+                app:enum_label="@string/MUSCLE_quads"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_hamstrings"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_legs" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_hamstrings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_hamstrings"
+                app:enum_code="@integer/MUSCLE_hamstrings"
+                app:enum_label="@string/MUSCLE_hamstrings"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_quads"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_legs" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_glutes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_glutes"
+                app:enum_code="@integer/MUSCLE_glutes"
+                app:enum_label="@string/MUSCLE_glutes"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_calves"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_quads" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_calves"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_calves"
+                app:enum_code="@integer/MUSCLE_calves"
+                app:enum_label="@string/MUSCLE_calves"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_glutes"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_hamstrings" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_hip_abductors"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_hip_abductors"
+                app:enum_code="@integer/MUSCLE_hip_abductors"
+                app:enum_label="@string/MUSCLE_hip_abductors"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_hip_adductors"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_glutes" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_hip_adductors"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_hip_adductors"
+                app:enum_code="@integer/MUSCLE_hip_adductors"
+                app:enum_label="@string/MUSCLE_hip_adductors"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_hip_abductors"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_calves" />
+
+            <TextView
+                android:id="@+id/musclegroup_shoulders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MUSCLEGROUP_shoulders"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_hip_abductors" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_deltoid_anterior"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_deltoid_anterior"
+                app:enum_code="@integer/MUSCLE_deltoid_anterior"
+                app:enum_label="@string/MUSCLE_deltoid_anterior"
+                app:layout_constraintEnd_toStartOf="@+id/muscle_deltoid_lateral"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_shoulders" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_deltoid_lateral"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_deltoid_lateral"
+                app:enum_code="@integer/MUSCLE_deltoid_lateral"
+                app:enum_label="@string/MUSCLE_deltoid_lateral"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/muscle_deltoid_anterior"
+                app:layout_constraintTop_toBottomOf="@+id/musclegroup_shoulders" />
+
+            <com.longlife.workoutlogger.CustomViews.TextViewWithId
+                android:id="@+id/muscle_deltoid_posterior"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/andada"
+                android:text="@string/MUSCLE_deltoid_posterior"
+                app:enum_code="@integer/MUSCLE_deltoid_posterior"
+                app:enum_label="@string/MUSCLE_deltoid_posterior"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/muscle_deltoid_anterior" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

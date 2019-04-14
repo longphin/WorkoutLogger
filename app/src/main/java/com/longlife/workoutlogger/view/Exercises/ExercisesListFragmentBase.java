@@ -6,13 +6,13 @@
 
 package com.longlife.workoutlogger.view.Exercises;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import com.longlife.workoutlogger.AndroidUtils.FragmentBase;
@@ -24,25 +24,26 @@ import com.longlife.workoutlogger.model.Exercise.Exercise;
 import com.longlife.workoutlogger.model.Exercise.ExerciseShort;
 import com.longlife.workoutlogger.model.Exercise.ExerciseUpdated;
 import com.longlife.workoutlogger.model.Exercise.IExerciseListable;
+import com.longlife.workoutlogger.utils.ExerciseFilter;
+import com.longlife.workoutlogger.view.ExerciseSearchFragment;
 import com.longlife.workoutlogger.view.Exercises.EditExercise.ExerciseEditFragment;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class ExercisesListFragmentBase extends FragmentBase implements IExerciseListCallbackBase {
+public abstract class ExercisesListFragmentBase extends FragmentBase implements IExerciseListCallbackBase {//, ExerciseSearchFragment.OnFragmentInteractionListener {
     private static final String SAVEDSTATE_groupBySelection = "initialGroupBySelection";
     protected ExercisesViewModel viewModel;
     protected ExercisesListAdapterBase adapter;
     protected View mView;
-    protected SearchView searchView;
+    protected ImageButton searchView;
     protected Spinner groupBySelector;
     private RecyclerView recyclerView;
     private int initialGroupBySelection = 0;
@@ -103,43 +104,7 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         setAdapterForRecyclerView();
     }
 
-    private void initializeSearchExercises() {
-        if (searchView == null) {
-            searchView = mView.findViewById(R.id.exercises_search_exercises);
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    if (adapter != null) {
-                        adapter.filterData(query);
-                        return true;
-                    }
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    if (adapter != null) {
-                        adapter.filterData(newText);
-                        return true;
-                    }
-                    return false;
-                    /* // [TODO] - If we want to add a delay to the search, use a handler instead.
-                    searchHandler.removeCallbacksAndMessages(null);
-                    String searchText = newText;
-                    searchHandler.postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run() {
-                            if (adapter != null) {
-                                adapter.filterData(searchText);
-                            }
-                        }
-                    }, 400);
-                    return true;*/
-                }
-            });
-        }
-    }
+    protected ExerciseFilter filter = new ExerciseFilter();
 
     protected abstract int getExercisesRecyclerViewId();
 
@@ -166,32 +131,20 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
 
     public abstract void getViewModel();
 
-    @Override
-    public void onDestroyView() {
-        if (adapter != null) {
-            adapter = null;
+    private void initializeSearchExercises() {
+        if (searchView == null) {
+            searchView = mView.findViewById(R.id.exercises_search_exercises);
+
+            searchView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getActivity() != null && isAdded()) {
+                        ExerciseSearchFragment fragment = ExerciseSearchFragment.newInstance();
+                        fragmentNavigation.pushFragment(fragment);
+                    }
+                }
+            });
         }
-
-        if (recyclerView != null) {
-            recyclerView = null;
-        }
-
-        if (searchView != null) {
-            searchView.setOnQueryTextListener(null);
-            searchView = null;
-        }
-
-        if (groupBySelector != null) {
-            groupBySelector.setAdapter(null);
-            groupBySelector.setOnItemSelectedListener(null);
-            groupBySelector = null;
-        }
-        exerciseOptionHasBeenInitialized = false;
-
-        clearDisposables();
-
-        mView = null;
-        super.onDestroyView();
     }
 
     private void initializeGroupByOptions(View v) {
@@ -224,6 +177,34 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        if (adapter != null) {
+            adapter = null;
+        }
+
+        if (recyclerView != null) {
+            recyclerView = null;
+        }
+
+        if (searchView != null) {
+            //searchView.setOnQueryTextListener(null);
+            searchView.setOnClickListener(null);
+            searchView = null;
+        }
+
+        if (groupBySelector != null) {
+            groupBySelector.setAdapter(null);
+            groupBySelector.setOnItemSelectedListener(null);
+            groupBySelector = null;
+        }
+        exerciseOptionHasBeenInitialized = false;
+
+        clearDisposables();
+
+        mView = null;
+        super.onDestroyView();
+    }
     private void loadExerciseUpdated(ExerciseUpdated exerciseUpdated) {
         if (adapter != null) adapter.exerciseUpdated(exerciseUpdated);
     }
@@ -244,7 +225,7 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         }
 
         if (isAdded() && searchView != null && adapter != null) {
-            String query = searchView.getQuery().toString();
+            String query = filter.getQuery();//searchView.getQuery().toString();
             if (!query.isEmpty())
                 adapter.filterData(query);
         }
