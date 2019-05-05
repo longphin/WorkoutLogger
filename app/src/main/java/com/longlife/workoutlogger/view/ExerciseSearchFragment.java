@@ -50,26 +50,16 @@ public class ExerciseSearchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getActivity() instanceof MainActivity) {
+/*        if (getActivity() instanceof MainActivity) { //[TODO] hiding the bottom navigation does not increase the size of the framelayout in the main activity, which leaves the space where the bottom nav used to be as white space.
             ((MainActivity) getActivity()).hideBottomNavigation();
-        }
+        }*/
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (getActivity() instanceof MainActivity) {
+        /*if (getActivity() instanceof MainActivity) { // [TODO] hiding the bottom navigation does not increase the size of the framelayout in the main activity, which leaves the space where the bottom nav used to be as white space.
             ((MainActivity) getActivity()).showBottomNavigation();
-        }
+        }*/
     }
-
-    /*    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }*/
-
-/*    public interface OnFragmentInteractionListener {
-        // [TODO] add onSaveSearchOptions(String query, List<Muscles> muscles);
-    }*/
 }
