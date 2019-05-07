@@ -8,6 +8,7 @@ package com.longlife.workoutlogger.view.Exercises;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,16 +46,8 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
     protected SearchView searchView;
     protected Spinner groupBySelector;
     private RecyclerView recyclerView;
-    private int initialGroupBySelection = 0;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            initialGroupBySelection = savedInstanceState.getInt(SAVEDSTATE_groupBySelection, 0);
-        }
-    }
+    private Handler searchHandler;
 
     private boolean exerciseOptionHasBeenInitialized = false;
 
@@ -103,41 +96,63 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         setAdapterForRecyclerView();
     }
 
+    private String searchString;
+    private int searchByCategory = 0;
+    private int lastSearchByCategory = 0;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        searchHandler = new Handler();
+
+        if (savedInstanceState != null) {
+            searchByCategory = savedInstanceState.getInt(SAVEDSTATE_groupBySelection, 0);
+        }
+    }
+
     private void initializeSearchExercises() {
         if (searchView == null) {
             searchView = mView.findViewById(R.id.exercises_search_exercises);
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    if (adapter != null) {
-                        adapter.filterData(query);
-                        return true;
-                    }
-                    return false;
+                    searchString = query;
+                    searchHandler.removeCallbacksAndMessages(null);
+                    searchHandler.postDelayed(() -> filterExercises(), 200);
+
+                    return true;
                 }
 
                 @Override
-                public boolean onQueryTextChange(String newText) {
-                    if (adapter != null) {
-                        adapter.filterData(newText);
-                        return true;
-                    }
-                    return false;
-                    /* // [TODO] - If we want to add a delay to the search, use a handler instead.
+                public boolean onQueryTextChange(String query) {
+                    searchString = query;
                     searchHandler.removeCallbacksAndMessages(null);
-                    String searchText = newText;
-                    searchHandler.postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run() {
-                            if (adapter != null) {
-                                adapter.filterData(searchText);
-                            }
-                        }
-                    }, 400);
-                    return true;*/
+                    searchHandler.postDelayed(() -> filterExercises(), 200);
+
+                    return true;
                 }
             });
+        }
+    }
+
+    private void filterExercises() // [TODO] Not completely working when switching from workout fragment to exercises fragment (it is not loading the correct data).
+    {
+        if (searchByCategory != lastSearchByCategory) { // When the group by is changed, execute the filter on the new group by.
+            loadExercisesHelper();
+            lastSearchByCategory = searchByCategory;
+        } else if (adapter != null) { // Else, the category filter was not changed, so only the text was changed. We only need to filter on the new text.
+            adapter.filterData(searchString);
+        } else { // Else, this is the case on boot up, aka the initial load.
+            loadExercisesHelper();
+        }
+    }
+
+    // This function is called to determine if to load all exercises or exercises by categories.
+    private void loadExercisesHelper() {
+        if (searchByCategory == 0) {
+            viewModel.loadExercises();
+        } else if (searchByCategory > 0 && searchByCategory <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
+            viewModel.loadExercisesByMuscleGroup(getContext(), searchByCategory - 1);
         }
     }
 
@@ -199,19 +214,15 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
             SpinnerInteractionListener selectionListener = new SpinnerInteractionListener() {
                 @Override
                 public void onItemSelectedFunction(AdapterView<?> parent, View view, int pos, long id) {
-                    int selectedGroupBy = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
-                    // When the group by is changed, execute the filter on the new group by.
-                    if (selectedGroupBy == 0) {
-                        viewModel.loadExercises();
-                    } else if (selectedGroupBy > 0 && selectedGroupBy <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
-                        viewModel.loadExercisesByMuscleGroup(getContext(), selectedGroupBy - 1);
-                    }
+                    searchHandler.removeCallbacksAndMessages(null);
+                    searchByCategory = ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId();
+                    searchHandler.postDelayed(() -> filterExercises(), 300);
                 }
             };
             groupBySelector.setOnItemSelectedListener(selectionListener); // Need this to trigger when the spinner item is chosen.
             groupBySelector.setOnTouchListener(selectionListener); // Need this to prevent the fragment from only triggering when user interacts with listener or on first load.
 
-            groupBySelector.setSelection(initialGroupBySelection, false);
+            groupBySelector.setSelection(searchByCategory, false);
             exerciseOptionHasBeenInitialized = true;
         }
     }
