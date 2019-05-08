@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class ExercisesListFragmentBase extends FragmentBase implements IExerciseListCallbackBase {
     private static final String SAVEDSTATE_groupBySelection = "initialGroupBySelection";
+    private static final String SAVEDSTATE_searchQuery = "searchExerciseQuery";
     protected ExercisesViewModel viewModel;
     protected ExercisesListAdapterBase adapter;
     protected View mView;
@@ -50,6 +51,20 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
     private Handler searchHandler;
 
     private boolean exerciseOptionHasBeenInitialized = false;
+    private String searchString;
+    private int searchByCategory = 0;
+    private int lastSearchByCategory = 0;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        searchHandler = new Handler();
+
+        if (savedInstanceState != null) {
+            searchByCategory = savedInstanceState.getInt(SAVEDSTATE_groupBySelection, 0);
+            searchString = savedInstanceState.getString(SAVEDSTATE_searchQuery, "");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,118 +83,6 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
     public void onResume() {
         super.onResume();
     }
-
-    private void initializeExerciseOptionsSpinner() {
-        groupBySelector = mView.findViewById(R.id.spinner_exercises_group_by);
-        if (getContext() != null) {
-            ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
-            // Specify the layout to use when the list appears.
-            groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Attach the adapter.
-            groupBySelector.setAdapter(groupByAdapter);
-        }
-    }
-
-    // This is the fragment layout resource.
-    protected abstract int getViewLayout();
-
-    private void initializeRecyclerView() {
-        if (recyclerView == null)
-            recyclerView = mView.findViewById(getExercisesRecyclerViewId());
-
-        recyclerView.setAdapter(adapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        if (getContext() != null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        }
-        setAdapterForRecyclerView();
-    }
-
-    private String searchString;
-    private int searchByCategory = 0;
-    private int lastSearchByCategory = 0;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        searchHandler = new Handler();
-
-        if (savedInstanceState != null) {
-            searchByCategory = savedInstanceState.getInt(SAVEDSTATE_groupBySelection, 0);
-        }
-    }
-
-    private void initializeSearchExercises() {
-        if (searchView == null) {
-            searchView = mView.findViewById(R.id.exercises_search_exercises);
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    searchString = query;
-                    searchHandler.removeCallbacksAndMessages(null);
-                    searchHandler.postDelayed(() -> filterExercises(), 200);
-
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String query) {
-                    searchString = query;
-                    searchHandler.removeCallbacksAndMessages(null);
-                    searchHandler.postDelayed(() -> filterExercises(), 200);
-
-                    return true;
-                }
-            });
-        }
-    }
-
-    private void filterExercises() // [TODO] Not completely working when switching from workout fragment to exercises fragment (it is not loading the correct data).
-    {
-        if (searchByCategory != lastSearchByCategory) { // When the group by is changed, execute the filter on the new group by.
-            loadExercisesHelper();
-            lastSearchByCategory = searchByCategory;
-        } else if (adapter != null) { // Else, the category filter was not changed, so only the text was changed. We only need to filter on the new text.
-            adapter.filterData(searchString);
-        } else { // Else, this is the case on boot up, aka the initial load.
-            loadExercisesHelper();
-        }
-    }
-
-    // This function is called to determine if to load all exercises or exercises by categories.
-    private void loadExercisesHelper() {
-        if (searchByCategory == 0) {
-            viewModel.loadExercises();
-        } else if (searchByCategory > 0 && searchByCategory <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
-            viewModel.loadExercisesByMuscleGroup(getContext(), searchByCategory - 1);
-        }
-    }
-
-    protected abstract int getExercisesRecyclerViewId();
-
-    private void setAdapterForRecyclerView() {
-        if (recyclerView != null && adapter != null) {
-            recyclerView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        getViewModel();
-        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
-        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
-        addDisposable(viewModel.getExerciseRestoreObservable().subscribe(this::restoreExercise));
-        addDisposable(viewModel.getExerciseDeletedObservable().subscribe(this::deleteExercise));
-        addDisposable(viewModel.getExercisesDataObservable().subscribe(this::loadExercises));
-
-        initializeGroupByOptions(mView);
-    }
-
-    public abstract void getViewModel();
 
     @Override
     public void onDestroyView() {
@@ -209,6 +112,109 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         super.onDestroyView();
     }
 
+    // This is the fragment layout resource.
+    protected abstract int getViewLayout();
+
+    private void initializeRecyclerView() {
+        if (recyclerView == null)
+            recyclerView = mView.findViewById(getExercisesRecyclerViewId());
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        if (getContext() != null) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        }
+        setAdapterForRecyclerView();
+    }
+
+    private void initializeSearchExercises() {
+        if (searchView == null) {
+            searchView = mView.findViewById(R.id.exercises_search_exercises);
+            searchView.setQuery(searchString, false);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    searchString = query;
+                    searchHandler.removeCallbacksAndMessages(null);
+                    searchHandler.postDelayed(() -> filterExercises(), 200);
+
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String query) {
+                    searchString = query;
+                    searchHandler.removeCallbacksAndMessages(null);
+                    searchHandler.postDelayed(() -> filterExercises(), 200);
+
+                    return true;
+                }
+            });
+        }
+    }
+
+    private void initializeExerciseOptionsSpinner() {
+        groupBySelector = mView.findViewById(R.id.spinner_exercises_group_by);
+        if (getContext() != null) {
+            ArrayAdapter<ExerciseListGroupBy.Type> groupByAdapter = new ArrayAdapter<>(getContext(), R.layout.weight_unit_spinner_item, ExerciseListGroupBy.getOptions(getContext()));
+            // Specify the layout to use when the list appears.
+            groupByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // Attach the adapter.
+            groupBySelector.setAdapter(groupByAdapter);
+        }
+    }
+
+    protected abstract int getExercisesRecyclerViewId();
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (groupBySelector != null) {
+            outState.putLong(SAVEDSTATE_groupBySelection, ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId());
+        }
+        if (searchView != null) {
+            outState.putString(SAVEDSTATE_searchQuery, searchView.getQuery().toString());
+        }
+    }
+
+    private void filterExercises() // [TODO] Not completely working when switching from workout fragment to exercises fragment (it is not loading the correct data).
+    {
+        if (searchByCategory != lastSearchByCategory) { // When the group by is changed, execute the filter on the new group by.
+            loadExercisesHelper();
+            lastSearchByCategory = searchByCategory;
+        } else if (adapter != null) { // Else, the category filter was not changed, so only the text was changed. We only need to filter on the new text.
+            adapter.filterData(searchString);
+        } else { // Else, this is the case on boot up, aka the initial load.
+            loadExercisesHelper();
+        }
+    }
+
+    // This function is called to determine if to load all exercises or exercises by categories.
+    private void loadExercisesHelper() {
+        if (searchByCategory == 0) {
+            viewModel.loadExercises();
+        } else if (searchByCategory > 0 && searchByCategory <= MuscleGroup.getAllMuscleGroupsIds(getContext()).size()) {
+            viewModel.loadExercisesByMuscleGroup(getContext(), searchByCategory - 1);
+        }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getViewModel();
+        addDisposable(viewModel.getExerciseInsertedObservable().subscribe(this::processExerciseInserted));
+        addDisposable(viewModel.getExerciseEditedObservable().subscribe(this::loadExerciseUpdated));
+        addDisposable(viewModel.getExerciseRestoreObservable().subscribe(this::restoreExercise));
+        addDisposable(viewModel.getExerciseDeletedObservable().subscribe(this::deleteExercise));
+        addDisposable(viewModel.getExercisesDataObservable().subscribe(this::loadExercises));
+
+        initializeGroupByOptions(mView);
+    }
+
+    public abstract void getViewModel();
+
     private void initializeGroupByOptions(View v) {
         if (!exerciseOptionHasBeenInitialized && groupBySelector != null && getContext() != null) {
             SpinnerInteractionListener selectionListener = new SpinnerInteractionListener() {
@@ -227,16 +233,27 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         }
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (groupBySelector != null) {
-            outState.putLong(SAVEDSTATE_groupBySelection, ((ExerciseListGroupBy.Type) groupBySelector.getSelectedItem()).getId());
-        }
+    private void loadExerciseUpdated(ExerciseUpdated exerciseUpdated) {
+        if (adapter != null) adapter.exerciseUpdated(exerciseUpdated, searchString);
     }
 
-    private void loadExerciseUpdated(ExerciseUpdated exerciseUpdated) {
-        if (adapter != null) adapter.exerciseUpdated(exerciseUpdated);
+    // Data was loaded, so now attach the adapter to the recyclerview.
+    protected void loadExercises(List<IExerciseListable> exercises) {
+        if (isAdded()) {
+            if (adapter == null) {
+                adapter = createAdapter(this, exercises, searchString);//adapter = new ExercisesListRemakeAdapter(this, exercises);
+            } else {
+                adapter.resetData(exercises, searchString);
+            }
+
+            setAdapterForRecyclerView();
+        }
+
+/*        if (isAdded() && searchView != null && adapter != null) {
+            String query = searchView.getQuery().toString();
+            if (!query.isEmpty())
+                adapter.filterData(query);
+        }*/
     }
 
     private void processExerciseInserted(Exercise ex) {
@@ -244,28 +261,15 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
             adapter.addExercise(new ExerciseShort(ex));
     }
 
-    // Data was loaded, so now attach the adapter to the recyclerview.
-    protected void loadExercises(List<IExerciseListable> exercises) {
-        if (isAdded()) {
-            if (adapter == null) {
-                adapter = createAdapter(this, exercises);//adapter = new ExercisesListRemakeAdapter(this, exercises);
-            } else {
-                adapter.resetData(exercises);
-            }
-        }
+    protected abstract ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises, String query); // [TODO] change ExercisesListAdapterBase.IClickExercise to a base interface instead. That way, whether the adapter is for exercise list or workout create, the number of callback options is limited.
 
-        if (isAdded() && searchView != null && adapter != null) {
-            String query = searchView.getQuery().toString();
-            if (!query.isEmpty())
-                adapter.filterData(query);
-        }
-
-        if (isAdded()) {
-            setAdapterForRecyclerView();
+    private void setAdapterForRecyclerView() {
+        if (recyclerView != null && adapter != null) {
+            recyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            //adapter.filterData(searchString);
         }
     }
-
-    protected abstract ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises); // [TODO] change ExercisesListAdapterBase.IClickExercise to a base interface instead. That way, whether the adapter is for exercise list or workout create, the number of callback options is limited.
 
     @Override
     public void exerciseEdit(Long idExercise) {

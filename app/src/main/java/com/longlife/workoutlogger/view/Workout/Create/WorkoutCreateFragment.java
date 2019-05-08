@@ -157,8 +157,8 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
     }
 
     @Override
-    protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
-        return new ExercisesListAdapter(this, exercises);
+    protected ExercisesListAdapterBase createAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises, String query) {
+        return new ExercisesListAdapter(this, exercises, query);
     }
 
     @Override

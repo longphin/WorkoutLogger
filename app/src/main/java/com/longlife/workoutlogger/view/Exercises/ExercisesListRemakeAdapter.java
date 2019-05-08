@@ -17,8 +17,8 @@ import androidx.appcompat.widget.PopupMenu;
 public class ExercisesListRemakeAdapter extends ExercisesListAdapterBase {
     private IExerciseListCallback callback;
 
-    public ExercisesListRemakeAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises) {
-        super(exercises);
+    public ExercisesListRemakeAdapter(IExerciseListCallbackBase callback, List<IExerciseListable> exercises, String query) {
+        super(exercises, query);
         if (callback instanceof IExerciseListCallback)
             this.callback = (IExerciseListCallback) callback;
     }

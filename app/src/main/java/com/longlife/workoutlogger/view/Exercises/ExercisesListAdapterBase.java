@@ -38,22 +38,31 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
     private Set<String> headers = new HashSet<>();
     private List<IExerciseListable> originalData;
 
-    public ExercisesListAdapterBase(List<IExerciseListable> exercises) {
-        resetData(exercises);
+    public ExercisesListAdapterBase(List<IExerciseListable> exercises, String query) {
+        resetData(exercises, query);
     }
 
-    void resetData(List<IExerciseListable> exercises) {
+    void resetData(List<IExerciseListable> exercises, String query) {
         originalData = exercises;
-        setData(exercises);
+        setData(exercises, query);
     }
 
-    public void setData(List<IExerciseListable> exercises) {
+    public void setData(List<IExerciseListable> exercises, String query) {
         data.clear();
         headers.clear();
 
         // 1. Iterate through the exercises and create a list item for the exercise.
         // 2. Then, create headers for the exercise categories also as a list item.
         Observable.fromIterable(exercises)
+                .filter(
+                        ex -> query == null || query.isEmpty() || ex.getName().toLowerCase().contains(query)
+                 /*       new Predicate<IExerciseListable>() {
+                    @Override
+                    public boolean test(IExerciseListable ex) throws Exception {
+                        return ex.getName().toLowerCase().contains(query);
+                    }
+                }*/
+                )
                 .map(ex ->
                 {
                     String headerCategory = ex.getCategory();
@@ -248,7 +257,7 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
 
     protected abstract void onBindExerciseViewHolder(ExerciseListExerciseViewHolder holder, int position);
 
-    void exerciseUpdated(ExerciseUpdated updated) {
+    void exerciseUpdated(ExerciseUpdated updated, String query) {
         Long idExercise = updated.getIdExercise();
         boolean wasCategorizationChanged = false; // Will be true if the item any fields that would change the exercise position is updated.  // [TODO] Does not seem to be working.
         for (int i = 0; i < originalData.size(); i++) {
@@ -261,7 +270,7 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
             }
         }
 
-        setData(originalData); // [TODO] Possible optimization: Because wasCategorization is not correct, logic to only update views when the category for an exercise changes.
+        setData(originalData, query); // [TODO] Possible optimization: Because wasCategorization is not correct, logic to only update views when the category for an exercise changes.
         /*
         if(wasCategorizationChanged) // Need to reset the views because categorization was changed.
         {
@@ -337,7 +346,7 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
 
                     @Override
                     public void onSuccess(List<IExerciseListable> iExerciseListables) {
-                        setData(iExerciseListables);
+                        setData(iExerciseListables, query);
                     }
 
                     @Override
