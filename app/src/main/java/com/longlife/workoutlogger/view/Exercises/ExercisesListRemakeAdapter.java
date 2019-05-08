@@ -56,7 +56,6 @@ public class ExercisesListRemakeAdapter extends ExercisesListAdapterBase {
                             case R.id.menu_exercise_delete:
                                 Long idExerciseToDelete = data.get(currentPosition).id();
                                 ExerciseShort exerciseToDelete = getExerciseById(idExerciseToDelete);
-                                //deleteExercise(idExerciseToDelete);
                                 callback.exerciseDelete(exerciseToDelete);
                                 return true;
                             default:

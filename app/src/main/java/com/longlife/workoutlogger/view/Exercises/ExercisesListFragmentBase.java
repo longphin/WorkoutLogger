@@ -72,7 +72,6 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         // Inflate the layout for this fragment
         mView = inflater.inflate(getViewLayout(), container, false);
 
-        //initializeObservers();
         initializeRecyclerView();
         initializeSearchExercises();
         initializeExerciseOptionsSpinner();
@@ -248,12 +247,6 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
 
             setAdapterForRecyclerView();
         }
-
-/*        if (isAdded() && searchView != null && adapter != null) {
-            String query = searchView.getQuery().toString();
-            if (!query.isEmpty())
-                adapter.filterData(query);
-        }*/
     }
 
     private void processExerciseInserted(Exercise ex) {
@@ -267,7 +260,6 @@ public abstract class ExercisesListFragmentBase extends FragmentBase implements 
         if (recyclerView != null && adapter != null) {
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-            //adapter.filterData(searchString);
         }
     }
 

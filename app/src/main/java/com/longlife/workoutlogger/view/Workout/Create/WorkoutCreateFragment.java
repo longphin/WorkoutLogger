@@ -135,7 +135,6 @@ public class WorkoutCreateFragment extends ExercisesListFragmentBase implements 
         super.onActivityCreated(savedInstanceState);
 
         initializeWorkoutData();
-        //initializeGroupByOptions(mView);
     }
 
     @Override

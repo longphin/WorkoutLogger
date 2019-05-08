@@ -24,11 +24,9 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -47,76 +45,8 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
         setData(exercises, query);
     }
 
-    public void setData(List<IExerciseListable> exercises, String query) {
-        data.clear();
-        headers.clear();
-
-        // 1. Iterate through the exercises and create a list item for the exercise.
-        // 2. Then, create headers for the exercise categories also as a list item.
-        Observable.fromIterable(exercises)
-                .filter(
-                        ex -> query == null || query.isEmpty() || ex.getName().toLowerCase().contains(query)
-                 /*       new Predicate<IExerciseListable>() {
-                    @Override
-                    public boolean test(IExerciseListable ex) throws Exception {
-                        return ex.getName().toLowerCase().contains(query);
-                    }
-                }*/
-                )
-                .map(ex ->
-                {
-                    String headerCategory = ex.getCategory();
-                    headers.add(headerCategory); // Keep track of the exercise's category to create an item for the category later.
-                    return new exerciseItem(headerCategory, ex, ex.getNote()); // The list item for the exercise.
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .toList()
-                .subscribe(new SingleObserver<List<exerciseItem>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(List<exerciseItem> exerciseItems) {
-                        // Add exercises to the list.
-                        data.addAll(exerciseItems);
-
-                        // Add headers to the list.
-                        Observable.fromIterable(headers)
-                                .map(headerName -> new headerItem(headerName, headerName))
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .toList()
-                                .subscribe(new SingleObserver<List<headerItem>>() {
-                                    @Override
-                                    public void onSubscribe(Disposable d) {
-
-                                    }
-
-                                    @Override
-                                    public void onSuccess(List<headerItem> headerItems) {
-                                        // Add list items for each category.
-                                        data.addAll(headerItems);
-
-                                        // Sort the exercise list items and the category list items.
-                                        Collections.sort(data);
-                                        notifyDataSetChanged();
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
+    void filterData(String query) {
+        setData(originalData, query);
     }
 
     void restoreExercise(ExerciseShort exerciseToRestore) {
@@ -325,28 +255,61 @@ public abstract class ExercisesListAdapterBase extends RecyclerView.Adapter<Recy
         }
     }
 
-    void filterData(String query) {
-        Single.fromObservable(
-                Observable.fromIterable(originalData)
-                        .map(ex -> ex)
-                        .filter(new Predicate<IExerciseListable>() {
-                            @Override
-                            public boolean test(IExerciseListable ex) throws Exception {
-                                return ex.getName().toLowerCase().contains(query);
-                            }
-                        })
-                        .toList()
-                        .toObservable()
-        )
-                .subscribe(new SingleObserver<List<IExerciseListable>>() {
+    public void setData(List<IExerciseListable> exercises, String query) {
+        data.clear();
+        headers.clear();
+
+        // 1. Iterate through the exercises and create a list item for the exercise.
+        // 2. Then, create headers for the exercise categories also as a list item.
+        Observable.fromIterable(exercises)
+                .filter(ex -> query == null || query.isEmpty() || ex.getName().toLowerCase().contains(query))
+                .map(ex ->
+                {
+                    String headerCategory = ex.getCategory();
+                    headers.add(headerCategory); // Keep track of the exercise's category to create an item for the category later.
+                    return new exerciseItem(headerCategory, ex, ex.getNote()); // The list item for the exercise.
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toList()
+                .subscribe(new SingleObserver<List<exerciseItem>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onSuccess(List<IExerciseListable> iExerciseListables) {
-                        setData(iExerciseListables, query);
+                    public void onSuccess(List<exerciseItem> exerciseItems) {
+                        // Add exercises to the list.
+                        data.addAll(exerciseItems);
+
+                        // Add headers to the list.
+                        Observable.fromIterable(headers)
+                                .map(headerName -> new headerItem(headerName, headerName))
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .toList()
+                                .subscribe(new SingleObserver<List<headerItem>>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
+
+                                    }
+
+                                    @Override
+                                    public void onSuccess(List<headerItem> headerItems) {
+                                        // Add list items for each category.
+                                        data.addAll(headerItems);
+
+                                        // Sort the exercise list items and the category list items.
+                                        Collections.sort(data);
+                                        notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+
+                                    }
+                                });
                     }
 
                     @Override

@@ -111,8 +111,6 @@ public class ExercisesListFragment extends ExercisesListFragmentBase implements 
         menu.clear();
 
         inflater.inflate(R.menu.exercises_search_menu, menu);
-
-        //initializeSearchForExercisesView(menu.findItem(R.id.exercises_list_searchview));
     }
 
     @Override
